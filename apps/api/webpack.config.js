@@ -6,8 +6,8 @@ module.exports = {
     path: join(__dirname, '../../dist/apps/api'),
     clean: true,
     ...(process.env.NODE_ENV !== 'production' && {
-      devtoolModuleFilenameTemplate: '[absolute-resource-path]',
-    }),
+      devtoolModuleFilenameTemplate: '[absolute-resource-path]'
+    })
   },
   plugins: [
     new NxAppWebpackPlugin({
@@ -15,11 +15,11 @@ module.exports = {
       compiler: 'tsc',
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
-      assets: ["./src/assets"],
+      assets: [ './src/assets' ],
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
-      sourceMap: true,
+      sourceMap: true
     })
-  ],
+  ]
 };
