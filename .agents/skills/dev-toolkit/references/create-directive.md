@@ -5,7 +5,7 @@ Create a new Angular directive and scaffold directive code.
 ## Key Principles
 
 1. **Always use `--no-interactive`** - Prevents prompts that would hang execution
-2. Angular directive generator is invoked using `nx g @lmgm/dev-toolkit:directive` followed by required arguments
+2. Angular directive generator is invoked using `nx g @top-nosh/dev-toolkit:directive` followed by required arguments
 3. **Match existing repo patterns** - Study similar artifacts in the repo and follow their conventions
 4. **Verify with lint/test/build/typecheck etc.** - Generated code must pass verification. The listed targets are just an example, use what's appropriate for this workspace.
 
@@ -24,7 +24,7 @@ A user must specify the following:
 **Always run with `--dry-run` first** to verify files will be created in the correct location:
 
 ```bash
-nx g @lmgm/dev-toolkit:directive --project=<project-name> --feature=<feature-name> --name=<directive-name> --no-interactive --dry-run
+nx g @top-nosh/dev-toolkit:directive --project=<project-name> --feature=<feature-name> --name=<directive-name> --no-interactive --dry-run
 ```
 
 Review the output carefully. If files would be created in the wrong location, adjust your options.
@@ -34,7 +34,7 @@ Review the output carefully. If files would be created in the wrong location, ad
 Execute the generator:
 
 ```bash
-nx g @lmgm/dev-toolkit:directive --project=<project-name> --feature=<feature-name> --name=<directive-name> --no-interactive
+nx g @top-nosh/dev-toolkit:directive --project=<project-name> --feature=<feature-name> --name=<directive-name> --no-interactive
 ```
 
 ### 4. Modify Generated Code (If Needed)

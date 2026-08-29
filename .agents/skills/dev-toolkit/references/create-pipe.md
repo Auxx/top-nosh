@@ -5,7 +5,7 @@ Create a new Angular pipe and scaffold pipe code.
 ## Key Principles
 
 1. **Always use `--no-interactive`** - Prevents prompts that would hang execution
-2. Angular pipe generator is invoked using `nx g @lmgm/dev-toolkit:pipe` followed by required arguments
+2. Angular pipe generator is invoked using `nx g @top-nosh/dev-toolkit:pipe` followed by required arguments
 3. **Match existing repo patterns** - Study similar artifacts in the repo and follow their conventions
 4. **Verify with lint/test/build/typecheck etc.** - Generated code must pass verification. The listed targets are just an example, use what's appropriate for this workspace.
 
@@ -24,7 +24,7 @@ A user must specify the following:
 **Always run with `--dry-run` first** to verify files will be created in the correct location:
 
 ```bash
-nx g @lmgm/dev-toolkit:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive --dry-run
+nx g @top-nosh/dev-toolkit:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive --dry-run
 ```
 
 Review the output carefully. If files would be created in the wrong location, adjust your options.
@@ -34,7 +34,7 @@ Review the output carefully. If files would be created in the wrong location, ad
 Execute the generator:
 
 ```bash
-nx g @lmgm/dev-toolkit:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive
+nx g @top-nosh/dev-toolkit:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive
 ```
 
 ### 4. Modify Generated Code (If Needed)

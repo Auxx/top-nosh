@@ -10,13 +10,24 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
-      "@top-nosh/data-access": ["./libs/data-access/src/index.ts"]
+      "@top-nosh/data-access": [
+        "./libs/data-access/src/index.ts"
+      ],
+      "@top-nosh/dev-toolkit": [
+        "./libs/dev-toolkit/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
