@@ -23,6 +23,9 @@
       ],
       "@top-nosh/dev-toolkit": [
         "./libs/dev-toolkit/src/index.ts"
+      ],
+      "@top-nosh/ui": [
+        "./libs/ui/src/index.ts"
       ]
     }
   },
