@@ -1,6 +1,8 @@
 import { Controller, Get, INestApplication, UseGuards, ValidationPipe } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '@top-nosh/data-access';
+import * as argon2 from 'argon2';
 import request from 'supertest';
 import { AppModule } from '../app.module';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -17,9 +19,10 @@ class TestProtectedController {
 describe('Auth Endpoints (Integration)', () => {
   let app: INestApplication;
   let jwtService: JwtService;
+  let moduleRef: TestingModule;
 
   beforeAll(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       imports: [ AppModule ],
       controllers: [ TestProtectedController ]
     }).compile();
@@ -33,6 +36,15 @@ describe('Auth Endpoints (Integration)', () => {
   });
 
   afterAll(async () => {
+    const prisma = moduleRef.get<PrismaService>(PrismaService);
+    const passwordHash = await argon2.hash('Pass1234!!!!');
+    await prisma.user.update({
+      where: { email: 'aux@hexmode.org' },
+      data: {
+        passwordHash,
+        forcePasswordChange: true
+      }
+    });
     await app.close();
   });
 
@@ -131,6 +143,113 @@ describe('Auth Endpoints (Integration)', () => {
         .get('/api/test-protected')
         .set('Authorization', 'Bearer invalid-token')
         .expect(401);
+    });
+  });
+
+  describe('POST /api/auth/change-password', () => {
+    it('should return 401 Unauthorized when Bearer token is missing', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/change-password')
+        .send({
+          password: 'NewSecurePassword123!'
+        })
+        .expect(401);
+    });
+
+    it('should return 401 Unauthorized when Bearer token is invalid', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/change-password')
+        .set('Authorization', 'Bearer invalid-token')
+        .send({
+          password: 'NewSecurePassword123!'
+        })
+        .expect(401);
+    });
+
+    it('should return 400 Bad Request when password is missing', async () => {
+      const loginResponse = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: 'aux@hexmode.org',
+          password: 'Pass1234!!!!'
+        })
+        .expect(200);
+
+      const token = loginResponse.body.token;
+
+      await request(app.getHttpServer())
+        .post('/api/auth/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({})
+        .expect(400);
+    });
+
+    it('should return 400 Bad Request when password is shorter than 12 characters', async () => {
+      const loginResponse = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: 'aux@hexmode.org',
+          password: 'Pass1234!!!!'
+        })
+        .expect(200);
+
+      const token = loginResponse.body.token;
+
+      await request(app.getHttpServer())
+        .post('/api/auth/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          password: 'Short123!'
+        })
+        .expect(400);
+    });
+
+    it('should successfully change password, reset forcePasswordChange, and allow login with new password', async () => {
+      // 1. Log in with initial password
+      const loginResponse = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: 'aux@hexmode.org',
+          password: 'Pass1234!!!!'
+        })
+        .expect(200);
+
+      const token = loginResponse.body.token;
+      expect(loginResponse.body.forcePasswordChange).toBe(true);
+
+      // 2. Change password
+      const changePasswordResponse = await request(app.getHttpServer())
+        .post('/api/auth/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          password: 'NewSecurePassword123!'
+        })
+        .expect(200);
+
+      expect(changePasswordResponse.body).toEqual({
+        message: 'Password changed successfully'
+      });
+
+      // 3. Verify old password no longer works
+      await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: 'aux@hexmode.org',
+          password: 'Pass1234!!!!'
+        })
+        .expect(401);
+
+      // 4. Verify login with new password succeeds and forcePasswordChange is false
+      const newLoginResponse = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: 'aux@hexmode.org',
+          password: 'NewSecurePassword123!'
+        })
+        .expect(200);
+
+      expect(newLoginResponse.body.forcePasswordChange).toBe(false);
+      expect(newLoginResponse.body).toHaveProperty('token');
     });
   });
 });

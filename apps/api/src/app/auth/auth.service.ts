@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
+import { ChangePasswordResponse } from './dto/change-password.dto';
 import { JwtPayload, LoginDto, LoginResponse } from './dto/login.dto';
 
 @Injectable()
@@ -55,5 +56,27 @@ export class AuthService {
       token,
       forcePasswordChange: user.forcePasswordChange
     };
+  }
+
+  async changePassword(userId: string, newPassword: string): Promise<ChangePasswordResponse> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const passwordHash = await argon2.hash(newPassword);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        passwordHash,
+        forcePasswordChange: false
+      }
+    });
+
+    return { message: 'Password changed successfully' };
   }
 }

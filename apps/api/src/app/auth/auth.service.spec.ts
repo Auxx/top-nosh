@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@top-nosh/data-access';
@@ -15,6 +15,7 @@ describe('AuthService', () => {
   let prismaService: {
     user: {
       findUnique: jest.Mock;
+      update: jest.Mock;
     };
   };
   let jwtService: {
@@ -36,7 +37,8 @@ describe('AuthService', () => {
 
     prismaService = {
       user: {
-        findUnique: jest.fn()
+        findUnique: jest.fn(),
+        update: jest.fn()
       }
     };
 
@@ -130,6 +132,47 @@ describe('AuthService', () => {
           password: 'Pass1234!!!!'
         })
       ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should throw NotFoundException if user is not found', async () => {
+      prismaService.user.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.changePassword('non-existent-user', 'NewPass123456!')
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: 'non-existent-user' }
+      });
+    });
+
+    it('should hash password with argon2 and update user with forcePasswordChange=false', async () => {
+      prismaService.user.findUnique.mockResolvedValue(mockUser);
+      (argon2.hash as jest.Mock).mockResolvedValue('$argon2id$v=19$newhashedpassword');
+      prismaService.user.update.mockResolvedValue({
+        ...mockUser,
+        passwordHash: '$argon2id$v=19$newhashedpassword',
+        forcePasswordChange: false
+      });
+
+      const result = await service.changePassword(mockUser.id, 'NewPass123456!');
+
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: mockUser.id }
+      });
+      expect(argon2.hash).toHaveBeenCalledWith('NewPass123456!');
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { id: mockUser.id },
+        data: {
+          passwordHash: '$argon2id$v=19$newhashedpassword',
+          forcePasswordChange: false
+        }
+      });
+      expect(result).toEqual({
+        message: 'Password changed successfully'
+      });
     });
   });
 });
