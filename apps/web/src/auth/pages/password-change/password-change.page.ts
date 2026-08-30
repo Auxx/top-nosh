@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,8 +16,28 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
+export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const password = group.get('password');
+  const confirmPassword = group.get('confirmPassword');
+
+  if (!password || !confirmPassword) {
+    return null;
+  }
+
+  if (confirmPassword.value && password.value !== confirmPassword.value) {
+    confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });
+    return { passwordMismatch: true };
+  } else if (confirmPassword.hasError('passwordMismatch')) {
+    const errors = { ...confirmPassword.errors };
+    delete errors['passwordMismatch'];
+    confirmPassword.setErrors(Object.keys(errors).length > 0 ? errors : null);
+  }
+
+  return null;
+};
+
 @Component({
-  selector: 'app-login',
+  selector: 'app-password-change',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -19,11 +46,11 @@ import { AuthenticationService } from '../../services/authentication/authenticat
     MatInputModule,
     MatButtonModule
   ],
-  templateUrl: './login.page.html',
-  styleUrl: './login.page.scss',
+  templateUrl: './password-change.page.html',
+  styleUrl: './password-change.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginPage {
+export class PasswordChangePage {
   private readonly fb = inject(FormBuilder);
 
   private readonly authService = inject(AuthenticationService);
@@ -36,10 +63,13 @@ export class LoginPage {
 
   readonly isLoading = signal<boolean>(false);
 
-  readonly form = this.fb.nonNullable.group({
-    email: [ '', [ Validators.required, Validators.email ] ],
-    password: [ '', [ Validators.required ] ]
-  });
+  readonly form = this.fb.nonNullable.group(
+    {
+      password: [ '', [ Validators.required, Validators.minLength(12) ] ],
+      confirmPassword: [ '', [ Validators.required ] ]
+    },
+    { validators: [ passwordsMatchValidator ] }
+  );
 
   readonly onSubmit = (): void => {
     if (this.form.invalid || this.isLoading()) {
@@ -53,23 +83,16 @@ export class LoginPage {
 
     this.isLoading.set(true);
 
-    const { email, password } = this.form.getRawValue();
+    const { password } = this.form.getRawValue();
 
-    this.authService.login(email, password).subscribe({
-      next: response => {
+    this.authService.changePassword(password).subscribe({
+      next: () => {
         this.isLoading.set(false);
-
-        this.router
-          .navigate(
-            response.forcePasswordChange
-              ? [ '/auth', 'change-password' ]
-              : [ '/dashboard' ]
-          )
-          .then();
+        this.router.navigate([ '/dashboard' ]).then();
       },
       error: error => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Login failed. Please check your credentials.';
+        const errorMessage = error?.error?.message || error?.message || 'Password change failed. Please try again.';
         this.snackBarRef = this.snackBar.open(errorMessage, 'OK');
       }
     });

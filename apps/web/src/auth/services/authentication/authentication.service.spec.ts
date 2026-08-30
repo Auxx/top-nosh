@@ -33,6 +33,7 @@ describe('AuthenticationService', () => {
   it('should have methods declared as arrow function properties', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'state')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'login')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'changePassword')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'logout')).toBe(true);
   });
 
@@ -62,6 +63,7 @@ describe('AuthenticationService', () => {
       ]
     });
     const newService = TestBed.inject(AuthenticationService);
+    httpTesting = TestBed.inject(HttpTestingController);
 
     newService.state().subscribe(state => {
       expect(state).toEqual(savedState);
@@ -81,6 +83,7 @@ describe('AuthenticationService', () => {
       ]
     });
     const newService = TestBed.inject(AuthenticationService);
+    httpTesting = TestBed.inject(HttpTestingController);
 
     newService.state().subscribe(state => {
       expect(state).toEqual({
@@ -103,7 +106,7 @@ describe('AuthenticationService', () => {
 
     service.login(testEmail, testPassword).subscribe({
       next: result => {
-        expect(result).toBe(true);
+        expect(result).toEqual({ forcePasswordChange: false });
         expect(states[states.length - 1]).toEqual({
           isAuthenticated: true,
           token: mockToken
@@ -121,6 +124,73 @@ describe('AuthenticationService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ email: testEmail, password: testPassword });
     req.flush({ token: mockToken, forcePasswordChange: false });
+  });
+
+  it('should send POST request to /auth/change-password with Authorization header and emit true on success', done => {
+    const savedState: AuthState = {
+      isAuthenticated: true,
+      token: 'jwt-auth-token'
+    };
+    localStorage.setItem(authStorageKey, JSON.stringify(savedState));
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        AuthenticationService
+      ]
+    });
+    const authService = TestBed.inject(AuthenticationService);
+    httpTesting = TestBed.inject(HttpTestingController);
+    const newPassword = 'NewSecretPassword123!';
+
+    authService.changePassword(newPassword).subscribe({
+      next: result => {
+        expect(result).toBe(true);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/change-password`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ password: newPassword });
+    expect(req.request.headers.get('Authorization')).toBe('Bearer jwt-auth-token');
+    req.flush({ message: 'Password changed successfully' });
+  });
+
+  it('should send POST request to /auth/change-password without Authorization header if token is null', done => {
+    const newPassword = 'NewSecretPassword123!';
+
+    service.changePassword(newPassword).subscribe({
+      next: result => {
+        expect(result).toBe(true);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/change-password`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ password: newPassword });
+    expect(req.request.headers.has('Authorization')).toBe(false);
+    req.flush({ message: 'Password changed successfully' });
+  });
+
+  it('should propagate error on changePassword failure', done => {
+    const newPassword = 'short';
+
+    service.changePassword(newPassword).subscribe({
+      next: () => {
+        fail('Should not succeed on 400');
+      },
+      error: error => {
+        expect(error.status).toBe(400);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/change-password`);
+    req.flush({ message: 'Password is too weak' }, { status: 400, statusText: 'Bad Request' });
   });
 
   it('should propagate error and not update state on login failure', done => {
@@ -164,6 +234,7 @@ describe('AuthenticationService', () => {
       ]
     });
     const loggedInService = TestBed.inject(AuthenticationService);
+    httpTesting = TestBed.inject(HttpTestingController);
 
     loggedInService.logout();
 

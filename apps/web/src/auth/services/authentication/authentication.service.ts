@@ -74,6 +74,19 @@ export class AuthenticationService {
       );
   };
 
+  readonly changePassword = (password: string): Observable<boolean> => {
+    const url = `${environment.apiUrl}/auth/change-password`;
+    const token = this.state$.value.token;
+    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
+    return this.http
+      .post<{ message: string; }>(url, { password }, { headers })
+      .pipe(
+        map(() => true),
+        catchError(error => throwError(() => error))
+      );
+  };
+
   readonly logout = (): void => {
     this.updateState(guestAuthState());
   };

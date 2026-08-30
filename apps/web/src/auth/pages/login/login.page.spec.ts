@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { LoginPage } from './login.page';
@@ -11,6 +12,7 @@ describe('LoginPage', () => {
   let authServiceMock: { login: jest.Mock; logout: jest.Mock; state: jest.Mock; };
   let snackBarMock: { open: jest.Mock; dismiss: jest.Mock; };
   let snackBarRefMock: { dismiss: jest.Mock; };
+  let routerMock: { navigate: jest.Mock; };
 
   beforeEach(async () => {
     authServiceMock = {
@@ -28,12 +30,17 @@ describe('LoginPage', () => {
       dismiss: jest.fn()
     };
 
+    routerMock = {
+      navigate: jest.fn().mockResolvedValue(true)
+    };
+
     await TestBed.configureTestingModule({
       imports: [ LoginPage ],
       providers: [
         provideAnimationsAsync(),
         { provide: AuthenticationService, useValue: authServiceMock },
-        { provide: MatSnackBar, useValue: snackBarMock }
+        { provide: MatSnackBar, useValue: snackBarMock },
+        { provide: Router, useValue: routerMock }
       ]
     }).compileComponents();
 
@@ -48,8 +55,6 @@ describe('LoginPage', () => {
 
   it('should have methods declared as arrow function properties', () => {
     expect(Object.prototype.hasOwnProperty.call(component, 'onSubmit')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'getEmailErrorMessage')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'getPasswordErrorMessage')).toBe(true);
   });
 
   it('should initialize with an invalid empty form and disabled submit button', () => {
@@ -66,15 +71,12 @@ describe('LoginPage', () => {
 
     emailControl.setValue('');
     expect(emailControl.hasError('required')).toBe(true);
-    expect(component.getEmailErrorMessage()).toBe('Email is required');
 
     emailControl.setValue('invalid-email');
     expect(emailControl.hasError('email')).toBe(true);
-    expect(component.getEmailErrorMessage()).toBe('Please enter a valid email address');
 
     emailControl.setValue('user@example.com');
     expect(emailControl.valid).toBe(true);
-    expect(component.getEmailErrorMessage()).toBe('');
   });
 
   it('should validate password required constraint', () => {
@@ -82,11 +84,9 @@ describe('LoginPage', () => {
 
     passwordControl.setValue('');
     expect(passwordControl.hasError('required')).toBe(true);
-    expect(component.getPasswordErrorMessage()).toBe('Password is required');
 
     passwordControl.setValue('secret123');
     expect(passwordControl.valid).toBe(true);
-    expect(component.getPasswordErrorMessage()).toBe('');
   });
 
   it('should enable submit button when form is valid', () => {
@@ -99,9 +99,8 @@ describe('LoginPage', () => {
     expect(submitBtn.disabled).toBe(false);
   });
 
-  it('should call authService.login and log to console on successful submit', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-    authServiceMock.login.mockReturnValue(of(true));
+  it('should navigate to /dashboard on successful login when forcePasswordChange is false', () => {
+    authServiceMock.login.mockReturnValue(of({ forcePasswordChange: false }));
 
     component.form.controls.email.setValue('user@example.com');
     component.form.controls.password.setValue('secret123');
@@ -109,10 +108,21 @@ describe('LoginPage', () => {
     component.onSubmit();
 
     expect(authServiceMock.login).toHaveBeenCalledWith('user@example.com', 'secret123');
-    expect(consoleSpy).toHaveBeenCalledWith('Login successful');
+    expect(routerMock.navigate).toHaveBeenCalledWith([ '/dashboard' ]);
     expect(component.isLoading()).toBe(false);
+  });
 
-    consoleSpy.mockRestore();
+  it('should navigate to /auth/change-password on successful login when forcePasswordChange is true', () => {
+    authServiceMock.login.mockReturnValue(of({ forcePasswordChange: true }));
+
+    component.form.controls.email.setValue('user@example.com');
+    component.form.controls.password.setValue('secret123');
+
+    component.onSubmit();
+
+    expect(authServiceMock.login).toHaveBeenCalledWith('user@example.com', 'secret123');
+    expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'change-password' ]);
+    expect(component.isLoading()).toBe(false);
   });
 
   it('should open snackbar on login failure with error message and OK action', () => {
@@ -149,7 +159,7 @@ describe('LoginPage', () => {
     component.onSubmit();
     expect(snackBarMock.open).toHaveBeenCalledTimes(1);
 
-    authServiceMock.login.mockReturnValue(of(true));
+    authServiceMock.login.mockReturnValue(of({ forcePasswordChange: false }));
     component.onSubmit();
 
     expect(snackBarRefMock.dismiss).toHaveBeenCalledTimes(1);
