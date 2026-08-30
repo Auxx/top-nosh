@@ -14,15 +14,13 @@
 
           <input matInput type="email" formControlName="email" placeholder="name@example.com"/>
 
-          @if (form.controls.email.invalid && (form.controls.email.touched || form.controls.email.dirty)) {
-            @if (form.controls.email.hasError('required')) {
-              <mat-error>Email is required</mat-error>
-            }
+          <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+            Email is required
+          </mat-error>
 
-            @if (form.controls.email.hasError('email')) {
-              <mat-error>Please enter a valid email address</mat-error>
-            }
-          }
+          <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+            Please enter a valid email address
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -30,11 +28,9 @@
 
           <input matInput type="password" formControlName="password" placeholder="Password"/>
 
-          @if (form.controls.password.invalid && (form.controls.password.touched || form.controls.password.dirty)) {
-            @if (form.controls.password.hasError('required')) {
-              <mat-error>Password is required</mat-error>
-            }
-          }
+          <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+            Password is required
+          </mat-error>
         </mat-form-field>
 
         <div class="form-actions">

@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { WhenError } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -17,7 +18,8 @@ import { AuthenticationService } from '../../services/authentication/authenticat
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    WhenError
   ],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',

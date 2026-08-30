@@ -6,7 +6,8 @@
     "format": "dprint fmt",
     "format:check": "dprint check",
     "prepare": "husky",
-    "lint": "nx run-many --all --target=lint --no-tui"
+    "lint": "nx run-many --all --target=lint --no-tui",
+    "test": "nx run-many --all --target=test"
   },
   "private": true,
   "dependencies": {

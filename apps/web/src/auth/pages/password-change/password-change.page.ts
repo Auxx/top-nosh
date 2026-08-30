@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { WhenError } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -44,7 +45,8 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    WhenError
   ],
   templateUrl: './password-change.page.html',
   styleUrl: './password-change.page.scss',

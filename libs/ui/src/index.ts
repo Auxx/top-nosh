@@ -1,1 +1,1 @@
-export * from './lib/ui/ui';
+export * from './control/directives/when-error/when-error.directive';

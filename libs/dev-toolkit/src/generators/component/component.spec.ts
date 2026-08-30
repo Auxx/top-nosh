@@ -38,10 +38,11 @@ describe('Component Generator', () => {
 
     const targetPath = `apps/${appName}/src/${featureName}/components/${componentName}`;
 
-    expect(tree.children(targetPath).length).toBe(4);
+    expect(tree.children(targetPath).length).toBe(5);
     expect(tree.exists(`${targetPath}/${componentName}.component.scss`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.component.html`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.component.spec.ts`)).toBe(true);
+    expect(tree.exists(`${targetPath}/${componentName}.component.stories.ts`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.component.ts`)).toBe(true);
   });
 

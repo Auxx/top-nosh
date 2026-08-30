@@ -38,10 +38,11 @@ describe('Page Generator', () => {
 
     const targetPath = `apps/${appName}/src/${featureName}/pages/${componentName}`;
 
-    expect(tree.children(targetPath).length).toBe(4);
+    expect(tree.children(targetPath).length).toBe(5);
     expect(tree.exists(`${targetPath}/${componentName}.page.scss`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.page.html`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.page.spec.ts`)).toBe(true);
+    expect(tree.exists(`${targetPath}/${componentName}.page.stories.ts`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.page.ts`)).toBe(true);
   });
 });
