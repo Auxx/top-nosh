@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { AuthorizedPage } from './authorized.page';
 
@@ -8,7 +9,8 @@ describe('AuthorizedPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ AuthorizedPage ]
+      imports: [ AuthorizedPage ],
+      providers: [ provideRouter([]) ]
     })
       .compileComponents();
 
