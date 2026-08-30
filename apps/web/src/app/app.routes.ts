@@ -15,5 +15,11 @@ export const appRoutes: Route[] = [
     canActivate: [ authGuard ],
     component: AuthorizedPage,
     loadChildren: () => import('../dashboard/dashboard.routes').then(m => m.routes)
+  },
+  {
+    path: 'recipes',
+    canActivate: [ authGuard ],
+    component: AuthorizedPage,
+    loadChildren: () => import('../recipes/recipes.routes').then(m => m.routes)
   }
 ];
