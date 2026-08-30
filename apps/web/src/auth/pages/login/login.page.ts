@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -28,6 +29,8 @@ export class LoginPage {
   private readonly authService = inject(AuthenticationService);
 
   private readonly snackBar = inject(MatSnackBar);
+
+  private readonly router = inject(Router);
 
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
@@ -55,7 +58,7 @@ export class LoginPage {
     this.authService.login(email, password).subscribe({
       next: () => {
         this.isLoading.set(false);
-        console.log('Login successful');
+        this.router.navigate([ '/dashboard' ]).then();
       },
       error: error => {
         this.isLoading.set(false);

@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { map, take } from 'rxjs';
 import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
 
-export const rootGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   const authenticationService = inject(AuthenticationService);
 
@@ -13,7 +13,7 @@ export const rootGuard: CanActivateFn = () => {
       take(1),
       map(state =>
         state.isAuthenticated
-          ? router.createUrlTree([ '/dashboard' ])
+          ? true
           : router.createUrlTree([ '/auth', 'login' ])
       )
     );
