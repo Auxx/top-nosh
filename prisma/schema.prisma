@@ -22,3 +22,69 @@ model User {
 
   @@map("users")
 }
+
+enum IngredientUnit {
+  GRAMS
+  ITEM_COUNT
+}
+
+model Recipe {
+  id          String        @id @default(uuid())
+  name        String
+  cuisine     String
+  category    String
+  description String
+  servings    Int
+  stages      RecipeStage[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@index([cuisine])
+  @@index([category])
+  @@index([cuisine, category])
+  @@map("recipes")
+}
+
+model RecipeStage {
+  id          String        @id @default(uuid())
+  recipeId    String        @map("recipe_id")
+  name        String
+  order       Int           @default(0)
+  recipe      Recipe        @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  steps       CookingStep[]
+  ingredients Ingredient[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@index([recipeId])
+  @@map("recipe_stages")
+}
+
+model CookingStep {
+  id          String      @id @default(uuid())
+  stageId     String      @map("stage_id")
+  name        String
+  description String
+  order       Int         @default(0)
+  stage       RecipeStage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@index([stageId])
+  @@map("cooking_steps")
+}
+
+model Ingredient {
+  id        String         @id @default(uuid())
+  stageId   String         @map("stage_id")
+  name      String
+  quantity  Float
+  unit      IngredientUnit
+  order     Int            @default(0)
+  stage     RecipeStage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  @@index([stageId])
+  @@map("ingredients")
+}
