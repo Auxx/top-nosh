@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 import { AuthenticationService, AuthState, authStorageKey } from './authentication.service';
 
 describe('AuthenticationService', () => {
@@ -123,43 +124,11 @@ describe('AuthenticationService', () => {
     const req = httpTesting.expectOne(`${environment.apiUrl}/auth/login`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ email: testEmail, password: testPassword });
+    expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
     req.flush({ token: mockToken, forcePasswordChange: false });
   });
 
-  it('should send POST request to /auth/change-password with Authorization header and emit true on success', done => {
-    const savedState: AuthState = {
-      isAuthenticated: true,
-      token: 'jwt-auth-token'
-    };
-    localStorage.setItem(authStorageKey, JSON.stringify(savedState));
-
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        AuthenticationService
-      ]
-    });
-    const authService = TestBed.inject(AuthenticationService);
-    httpTesting = TestBed.inject(HttpTestingController);
-    const newPassword = 'NewSecretPassword123!';
-
-    authService.changePassword(newPassword).subscribe({
-      next: result => {
-        expect(result).toBe(true);
-        done();
-      }
-    });
-
-    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/change-password`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ password: newPassword });
-    expect(req.request.headers.get('Authorization')).toBe('Bearer jwt-auth-token');
-    req.flush({ message: 'Password changed successfully' });
-  });
-
-  it('should send POST request to /auth/change-password without Authorization header if token is null', done => {
+  it('should send POST request to /auth/change-password and emit true on success', done => {
     const newPassword = 'NewSecretPassword123!';
 
     service.changePassword(newPassword).subscribe({
@@ -173,6 +142,7 @@ describe('AuthenticationService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ password: newPassword });
     expect(req.request.headers.has('Authorization')).toBe(false);
+    expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(true);
     req.flush({ message: 'Password changed successfully' });
   });
 

@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -63,7 +64,11 @@ export class AuthenticationService {
     const url = `${environment.apiUrl}/auth/login`;
 
     return this.http
-      .post<{ token: string; forcePasswordChange: boolean; }>(url, { email, password })
+      .post<{ token: string; forcePasswordChange: boolean; }>(
+        url,
+        { email, password },
+        { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
+      )
       .pipe(
         map(response => {
           this.updateState({ isAuthenticated: true, token: response.token });
@@ -76,11 +81,9 @@ export class AuthenticationService {
 
   readonly changePassword = (password: string): Observable<boolean> => {
     const url = `${environment.apiUrl}/auth/change-password`;
-    const token = this.state$.value.token;
-    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
 
     return this.http
-      .post<{ message: string; }>(url, { password }, { headers })
+      .post<{ message: string; }>(url, { password })
       .pipe(
         map(() => true),
         catchError(error => throwError(() => error))
