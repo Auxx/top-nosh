@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { MenuBarComponent } from '@top-nosh/ui';
 import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
 
 @Component({
   selector: 'app-landing',
   imports: [
-    MatButton
+    MatButton,
+    MenuBarComponent,
+    RouterOutlet
   ],
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',
