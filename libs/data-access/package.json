@@ -6,6 +6,9 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "@nestjs/common": "11.2.3",
+    "@prisma/adapter-better-sqlite3": "7.10.0",
+    "@prisma/client": "7.10.0",
     "tslib": "^2.3.0"
   }
 }
