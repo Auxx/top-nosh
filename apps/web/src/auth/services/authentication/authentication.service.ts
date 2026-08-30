@@ -59,15 +59,16 @@ export class AuthenticationService {
 
   readonly state = (): Observable<AuthState> => this.state$.asObservable();
 
-  readonly login = (email: string, password: string): Observable<boolean> => {
+  readonly login = (email: string, password: string): Observable<{ forcePasswordChange: boolean; }> => {
     const url = `${environment.apiUrl}/auth/login`;
 
     return this.http
-      .post<{ token: string; forcePasswordChange?: boolean; }>(url, { email, password })
+      .post<{ token: string; forcePasswordChange: boolean; }>(url, { email, password })
       .pipe(
         map(response => {
           this.updateState({ isAuthenticated: true, token: response.token });
-          return true;
+
+          return { forcePasswordChange: response.forcePasswordChange };
         }),
         catchError(error => throwError(() => error))
       );

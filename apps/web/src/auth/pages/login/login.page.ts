@@ -56,7 +56,8 @@ export class LoginPage {
     const { email, password } = this.form.getRawValue();
 
     this.authService.login(email, password).subscribe({
-      next: () => {
+      next: response => {
+        console.log(response);
         this.isLoading.set(false);
         this.router.navigate([ '/dashboard' ]).then();
       },
