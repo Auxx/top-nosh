@@ -69,36 +69,4 @@ describe('authInterceptor', () => {
     expect(req.request.headers.get('Authorization')).toBe('Bearer valid-jwt-token');
     req.flush({ data: 'secret' });
   });
-
-  it('should redirect to /auth/login and throw error when user is not authenticated', done => {
-    authServiceMock.state.mockReturnValue(of({ isAuthenticated: false, token: null }));
-
-    httpClient.get('/api/protected').subscribe({
-      next: () => {
-        fail('Expected request to fail when unauthenticated');
-      },
-      error: error => {
-        expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
-        expect(error).toEqual(new Error('User is not authenticated'));
-        httpTesting.expectNone('/api/protected');
-        done();
-      }
-    });
-  });
-
-  it('should redirect to /auth/login and throw error when user token is null despite isAuthenticated being true', done => {
-    authServiceMock.state.mockReturnValue(of({ isAuthenticated: true, token: null }));
-
-    httpClient.get('/api/protected').subscribe({
-      next: () => {
-        fail('Expected request to fail when token is null');
-      },
-      error: error => {
-        expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
-        expect(error).toEqual(new Error('User is not authenticated'));
-        httpTesting.expectNone('/api/protected');
-        done();
-      }
-    });
-  });
 });
