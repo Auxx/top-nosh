@@ -2,7 +2,6 @@
   "name": "@top-nosh/dev-toolkit",
   "version": "0.0.1",
   "private": true,
-  "type": "module",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "generators": "./generators.json",
