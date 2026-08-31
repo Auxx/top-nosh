@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { WhenError } from '@top-nosh/ui';
 import { CreateRecipeDto, IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -31,7 +32,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatIconModule,
     CdkDropList,
     CdkDrag,
-    CdkDragHandle
+    CdkDragHandle,
+    WhenError
   ],
   templateUrl: './create-recipe.page.html',
   styleUrl: './create-recipe.page.scss',
