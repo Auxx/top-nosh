@@ -80,7 +80,7 @@
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let recipe" class="name-cell">
-              <a href="#" class="recipe-name-link" (click)="$event.preventDefault()">
+              <a [routerLink]="['/recipes', recipe.id]" class="recipe-name-link">
                 {{ recipe.name }}
               </a>
             </td>

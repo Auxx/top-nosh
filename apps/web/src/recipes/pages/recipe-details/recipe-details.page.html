@@ -1,0 +1,367 @@
+<div class="recipe-details-container">
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-state" data-testid="loading-spinner">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading recipe details...</p>
+    </div>
+  }
+
+  <!-- Error / Not Found State -->
+  @if (!isLoading() && hasError()) {
+    <mat-card class="error-card" data-testid="error-state">
+      <mat-card-content class="error-content">
+        <mat-icon class="error-icon" color="warn">error_outline</mat-icon>
+        <h2>Recipe Not Found</h2>
+
+        <p>The recipe you are looking for could not be found or failed to load.</p>
+
+        <button mat-flat-button
+                color="primary"
+                (click)="onBackToList()"
+                data-testid="error-back-btn">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Recipes
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Recipe Details Content -->
+  @if (!isLoading() && !hasError() && recipe(); as currentRecipe) {
+    <!-- Page Header & Top Bar -->
+    <header class="page-header">
+      <div class="header-nav">
+        <button mat-button
+                class="back-link"
+                (click)="onBackToList()"
+                data-testid="back-btn">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Recipes
+        </button>
+      </div>
+
+      <div class="header-main">
+        <div class="header-title-section">
+          <h1 class="recipe-name" data-testid="recipe-name">{{ currentRecipe.name }}</h1>
+
+          <div class="recipe-badges">
+            <span class="badge cuisine-badge" data-testid="recipe-cuisine">{{ currentRecipe.cuisine }}</span>
+            <span class="badge category-badge" data-testid="recipe-category">{{ currentRecipe.category }}</span>
+          </div>
+
+          @if (currentRecipe.description) {
+            <p class="recipe-description" data-testid="recipe-description">{{ currentRecipe.description }}</p>
+          }
+        </div>
+
+        <div class="header-actions">
+          <button mat-stroked-button
+                  (click)="onEditRecipe()"
+                  data-testid="edit-recipe-btn">
+            <mat-icon>edit</mat-icon>
+            Edit Recipe
+          </button>
+
+          <button mat-stroked-button
+                  (click)="onDeleteRecipe()"
+                  data-testid="delete-recipe-btn">
+            <mat-icon>delete</mat-icon>
+            Delete Recipe
+          </button>
+        </div>
+      </div>
+
+      <!-- Controls Toolbar: Mode Switcher & Servings Stepper -->
+      <div class="controls-toolbar">
+        <mat-button-toggle-group [value]="viewMode()"
+                                 (change)="setViewMode($event.value)"
+                                 aria-label="Recipe View Mode"
+                                 data-testid="mode-toggle-group">
+          <mat-button-toggle value="glance" data-testid="glance-mode-toggle">
+            <mat-icon>visibility</mat-icon>
+            <span>At a Glance</span>
+          </mat-button-toggle>
+
+          <mat-button-toggle value="cooking" data-testid="cooking-mode-toggle">
+            <mat-icon>restaurant</mat-icon>
+            <span>Cooking Mode</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <div class="servings-stepper" data-testid="servings-stepper">
+          <span class="servings-label">Servings:</span>
+          <div class="stepper-controls">
+            <button mat-icon-button
+                    type="button"
+                    [disabled]="servings() <= 1"
+                    (click)="decrementServings()"
+                    aria-label="Decrease servings"
+                    data-testid="decrement-servings-btn">
+              <mat-icon>remove</mat-icon>
+            </button>
+
+            <span class="servings-value" data-testid="servings-count">{{ servings() }}</span>
+
+            <button mat-icon-button
+                    type="button"
+                    (click)="incrementServings()"
+                    aria-label="Increase servings"
+                    data-testid="increment-servings-btn">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- VIEW MODE: GLANCE -->
+    @if (viewMode() === 'glance') {
+      <div class="glance-view-container" data-testid="glance-view">
+        <!-- Ingredients Card -->
+        <mat-card class="ingredients-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>shopping_basket</mat-icon>
+              Ingredients
+            </mat-card-title>
+
+            <mat-card-subtitle>
+              Scaled for {{ servings() }} {{ servings() === 1 ? 'serving' : 'servings' }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            @if (allIngredients().length === 0) {
+              <p class="empty-hint">No ingredients listed for this recipe.</p>
+            } @else {
+              <ul class="ingredients-list">
+                @for (ingredient of allIngredients(); track ingredient.id || ingredient.name) {
+                  <li class="ingredient-item" data-testid="ingredient-row">
+
+                    <div class="ingredient-info">
+                      <span class="ingredient-quantity" data-testid="ingredient-quantity">
+                        {{ getScaledQuantity(ingredient.quantity) }}
+                        {{ formatUnit(ingredient.unit, getScaledQuantity(ingredient.quantity)) }}
+                      </span>
+
+                      <span class="ingredient-name" data-testid="ingredient-name">{{ ingredient.name }}</span>
+                    </div>
+
+                    <button mat-icon-button
+                            type="button"
+                            matTooltip="Add to shopping list"
+                            (click)="onAddToShoppingList(ingredient)"
+                            aria-label="Add to shopping list"
+                            data-testid="add-to-shopping-list-btn">
+                      <mat-icon>add_shopping_cart</mat-icon>
+                    </button>
+
+                  </li>
+                }
+              </ul>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Collapsible Stages Accordion -->
+        <div class="stages-container">
+          <div class="stages-header">
+            <h2>Cooking Stages & Steps</h2>
+          </div>
+
+          @if (currentRecipe.stages.length === 0) {
+            <mat-card class="empty-stages-card">
+              <mat-card-content>
+                <p class="empty-hint">No stages defined for this recipe.</p>
+              </mat-card-content>
+            </mat-card>
+          } @else {
+            <mat-accordion multi class="stages-accordion" data-testid="stages-accordion">
+              @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
+                <mat-expansion-panel [expanded]="true" class="stage-expansion-panel" data-testid="stage-panel">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="stage-title">
+                      <span class="stage-number">{{ stageIndex + 1 }}.</span>
+                      <span>{{ stage.name }}</span>
+                    </mat-panel-title>
+
+                    <mat-panel-description class="stage-summary">
+                      {{ stage.steps.length }} {{ stage.steps.length === 1 ? 'step' : 'steps' }} ·
+                      {{ stage.ingredients.length }} {{ stage.ingredients.length === 1 ? 'ingredient' : 'ingredients' }}
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+
+                  <!-- Stage Ingredients -->
+                  @if (stage.ingredients && stage.ingredients.length > 0) {
+                    <div class="stage-section stage-ingredients-section">
+                      <h4>Stage Ingredients</h4>
+                      <ul class="stage-ingredients-list">
+                        @for (ingredient of stage.ingredients; track ingredient.id || ingredient.name) {
+                          <li class="stage-ingredient-row">
+                            <span class="ingredient-amount">
+                              {{ getScaledQuantity(ingredient.quantity) }}
+                              {{ formatUnit(ingredient.unit, getScaledQuantity(ingredient.quantity)) }}
+                            </span>
+
+                            <span class="ingredient-name">{{ ingredient.name }}</span>
+
+                            <button mat-icon-button
+                                    type="button"
+                                    matTooltip="Add to shopping list"
+                                    (click)="onAddToShoppingList(ingredient)"
+                                    aria-label="Add to shopping list">
+                              <mat-icon>add_shopping_cart</mat-icon>
+                            </button>
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  }
+
+                  <!-- Stage Steps -->
+                  @if (stage.steps && stage.steps.length > 0) {
+                    <div class="stage-section stage-steps-section">
+                      <h4>Steps</h4>
+                      <ol class="stage-steps-list">
+                        @for (step of stage.steps; track step.id || step.name; let stepIndex = $index) {
+                          <li class="stage-step-item" data-testid="stage-step-row">
+                            <div class="step-header">
+                              <span class="step-badge">{{ stepIndex + 1 }}</span>
+                              <strong class="step-name">{{ step.name }}</strong>
+                            </div>
+
+                            @if (step.description) {
+                              <p class="step-description">{{ step.description }}</p>
+                            }
+                          </li>
+                        }
+                      </ol>
+                    </div>
+                  }
+                </mat-expansion-panel>
+              }
+            </mat-accordion>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- VIEW MODE: COOKING -->
+    @if (viewMode() === 'cooking') {
+      <div class="cooking-view-container" data-testid="cooking-view">
+        <!-- Progress Bar Card -->
+        <mat-card class="progress-card" data-testid="cooking-progress-card">
+          <mat-card-content>
+            <div class="progress-header">
+              <span class="progress-title">Cooking Progress</span>
+              <span class="progress-stats" data-testid="progress-text">
+                {{ completedStepsCount() }} of {{ totalSteps() }} steps completed ({{ cookingProgress() }}%)
+              </span>
+            </div>
+
+            <mat-progress-bar mode="determinate"
+                              [value]="cookingProgress()"
+                              class="cooking-progress-bar"
+                              data-testid="cooking-progress-bar"/>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="cooking-grid">
+          <!-- Ingredients Checklist -->
+          <mat-card class="cooking-ingredients-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>checklist</mat-icon>
+                Ingredients Checklist
+              </mat-card-title>
+
+              <mat-card-subtitle>
+                Check off ingredients as you use them
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              @if (allIngredients().length === 0) {
+                <p class="empty-hint">No ingredients needed.</p>
+              } @else {
+                <ul class="checklist">
+                  @for (ingredient of allIngredients(); track ingredient.id || ingredient.name) {
+                    <li class="checklist-item"
+                        [class.used]="isIngredientUsed(ingredient.id)"
+                        data-testid="cooking-ingredient-item">
+
+                      <mat-checkbox [checked]="isIngredientUsed(ingredient.id)"
+                                    (change)="toggleIngredientUsed(ingredient.id)"
+                                    color="primary"
+                                    data-testid="ingredient-checkbox">
+                        <span class="ingredient-scaled-amount">
+                          {{ getScaledQuantity(ingredient.quantity) }}
+                          {{ formatUnit(ingredient.unit, getScaledQuantity(ingredient.quantity)) }}
+                        </span>
+
+                        <span class="ingredient-item-name">{{ ingredient.name }}</span>
+                      </mat-checkbox>
+
+                    </li>
+                  }
+                </ul>
+              }
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Step-by-Step Cooking Steps -->
+          <div class="cooking-steps-container">
+            @if (currentRecipe.stages.length === 0) {
+              <mat-card>
+                <mat-card-content>
+                  <p class="empty-hint">No steps to follow.</p>
+                </mat-card-content>
+              </mat-card>
+            } @else {
+              @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
+                <mat-card class="cooking-stage-card" data-testid="cooking-stage-card">
+                  <mat-card-header>
+                    <mat-card-title class="cooking-stage-title">
+                      <span class="stage-index-badge">Stage {{ stageIndex + 1 }}</span>
+                      {{ stage.name }}
+                    </mat-card-title>
+                  </mat-card-header>
+
+                  <mat-card-content>
+                    <div class="cooking-steps-list">
+                      @for (step of stage.steps; track step.id || step.name; let stepIndex = $index) {
+                        <div class="cooking-step-card"
+                             [class.completed]="isStepCompleted(step.id)"
+                             data-testid="cooking-step-item">
+
+                          <div class="step-checkbox-wrapper">
+                            <mat-checkbox [checked]="isStepCompleted(step.id)"
+                                          (change)="toggleStepCompletion(step.id)"
+                                          color="primary"
+                                          data-testid="step-checkbox">
+                              <span class="step-title" [class.line-through]="isStepCompleted(step.id)">
+                                {{ step.name }}
+                              </span>
+                            </mat-checkbox>
+                          </div>
+
+                          @if (step.description) {
+                            <p class="step-desc" [class.faded]="isStepCompleted(step.id)">
+                              {{ step.description }}
+                            </p>
+                          }
+
+                        </div>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>

@@ -1,7 +1,7 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
   CuisinesCategoriesResponse,
@@ -37,9 +37,7 @@ describe('RecipeListPage', () => {
     observe: jest.Mock;
   };
 
-  let routerMock: {
-    navigate: jest.Mock;
-  };
+  let router: Router;
 
   const sampleRecipes: RecipeListItem[] = [
     {
@@ -96,19 +94,18 @@ describe('RecipeListPage', () => {
       observe: jest.fn().mockReturnValue(mockBreakpoint$.asObservable())
     };
 
-    routerMock = {
-      navigate: jest.fn()
-    };
-
     await TestBed.configureTestingModule({
       imports: [ RecipeListPage ],
       providers: [
         provideAnimationsAsync(),
+        provideRouter([]),
         { provide: RecipeManagementService, useValue: recipeServiceMock },
-        { provide: BreakpointObserver, useValue: breakpointObserverMock },
-        { provide: Router, useValue: routerMock }
+        { provide: BreakpointObserver, useValue: breakpointObserverMock }
       ]
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(RecipeListPage);
     component = fixture.componentInstance;
@@ -171,12 +168,12 @@ describe('RecipeListPage', () => {
     expect(component.displayedColumns()).toEqual([ 'name', 'actions' ]);
   });
 
-  it('should render table rows for each recipe with link to # and action buttons', () => {
+  it('should render table rows for each recipe with link to details page and action buttons', () => {
     const rows = fixture.nativeElement.querySelectorAll('tr.mat-mdc-row');
     expect(rows.length).toBe(2);
 
     const firstLink: HTMLAnchorElement = rows[0].querySelector('.recipe-name-link');
-    expect(firstLink.getAttribute('href')).toBe('#');
+    expect(firstLink.getAttribute('href')).toBe('/recipes/1');
     expect(firstLink.textContent?.trim()).toBe('Spaghetti Bolognese');
 
     const editBtn = rows[0].querySelector('.edit-btn');
@@ -279,7 +276,7 @@ describe('RecipeListPage', () => {
 
   it('should navigate to /recipes/new when onCreateRecipe is called', () => {
     component.onCreateRecipe();
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/recipes/new' ]);
+    expect(router.navigate).toHaveBeenCalledWith([ '/recipes/new' ]);
   });
 
   it('should trigger placeholder action handlers without error', () => {

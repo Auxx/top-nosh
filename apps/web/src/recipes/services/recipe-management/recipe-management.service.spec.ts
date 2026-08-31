@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CreateRecipeDto } from '../../models/create-recipe.types';
+import { RecipeDetails } from '../../models/recipe-details.types';
 import {
   CuisinesCategoriesResponse,
   defaultRecipeListFilters,
@@ -75,6 +76,7 @@ describe('RecipeManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadRecipeList')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadCuisinesCategories')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'createRecipe')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'getRecipeById')).toBe(true);
   });
 
   it('should return default filters with page 1 and ensure immutability', () => {
@@ -298,5 +300,70 @@ describe('RecipeManagementService', () => {
     postReq.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
 
     httpTesting.expectNone('http://localhost:3000/api/recipes?page=1');
+  });
+
+  it('should fetch recipe details by id', done => {
+    const mockRecipeDetails: RecipeDetails = {
+      id: 'recipe-456',
+      name: 'Spaghetti Bolognese',
+      cuisine: 'Italian',
+      category: 'Pasta',
+      description: 'Classic meat sauce pasta',
+      servings: 4,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      stages: [
+        {
+          id: 'stage-1',
+          recipeId: 'recipe-456',
+          name: 'Sauce Preparation',
+          order: 0,
+          steps: [
+            {
+              id: 'step-1',
+              stageId: 'stage-1',
+              name: 'Simmer sauce',
+              description: 'Simmer on low heat for 2 hours',
+              order: 0
+            }
+          ],
+          ingredients: [
+            {
+              id: 'ing-1',
+              stageId: 'stage-1',
+              name: 'Minced beef',
+              quantity: 500,
+              unit: 'GRAMS',
+              order: 0
+            }
+          ]
+        }
+      ]
+    };
+
+    service.getRecipeById('recipe-456').subscribe(recipe => {
+      expect(recipe).toEqual(mockRecipeDetails);
+      done();
+    });
+
+    const req = httpTesting.expectOne('http://localhost:3000/api/recipes/recipe-456');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockRecipeDetails);
+  });
+
+  it('should propagate error when getRecipeById fails with 404', done => {
+    service.getRecipeById('non-existent-id').subscribe({
+      next: () => {
+        fail('Should have failed');
+      },
+      error: error => {
+        expect(error.status).toBe(404);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('http://localhost:3000/api/recipes/non-existent-id');
+    expect(req.request.method).toBe('GET');
+    req.flush('Not Found', { status: 404, statusText: 'Not Found' });
   });
 });
