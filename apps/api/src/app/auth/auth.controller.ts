@@ -1,12 +1,23 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto, ChangePasswordResponse } from './dto/change-password.dto';
 import { LoginDto, LoginResponse } from './dto/login.dto';
+import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('onboarding-required')
+  async onboardingRequired(): Promise<OnboardingRequiredResponse> {
+    return this.authService.onboardingRequired();
+  }
+
+  @Post('onboard-user')
+  async onboardUser(@Body() onboardUserDto: OnboardUserDto): Promise<OnboardUserResponse> {
+    return this.authService.onboardUser(onboardUserDto);
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

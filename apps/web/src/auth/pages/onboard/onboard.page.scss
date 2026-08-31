@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+.onboard-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.onboard-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+}
+
+.onboard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  margin-top: 0.5rem;
+}

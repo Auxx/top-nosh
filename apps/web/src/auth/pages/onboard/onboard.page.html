@@ -1,0 +1,71 @@
+@let loading = isLoading();
+
+<div class="onboard-container">
+  <mat-card class="onboard-card">
+
+    <mat-card-header>
+      <mat-card-title>First User Onboarding</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="onboard-form">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Full Name</mat-label>
+
+          <input matInput type="text" formControlName="fullName" placeholder="Full Name"/>
+
+          <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
+            Full name is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+
+          <input matInput type="email" formControlName="email" placeholder="name@example.com"/>
+
+          <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+            Email is required
+          </mat-error>
+
+          <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+
+          <input matInput type="password" formControlName="password" placeholder="Password"/>
+
+          <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+            Password is required
+          </mat-error>
+
+          <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
+            Password must be at least 12 characters long
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-flat-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="form.invalid || loading"
+                  class="full-width">
+            @if (loading) {
+              Onboarding...
+            } @else {
+              Onboard
+            }
+          </button>
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+</div>

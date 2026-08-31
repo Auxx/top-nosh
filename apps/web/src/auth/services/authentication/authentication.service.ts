@@ -2,6 +2,9 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
+import { OnboardingRequiredResponse, OnboardUserPayload, OnboardUserResponse } from './authentication.service.types';
+
+export * from './authentication.service.types';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -59,6 +62,22 @@ export class AuthenticationService {
 
   readonly state = (): Observable<AuthState> => this.state$.asObservable();
 
+  readonly onboardingRequired = (): Observable<boolean> =>
+    this.http
+      .get<OnboardingRequiredResponse>(
+        '/auth/onboarding-required',
+        { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
+      )
+      .pipe(map(response => response.onboardingRequired));
+
+  readonly onboardUser = (payload: OnboardUserPayload): Observable<OnboardUserResponse> =>
+    this.http
+      .post<OnboardUserResponse>(
+        '/auth/onboard-user',
+        payload,
+        { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
+      );
+
   readonly login = (email: string, password: string): Observable<{ forcePasswordChange: boolean; }> =>
     this.http
       .post<{ token: string; forcePasswordChange: boolean; }>(
@@ -71,17 +90,13 @@ export class AuthenticationService {
           this.updateState({ isAuthenticated: true, token: response.token });
 
           return { forcePasswordChange: response.forcePasswordChange };
-        }),
-        catchError(error => throwError(() => error))
+        })
       );
 
   readonly changePassword = (password: string): Observable<boolean> =>
     this.http
       .post<{ message: string; }>('/auth/change-password', { password })
-      .pipe(
-        map(() => true),
-        catchError(error => throwError(() => error))
-      );
+      .pipe(map(() => true));
 
   readonly logout = (): void => {
     this.updateState(guestAuthState());

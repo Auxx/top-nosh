@@ -14,7 +14,9 @@ describe('AuthService', () => {
   let service: AuthService;
   let prismaService: {
     user: {
+      count: jest.Mock;
       findUnique: jest.Mock;
+      create: jest.Mock;
       update: jest.Mock;
     };
   };
@@ -37,7 +39,9 @@ describe('AuthService', () => {
 
     prismaService = {
       user: {
+        count: jest.fn(),
         findUnique: jest.fn(),
+        create: jest.fn(),
         update: jest.fn()
       }
     };
@@ -61,6 +65,68 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+  });
+
+  describe('onboardingRequired', () => {
+    it('should return onboardingRequired true when count is 0', async () => {
+      prismaService.user.count.mockResolvedValue(0);
+
+      const result = await service.onboardingRequired();
+
+      expect(prismaService.user.count).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ onboardingRequired: true });
+    });
+
+    it('should return onboardingRequired false when count is greater than 0', async () => {
+      prismaService.user.count.mockResolvedValue(1);
+
+      const result = await service.onboardingRequired();
+
+      expect(prismaService.user.count).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ onboardingRequired: false });
+    });
+  });
+
+  describe('onboardUser', () => {
+    const onboardDto = {
+      fullName: 'Admin User',
+      email: 'admin@example.com',
+      password: 'SuperSecret1234!'
+    };
+
+    it('should create user and return message when no users exist', async () => {
+      prismaService.user.count.mockResolvedValue(0);
+      (argon2.hash as jest.Mock).mockResolvedValue('$argon2id$v=19$mockedhashedpassword');
+      prismaService.user.create.mockResolvedValue({
+        id: 'new-user-id',
+        ...onboardDto,
+        passwordHash: '$argon2id$v=19$mockedhashedpassword',
+        forcePasswordChange: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+
+      const result = await service.onboardUser(onboardDto);
+
+      expect(prismaService.user.count).toHaveBeenCalledTimes(1);
+      expect(argon2.hash).toHaveBeenCalledWith('SuperSecret1234!');
+      expect(prismaService.user.create).toHaveBeenCalledWith({
+        data: {
+          fullName: 'Admin User',
+          email: 'admin@example.com',
+          passwordHash: '$argon2id$v=19$mockedhashedpassword',
+          forcePasswordChange: false
+        }
+      });
+      expect(result).toEqual({ message: 'User onboarded successfully' });
+    });
+
+    it('should throw UnauthorizedException when users already exist', async () => {
+      prismaService.user.count.mockResolvedValue(1);
+
+      await expect(service.onboardUser(onboardDto)).rejects.toThrow(UnauthorizedException);
+      expect(prismaService.user.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('validateUser', () => {

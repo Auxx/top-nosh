@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Onboarding
+- [x] Onboarding
 - [x] Edit Recipe page
 - [x] Delete Recipe
 - [ ] Dashboard page

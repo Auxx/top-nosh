@@ -37,15 +37,145 @@ describe('Auth Endpoints (Integration)', () => {
 
   afterAll(async () => {
     const prisma = moduleRef.get<PrismaService>(PrismaService);
+    // Ensure aux user exists for any other test or teardown
+    await prisma.user.deleteMany({});
     const passwordHash = await argon2.hash('Pass1234!!!!');
-    await prisma.user.update({
-      where: { email: 'aux@hexmode.org' },
+    await prisma.user.create({
       data: {
+        id: '1',
+        fullName: 'Aux',
+        email: 'aux@hexmode.org',
         passwordHash,
         forcePasswordChange: true
       }
     });
     await app.close();
+  });
+
+  describe('GET /api/auth/onboarding-required', () => {
+    it('should return onboardingRequired: false when users exist', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/auth/onboarding-required')
+        .expect(200);
+
+      expect(response.body).toEqual({ onboardingRequired: false });
+    });
+  });
+
+  describe('POST /api/auth/onboard-user', () => {
+    it('should return 401 Unauthorized when users already exist', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/auth/onboard-user')
+        .send({
+          fullName: 'New Admin',
+          email: 'admin@example.com',
+          password: 'Password12345!'
+        })
+        .expect(401);
+
+      expect(response.body.message).toContain('Onboarding is not allowed when users already exist');
+    });
+
+    it('should return 400 Bad Request when fullName is missing or empty', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/onboard-user')
+        .send({
+          fullName: '',
+          email: 'admin@example.com',
+          password: 'Password12345!'
+        })
+        .expect(400);
+    });
+
+    it('should return 400 Bad Request when email is invalid', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/onboard-user')
+        .send({
+          fullName: 'New Admin',
+          email: 'not-an-email',
+          password: 'Password12345!'
+        })
+        .expect(400);
+    });
+
+    it('should return 400 Bad Request when password is shorter than 12 characters', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/onboard-user')
+        .send({
+          fullName: 'New Admin',
+          email: 'admin@example.com',
+          password: 'Short123!'
+        })
+        .expect(400);
+    });
+
+    it('should successfully onboard the first user when no users exist', async () => {
+      const prisma = moduleRef.get<PrismaService>(PrismaService);
+      await prisma.user.deleteMany({});
+
+      // 1. Verify onboarding is required
+      const checkResponse = await request(app.getHttpServer())
+        .get('/api/auth/onboarding-required')
+        .expect(200);
+
+      expect(checkResponse.body).toEqual({ onboardingRequired: true });
+
+      // 2. Onboard initial user
+      const onboardResponse = await request(app.getHttpServer())
+        .post('/api/auth/onboard-user')
+        .send({
+          fullName: 'First Admin',
+          email: 'firstadmin@example.com',
+          password: 'SuperSecurePassword123!'
+        })
+        .expect(201);
+
+      expect(onboardResponse.body).toEqual({
+        message: 'User onboarded successfully'
+      });
+
+      // 3. Verify onboarding is now false
+      const checkAfter = await request(app.getHttpServer())
+        .get('/api/auth/onboarding-required')
+        .expect(200);
+
+      expect(checkAfter.body).toEqual({ onboardingRequired: false });
+
+      // 4. Verify the new user can log in
+      const loginResponse = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: 'firstadmin@example.com',
+          password: 'SuperSecurePassword123!'
+        })
+        .expect(200);
+
+      expect(loginResponse.body).toHaveProperty('token');
+      expect(loginResponse.body.forcePasswordChange).toBe(false);
+
+      // 5. Verify subsequent onboarding attempt is rejected with 401
+      await request(app.getHttpServer())
+        .post('/api/auth/onboard-user')
+        .send({
+          fullName: 'Second Admin',
+          email: 'secondadmin@example.com',
+          password: 'SuperSecurePassword123!'
+        })
+        .expect(401);
+
+      // Restore aux user
+      await prisma.user.deleteMany({});
+      const passwordHash = await argon2.hash('Pass1234!!!!');
+      await prisma.user.create({
+        data: {
+          id: '1',
+          fullName: 'Aux',
+          email: 'aux@hexmode.org',
+          passwordHash,
+          forcePasswordChange: true
+        }
+      });
+    });
   });
 
   describe('POST /api/auth/login', () => {

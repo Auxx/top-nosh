@@ -35,6 +35,8 @@ describe('AuthenticationService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'login')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'changePassword')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'logout')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'onboardingRequired')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'onboardUser')).toBe(true);
   });
 
   it('should initialize with default unauthenticated state when localStorage is empty', done => {
@@ -185,6 +187,80 @@ describe('AuthenticationService', () => {
 
     const req = httpTesting.expectOne('/auth/login');
     req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
+  });
+
+  it('should send GET request to /auth/onboarding-required with HTTP_AUTH_ENABLED false and return boolean', done => {
+    service.onboardingRequired().subscribe({
+      next: result => {
+        expect(result).toBe(true);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/auth/onboarding-required');
+    expect(req.request.method).toBe('GET');
+    expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
+    req.flush({ onboardingRequired: true });
+  });
+
+  it('should propagate error on onboardingRequired failure', done => {
+    service.onboardingRequired().subscribe({
+      next: () => {
+        fail('Should not succeed on 500');
+      },
+      error: error => {
+        expect(error.status).toBe(500);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/auth/onboarding-required');
+    req.flush({ message: 'Internal server error' }, { status: 500, statusText: 'Internal Server Error' });
+  });
+
+  it('should send POST request to /auth/onboard-user with HTTP_AUTH_ENABLED false and return response', done => {
+    const payload = {
+      fullName: 'Admin User',
+      email: 'admin@example.com',
+      password: 'SuperSecretPassword123!'
+    };
+
+    service.onboardUser(payload).subscribe({
+      next: result => {
+        expect(result).toEqual({ message: 'User onboarded successfully' });
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/auth/onboard-user');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(payload);
+    expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
+    req.flush({ message: 'User onboarded successfully' });
+  });
+
+  it('should propagate error on onboardUser failure', done => {
+    const payload = {
+      fullName: 'Admin User',
+      email: 'admin@example.com',
+      password: 'SuperSecretPassword123!'
+    };
+
+    service.onboardUser(payload).subscribe({
+      next: () => {
+        fail('Should not succeed on 401');
+      },
+      error: error => {
+        expect(error.status).toBe(401);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/auth/onboard-user');
+    req.flush({ message: 'Onboarding is not allowed when users already exist' }, {
+      status: 401,
+      statusText: 'Unauthorized'
+    });
   });
 
   it('should reset state and update localStorage on logout', done => {

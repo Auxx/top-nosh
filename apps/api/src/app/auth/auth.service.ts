@@ -4,6 +4,7 @@ import { PrismaService } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
 import { ChangePasswordResponse } from './dto/change-password.dto';
 import { JwtPayload, LoginDto, LoginResponse } from './dto/login.dto';
+import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,33 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService
   ) {}
+
+  async onboardingRequired(): Promise<OnboardingRequiredResponse> {
+    const userCount = await this.prisma.user.count();
+    return {
+      onboardingRequired: userCount === 0
+    };
+  }
+
+  async onboardUser(dto: OnboardUserDto): Promise<OnboardUserResponse> {
+    const userCount = await this.prisma.user.count();
+    if (userCount > 0) {
+      throw new UnauthorizedException('Onboarding is not allowed when users already exist');
+    }
+
+    const passwordHash = await argon2.hash(dto.password);
+
+    await this.prisma.user.create({
+      data: {
+        fullName: dto.fullName,
+        email: dto.email,
+        passwordHash,
+        forcePasswordChange: false
+      }
+    });
+
+    return { message: 'User onboarded successfully' };
+  }
 
   async validateUser(email: string, pass: string) {
     const user = await this.prisma.user.findUnique({

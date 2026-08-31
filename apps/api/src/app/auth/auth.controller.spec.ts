@@ -4,12 +4,19 @@ import { AuthService } from './auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let authService: { login: jest.Mock; changePassword: jest.Mock; };
+  let authService: {
+    login: jest.Mock;
+    changePassword: jest.Mock;
+    onboardingRequired: jest.Mock;
+    onboardUser: jest.Mock;
+  };
 
   beforeEach(async () => {
     authService = {
       login: jest.fn(),
-      changePassword: jest.fn()
+      changePassword: jest.fn(),
+      onboardingRequired: jest.fn(),
+      onboardUser: jest.fn()
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -27,6 +34,35 @@ describe('AuthController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('onboardingRequired', () => {
+    it('should delegate onboardingRequired to AuthService.onboardingRequired and return result', async () => {
+      const expectedResponse = { onboardingRequired: true };
+      authService.onboardingRequired.mockResolvedValue(expectedResponse);
+
+      const result = await controller.onboardingRequired();
+
+      expect(authService.onboardingRequired).toHaveBeenCalled();
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('onboardUser', () => {
+    it('should delegate onboardUser to AuthService.onboardUser and return result', async () => {
+      const onboardUserDto = {
+        fullName: 'Admin User',
+        email: 'admin@example.com',
+        password: 'SuperSecret1234!'
+      };
+      const expectedResponse = { message: 'User onboarded successfully' };
+      authService.onboardUser.mockResolvedValue(expectedResponse);
+
+      const result = await controller.onboardUser(onboardUserDto);
+
+      expect(authService.onboardUser).toHaveBeenCalledWith(onboardUserDto);
+      expect(result).toEqual(expectedResponse);
+    });
   });
 
   describe('login', () => {
