@@ -1,8 +1,10 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { ConfirmationDialog } from '@top-nosh/ui';
+import { BehaviorSubject, of } from 'rxjs';
 import {
   CuisinesCategoriesResponse,
   PaginatedRecipeResponse,
@@ -31,10 +33,15 @@ describe('RecipeListPage', () => {
     setPage: jest.Mock;
     resetFilters: jest.Mock;
     reloadCuisinesCategories: jest.Mock;
+    deleteRecipe: jest.Mock;
   };
 
   let breakpointObserverMock: {
     observe: jest.Mock;
+  };
+
+  let dialogMock: {
+    open: jest.Mock;
   };
 
   let router: Router;
@@ -87,11 +94,18 @@ describe('RecipeListPage', () => {
       setSearch: jest.fn(),
       setPage: jest.fn(),
       resetFilters: jest.fn(),
-      reloadCuisinesCategories: jest.fn()
+      reloadCuisinesCategories: jest.fn(),
+      deleteRecipe: jest.fn().mockReturnValue(of(true))
     };
 
     breakpointObserverMock = {
       observe: jest.fn().mockReturnValue(mockBreakpoint$.asObservable())
+    };
+
+    dialogMock = {
+      open: jest.fn().mockReturnValue({
+        afterClosed: jest.fn().mockReturnValue(of(true))
+      })
     };
 
     await TestBed.configureTestingModule({
@@ -100,7 +114,8 @@ describe('RecipeListPage', () => {
         provideAnimationsAsync(),
         provideRouter([]),
         { provide: RecipeManagementService, useValue: recipeServiceMock },
-        { provide: BreakpointObserver, useValue: breakpointObserverMock }
+        { provide: BreakpointObserver, useValue: breakpointObserverMock },
+        { provide: MatDialog, useValue: dialogMock }
       ]
     }).compileComponents();
 
@@ -279,8 +294,57 @@ describe('RecipeListPage', () => {
     expect(router.navigate).toHaveBeenCalledWith([ '/recipes/new' ]);
   });
 
-  it('should trigger placeholder action handlers without error', () => {
+  it('should trigger placeholder action handler for edit without error', () => {
     expect(() => component.onEditRecipe(sampleRecipes[0])).not.toThrow();
-    expect(() => component.onDeleteRecipe(sampleRecipes[0])).not.toThrow();
+  });
+
+  it('should open ConfirmationDialog with correct data when onDeleteRecipe is called', () => {
+    component.onDeleteRecipe(sampleRecipes[0]);
+
+    expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialog, {
+      data: {
+        title: 'Delete Recipe',
+        content: 'Are you sure you want to delete "Spaghetti Bolognese"?'
+      }
+    });
+  });
+
+  it('should call recipeService.deleteRecipe when confirmation dialog is confirmed', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(true))
+    });
+
+    component.onDeleteRecipe(sampleRecipes[0]);
+
+    expect(recipeServiceMock.deleteRecipe).toHaveBeenCalledWith('1');
+  });
+
+  it('should not call recipeService.deleteRecipe when confirmation dialog is cancelled', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(false))
+    });
+
+    component.onDeleteRecipe(sampleRecipes[0]);
+
+    expect(recipeServiceMock.deleteRecipe).not.toHaveBeenCalled();
+  });
+
+  it('should not call recipeService.deleteRecipe when confirmation dialog is dismissed with undefined', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(undefined))
+    });
+
+    component.onDeleteRecipe(sampleRecipes[0]);
+
+    expect(recipeServiceMock.deleteRecipe).not.toHaveBeenCalled();
+  });
+
+  it('should trigger onDeleteRecipe when clicking delete button in table row', () => {
+    const deleteBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.delete-btn');
+    jest.spyOn(component, 'onDeleteRecipe');
+
+    deleteBtn.click();
+
+    expect(component.onDeleteRecipe).toHaveBeenCalledWith(sampleRecipes[0]);
   });
 });

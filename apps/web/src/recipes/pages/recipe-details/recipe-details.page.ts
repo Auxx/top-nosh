@@ -1,12 +1,13 @@
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +15,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs';
+import { ConfirmationDialog } from '@top-nosh/ui';
 import { IngredientDetails, RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -46,6 +47,8 @@ export class RecipeDetailsPage {
   private readonly recipeService = inject(RecipeManagementService);
 
   private readonly breakpointObserver = inject(BreakpointObserver);
+
+  private readonly dialog = inject(MatDialog);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -212,7 +215,30 @@ export class RecipeDetailsPage {
   };
 
   readonly onDeleteRecipe = (): void => {
-    // Non-functional placeholder
+    const currentRecipe = this.recipe();
+    if (!currentRecipe) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
+        title: 'Delete Recipe',
+        content: `Are you sure you want to delete "${currentRecipe.name}"?`
+      }
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.recipeService
+            .deleteRecipe(currentRecipe.id)
+            .subscribe(() => {
+              this.router.navigate([ '/recipes' ]);
+            });
+        }
+      });
   };
 
   readonly onAddToShoppingList = (ingredient: IngredientDetails): void => {

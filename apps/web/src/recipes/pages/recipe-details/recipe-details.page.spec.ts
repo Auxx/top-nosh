@@ -1,7 +1,9 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { ConfirmationDialog } from '@top-nosh/ui';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -13,6 +15,10 @@ describe('RecipeDetailsPage', () => {
 
   let mockRecipeService: {
     getRecipeById: jest.Mock;
+    deleteRecipe: jest.Mock;
+  };
+  let dialogMock: {
+    open: jest.Mock;
   };
   let router: Router;
   let mockParamMap$: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
@@ -76,7 +82,14 @@ describe('RecipeDetailsPage', () => {
     mockBreakpoint$ = new BehaviorSubject<BreakpointState>({ matches: false, breakpoints: {} });
 
     mockRecipeService = {
-      getRecipeById: jest.fn().mockReturnValue(of(mockRecipeDetails))
+      getRecipeById: jest.fn().mockReturnValue(of(mockRecipeDetails)),
+      deleteRecipe: jest.fn().mockReturnValue(of(true))
+    };
+
+    dialogMock = {
+      open: jest.fn().mockReturnValue({
+        afterClosed: jest.fn().mockReturnValue(of(true))
+      })
     };
 
     const mockBreakpointObserver = {
@@ -95,7 +108,8 @@ describe('RecipeDetailsPage', () => {
           }
         },
         { provide: RecipeManagementService, useValue: mockRecipeService },
-        { provide: BreakpointObserver, useValue: mockBreakpointObserver }
+        { provide: BreakpointObserver, useValue: mockBreakpointObserver },
+        { provide: MatDialog, useValue: dialogMock }
       ]
     }).compileComponents();
 
@@ -356,8 +370,68 @@ describe('RecipeDetailsPage', () => {
 
   it('should handle placeholder actions without errors', () => {
     expect(() => component.onEditRecipe()).not.toThrow();
-    expect(() => component.onDeleteRecipe()).not.toThrow();
     expect(() => component.onAddToShoppingList(mockRecipeDetails.stages[0].ingredients[0])).not.toThrow();
+  });
+
+  it('should open ConfirmationDialog with correct data when onDeleteRecipe is called', () => {
+    component.onDeleteRecipe();
+
+    expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialog, {
+      data: {
+        title: 'Delete Recipe',
+        content: 'Are you sure you want to delete "Spaghetti Bolognese"?'
+      }
+    });
+  });
+
+  it('should call recipeService.deleteRecipe and navigate to /recipes when confirmation dialog is confirmed', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(true))
+    });
+
+    component.onDeleteRecipe();
+
+    expect(mockRecipeService.deleteRecipe).toHaveBeenCalledWith('test-recipe-1');
+    expect(router.navigate).toHaveBeenCalledWith([ '/recipes' ]);
+  });
+
+  it('should not delete or navigate when confirmation dialog is cancelled', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(false))
+    });
+
+    component.onDeleteRecipe();
+
+    expect(mockRecipeService.deleteRecipe).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should not delete or navigate when confirmation dialog is dismissed with undefined', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(undefined))
+    });
+
+    component.onDeleteRecipe();
+
+    expect(mockRecipeService.deleteRecipe).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should do nothing when recipe is null on onDeleteRecipe', () => {
+    component.recipe.set(null);
+    component.onDeleteRecipe();
+
+    expect(dialogMock.open).not.toHaveBeenCalled();
+    expect(mockRecipeService.deleteRecipe).not.toHaveBeenCalled();
+  });
+
+  it('should trigger onDeleteRecipe when clicking delete recipe button in header', () => {
+    jest.spyOn(component, 'onDeleteRecipe');
+    const deleteBtn = fixture.nativeElement.querySelector('[data-testid="delete-recipe-btn"]');
+
+    deleteBtn.click();
+
+    expect(component.onDeleteRecipe).toHaveBeenCalled();
   });
 
   it('should handle empty recipe stages safely', () => {

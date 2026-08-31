@@ -33,3 +33,7 @@ export interface PaginatedRecipeResponse {
   page: number;
   totalPages: number;
 }
+
+export interface DeleteRecipeResponse {
+  message: string;
+}

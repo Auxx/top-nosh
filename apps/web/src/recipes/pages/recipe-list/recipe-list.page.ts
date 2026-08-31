@@ -5,6 +5,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +13,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { ConfirmationDialog } from '@top-nosh/ui';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
 import { RecipeListItem } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -41,6 +43,7 @@ export class RecipeListPage {
   private readonly recipeService = inject(RecipeManagementService);
   private readonly router = inject(Router);
   private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly searchSubject = new Subject<string>();
@@ -140,7 +143,20 @@ export class RecipeListPage {
   };
 
   readonly onDeleteRecipe = (recipe: RecipeListItem): void => {
-    // Placeholder for future delete recipe feature
-    void recipe;
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
+        title: 'Delete Recipe',
+        content: `Are you sure you want to delete "${recipe.name}"?`
+      }
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.recipeService.deleteRecipe(recipe.id).subscribe();
+        }
+      });
   };
 }

@@ -76,6 +76,7 @@ describe('RecipeManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadRecipeList')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadCuisinesCategories')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'createRecipe')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'deleteRecipe')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'getRecipeById')).toBe(true);
   });
 
@@ -306,6 +307,52 @@ describe('RecipeManagementService', () => {
     const postReq = httpTesting.expectOne('/recipes');
     expect(postReq.request.method).toBe('POST');
     postReq.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
+
+    httpTesting.expectNone('/recipes?page=1');
+  });
+
+  it('should delete recipe by id, reload recipe list, and emit true', done => {
+    let recipeListEmissions = 0;
+    service.recipes().subscribe(() => {
+      recipeListEmissions++;
+    });
+
+    const initialFetch = httpTesting.expectOne('/recipes?page=1');
+    initialFetch.flush(mockRecipesResponse);
+
+    service.deleteRecipe('recipe-123').subscribe(result => {
+      expect(result).toBe(true);
+      done();
+    });
+
+    const deleteReq = httpTesting.expectOne('/recipes/recipe-123');
+    expect(deleteReq.request.method).toBe('DELETE');
+    deleteReq.flush({ message: 'Recipe deleted successfully' });
+
+    const reloadFetch = httpTesting.expectOne('/recipes?page=1');
+    reloadFetch.flush(mockRecipesResponse);
+
+    const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
+    expect(cuisinesReq.request.method).toBe('GET');
+    cuisinesReq.flush(mockCuisinesCategories);
+
+    expect(recipeListEmissions).toBe(2);
+  });
+
+  it('should propagate error when deleteRecipe fails without reloading recipe list', done => {
+    service.deleteRecipe('recipe-fail').subscribe({
+      next: () => {
+        fail('Should have failed');
+      },
+      error: error => {
+        expect(error.status).toBe(500);
+        done();
+      }
+    });
+
+    const deleteReq = httpTesting.expectOne('/recipes/recipe-fail');
+    expect(deleteReq.request.method).toBe('DELETE');
+    deleteReq.flush('Internal Server Error', { status: 500, statusText: 'Internal Server Error' });
 
     httpTesting.expectNone('/recipes?page=1');
   });

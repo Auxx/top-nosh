@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { CreateRecipeDto, RecipeCreatedResponse } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import {
   CuisinesCategoriesResponse,
   defaultRecipeListFilters,
+  DeleteRecipeResponse,
   PaginatedRecipeResponse,
   RecipeListFilters
 } from '../../models/recipe-list.types';
@@ -113,6 +114,14 @@ export class RecipeManagementService {
     this.http
       .post<RecipeCreatedResponse>('/recipes', recipe)
       .pipe(tap(() => this.reloadRecipeList()));
+
+  readonly deleteRecipe = (id: string): Observable<boolean> =>
+    this.http
+      .delete<DeleteRecipeResponse>(`/recipes/${id}`)
+      .pipe(
+        tap(() => this.reloadRecipeList()),
+        map(() => true)
+      );
 
   readonly getRecipeById = (id: string): Observable<RecipeDetails> => this.http.get<RecipeDetails>(`/recipes/${id}`);
 }
