@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { CreateRecipeDto } from '../../models/create-recipe.types';
 import {
   CuisinesCategoriesResponse,
   defaultRecipeListFilters,
@@ -71,7 +72,9 @@ describe('RecipeManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'setSearch')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'setPage')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'resetFilters')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'reloadRecipeList')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadCuisinesCategories')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'createRecipe')).toBe(true);
   });
 
   it('should return default filters with page 1 and ensure immutability', () => {
@@ -210,5 +213,90 @@ describe('RecipeManagementService', () => {
 
     const req = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
     req.flush('Error fetching recipes', { status: 500, statusText: 'Server Error' });
+  });
+
+  it('should re-fetch recipes when reloadRecipeList is called', () => {
+    let emissionCount = 0;
+    service.recipes().subscribe(() => {
+      emissionCount++;
+    });
+
+    const req1 = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    req1.flush(mockRecipesResponse);
+
+    service.reloadRecipeList();
+
+    const req2 = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    req2.flush(mockRecipesResponse);
+
+    expect(emissionCount).toBe(2);
+  });
+
+  it('should create a recipe, trigger recipe list reload, and return the created recipe ID', done => {
+    const newRecipePayload: CreateRecipeDto = {
+      name: 'Tacos Al Pastor',
+      cuisine: 'Mexican',
+      category: 'Tacos',
+      description: 'Authentic mexican street food tacos',
+      servings: 4,
+      stages: [
+        {
+          name: 'Marinade',
+          order: 0,
+          steps: [ { name: 'Blend ingredients', description: 'Blend spices and chiles', order: 0 } ],
+          ingredients: [ { name: 'Pork shoulder', quantity: 1000, unit: 'GRAMS', order: 0 } ]
+        }
+      ]
+    };
+
+    let recipeListEmissions = 0;
+    service.recipes().subscribe(() => {
+      recipeListEmissions++;
+    });
+
+    const initialFetch = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    initialFetch.flush(mockRecipesResponse);
+
+    service.createRecipe(newRecipePayload).subscribe(response => {
+      expect(response).toEqual({ id: 'recipe-123' });
+      done();
+    });
+
+    const postReq = httpTesting.expectOne('http://localhost:3000/api/recipes');
+    expect(postReq.request.method).toBe('POST');
+    expect(postReq.request.body).toEqual(newRecipePayload);
+    postReq.flush({ id: 'recipe-123' });
+
+    const reloadFetch = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    reloadFetch.flush(mockRecipesResponse);
+
+    expect(recipeListEmissions).toBe(2);
+  });
+
+  it('should propagate error when createRecipe fails without reloading recipe list', done => {
+    const newRecipePayload: CreateRecipeDto = {
+      name: 'Failed Recipe',
+      cuisine: 'Italian',
+      category: 'Pasta',
+      description: 'Will fail',
+      servings: 2,
+      stages: []
+    };
+
+    service.createRecipe(newRecipePayload).subscribe({
+      next: () => {
+        fail('Should have failed');
+      },
+      error: error => {
+        expect(error.status).toBe(400);
+        done();
+      }
+    });
+
+    const postReq = httpTesting.expectOne('http://localhost:3000/api/recipes');
+    expect(postReq.request.method).toBe('POST');
+    postReq.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
+
+    httpTesting.expectNone('http://localhost:3000/api/recipes?page=1');
   });
 });

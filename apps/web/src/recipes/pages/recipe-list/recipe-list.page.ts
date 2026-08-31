@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
 import { RecipeListItem } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -37,6 +38,7 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
 export class RecipeListPage {
   private readonly fb = inject(FormBuilder);
   private readonly recipeService = inject(RecipeManagementService);
+  private readonly router = inject(Router);
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -129,9 +131,7 @@ export class RecipeListPage {
     this.recipeService.resetFilters();
   };
 
-  readonly onCreateRecipe = (): void => {
-    // Placeholder for future create recipe feature
-  };
+  readonly onCreateRecipe = () => this.router.navigate([ '/recipes/new' ]);
 
   readonly onEditRecipe = (recipe: RecipeListItem): void => {
     // Placeholder for future edit recipe feature

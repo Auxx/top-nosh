@@ -1,0 +1,264 @@
+.create-recipe-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .header-title {
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin: 0.25rem 0 0;
+      color: var(--mat-sys-on-surface-variant, #666);
+    }
+  }
+}
+
+.recipe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-card {
+  border-radius: 12px;
+
+  mat-card-header {
+    margin-bottom: 1rem;
+
+    mat-card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+
+    .full-width {
+      grid-column: span 2;
+    }
+  }
+}
+
+.stages-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      margin: 0.25rem 0 0;
+      font-size: 0.875rem;
+      color: var(--mat-sys-on-surface-variant, #666);
+    }
+  }
+}
+
+.stages-drop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stage-panel {
+  border-radius: 12px !important;
+  margin-bottom: 1rem !important;
+  border: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+
+  .stage-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    font-size: 1.05rem;
+  }
+
+  .stage-panel-description {
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+.drag-handle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  cursor: grab;
+  color: var(--mat-sys-on-surface-variant, #888);
+  padding: 4px;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .drag-handle-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.stage-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+
+  .stage-name-field {
+    width: 100%;
+  }
+}
+
+.sub-section {
+  background-color: var(--mat-sys-surface-container-low, #fcfcfc);
+  border: 1px solid var(--mat-sys-outline-variant, #ececec);
+  border-radius: 8px;
+  padding: 1rem;
+
+  .sub-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--mat-sys-on-surface, #333);
+    }
+  }
+}
+
+.items-drop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--mat-sys-surface, #fff);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--mat-sys-outline-variant, #e4e4e4);
+  border-radius: 8px;
+
+  &.ingredient-row {
+    flex-wrap: wrap;
+
+    .ingredient-name {
+      flex: 2 1 180px;
+    }
+
+    .ingredient-qty {
+      flex: 1 1 100px;
+    }
+
+    .ingredient-unit {
+      flex: 1 1 140px;
+    }
+  }
+
+  &.step-row {
+    align-items: flex-start;
+
+    .step-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1 1 auto;
+
+      .step-name,
+      .step-desc {
+        width: 100%;
+      }
+    }
+
+    .remove-row-btn {
+      margin-top: 4px;
+    }
+
+    .drag-handle-wrapper {
+      margin-top: 12px;
+    }
+  }
+}
+
+.empty-stages-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  border: 2px dashed var(--mat-sys-outline-variant, #ddd);
+  border-radius: 12px;
+  background-color: var(--mat-sys-surface-container-lowest, #fafafa);
+  color: var(--mat-sys-on-surface-variant, #888);
+
+  .empty-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.empty-sub-list {
+  padding: 1rem;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant, #888);
+  font-size: 0.875rem;
+
+  p {
+    margin: 0;
+  }
+}
+
+.actions-card .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+
+  .submit-btn {
+    min-width: 140px;
+  }
+}

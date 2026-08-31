@@ -1,6 +1,7 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
   CuisinesCategoriesResponse,
@@ -34,6 +35,10 @@ describe('RecipeListPage', () => {
 
   let breakpointObserverMock: {
     observe: jest.Mock;
+  };
+
+  let routerMock: {
+    navigate: jest.Mock;
   };
 
   const sampleRecipes: RecipeListItem[] = [
@@ -91,12 +96,17 @@ describe('RecipeListPage', () => {
       observe: jest.fn().mockReturnValue(mockBreakpoint$.asObservable())
     };
 
+    routerMock = {
+      navigate: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
       imports: [ RecipeListPage ],
       providers: [
         provideAnimationsAsync(),
         { provide: RecipeManagementService, useValue: recipeServiceMock },
-        { provide: BreakpointObserver, useValue: breakpointObserverMock }
+        { provide: BreakpointObserver, useValue: breakpointObserverMock },
+        { provide: Router, useValue: routerMock }
       ]
     }).compileComponents();
 
@@ -267,8 +277,12 @@ describe('RecipeListPage', () => {
     expect(emptyCell.textContent).toContain('No recipes found');
   });
 
+  it('should navigate to /recipes/new when onCreateRecipe is called', () => {
+    component.onCreateRecipe();
+    expect(routerMock.navigate).toHaveBeenCalledWith([ '/recipes/new' ]);
+  });
+
   it('should trigger placeholder action handlers without error', () => {
-    expect(() => component.onCreateRecipe()).not.toThrow();
     expect(() => component.onEditRecipe(sampleRecipes[0])).not.toThrow();
     expect(() => component.onDeleteRecipe(sampleRecipes[0])).not.toThrow();
   });

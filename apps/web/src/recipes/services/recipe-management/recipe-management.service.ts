@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CreateRecipeDto, RecipeCreatedResponse } from '../../models/create-recipe.types';
 import {
   CuisinesCategoriesResponse,
   defaultRecipeListFilters,
@@ -92,6 +93,8 @@ export class RecipeManagementService {
 
   readonly resetFilters = (): void => this.filters$.next(defaultRecipeListFilters());
 
+  readonly reloadRecipeList = (): void => this.filters$.next(this.filters$.value);
+
   readonly reloadCuisinesCategories = (): void => {
     this.http
       .get<CuisinesCategoriesResponse>(`${environment.apiUrl}/recipes/cuisines-categories`)
@@ -102,4 +105,9 @@ export class RecipeManagementService {
         }
       });
   };
+
+  readonly createRecipe = (recipe: CreateRecipeDto): Observable<RecipeCreatedResponse> =>
+    this.http
+      .post<RecipeCreatedResponse>(`${environment.apiUrl}/recipes`, recipe)
+      .pipe(tap(() => this.reloadRecipeList()));
 }
