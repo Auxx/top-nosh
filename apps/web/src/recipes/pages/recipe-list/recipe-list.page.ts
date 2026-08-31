@@ -138,8 +138,9 @@ export class RecipeListPage {
   readonly onCreateRecipe = () => this.router.navigate([ '/recipes/new' ]);
 
   readonly onEditRecipe = (recipe: RecipeListItem): void => {
-    // Placeholder for future edit recipe feature
-    void recipe;
+    this.router.navigate([ '/recipes', recipe.id, 'edit' ], {
+      queryParams: { from: 'list' }
+    });
   };
 
   readonly onDeleteRecipe = (recipe: RecipeListItem): void => {

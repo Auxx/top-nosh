@@ -211,7 +211,12 @@ export class RecipeDetailsPage {
   };
 
   readonly onEditRecipe = (): void => {
-    // Non-functional placeholder
+    const currentRecipe = this.recipe();
+    if (currentRecipe) {
+      this.router.navigate([ '/recipes', currentRecipe.id, 'edit' ], {
+        queryParams: { from: 'details' }
+      });
+    }
   };
 
   readonly onDeleteRecipe = (): void => {

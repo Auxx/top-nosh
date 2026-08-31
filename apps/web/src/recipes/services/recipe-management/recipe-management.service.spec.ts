@@ -10,6 +10,7 @@ import {
   RawCuisinesCategoriesItem,
   RecipeListFilters
 } from '../../models/recipe-list.types';
+import { UpdateRecipeDto } from '../../models/update-recipe.types';
 import { RecipeManagementService } from './recipe-management.service';
 
 describe('RecipeManagementService', () => {
@@ -82,6 +83,7 @@ describe('RecipeManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadRecipeList')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadCuisinesCategories')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'createRecipe')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'updateRecipe')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'deleteRecipe')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'getRecipeById')).toBe(true);
   });
@@ -318,6 +320,84 @@ describe('RecipeManagementService', () => {
     const postReq = httpTesting.expectOne('/recipes');
     expect(postReq.request.method).toBe('POST');
     postReq.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
+
+    httpTesting.expectNone('/recipes?page=1');
+  });
+
+  it('should update recipe by id, reload recipe list, and return updated recipe details', done => {
+    let recipeListEmissions = 0;
+    service.recipes().subscribe(() => {
+      recipeListEmissions++;
+    });
+
+    const initialFetch = httpTesting.expectOne('/recipes?page=1');
+    initialFetch.flush(mockRecipesResponse);
+
+    const updatePayload: UpdateRecipeDto = {
+      name: 'Updated Pasta',
+      cuisine: 'Italian',
+      category: 'Pasta',
+      description: 'Updated description',
+      servings: 4,
+      stages: []
+    };
+
+    const mockUpdatedDetails: RecipeDetails = {
+      id: 'recipe-123',
+      name: 'Updated Pasta',
+      cuisine: 'Italian',
+      category: 'Pasta',
+      description: 'Updated description',
+      servings: 4,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-02T00:00:00.000Z',
+      stages: []
+    };
+
+    service.updateRecipe('recipe-123', updatePayload).subscribe(result => {
+      expect(result).toEqual(mockUpdatedDetails);
+      done();
+    });
+
+    const putReq = httpTesting.expectOne('/recipes/recipe-123');
+    expect(putReq.request.method).toBe('PUT');
+    expect(putReq.request.body).toEqual(updatePayload);
+    putReq.flush(mockUpdatedDetails);
+
+    const reloadFetch = httpTesting.expectOne('/recipes?page=1');
+    reloadFetch.flush(mockRecipesResponse);
+
+    const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
+    expect(cuisinesReq.request.method).toBe('GET');
+    cuisinesReq.flush(mockRawCuisinesCategories);
+
+    expect(recipeListEmissions).toBe(2);
+  });
+
+  it('should propagate error when updateRecipe fails without reloading recipe list', done => {
+    const updatePayload: UpdateRecipeDto = {
+      name: 'Failed Update',
+      cuisine: 'Italian',
+      category: 'Pasta',
+      description: 'Will fail',
+      servings: 2,
+      stages: []
+    };
+
+    service.updateRecipe('recipe-fail', updatePayload).subscribe({
+      next: () => {
+        fail('Should have failed');
+      },
+      error: error => {
+        expect(error.status).toBe(400);
+        done();
+      }
+    });
+
+    const putReq = httpTesting.expectOne('/recipes/recipe-fail');
+    expect(putReq.request.method).toBe('PUT');
+    expect(putReq.request.body).toEqual(updatePayload);
+    putReq.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
 
     httpTesting.expectNone('/recipes?page=1');
   });

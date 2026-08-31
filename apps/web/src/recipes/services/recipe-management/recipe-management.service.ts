@@ -11,6 +11,7 @@ import {
   RawCuisinesCategoriesItem,
   RecipeListFilters
 } from '../../models/recipe-list.types';
+import { UpdateRecipeDto } from '../../models/update-recipe.types';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeManagementService {
@@ -127,6 +128,11 @@ export class RecipeManagementService {
   readonly createRecipe = (recipe: CreateRecipeDto): Observable<RecipeCreatedResponse> =>
     this.http
       .post<RecipeCreatedResponse>('/recipes', recipe)
+      .pipe(tap(() => this.reloadRecipeList()));
+
+  readonly updateRecipe = (id: string, recipe: UpdateRecipeDto): Observable<RecipeDetails> =>
+    this.http
+      .put<RecipeDetails>(`/recipes/${id}`, recipe)
       .pipe(tap(() => this.reloadRecipeList()));
 
   readonly deleteRecipe = (id: string): Observable<boolean> =>

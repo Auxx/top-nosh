@@ -294,8 +294,11 @@ describe('RecipeListPage', () => {
     expect(router.navigate).toHaveBeenCalledWith([ '/recipes/new' ]);
   });
 
-  it('should trigger placeholder action handler for edit without error', () => {
-    expect(() => component.onEditRecipe(sampleRecipes[0])).not.toThrow();
+  it('should navigate to edit recipe page with from=list query param when onEditRecipe is called', () => {
+    component.onEditRecipe(sampleRecipes[0]);
+    expect(router.navigate).toHaveBeenCalledWith([ '/recipes', '1', 'edit' ], {
+      queryParams: { from: 'list' }
+    });
   });
 
   it('should open ConfirmationDialog with correct data when onDeleteRecipe is called', () => {

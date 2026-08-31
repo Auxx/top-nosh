@@ -1,56 +1,107 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import {
-  createIngredientGroup,
-  createRecipeForm,
-  createStageGroup,
-  createStepGroup,
-  RecipeFormComponent
-} from '../../components/recipe-form/recipe-form.component';
-import { CreateRecipeDto, IngredientUnit } from '../../models/create-recipe.types';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { WhenError } from '@top-nosh/ui';
+import { IngredientUnit } from '../../models/create-recipe.types';
+import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
+export function createStepGroup(
+  fb: FormBuilder,
+  step?: { id?: string; name?: string; description?: string; }
+): FormGroup {
+  return fb.group({
+    id: [ step?.id ?? null ],
+    name: [ step?.name ?? '', [ Validators.required ] ],
+    description: [ step?.description ?? '' ]
+  });
+}
+
+export function createIngredientGroup(
+  fb: FormBuilder,
+  ingredient?: { id?: string; name?: string; quantity?: number | null; unit?: IngredientUnit; }
+): FormGroup {
+  return fb.group({
+    id: [ ingredient?.id ?? null ],
+    name: [ ingredient?.name ?? '', [ Validators.required ] ],
+    quantity: [ ingredient?.quantity ?? null, [ Validators.required, Validators.min(0) ] ],
+    unit: [ ingredient?.unit ?? 'GRAMS', [ Validators.required ] ]
+  });
+}
+
+export function createStageGroup(
+  fb: FormBuilder,
+  stage?: {
+    id?: string;
+    name?: string;
+    steps?: Array<{ id?: string; name?: string; description?: string; }>;
+    ingredients?: Array<{ id?: string; name?: string; quantity?: number | null; unit?: IngredientUnit; }>;
+  }
+): FormGroup {
+  return fb.group({
+    id: [ stage?.id ?? null ],
+    name: [ stage?.name ?? '', [ Validators.required ] ],
+    steps: fb.array<FormGroup>((stage?.steps || []).map(step => createStepGroup(fb, step))),
+    ingredients: fb.array<FormGroup>((stage?.ingredients || []).map(ing => createIngredientGroup(fb, ing)))
+  });
+}
+
+export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null): FormGroup {
+  return fb.group({
+    name: [ recipe?.name ?? '', [ Validators.required ] ],
+    cuisine: [ recipe?.cuisine ?? '', [ Validators.required ] ],
+    category: [ recipe?.category ?? '', [ Validators.required ] ],
+    description: [ recipe?.description ?? '' ],
+    servings: [ recipe?.servings ?? null, [ Validators.required, Validators.min(1) ] ],
+    stages: fb.array<FormGroup>((recipe?.stages || []).map(stage => createStageGroup(fb, stage)))
+  });
+}
+
 @Component({
-  selector: 'app-create-recipe',
+  selector: 'app-recipe-form',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatExpansionModule,
     MatButtonModule,
     MatIconModule,
-    RecipeFormComponent
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
+    WhenError
   ],
-  templateUrl: './create-recipe.page.html',
-  styleUrl: './create-recipe.page.scss',
+  templateUrl: './recipe-form.component.html',
+  styleUrl: './recipe-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateRecipePage {
+export class RecipeFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   private readonly recipeService = inject(RecipeManagementService);
 
-  private readonly snackBar = inject(MatSnackBar);
-
-  private readonly router = inject(Router);
-
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly isSubmitting = signal<boolean>(false);
+  readonly form = input.required<FormGroup>();
 
   readonly unitOptions: { value: IngredientUnit; label: string; }[] = [
     { value: 'GRAMS', label: 'Grams (g)' },
     { value: 'ITEM_COUNT', label: 'Item count (pcs)' }
   ];
-
-  readonly recipeForm = createRecipeForm(this.fb);
 
   readonly cuisineInput = signal<string>('');
 
@@ -94,14 +145,23 @@ export class CreateRecipePage {
     return pool.filter(cat => cat.toLowerCase().includes(currentCategoryInput));
   });
 
-  constructor() {
-    this.recipeForm.controls['cuisine'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(val => this.cuisineInput.set(val || ''));
+  ngOnInit(): void {
+    const formGroup = this.form();
+    const cuisineCtrl = formGroup.get('cuisine');
+    if (cuisineCtrl) {
+      this.cuisineInput.set(cuisineCtrl.value || '');
+      cuisineCtrl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(val => this.cuisineInput.set(val || ''));
+    }
 
-    this.recipeForm.controls['category'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(val => this.categoryInput.set(val || ''));
+    const categoryCtrl = formGroup.get('category');
+    if (categoryCtrl) {
+      this.categoryInput.set(categoryCtrl.value || '');
+      categoryCtrl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(val => this.categoryInput.set(val || ''));
+    }
   }
 
   readonly createStepGroup = (name = '', description = ''): FormGroup =>
@@ -115,7 +175,7 @@ export class CreateRecipePage {
 
   readonly createStageGroup = (name = ''): FormGroup => createStageGroup(this.fb, { name });
 
-  readonly getStagesArray = (): FormArray => this.recipeForm.controls['stages'] as FormArray;
+  readonly getStagesArray = (): FormArray => this.form().controls['stages'] as FormArray;
 
   readonly getStepsArray = (stageIndex: number): FormArray =>
     (this.getStagesArray().at(stageIndex) as FormGroup).controls['steps'] as FormArray;
@@ -165,58 +225,5 @@ export class CreateRecipePage {
       event.currentIndex
     );
     this.getIngredientsArray(stageIndex).updateValueAndValidity();
-  };
-
-  readonly onCancel = () => this.router.navigate([ '/recipes' ]);
-
-  readonly onSubmit = (): void => {
-    if (this.recipeForm.invalid || this.isSubmitting()) {
-      return;
-    }
-
-    this.snackBar.dismiss();
-    this.isSubmitting.set(true);
-
-    const formValue = this.recipeForm.getRawValue();
-    const rawStages = (formValue.stages ?? []) as unknown as Array<{
-      name?: string;
-      steps?: Array<{ name?: string; description?: string; }>;
-      ingredients?: Array<{ name?: string; quantity?: number; unit?: IngredientUnit; }>;
-    }>;
-
-    const payload: CreateRecipeDto = {
-      name: (formValue.name || '').trim(),
-      cuisine: (formValue.cuisine || '').trim(),
-      category: (formValue.category || '').trim(),
-      description: (formValue.description || '').trim(),
-      servings: Number(formValue.servings),
-      stages: rawStages.map((stage, stageIdx) => ({
-        name: (stage.name || '').trim(),
-        order: stageIdx,
-        steps: (stage.steps || []).map((step, stepIdx) => ({
-          name: (step.name || '').trim(),
-          description: (step.description || '').trim(),
-          order: stepIdx
-        })),
-        ingredients: (stage.ingredients || []).map((ing, ingIdx) => ({
-          name: (ing.name || '').trim(),
-          quantity: Number(ing.quantity),
-          unit: (ing.unit || 'GRAMS') as IngredientUnit,
-          order: ingIdx
-        }))
-      }))
-    };
-
-    this.recipeService.createRecipe(payload).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.snackBar.open('Recipe created successfully!', undefined, { duration: 5000 });
-        this.router.navigate([ '/recipes' ]).then();
-      },
-      error: () => {
-        this.isSubmitting.set(false);
-        this.snackBar.open('Failed to create recipe. Please check your input and try again.', 'OK');
-      }
-    });
   };
 }

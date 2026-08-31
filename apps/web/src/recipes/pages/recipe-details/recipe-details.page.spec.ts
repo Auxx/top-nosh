@@ -368,8 +368,14 @@ describe('RecipeDetailsPage', () => {
     });
   });
 
-  it('should handle placeholder actions without errors', () => {
-    expect(() => component.onEditRecipe()).not.toThrow();
+  it('should navigate to edit recipe page with from=details query param when onEditRecipe is called', () => {
+    component.onEditRecipe();
+    expect(router.navigate).toHaveBeenCalledWith([ '/recipes', 'test-recipe-1', 'edit' ], {
+      queryParams: { from: 'details' }
+    });
+  });
+
+  it('should handle placeholder shopping list action without error', () => {
     expect(() => component.onAddToShoppingList(mockRecipeDetails.stages[0].ingredients[0])).not.toThrow();
   });
 
