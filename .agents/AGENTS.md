@@ -1,5 +1,10 @@
 # top-nosh workspace layout and structure
 
+`top-nosh` is an NX-powered workspace consisting of multiple projects. Its goal
+is to create a self-hosted web application with a back-end API to manage a
+private collection of food recipes and shopping lists. It is deployed using
+Docker.
+
 ## Tech stack
 
 - NX - manages mono-repo workspace.
@@ -7,8 +12,8 @@
 - Material Design Version 3 - front-end components and design system.
 - NestJs - back-end framework.
 - Prisma - ORM used in back-end projects.
-- SQLite - database used in back-end projects.
-- TypeScript - programming language used in all projects.
+- SQLite - a database used in back-end projects.
+- TypeScript - a programming language used in all projects.
 - SCSS - styling language used in all projects.
 - JWT - JSON Web Token used for authentication.
 - Jest - test runner used for all projects inside the workspace.
