@@ -1,3 +1,5 @@
+@let submitting = isSubmitting();
+
 <div class="create-recipe-container">
   <header class="page-header">
     <div class="header-title">
@@ -325,18 +327,18 @@
     <mat-card class="section-card actions-card">
       <mat-card-content>
         <div class="form-actions">
-          <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSubmitting()">
+          <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="submitting">
             Cancel
           </button>
           <button mat-flat-button
                   color="primary"
                   type="submit"
-                  [disabled]="recipeForm.invalid || isSubmitting()"
+                  [disabled]="recipeForm.invalid || submitting"
                   class="submit-btn">
-            @if (!isSubmitting()) {
+            @if (!submitting) {
               <mat-icon>check</mat-icon>
             }
-            <span>{{ isSubmitting() ? 'Creating Recipe...' : 'Create Recipe' }}</span>
+            <span>{{ submitting ? 'Creating Recipe...' : 'Create Recipe' }}</span>
           </button>
         </div>
       </mat-card-content>

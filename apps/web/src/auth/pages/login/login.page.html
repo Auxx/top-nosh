@@ -1,3 +1,5 @@
+@let loading = isLoading();
+
 <div class="login-container">
   <mat-card class="login-card">
 
@@ -37,9 +39,9 @@
           <button mat-flat-button
                   color="primary"
                   type="submit"
-                  [disabled]="form.invalid || isLoading()"
+                  [disabled]="form.invalid || loading"
                   class="full-width">
-            @if (isLoading()) {
+            @if (loading) {
               Logging in...
             } @else {
               Login

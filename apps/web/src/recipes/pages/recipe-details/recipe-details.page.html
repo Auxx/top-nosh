@@ -1,6 +1,13 @@
+@let loading = isLoading();
+@let error = hasError();
+@let mode = viewMode();
+@let currentServings = servings();
+@let progress = cookingProgress();
+@let ingredients = allIngredients();
+
 <div class="recipe-details-container">
   <!-- Loading State -->
-  @if (isLoading()) {
+  @if (loading) {
     <div class="loading-state" data-testid="loading-spinner">
       <mat-spinner diameter="48"></mat-spinner>
       <p>Loading recipe details...</p>
@@ -8,7 +15,7 @@
   }
 
   <!-- Error / Not Found State -->
-  @if (!isLoading() && hasError()) {
+  @if (!loading && error) {
     <mat-card class="error-card" data-testid="error-state">
       <mat-card-content class="error-content">
         <mat-icon class="error-icon" color="warn">error_outline</mat-icon>
@@ -28,7 +35,7 @@
   }
 
   <!-- Recipe Details Content -->
-  @if (!isLoading() && !hasError() && recipe(); as currentRecipe) {
+  @if (!loading && !error && recipe(); as currentRecipe) {
     <!-- Page Header & Top Bar -->
     <header class="page-header">
       <div class="header-nav">
@@ -74,7 +81,7 @@
 
       <!-- Controls Toolbar: Mode Switcher & Servings Stepper -->
       <div class="controls-toolbar">
-        <mat-button-toggle-group [value]="viewMode()"
+        <mat-button-toggle-group [value]="mode"
                                  (change)="setViewMode($event.value)"
                                  aria-label="Recipe View Mode"
                                  data-testid="mode-toggle-group">
@@ -94,14 +101,14 @@
           <div class="stepper-controls">
             <button mat-icon-button
                     type="button"
-                    [disabled]="servings() <= 1"
+                    [disabled]="currentServings <= 1"
                     (click)="decrementServings()"
                     aria-label="Decrease servings"
                     data-testid="decrement-servings-btn">
               <mat-icon>remove</mat-icon>
             </button>
 
-            <span class="servings-value" data-testid="servings-count">{{ servings() }}</span>
+            <span class="servings-value" data-testid="servings-count">{{ currentServings }}</span>
 
             <button mat-icon-button
                     type="button"
@@ -116,7 +123,7 @@
     </header>
 
     <!-- VIEW MODE: GLANCE -->
-    @if (viewMode() === 'glance') {
+    @if (mode === 'glance') {
       <div class="glance-view-container" data-testid="glance-view">
         <!-- Ingredients Card -->
         <mat-card class="ingredients-card">
@@ -127,16 +134,16 @@
             </mat-card-title>
 
             <mat-card-subtitle>
-              Scaled for {{ servings() }} {{ servings() === 1 ? 'serving' : 'servings' }}
+              Scaled for {{ currentServings }} {{ currentServings === 1 ? 'serving' : 'servings' }}
             </mat-card-subtitle>
           </mat-card-header>
 
           <mat-card-content>
-            @if (allIngredients().length === 0) {
+            @if (ingredients.length === 0) {
               <p class="empty-hint">No ingredients listed for this recipe.</p>
             } @else {
               <ul class="ingredients-list">
-                @for (ingredient of allIngredients(); track ingredient.id || ingredient.name) {
+                @for (ingredient of ingredients; track ingredient.id || ingredient.name) {
                   <li class="ingredient-item" data-testid="ingredient-row">
 
                     <div class="ingredient-info">
@@ -248,7 +255,7 @@
     }
 
     <!-- VIEW MODE: COOKING -->
-    @if (viewMode() === 'cooking') {
+    @if (mode === 'cooking') {
       <div class="cooking-view-container" data-testid="cooking-view">
         <!-- Progress Bar Card -->
         <mat-card class="progress-card" data-testid="cooking-progress-card">
@@ -256,12 +263,12 @@
             <div class="progress-header">
               <span class="progress-title">Cooking Progress</span>
               <span class="progress-stats" data-testid="progress-text">
-                {{ completedStepsCount() }} of {{ totalSteps() }} steps completed ({{ cookingProgress() }}%)
+                {{ completedStepsCount() }} of {{ totalSteps() }} steps completed ({{ progress }}%)
               </span>
             </div>
 
             <mat-progress-bar mode="determinate"
-                              [value]="cookingProgress()"
+                              [value]="progress"
                               class="cooking-progress-bar"
                               data-testid="cooking-progress-bar"/>
           </mat-card-content>
@@ -282,11 +289,11 @@
             </mat-card-header>
 
             <mat-card-content>
-              @if (allIngredients().length === 0) {
+              @if (ingredients.length === 0) {
                 <p class="empty-hint">No ingredients needed.</p>
               } @else {
                 <ul class="checklist">
-                  @for (ingredient of allIngredients(); track ingredient.id || ingredient.name) {
+                  @for (ingredient of ingredients; track ingredient.id || ingredient.name) {
                     <li class="checklist-item"
                         [class.used]="isIngredientUsed(ingredient.id)"
                         data-testid="cooking-ingredient-item">
