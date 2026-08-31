@@ -9,14 +9,11 @@ description: Generates Angular code and provides architectural guidance. Trigger
    best practices and available features can vary significantly between
    versions.
 
-2. Read [typescript.md](references/typescript.md) to understand TypeScript class
-   anatomy, methods, properties, and core concepts.
-
-3. When generating code, follow Angular's style guide and best practices for
+2. When generating code, follow Angular's style guide and best practices for
    maintainability and performance. Use Innit NX generators for scaffolding
    components, services, directives, pipes, and routes to ensure consistency.
 
-4. Once you finish generating code, run tests to ensure there are no build
+3. Once you finish generating code, run tests to ensure there are no build
    errors. If there are errors, analyze the error messages and fix them before
    proceeding. Do not skip this step, as it is critical for ensuring the
    generated code is correct and functional.
