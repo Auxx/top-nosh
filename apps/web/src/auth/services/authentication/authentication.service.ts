@@ -1,7 +1,6 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 
 export interface AuthState {
@@ -60,12 +59,10 @@ export class AuthenticationService {
 
   readonly state = (): Observable<AuthState> => this.state$.asObservable();
 
-  readonly login = (email: string, password: string): Observable<{ forcePasswordChange: boolean; }> => {
-    const url = `${environment().apiUrl}/auth/login`;
-
-    return this.http
+  readonly login = (email: string, password: string): Observable<{ forcePasswordChange: boolean; }> =>
+    this.http
       .post<{ token: string; forcePasswordChange: boolean; }>(
-        url,
+        '/auth/login',
         { email, password },
         { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
       )
@@ -77,18 +74,14 @@ export class AuthenticationService {
         }),
         catchError(error => throwError(() => error))
       );
-  };
 
-  readonly changePassword = (password: string): Observable<boolean> => {
-    const url = `${environment().apiUrl}/auth/change-password`;
-
-    return this.http
-      .post<{ message: string; }>(url, { password })
+  readonly changePassword = (password: string): Observable<boolean> =>
+    this.http
+      .post<{ message: string; }>('/auth/change-password', { password })
       .pipe(
         map(() => true),
         catchError(error => throwError(() => error))
       );
-  };
 
   readonly logout = (): void => {
     this.updateState(guestAuthState());

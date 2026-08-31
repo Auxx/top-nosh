@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { environment } from '../../../environments/environment';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 import { AuthenticationService, AuthState, authStorageKey } from './authentication.service';
 
@@ -121,7 +120,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/login`);
+    const req = httpTesting.expectOne('/auth/login');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ email: testEmail, password: testPassword });
     expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
@@ -138,7 +137,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/change-password`);
+    const req = httpTesting.expectOne('/auth/change-password');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ password: newPassword });
     expect(req.request.headers.has('Authorization')).toBe(false);
@@ -159,7 +158,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/change-password`);
+    const req = httpTesting.expectOne('/auth/change-password');
     req.flush({ message: 'Password is too weak' }, { status: 400, statusText: 'Bad Request' });
   });
 
@@ -184,7 +183,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/login`);
+    const req = httpTesting.expectOne('/auth/login');
     req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
   });
 

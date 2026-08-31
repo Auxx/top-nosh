@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { CreateRecipeDto, RecipeCreatedResponse } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import {
@@ -42,7 +41,7 @@ export class RecipeManagementService {
         params = params.set('category', filters.category);
       }
 
-      return this.http.get<PaginatedRecipeResponse>(`${environment().apiUrl}/recipes`, { params }).pipe(
+      return this.http.get<PaginatedRecipeResponse>('/recipes', { params }).pipe(
         catchError(() =>
           of({
             data: [],
@@ -98,7 +97,7 @@ export class RecipeManagementService {
 
   readonly reloadCuisinesCategories = (): void => {
     this.http
-      .get<CuisinesCategoriesResponse>(`${environment().apiUrl}/recipes/cuisines-categories`)
+      .get<CuisinesCategoriesResponse>('/recipes/cuisines-categories')
       .subscribe({
         next: data => this.cuisinesCategories$.next(data),
         error: () => {
@@ -109,9 +108,8 @@ export class RecipeManagementService {
 
   readonly createRecipe = (recipe: CreateRecipeDto): Observable<RecipeCreatedResponse> =>
     this.http
-      .post<RecipeCreatedResponse>(`${environment().apiUrl}/recipes`, recipe)
+      .post<RecipeCreatedResponse>('/recipes', recipe)
       .pipe(tap(() => this.reloadRecipeList()));
 
-  readonly getRecipeById = (id: string): Observable<RecipeDetails> =>
-    this.http.get<RecipeDetails>(`${environment().apiUrl}/recipes/${id}`);
+  readonly getRecipeById = (id: string): Observable<RecipeDetails> => this.http.get<RecipeDetails>(`/recipes/${id}`);
 }
