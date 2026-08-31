@@ -1,7 +1,7 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { switchMap, take, throwError } from 'rxjs';
+import { catchError, switchMap, take, throwError } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { HTTP_AUTH_ENABLED } from './auth.interceptor.types';
 
@@ -30,7 +30,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           }
         });
 
-        return next(authReq);
+        return next(authReq).pipe(
+          catchError((error: unknown) => {
+            if (error instanceof HttpErrorResponse && error.status === 401) {
+              authenticationService.logout();
+              router.navigate([ '/auth', 'login' ]).then();
+            }
+
+            return throwError(() => error);
+          })
+        );
       })
     );
 };

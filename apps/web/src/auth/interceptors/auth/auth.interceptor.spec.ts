@@ -11,15 +11,16 @@ describe('authInterceptor', () => {
   let httpClient: HttpClient;
   let httpTesting: HttpTestingController;
   let routerMock: { navigate: jest.Mock; };
-  let authServiceMock: { state: jest.Mock; };
+  let authServiceMock: { state: jest.Mock; logout: jest.Mock; };
 
   beforeEach(() => {
     routerMock = {
-      navigate: jest.fn()
+      navigate: jest.fn().mockResolvedValue(true)
     };
 
     authServiceMock = {
-      state: jest.fn()
+      state: jest.fn(),
+      logout: jest.fn()
     };
 
     TestBed.configureTestingModule({
@@ -68,5 +69,59 @@ describe('authInterceptor', () => {
     const req = httpTesting.expectOne('/api/protected');
     expect(req.request.headers.get('Authorization')).toBe('Bearer valid-jwt-token');
     req.flush({ data: 'secret' });
+  });
+
+  it('should redirect to login and throw error when user is not authenticated', done => {
+    authServiceMock.state.mockReturnValue(of({ isAuthenticated: false, token: null }));
+
+    httpClient.get('/api/protected').subscribe({
+      next: () => {
+        done.fail('Expected error, but succeeded');
+      },
+      error: error => {
+        expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
+        expect(error.message).toBe('User is not authenticated');
+        httpTesting.expectNone('/api/protected');
+        done();
+      }
+    });
+  });
+
+  it('should logout and redirect to login when receiving a 401 Unauthorized error', done => {
+    authServiceMock.state.mockReturnValue(of({ isAuthenticated: true, token: 'valid-jwt-token' }));
+
+    httpClient.get('/api/protected').subscribe({
+      next: () => {
+        done.fail('Expected 401 error, but succeeded');
+      },
+      error: error => {
+        expect(authServiceMock.logout).toHaveBeenCalledTimes(1);
+        expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
+        expect(error.status).toBe(401);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/api/protected');
+    req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+  });
+
+  it('should not logout or redirect when receiving a non-401 error', done => {
+    authServiceMock.state.mockReturnValue(of({ isAuthenticated: true, token: 'valid-jwt-token' }));
+
+    httpClient.get('/api/protected').subscribe({
+      next: () => {
+        done.fail('Expected 500 error, but succeeded');
+      },
+      error: error => {
+        expect(authServiceMock.logout).not.toHaveBeenCalled();
+        expect(routerMock.navigate).not.toHaveBeenCalled();
+        expect(error.status).toBe(500);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/api/protected');
+    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
   });
 });
