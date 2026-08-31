@@ -93,7 +93,10 @@ export class RecipeManagementService {
 
   readonly resetFilters = (): void => this.filters$.next(defaultRecipeListFilters());
 
-  readonly reloadRecipeList = (): void => this.filters$.next(this.filters$.value);
+  readonly reloadRecipeList = (): void => {
+    this.filters$.next(this.filters$.value);
+    this.reloadCuisinesCategories();
+  };
 
   readonly reloadCuisinesCategories = (): void => {
     this.http
