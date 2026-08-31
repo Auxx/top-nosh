@@ -1,8 +1,8 @@
 # TODO
 
 - [ ] Onboarding
-- [ ] Edit Recipe page
-- [ ] Delete Recipe
+- [x] Edit Recipe page
+- [x] Delete Recipe
 - [ ] Dashboard page
 - [ ] Implement shopping list
 

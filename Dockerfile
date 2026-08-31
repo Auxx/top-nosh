@@ -30,6 +30,7 @@ COPY prisma7.config.ts ./
 
 RUN npm ci --omit=dev && npm cache clean --force
 RUN npx -y prisma generate
+RUN npx -y prisma migrate deploy
 
 COPY --from=builder /app/dist ./dist
 
