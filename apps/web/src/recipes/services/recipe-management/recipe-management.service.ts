@@ -8,6 +8,7 @@ import {
   defaultRecipeListFilters,
   DeleteRecipeResponse,
   PaginatedRecipeResponse,
+  RawCuisinesCategoriesItem,
   RecipeListFilters
 } from '../../models/recipe-list.types';
 
@@ -101,7 +102,20 @@ export class RecipeManagementService {
 
   readonly reloadCuisinesCategories = (): void => {
     this.http
-      .get<CuisinesCategoriesResponse>('/recipes/cuisines-categories')
+      .get<RawCuisinesCategoriesItem[]>('/recipes/cuisines-categories')
+      .pipe(
+        map(rawItems => {
+          const cuisines: string[] = [];
+          const categories: Record<string, string[]> = {};
+
+          rawItems.forEach(item => {
+            cuisines.push(item.cuisine);
+            categories[item.cuisine] = item.categories;
+          });
+
+          return { cuisines, categories };
+        })
+      )
       .subscribe({
         next: data => this.cuisinesCategories$.next(data),
         error: () => {

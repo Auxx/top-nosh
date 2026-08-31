@@ -7,6 +7,7 @@ import {
   CuisinesCategoriesResponse,
   defaultRecipeListFilters,
   PaginatedRecipeResponse,
+  RawCuisinesCategoriesItem,
   RecipeListFilters
 } from '../../models/recipe-list.types';
 import { RecipeManagementService } from './recipe-management.service';
@@ -22,6 +23,11 @@ describe('RecipeManagementService', () => {
       Mexican: [ 'Tacos', 'Burritos' ]
     }
   };
+
+  const mockRawCuisinesCategories: RawCuisinesCategoriesItem[] = [
+    { cuisine: 'Italian', categories: [ 'Pasta', 'Pizza' ] },
+    { cuisine: 'Mexican', categories: [ 'Tacos', 'Burritos' ] }
+  ];
 
   const mockRecipesResponse: PaginatedRecipeResponse = {
     data: [
@@ -53,7 +59,7 @@ describe('RecipeManagementService', () => {
     // Initial constructor call to /api/recipes/cuisines-categories
     const initReq = httpTesting.expectOne('/recipes/cuisines-categories');
     expect(initReq.request.method).toBe('GET');
-    initReq.flush(mockCuisinesCategories);
+    initReq.flush(mockRawCuisinesCategories);
   });
 
   afterEach(() => {
@@ -103,7 +109,12 @@ describe('RecipeManagementService', () => {
   });
 
   it('should reload cuisines and categories when reloadCuisinesCategories is called', () => {
-    const updatedOptions: CuisinesCategoriesResponse = {
+    const updatedOptions: RawCuisinesCategoriesItem[] = [
+      { cuisine: 'Indian', categories: [ 'Curry' ] },
+      { cuisine: 'Japanese', categories: [ 'Sushi' ] }
+    ];
+
+    const expectedResponse: CuisinesCategoriesResponse = {
       cuisines: [ 'Indian', 'Japanese' ],
       categories: {
         Indian: [ 'Curry' ],
@@ -119,7 +130,7 @@ describe('RecipeManagementService', () => {
 
     let emitted: CuisinesCategoriesResponse | undefined;
     service.cuisinesCategories().subscribe(res => (emitted = res));
-    expect(emitted).toEqual(updatedOptions);
+    expect(emitted).toEqual(expectedResponse);
   });
 
   it('should fetch recipes using current filters', done => {
@@ -234,7 +245,7 @@ describe('RecipeManagementService', () => {
 
     const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
     expect(cuisinesReq.request.method).toBe('GET');
-    cuisinesReq.flush(mockCuisinesCategories);
+    cuisinesReq.flush(mockRawCuisinesCategories);
 
     expect(emissionCount).toBe(2);
   });
@@ -279,7 +290,7 @@ describe('RecipeManagementService', () => {
 
     const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
     expect(cuisinesReq.request.method).toBe('GET');
-    cuisinesReq.flush(mockCuisinesCategories);
+    cuisinesReq.flush(mockRawCuisinesCategories);
 
     expect(recipeListEmissions).toBe(2);
   });
@@ -334,7 +345,7 @@ describe('RecipeManagementService', () => {
 
     const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
     expect(cuisinesReq.request.method).toBe('GET');
-    cuisinesReq.flush(mockCuisinesCategories);
+    cuisinesReq.flush(mockRawCuisinesCategories);
 
     expect(recipeListEmissions).toBe(2);
   });

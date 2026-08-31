@@ -14,6 +14,11 @@ export interface CuisinesCategoriesResponse {
   categories: Record<string, string[]>;
 }
 
+export interface RawCuisinesCategoriesItem {
+  cuisine: string;
+  categories: string[];
+}
+
 export interface RecipeListItem {
   id: string;
   name: string;
