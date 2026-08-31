@@ -61,7 +61,7 @@ export class AuthenticationService {
   readonly state = (): Observable<AuthState> => this.state$.asObservable();
 
   readonly login = (email: string, password: string): Observable<{ forcePasswordChange: boolean; }> => {
-    const url = `${environment.apiUrl}/auth/login`;
+    const url = `${environment().apiUrl}/auth/login`;
 
     return this.http
       .post<{ token: string; forcePasswordChange: boolean; }>(
@@ -80,7 +80,7 @@ export class AuthenticationService {
   };
 
   readonly changePassword = (password: string): Observable<boolean> => {
-    const url = `${environment.apiUrl}/auth/change-password`;
+    const url = `${environment().apiUrl}/auth/change-password`;
 
     return this.http
       .post<{ message: string; }>(url, { password })

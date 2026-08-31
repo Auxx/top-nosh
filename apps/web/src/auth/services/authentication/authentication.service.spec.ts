@@ -121,7 +121,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/login`);
+    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/login`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ email: testEmail, password: testPassword });
     expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
@@ -138,7 +138,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/change-password`);
+    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/change-password`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ password: newPassword });
     expect(req.request.headers.has('Authorization')).toBe(false);
@@ -159,7 +159,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/change-password`);
+    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/change-password`);
     req.flush({ message: 'Password is too weak' }, { status: 400, statusText: 'Bad Request' });
   });
 
@@ -184,7 +184,7 @@ describe('AuthenticationService', () => {
       }
     });
 
-    const req = httpTesting.expectOne(`${environment.apiUrl}/auth/login`);
+    const req = httpTesting.expectOne(`${environment().apiUrl}/auth/login`);
     req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
   });
 

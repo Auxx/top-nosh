@@ -42,7 +42,7 @@ export class RecipeManagementService {
         params = params.set('category', filters.category);
       }
 
-      return this.http.get<PaginatedRecipeResponse>(`${environment.apiUrl}/recipes`, { params }).pipe(
+      return this.http.get<PaginatedRecipeResponse>(`${environment().apiUrl}/recipes`, { params }).pipe(
         catchError(() =>
           of({
             data: [],
@@ -98,7 +98,7 @@ export class RecipeManagementService {
 
   readonly reloadCuisinesCategories = (): void => {
     this.http
-      .get<CuisinesCategoriesResponse>(`${environment.apiUrl}/recipes/cuisines-categories`)
+      .get<CuisinesCategoriesResponse>(`${environment().apiUrl}/recipes/cuisines-categories`)
       .subscribe({
         next: data => this.cuisinesCategories$.next(data),
         error: () => {
@@ -109,9 +109,9 @@ export class RecipeManagementService {
 
   readonly createRecipe = (recipe: CreateRecipeDto): Observable<RecipeCreatedResponse> =>
     this.http
-      .post<RecipeCreatedResponse>(`${environment.apiUrl}/recipes`, recipe)
+      .post<RecipeCreatedResponse>(`${environment().apiUrl}/recipes`, recipe)
       .pipe(tap(() => this.reloadRecipeList()));
 
   readonly getRecipeById = (id: string): Observable<RecipeDetails> =>
-    this.http.get<RecipeDetails>(`${environment.apiUrl}/recipes/${id}`);
+    this.http.get<RecipeDetails>(`${environment().apiUrl}/recipes/${id}`);
 }

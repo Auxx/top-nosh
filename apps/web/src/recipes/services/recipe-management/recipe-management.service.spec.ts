@@ -51,7 +51,7 @@ describe('RecipeManagementService', () => {
     httpTesting = TestBed.inject(HttpTestingController);
 
     // Initial constructor call to /api/recipes/cuisines-categories
-    const initReq = httpTesting.expectOne('http://localhost:3000/api/recipes/cuisines-categories');
+    const initReq = httpTesting.expectOne('/recipes/cuisines-categories');
     expect(initReq.request.method).toBe('GET');
     initReq.flush(mockCuisinesCategories);
   });
@@ -112,7 +112,7 @@ describe('RecipeManagementService', () => {
 
     service.reloadCuisinesCategories();
 
-    const req = httpTesting.expectOne('http://localhost:3000/api/recipes/cuisines-categories');
+    const req = httpTesting.expectOne('/recipes/cuisines-categories');
     expect(req.request.method).toBe('GET');
     req.flush(updatedOptions);
 
@@ -127,7 +127,7 @@ describe('RecipeManagementService', () => {
       done();
     });
 
-    const req = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    const req = httpTesting.expectOne('/recipes?page=1');
     expect(req.request.method).toBe('GET');
     req.flush(mockRecipesResponse);
   });
@@ -213,7 +213,7 @@ describe('RecipeManagementService', () => {
       done();
     });
 
-    const req = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    const req = httpTesting.expectOne('/recipes?page=1');
     req.flush('Error fetching recipes', { status: 500, statusText: 'Server Error' });
   });
 
@@ -223,12 +223,12 @@ describe('RecipeManagementService', () => {
       emissionCount++;
     });
 
-    const req1 = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    const req1 = httpTesting.expectOne('/recipes?page=1');
     req1.flush(mockRecipesResponse);
 
     service.reloadRecipeList();
 
-    const req2 = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    const req2 = httpTesting.expectOne('/recipes?page=1');
     req2.flush(mockRecipesResponse);
 
     expect(emissionCount).toBe(2);
@@ -256,7 +256,7 @@ describe('RecipeManagementService', () => {
       recipeListEmissions++;
     });
 
-    const initialFetch = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    const initialFetch = httpTesting.expectOne('/recipes?page=1');
     initialFetch.flush(mockRecipesResponse);
 
     service.createRecipe(newRecipePayload).subscribe(response => {
@@ -264,12 +264,12 @@ describe('RecipeManagementService', () => {
       done();
     });
 
-    const postReq = httpTesting.expectOne('http://localhost:3000/api/recipes');
+    const postReq = httpTesting.expectOne('/recipes');
     expect(postReq.request.method).toBe('POST');
     expect(postReq.request.body).toEqual(newRecipePayload);
     postReq.flush({ id: 'recipe-123' });
 
-    const reloadFetch = httpTesting.expectOne('http://localhost:3000/api/recipes?page=1');
+    const reloadFetch = httpTesting.expectOne('/recipes?page=1');
     reloadFetch.flush(mockRecipesResponse);
 
     expect(recipeListEmissions).toBe(2);
@@ -295,11 +295,11 @@ describe('RecipeManagementService', () => {
       }
     });
 
-    const postReq = httpTesting.expectOne('http://localhost:3000/api/recipes');
+    const postReq = httpTesting.expectOne('/recipes');
     expect(postReq.request.method).toBe('POST');
     postReq.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
 
-    httpTesting.expectNone('http://localhost:3000/api/recipes?page=1');
+    httpTesting.expectNone('/recipes?page=1');
   });
 
   it('should fetch recipe details by id', done => {
@@ -346,7 +346,7 @@ describe('RecipeManagementService', () => {
       done();
     });
 
-    const req = httpTesting.expectOne('http://localhost:3000/api/recipes/recipe-456');
+    const req = httpTesting.expectOne('/recipes/recipe-456');
     expect(req.request.method).toBe('GET');
     req.flush(mockRecipeDetails);
   });
@@ -362,7 +362,7 @@ describe('RecipeManagementService', () => {
       }
     });
 
-    const req = httpTesting.expectOne('http://localhost:3000/api/recipes/non-existent-id');
+    const req = httpTesting.expectOne('/recipes/non-existent-id');
     expect(req.request.method).toBe('GET');
     req.flush('Not Found', { status: 404, statusText: 'Not Found' });
   });
