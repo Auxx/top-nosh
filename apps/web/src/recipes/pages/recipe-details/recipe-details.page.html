@@ -293,7 +293,6 @@
 
                       <mat-checkbox [checked]="isIngredientUsed(ingredient.id)"
                                     (change)="toggleIngredientUsed(ingredient.id)"
-                                    color="primary"
                                     data-testid="ingredient-checkbox">
                         <span class="ingredient-scaled-amount">
                           {{ getScaledQuantity(ingredient.quantity) }}
@@ -338,7 +337,6 @@
                           <div class="step-checkbox-wrapper">
                             <mat-checkbox [checked]="isStepCompleted(step.id)"
                                           (change)="toggleStepCompletion(step.id)"
-                                          color="primary"
                                           data-testid="step-checkbox">
                               <span class="step-title" [class.line-through]="isStepCompleted(step.id)">
                                 {{ step.name }}
