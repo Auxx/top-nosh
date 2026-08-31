@@ -231,6 +231,10 @@ describe('RecipeManagementService', () => {
     const req2 = httpTesting.expectOne('/recipes?page=1');
     req2.flush(mockRecipesResponse);
 
+    const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
+    expect(cuisinesReq.request.method).toBe('GET');
+    cuisinesReq.flush(mockCuisinesCategories);
+
     expect(emissionCount).toBe(2);
   });
 
@@ -271,6 +275,10 @@ describe('RecipeManagementService', () => {
 
     const reloadFetch = httpTesting.expectOne('/recipes?page=1');
     reloadFetch.flush(mockRecipesResponse);
+
+    const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
+    expect(cuisinesReq.request.method).toBe('GET');
+    cuisinesReq.flush(mockCuisinesCategories);
 
     expect(recipeListEmissions).toBe(2);
   });
