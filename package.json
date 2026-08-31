@@ -5,7 +5,7 @@
   "scripts": {
     "format": "dprint fmt",
     "format:check": "dprint check",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "lint": "nx run-many --all --target=lint --no-tui",
     "test": "nx run-many --all --target=test"
   },
