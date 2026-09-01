@@ -426,6 +426,166 @@ describe('RecipeDetailsPage', () => {
         expect(component.isIngredientUsed('ing-1')).toBe(true);
       }
     });
+
+    it('should render ingredients grouped by stage in cooking mode for multi-stage recipes', () => {
+      const multiStageRecipe: RecipeDetails = {
+        id: 'multi-stage-recipe',
+        name: 'Multi-stage Dish',
+        cuisine: 'Fusion',
+        category: 'Main',
+        description: 'Test dish with multiple stages',
+        servings: 2,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        stages: [
+          {
+            id: 'stage-1',
+            recipeId: 'multi-stage-recipe',
+            name: 'Prep Veggies',
+            order: 0,
+            ingredients: [
+              { id: 'ing-1', stageId: 'stage-1', name: 'Carrots', quantity: 200, unit: 'GRAMS', order: 0 },
+              { id: 'ing-2', stageId: 'stage-1', name: 'Celery', quantity: 100, unit: 'GRAMS', order: 1 }
+            ],
+            steps: [
+              {
+                id: 'step-1',
+                stageId: 'stage-1',
+                name: 'Dice Veggies',
+                description: 'Dice all veggies finely.',
+                order: 0
+              }
+            ]
+          },
+          {
+            id: 'stage-2',
+            recipeId: 'multi-stage-recipe',
+            name: 'Cook Sauce',
+            order: 1,
+            ingredients: [
+              { id: 'ing-3', stageId: 'stage-2', name: 'Tomato Paste', quantity: 50, unit: 'GRAMS', order: 0 },
+              { id: 'ing-4', stageId: 'stage-2', name: 'Olive Oil', quantity: 15, unit: 'ml', order: 1 }
+            ],
+            steps: [
+              { id: 'step-2', stageId: 'stage-2', name: 'Simmer', description: 'Simmer for 10 minutes.', order: 0 }
+            ]
+          }
+        ]
+      };
+
+      component.recipe.set(multiStageRecipe);
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const stageGroups = compiled.querySelectorAll('[data-testid="checklist-stage-group"]');
+      expect(stageGroups.length).toBe(2);
+
+      const stageTitles = compiled.querySelectorAll('[data-testid="checklist-stage-title"]');
+      expect(stageTitles.length).toBe(2);
+      expect(stageTitles[0].textContent).toContain('Stage 1');
+      expect(stageTitles[0].textContent).toContain('Prep Veggies');
+      expect(stageTitles[1].textContent).toContain('Stage 2');
+      expect(stageTitles[1].textContent).toContain('Cook Sauce');
+
+      // Verify ingredients inside first stage group
+      const firstGroupIngredients = stageGroups[0].querySelectorAll('[data-testid="cooking-ingredient-item"]');
+      expect(firstGroupIngredients.length).toBe(2);
+      expect(firstGroupIngredients[0].textContent).toContain('Carrots');
+      expect(firstGroupIngredients[1].textContent).toContain('Celery');
+
+      // Verify ingredients inside second stage group
+      const secondGroupIngredients = stageGroups[1].querySelectorAll('[data-testid="cooking-ingredient-item"]');
+      expect(secondGroupIngredients.length).toBe(2);
+      expect(secondGroupIngredients[0].textContent).toContain('Tomato Paste');
+      expect(secondGroupIngredients[1].textContent).toContain('Olive Oil');
+    });
+
+    it('should skip stage headers for stages that contain no ingredients', () => {
+      const recipeWithEmptyStage: RecipeDetails = {
+        id: 'recipe-empty-stage',
+        name: 'Empty Stage Dish',
+        cuisine: 'International',
+        category: 'Main',
+        description: 'Test dish with an ingredient-less stage',
+        servings: 2,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        stages: [
+          {
+            id: 'stage-1',
+            recipeId: 'recipe-empty-stage',
+            name: 'Boil Water',
+            order: 0,
+            ingredients: [],
+            steps: [
+              { id: 'step-1', stageId: 'stage-1', name: 'Boil', description: 'Bring water to a boil.', order: 0 }
+            ]
+          },
+          {
+            id: 'stage-2',
+            recipeId: 'recipe-empty-stage',
+            name: 'Add Pasta',
+            order: 1,
+            ingredients: [
+              { id: 'ing-1', stageId: 'stage-2', name: 'Penne', quantity: 250, unit: 'GRAMS', order: 0 }
+            ],
+            steps: [
+              { id: 'step-2', stageId: 'stage-2', name: 'Cook', description: 'Cook pasta until al dente.', order: 0 }
+            ]
+          }
+        ]
+      };
+
+      component.recipe.set(recipeWithEmptyStage);
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const stageGroups = compiled.querySelectorAll('[data-testid="checklist-stage-group"]');
+      expect(stageGroups.length).toBe(1);
+
+      const stageTitles = compiled.querySelectorAll('[data-testid="checklist-stage-title"]');
+      expect(stageTitles.length).toBe(1);
+      expect(stageTitles[0].textContent).toContain('Stage 2');
+      expect(stageTitles[0].textContent).toContain('Add Pasta');
+
+      const ingredients = stageGroups[0].querySelectorAll('[data-testid="cooking-ingredient-item"]');
+      expect(ingredients.length).toBe(1);
+      expect(ingredients[0].textContent).toContain('Penne');
+    });
+
+    it('should display empty hint when recipe has no ingredients across all stages', () => {
+      const noIngredientsRecipe: RecipeDetails = {
+        id: 'no-ingredients-recipe',
+        name: 'Water Boiling',
+        cuisine: 'General',
+        category: 'Misc',
+        description: 'Just boiling water',
+        servings: 1,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        stages: [
+          {
+            id: 'stage-1',
+            recipeId: 'no-ingredients-recipe',
+            name: 'Boil',
+            order: 0,
+            ingredients: [],
+            steps: [
+              { id: 'step-1', stageId: 'stage-1', name: 'Boil', description: 'Boil water.', order: 0 }
+            ]
+          }
+        ]
+      };
+
+      component.recipe.set(noIngredientsRecipe);
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const emptyHint = compiled.querySelector('.cooking-ingredients-card .empty-hint');
+      expect(emptyHint).toBeTruthy();
+      expect(emptyHint?.textContent?.trim()).toBe('No ingredients needed.');
+      expect(compiled.querySelectorAll('[data-testid="checklist-stage-group"]').length).toBe(0);
+    });
   });
 
   it('should navigate to edit recipe page with from=details query param when onEditRecipe is called', () => {
