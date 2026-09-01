@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecipeDetails } from '../../models/recipe-details.types';
@@ -102,7 +101,6 @@ describe('EditRecipePage', () => {
     await TestBed.configureTestingModule({
       imports: [ EditRecipePage ],
       providers: [
-        provideAnimationsAsync(),
         { provide: RecipeManagementService, useValue: recipeServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
         { provide: Router, useValue: routerMock },

@@ -1,10 +1,11 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { PaginatedShoppingListResponse, ShoppingListItem } from '../../models/shopping-list.types';
-import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
+import {
+  ShoppingListManagementService
+} from '../../services/shopping-list-management/shopping-list-management.service';
 import { ShoppingListPage } from './shopping-list.page';
 
 describe('ShoppingListPage', () => {
@@ -67,7 +68,6 @@ describe('ShoppingListPage', () => {
     await TestBed.configureTestingModule({
       imports: [ ShoppingListPage ],
       providers: [
-        provideAnimationsAsync(),
         provideRouter([]),
         { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
         { provide: BreakpointObserver, useValue: breakpointObserverMock }

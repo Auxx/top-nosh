@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
@@ -35,7 +34,6 @@ describe('PasswordChangePage', () => {
     await TestBed.configureTestingModule({
       imports: [ PasswordChangePage ],
       providers: [
-        provideAnimationsAsync(),
         { provide: AuthenticationService, useValue: authServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
         { provide: Router, useValue: routerMock }

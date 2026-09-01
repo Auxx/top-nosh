@@ -1,7 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { CreateRecipeDto } from '../../models/create-recipe.types';
@@ -58,7 +57,6 @@ describe('CreateRecipePage', () => {
     await TestBed.configureTestingModule({
       imports: [ CreateRecipePage ],
       providers: [
-        provideAnimationsAsync(),
         { provide: RecipeManagementService, useValue: recipeServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
         { provide: Router, useValue: routerMock }

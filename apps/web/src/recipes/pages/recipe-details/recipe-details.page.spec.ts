@@ -1,7 +1,6 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { ConfirmationDialog } from '@top-nosh/ui';
 import { BehaviorSubject, of, throwError } from 'rxjs';
@@ -99,7 +98,6 @@ describe('RecipeDetailsPage', () => {
     await TestBed.configureTestingModule({
       imports: [ RecipeDetailsPage ],
       providers: [
-        provideAnimationsAsync(),
         provideRouter([]),
         {
           provide: ActivatedRoute,

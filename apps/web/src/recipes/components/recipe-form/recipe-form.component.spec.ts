@@ -2,7 +2,6 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { BehaviorSubject } from 'rxjs';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -47,7 +46,6 @@ describe('RecipeFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ TestHostComponent ],
       providers: [
-        provideAnimationsAsync(),
         { provide: RecipeManagementService, useValue: recipeServiceMock }
       ]
     }).compileComponents();

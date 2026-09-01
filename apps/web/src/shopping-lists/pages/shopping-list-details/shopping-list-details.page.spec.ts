@@ -2,11 +2,12 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { ShoppingListCreatedResponse, ShoppingListDetails } from '../../models/shopping-list.types';
-import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
+import {
+  ShoppingListManagementService
+} from '../../services/shopping-list-management/shopping-list-management.service';
 import { ShoppingListDetailsPage } from './shopping-list-details.page';
 
 describe('ShoppingListDetailsPage', () => {
@@ -68,7 +69,6 @@ describe('ShoppingListDetailsPage', () => {
     await TestBed.configureTestingModule({
       imports: [ ShoppingListDetailsPage ],
       providers: [
-        provideAnimationsAsync(),
         provideRouter([]),
         { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
         {
