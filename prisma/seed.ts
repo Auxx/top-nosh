@@ -32,13 +32,13 @@ async function main() {
     update: {
       fullName: 'Aux',
       passwordHash,
-      forcePasswordChange: true
+      forcePasswordChange: false
     },
     create: {
       fullName: 'Aux',
       email: 'aux@hexmode.org',
       passwordHash,
-      forcePasswordChange: true
+      forcePasswordChange: false
     }
   });
 
