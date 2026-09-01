@@ -71,3 +71,14 @@ Docker.
 - **Lint All projects**: `nx run-many --all --target=lint --no-tui`
 - **Lint API project**: `nx run api:lint --no-tui`
 - **Lint WEB project**: `nx run web:lint --no-tui`
+
+## Formatting the code
+
+- **Format the code**: `npm run format`
+- **Check formatting**: `npm run format:check`
+
+## Finalising the work
+
+Once required code changes are made, lint and test all projects to ensure that
+there are no issues. Fix issues, if any. Once the code passes linting and
+testing, format it.

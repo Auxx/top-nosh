@@ -2,9 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, switchMap } from 'rxjs';
 import {
+  CreateShoppingListDto,
   defaultShoppingListFilters,
   PaginatedShoppingListResponse,
-  ShoppingListFilter
+  ShoppingListCreatedResponse,
+  ShoppingListDetails,
+  ShoppingListFilter,
+  UpdateShoppingListDto
 } from '../../models/shopping-list.types';
 
 @Injectable({ providedIn: 'root' })
@@ -45,4 +49,17 @@ export class ShoppingListManagementService {
     });
 
   readonly resetFilters = (): void => this.filters$.next(defaultShoppingListFilters());
+
+  readonly reloadShoppingLists = (): void => {
+    this.filters$.next(this.filters$.value);
+  };
+
+  readonly create = (dto: CreateShoppingListDto): Observable<ShoppingListCreatedResponse> =>
+    this.http.post<ShoppingListCreatedResponse>('/shopping-lists', dto);
+
+  readonly update = (id: string, dto: UpdateShoppingListDto): Observable<ShoppingListDetails> =>
+    this.http.put<ShoppingListDetails>(`/shopping-lists/${id}`, dto);
+
+  readonly getShoppingListById = (id: string): Observable<ShoppingListDetails> =>
+    this.http.get<ShoppingListDetails>(`/shopping-lists/${id}`);
 }

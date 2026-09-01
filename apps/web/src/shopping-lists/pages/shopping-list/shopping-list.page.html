@@ -24,7 +24,7 @@
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let item" class="name-cell">
-              <a href="#" class="shopping-list-name-link">
+              <a [routerLink]="['/shopping-lists', item.id]" class="shopping-list-name-link">
                 {{ item.name }}
               </a>
             </td>

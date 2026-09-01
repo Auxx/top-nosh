@@ -1,6 +1,7 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { PaginatedShoppingListResponse, ShoppingListItem } from '../../models/shopping-list.types';
 import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
@@ -9,6 +10,7 @@ import { ShoppingListPage } from './shopping-list.page';
 describe('ShoppingListPage', () => {
   let component: ShoppingListPage;
   let fixture: ComponentFixture<ShoppingListPage>;
+  let router: Router;
 
   let mockShoppingLists$: BehaviorSubject<PaginatedShoppingListResponse>;
   let mockBreakpoint$: BehaviorSubject<BreakpointState>;
@@ -16,6 +18,7 @@ describe('ShoppingListPage', () => {
   let shoppingListServiceMock: {
     shoppingLists: jest.Mock;
     setPage: jest.Mock;
+    reloadShoppingLists: jest.Mock;
   };
 
   let breakpointObserverMock: {
@@ -53,7 +56,8 @@ describe('ShoppingListPage', () => {
 
     shoppingListServiceMock = {
       shoppingLists: jest.fn().mockReturnValue(mockShoppingLists$.asObservable()),
-      setPage: jest.fn()
+      setPage: jest.fn(),
+      reloadShoppingLists: jest.fn()
     };
 
     breakpointObserverMock = {
@@ -64,10 +68,14 @@ describe('ShoppingListPage', () => {
       imports: [ ShoppingListPage ],
       providers: [
         provideAnimationsAsync(),
+        provideRouter([]),
         { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
         { provide: BreakpointObserver, useValue: breakpointObserverMock }
       ]
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate').mockImplementation(async () => true);
 
     fixture = TestBed.createComponent(ShoppingListPage);
     component = fixture.componentInstance;
@@ -76,6 +84,10 @@ describe('ShoppingListPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should reload shopping lists on initialization', () => {
+    expect(shoppingListServiceMock.reloadShoppingLists).toHaveBeenCalled();
   });
 
   it('should have all class methods declared as readonly arrow function properties', () => {
@@ -95,6 +107,11 @@ describe('ShoppingListPage', () => {
     expect(createBtn.textContent?.trim()).toContain('Create Shopping List');
   });
 
+  it('should navigate to new shopping list on create button click', () => {
+    component.onCreateShoppingList();
+    expect(router.navigate).toHaveBeenCalledWith([ '/shopping-lists', 'new' ]);
+  });
+
   it('should have desktop columns by default', () => {
     expect(component.displayedColumns()).toEqual([
       'name',
@@ -112,13 +129,13 @@ describe('ShoppingListPage', () => {
     expect(component.displayedColumns()).toEqual([ 'name', 'actions' ]);
   });
 
-  it('should render table rows for each shopping list item', () => {
+  it('should render table rows for each shopping list item with router links', () => {
     const rows = fixture.nativeElement.querySelectorAll('tr.mat-mdc-row');
     expect(rows.length).toBe(2);
 
     const firstLink: HTMLAnchorElement = rows[0].querySelector('.shopping-list-name-link');
-    expect(firstLink.getAttribute('href')).toBe('#');
     expect(firstLink.textContent?.trim()).toBe('Weekly Groceries');
+    expect(firstLink.getAttribute('href')).toBe('/shopping-lists/1');
 
     const firstDescription: HTMLElement = rows[0].querySelector('.description-cell');
     expect(firstDescription.textContent?.trim()).toBe('Groceries for the week');

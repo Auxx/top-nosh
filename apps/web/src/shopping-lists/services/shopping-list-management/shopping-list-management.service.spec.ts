@@ -1,7 +1,14 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { defaultShoppingListFilters, PaginatedShoppingListResponse } from '../../models/shopping-list.types';
+import {
+  CreateShoppingListDto,
+  defaultShoppingListFilters,
+  PaginatedShoppingListResponse,
+  ShoppingListCreatedResponse,
+  ShoppingListDetails,
+  UpdateShoppingListDto
+} from '../../models/shopping-list.types';
 import { ShoppingListManagementService } from './shopping-list-management.service';
 
 describe('ShoppingListManagementService', () => {
@@ -22,6 +29,31 @@ describe('ShoppingListManagementService', () => {
     total: 1,
     page: 1,
     totalPages: 1
+  };
+
+  const mockShoppingListDetails: ShoppingListDetails = {
+    id: '123',
+    name: 'Party Groceries',
+    description: 'Items for the party',
+    items: [
+      {
+        id: 'item-1',
+        name: 'Apples',
+        quantity: 5,
+        isBought: false,
+        order: 0
+      },
+      {
+        id: 'item-2',
+        name: 'Bananas',
+        quantity: 2,
+        isBought: true,
+        order: 1
+      }
+    ],
+    createdAt: '2026-09-01T00:00:00.000Z',
+    updatedAt: '2026-09-01T00:00:00.000Z',
+    deletedAt: null
   };
 
   beforeEach(() => {
@@ -49,6 +81,10 @@ describe('ShoppingListManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'shoppingLists')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'setPage')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'resetFilters')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'reloadShoppingLists')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'create')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'update')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'getShoppingListById')).toBe(true);
   });
 
   it('should return default filters with page 1 and ensure immutability', () => {
@@ -126,7 +162,27 @@ describe('ShoppingListManagementService', () => {
     });
   });
 
-  it('should handle HTTP error gracefully and return fallback empty response', done => {
+  it('should reload shopping lists when reloadShoppingLists is called', done => {
+    let callCount = 0;
+    service.shoppingLists().subscribe(response => {
+      callCount++;
+      if (callCount === 2) {
+        expect(response).toEqual(mockShoppingListsResponse);
+        done();
+      }
+    });
+
+    const req1 = httpTesting.expectOne('/shopping-lists?page=1');
+    req1.flush(mockShoppingListsResponse);
+
+    service.reloadShoppingLists();
+
+    const req2 = httpTesting.expectOne('/shopping-lists?page=1');
+    expect(req2.request.method).toBe('GET');
+    req2.flush(mockShoppingListsResponse);
+  });
+
+  it('should handle HTTP error gracefully and return fallback empty response in listing stream', done => {
     service.shoppingLists().subscribe(response => {
       expect(response).toEqual({
         data: [],
@@ -139,5 +195,108 @@ describe('ShoppingListManagementService', () => {
 
     const req = httpTesting.expectOne('/shopping-lists?page=1');
     req.error(new ProgressEvent('Network error'));
+  });
+
+  it('should create shopping list and return response without triggering listing reload', done => {
+    const createDto: CreateShoppingListDto = {
+      name: 'New List',
+      description: 'Desc',
+      items: [ { name: 'Milk', quantity: 2, isBought: false, order: 0 } ]
+    };
+    const responseDto: ShoppingListCreatedResponse = { id: 'created-id-123' };
+
+    service.create(createDto).subscribe(response => {
+      expect(response).toEqual(responseDto);
+      done();
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(createDto);
+    req.flush(responseDto);
+
+    httpTesting.expectNone('/shopping-lists?page=1');
+  });
+
+  it('should throw error when create shopping list fails', done => {
+    const createDto: CreateShoppingListDto = {
+      name: 'New List',
+      description: 'Desc',
+      items: []
+    };
+
+    service.create(createDto).subscribe({
+      next: () => fail('should have failed with 500 error'),
+      error: error => {
+        expect(error.status).toBe(500);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists');
+    req.flush({ message: 'Internal Server Error' }, { status: 500, statusText: 'Server Error' });
+  });
+
+  it('should update shopping list and return response without triggering listing reload', done => {
+    const updateDto: UpdateShoppingListDto = {
+      name: 'Updated List',
+      description: 'Updated Desc',
+      items: [ { id: 'item-1', name: 'Milk', quantity: 3, isBought: true, order: 0 } ]
+    };
+
+    service.update('123', updateDto).subscribe(response => {
+      expect(response).toEqual(mockShoppingListDetails);
+      done();
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists/123');
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(updateDto);
+    req.flush(mockShoppingListDetails);
+
+    httpTesting.expectNone('/shopping-lists?page=1');
+  });
+
+  it('should throw error when update shopping list fails', done => {
+    const updateDto: UpdateShoppingListDto = {
+      name: 'Updated List',
+      description: 'Updated Desc',
+      items: []
+    };
+
+    service.update('123', updateDto).subscribe({
+      next: () => fail('should have failed with 400 error'),
+      error: error => {
+        expect(error.status).toBe(400);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists/123');
+    req.flush({ message: 'Bad Request' }, { status: 400, statusText: 'Bad Request' });
+  });
+
+  it('should fetch shopping list by id', done => {
+    service.getShoppingListById('123').subscribe(response => {
+      expect(response).toEqual(mockShoppingListDetails);
+      done();
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists/123');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockShoppingListDetails);
+  });
+
+  it('should throw error when getShoppingListById fails', done => {
+    service.getShoppingListById('999').subscribe({
+      next: () => fail('should have failed with 404 error'),
+      error: error => {
+        expect(error.status).toBe(404);
+        done();
+      }
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists/999');
+    req.flush({ message: 'Not Found' }, { status: 404, statusText: 'Not Found' });
   });
 });

@@ -1,0 +1,170 @@
+<div class="shopping-list-details-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-title">
+      <button mat-icon-button routerLink="/shopping-lists" aria-label="Back to shopping lists" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>{{ isEditMode() ? 'Edit Shopping List' : 'Create Shopping List' }}</h1>
+    </div>
+    @if (isSaving()) {
+      <div class="header-status">
+        <mat-spinner diameter="16"></mat-spinner>
+        <span>Saving...</span>
+      </div>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading shopping list...</p>
+    </div>
+  } @else if (hasError()) {
+    <div class="error-container">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>Failed to load shopping list</p>
+      <button mat-stroked-button (click)="loadShoppingList(currentId()!)">Retry</button>
+    </div>
+  } @else {
+    <form [formGroup]="form" (focusout)="onFormFocusOut()" class="shopping-list-form">
+      <!-- Header Section Card -->
+      <mat-card class="details-card">
+        <mat-card-header>
+          <mat-card-title>List Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="form-header-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" placeholder="e.g. Weekly Groceries" class="list-name-input"/>
+            <mat-error *uiWhenError="form.controls.name; errorCode: 'required'">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="2" placeholder="Optional description"></textarea>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Items Section Card -->
+      <mat-card class="items-card">
+        <mat-card-content>
+          <div class="items-section-header">
+            <h2>Items</h2>
+            <button mat-stroked-button
+                    color="warn"
+                    type="button"
+                    class="remove-bought-btn"
+                    [disabled]="!hasBoughtItems"
+                    (click)="onRemoveAllBoughtItems()">
+              <mat-icon>delete_sweep</mat-icon>
+              <span>Remove all bought items</span>
+            </button>
+          </div>
+
+          <!-- Active Items List (No Title) -->
+          <div cdkDropList
+               class="items-list active-items-list"
+               (cdkDropListDropped)="onDropActive($event)">
+            @for (item of activeItems; track item) {
+              <div class="item-row"
+                   cdkDrag
+                   [formGroup]="item">
+                <div class="drag-handle" cdkDragHandle aria-label="Drag item to reorder">
+                  <mat-icon>drag_indicator</mat-icon>
+                </div>
+
+                <mat-checkbox formControlName="isBought"
+                              (change)="onBoughtChange()"
+                              aria-label="Mark item as bought">
+                </mat-checkbox>
+
+                <mat-form-field appearance="outline" class="item-name-field" subscriptSizing="dynamic">
+                  <input matInput
+                         formControlName="name"
+                         placeholder="Item name"
+                         class="item-name-input"
+                         (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
+                         (input)="onItemNameInput(item, $event)"
+                         (keydown.backspace)="onItemNameBackspace(item, $event)"/>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="item-quantity-field" subscriptSizing="dynamic">
+                  <input matInput
+                         type="number"
+                         min="1"
+                         formControlName="quantity"
+                         placeholder="Qty"
+                         class="item-quantity-input"/>
+                </mat-form-field>
+
+                <button mat-icon-button
+                        type="button"
+                        aria-label="Remove item"
+                        class="remove-item-btn"
+                        (click)="onRemoveItem(item)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Completed Section (With Title) -->
+          @if (completedItems.length > 0) {
+            <div class="completed-section">
+              <h3 class="completed-title">Completed</h3>
+              <div cdkDropList
+                   class="items-list completed-items-list"
+                   (cdkDropListDropped)="onDropCompleted($event)">
+                @for (item of completedItems; track item) {
+                  <div class="item-row bought"
+                       cdkDrag
+                       [formGroup]="item">
+                    <div class="drag-handle" cdkDragHandle aria-label="Drag item to reorder">
+                      <mat-icon>drag_indicator</mat-icon>
+                    </div>
+
+                    <mat-checkbox formControlName="isBought"
+                                  (change)="onBoughtChange()"
+                                  aria-label="Mark item as bought">
+                    </mat-checkbox>
+
+                    <mat-form-field appearance="outline" class="item-name-field" subscriptSizing="dynamic">
+                      <input matInput
+                             formControlName="name"
+                             placeholder="Item name"
+                             class="item-name-input"
+                             (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
+                             (input)="onItemNameInput(item, $event)"
+                             (keydown.backspace)="onItemNameBackspace(item, $event)"/>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="item-quantity-field" subscriptSizing="dynamic">
+                      <input matInput
+                             type="number"
+                             min="1"
+                             formControlName="quantity"
+                             placeholder="Qty"
+                             class="item-quantity-input"/>
+                    </mat-form-field>
+
+                    <button mat-icon-button
+                            type="button"
+                            aria-label="Remove item"
+                            class="remove-item-btn"
+                            (click)="onRemoveItem(item)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </form>
+  }
+</div>

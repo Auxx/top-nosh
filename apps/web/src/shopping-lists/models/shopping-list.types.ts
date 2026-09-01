@@ -21,3 +21,52 @@ export interface PaginatedShoppingListResponse {
   page: number;
   totalPages: number;
 }
+
+export interface ShoppingListDetailsItem {
+  id?: string;
+  name: string;
+  quantity: number;
+  isBought: boolean;
+  order?: number;
+}
+
+export interface ShoppingListDetails {
+  id: string;
+  name: string;
+  description?: string | null;
+  items: ShoppingListDetailsItem[];
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+  deletedAt?: string | Date | null;
+}
+
+export interface ShoppingListCreatedResponse {
+  id: string;
+}
+
+export interface CreateShoppingListItemDto {
+  name: string;
+  quantity: number;
+  isBought?: boolean;
+  order?: number;
+}
+
+export interface CreateShoppingListDto {
+  name: string;
+  description?: string | null;
+  items?: CreateShoppingListItemDto[];
+}
+
+export interface UpdateShoppingListItemDto {
+  id?: string;
+  name: string;
+  quantity: number;
+  isBought: boolean;
+  order?: number;
+}
+
+export interface UpdateShoppingListDto {
+  name: string;
+  description?: string | null;
+  items: UpdateShoppingListItemDto[];
+}
