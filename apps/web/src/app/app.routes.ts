@@ -21,5 +21,11 @@ export const appRoutes: Route[] = [
     canActivate: [ authGuard ],
     component: AuthorizedPage,
     loadChildren: () => import('../recipes/recipes.routes').then(m => m.routes)
+  },
+  {
+    path: 'shopping-lists',
+    canActivate: [ authGuard ],
+    component: AuthorizedPage,
+    loadChildren: () => import('../shopping-lists/shopping-lists.routes').then(m => m.routes)
   }
 ];

@@ -1,0 +1,158 @@
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { BehaviorSubject } from 'rxjs';
+import { PaginatedShoppingListResponse, ShoppingListItem } from '../../models/shopping-list.types';
+import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
+import { ShoppingListPage } from './shopping-list.page';
+
+describe('ShoppingListPage', () => {
+  let component: ShoppingListPage;
+  let fixture: ComponentFixture<ShoppingListPage>;
+
+  let mockShoppingLists$: BehaviorSubject<PaginatedShoppingListResponse>;
+  let mockBreakpoint$: BehaviorSubject<BreakpointState>;
+
+  let shoppingListServiceMock: {
+    shoppingLists: jest.Mock;
+    setPage: jest.Mock;
+  };
+
+  let breakpointObserverMock: {
+    observe: jest.Mock;
+  };
+
+  const sampleShoppingLists: ShoppingListItem[] = [
+    {
+      id: '1',
+      name: 'Weekly Groceries',
+      description: 'Groceries for the week',
+      createdAt: '2026-09-01T00:00:00.000Z',
+      updatedAt: '2026-09-01T00:00:00.000Z',
+      deletedAt: null
+    },
+    {
+      id: '2',
+      name: 'Party Supplies',
+      description: 'Drinks and snacks',
+      createdAt: '2026-09-01T00:00:00.000Z',
+      updatedAt: '2026-09-01T00:00:00.000Z',
+      deletedAt: null
+    }
+  ];
+
+  beforeEach(async () => {
+    mockShoppingLists$ = new BehaviorSubject<PaginatedShoppingListResponse>({
+      data: sampleShoppingLists,
+      total: 2,
+      page: 1,
+      totalPages: 1
+    });
+
+    mockBreakpoint$ = new BehaviorSubject<BreakpointState>({ matches: false, breakpoints: {} });
+
+    shoppingListServiceMock = {
+      shoppingLists: jest.fn().mockReturnValue(mockShoppingLists$.asObservable()),
+      setPage: jest.fn()
+    };
+
+    breakpointObserverMock = {
+      observe: jest.fn().mockReturnValue(mockBreakpoint$.asObservable())
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [ ShoppingListPage ],
+      providers: [
+        provideAnimationsAsync(),
+        { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
+        { provide: BreakpointObserver, useValue: breakpointObserverMock }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ShoppingListPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should have all class methods declared as readonly arrow function properties', () => {
+    expect(Object.prototype.hasOwnProperty.call(component, 'onPageChange')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(component, 'onCreateShoppingList')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(component, 'onDeleteShoppingList')).toBe(true);
+  });
+
+  it('should render page title, subtitle, and create shopping list button', () => {
+    const titleEl: HTMLElement = fixture.nativeElement.querySelector('.header-title h1');
+    const subtitleEl: HTMLElement = fixture.nativeElement.querySelector('.header-title .subtitle');
+    const createBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.create-shopping-list-btn');
+
+    expect(titleEl.textContent?.trim()).toBe('Shopping Lists');
+    expect(subtitleEl.textContent?.trim()).toContain('Organize and manage');
+    expect(createBtn).toBeTruthy();
+    expect(createBtn.textContent?.trim()).toContain('Create Shopping List');
+  });
+
+  it('should have desktop columns by default', () => {
+    expect(component.displayedColumns()).toEqual([
+      'name',
+      'description',
+      'updatedAt',
+      'actions'
+    ]);
+  });
+
+  it('should switch to mobile columns when breakpoint matches mobile handset', () => {
+    mockBreakpoint$.next({ matches: true, breakpoints: {} });
+    fixture.detectChanges();
+
+    expect(component.isMobile()).toBe(true);
+    expect(component.displayedColumns()).toEqual([ 'name', 'actions' ]);
+  });
+
+  it('should render table rows for each shopping list item', () => {
+    const rows = fixture.nativeElement.querySelectorAll('tr.mat-mdc-row');
+    expect(rows.length).toBe(2);
+
+    const firstLink: HTMLAnchorElement = rows[0].querySelector('.shopping-list-name-link');
+    expect(firstLink.getAttribute('href')).toBe('#');
+    expect(firstLink.textContent?.trim()).toBe('Weekly Groceries');
+
+    const firstDescription: HTMLElement = rows[0].querySelector('.description-cell');
+    expect(firstDescription.textContent?.trim()).toBe('Groceries for the week');
+
+    const deleteBtn = rows[0].querySelector('.delete-btn');
+    expect(deleteBtn).toBeTruthy();
+  });
+
+  it('should dispatch setPage on pagination page change', () => {
+    component.onPageChange({
+      pageIndex: 1,
+      pageSize: 50,
+      length: 100
+    });
+
+    expect(shoppingListServiceMock.setPage).toHaveBeenCalledWith(2);
+  });
+
+  it('should render empty state when no shopping lists are returned', () => {
+    mockShoppingLists$.next({
+      data: [],
+      total: 0,
+      page: 1,
+      totalPages: 0
+    });
+    fixture.detectChanges();
+
+    const emptyState: HTMLElement = fixture.nativeElement.querySelector('.empty-state');
+    expect(emptyState).toBeTruthy();
+    expect(emptyState.textContent?.trim()).toContain('No shopping lists found');
+  });
+
+  it('should handle onCreateShoppingList and onDeleteShoppingList calls gracefully', () => {
+    expect(() => component.onCreateShoppingList()).not.toThrow();
+    expect(() => component.onDeleteShoppingList(sampleShoppingLists[0])).not.toThrow();
+  });
+});
