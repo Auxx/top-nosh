@@ -79,12 +79,14 @@ describe('ShoppingListManagementService', () => {
   it('should have all class methods declared as readonly arrow function properties', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'filters')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'shoppingLists')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'recentShoppingLists')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'setPage')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'resetFilters')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'reloadShoppingLists')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'create')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'update')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'getShoppingListById')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'addToShoppingList')).toBe(true);
   });
 
   it('should return default filters with page 1 and ensure immutability', () => {
@@ -180,6 +182,68 @@ describe('ShoppingListManagementService', () => {
     const req2 = httpTesting.expectOne('/shopping-lists?page=1');
     expect(req2.request.method).toBe('GET');
     req2.flush(mockShoppingListsResponse);
+  });
+
+  it('should fetch and emit recent shopping lists', done => {
+    const mockRecentLists = [
+      {
+        id: '1',
+        name: 'Weekly Groceries',
+        description: 'Groceries for the whole week'
+      }
+    ];
+
+    service.recentShoppingLists().subscribe(response => {
+      expect(response).toEqual(mockRecentLists);
+      done();
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists/recent');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockRecentLists);
+  });
+
+  it('should handle HTTP error gracefully and return fallback empty array in recent shopping lists stream', done => {
+    service.recentShoppingLists().subscribe(response => {
+      expect(response).toEqual([]);
+      done();
+    });
+
+    const req = httpTesting.expectOne('/shopping-lists/recent');
+    req.error(new ProgressEvent('Network error'));
+  });
+
+  it('should trigger reload for both shoppingLists and recentShoppingLists when reloadShoppingLists is called', done => {
+    let listCalls = 0;
+    let recentCalls = 0;
+
+    service.shoppingLists().subscribe(() => {
+      listCalls++;
+      if (listCalls === 2 && recentCalls === 2) {
+        done();
+      }
+    });
+
+    service.recentShoppingLists().subscribe(() => {
+      recentCalls++;
+      if (listCalls === 2 && recentCalls === 2) {
+        done();
+      }
+    });
+
+    const listReq1 = httpTesting.expectOne('/shopping-lists?page=1');
+    listReq1.flush(mockShoppingListsResponse);
+
+    const recentReq1 = httpTesting.expectOne('/shopping-lists/recent');
+    recentReq1.flush([]);
+
+    service.reloadShoppingLists();
+
+    const listReq2 = httpTesting.expectOne('/shopping-lists?page=1');
+    listReq2.flush(mockShoppingListsResponse);
+
+    const recentReq2 = httpTesting.expectOne('/shopping-lists/recent');
+    recentReq2.flush([]);
   });
 
   it('should handle HTTP error gracefully and return fallback empty response in listing stream', done => {
@@ -298,5 +362,76 @@ describe('ShoppingListManagementService', () => {
 
     const req = httpTesting.expectOne('/shopping-lists/999');
     req.flush({ message: 'Not Found' }, { status: 404, statusText: 'Not Found' });
+  });
+
+  describe('addToShoppingList', () => {
+    it('should fetch list details, append new item, call update, trigger reload, and emit true', done => {
+      let reloadTriggered = false;
+      jest.spyOn(service, 'reloadShoppingLists').mockImplementation(() => {
+        reloadTriggered = true;
+      });
+
+      service.addToShoppingList('123', 'Eggs').subscribe(result => {
+        expect(result).toBe(true);
+        expect(reloadTriggered).toBe(true);
+        done();
+      });
+
+      const getReq = httpTesting.expectOne('/shopping-lists/123');
+      expect(getReq.request.method).toBe('GET');
+      getReq.flush(mockShoppingListDetails);
+
+      const updateReq = httpTesting.expectOne('/shopping-lists/123');
+      expect(updateReq.request.method).toBe('PUT');
+      expect(updateReq.request.body).toEqual({
+        name: mockShoppingListDetails.name,
+        description: mockShoppingListDetails.description,
+        items: [
+          ...mockShoppingListDetails.items,
+          {
+            name: 'Eggs',
+            quantity: 1,
+            isBought: false,
+            order: 2
+          }
+        ]
+      });
+      updateReq.flush({
+        ...mockShoppingListDetails,
+        items: [
+          ...mockShoppingListDetails.items,
+          { id: 'item-3', name: 'Eggs', quantity: 1, isBought: false, order: 2 }
+        ]
+      });
+    });
+
+    it('should throw error when getShoppingListById fails during addToShoppingList', done => {
+      service.addToShoppingList('999', 'Eggs').subscribe({
+        next: () => fail('should have failed'),
+        error: error => {
+          expect(error.status).toBe(404);
+          done();
+        }
+      });
+
+      const req = httpTesting.expectOne('/shopping-lists/999');
+      req.flush({ message: 'Not Found' }, { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should throw error when update fails during addToShoppingList', done => {
+      service.addToShoppingList('123', 'Eggs').subscribe({
+        next: () => fail('should have failed'),
+        error: error => {
+          expect(error.status).toBe(500);
+          done();
+        }
+      });
+
+      const getReq = httpTesting.expectOne('/shopping-lists/123');
+      getReq.flush(mockShoppingListDetails);
+
+      const updateReq = httpTesting.expectOne('/shopping-lists/123');
+      updateReq.flush({ message: 'Server Error' }, { status: 500, statusText: 'Server Error' });
+    });
   });
 });

@@ -11,11 +11,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationDialog } from '@top-nosh/ui';
+import { AddToShoppingListDirective } from '../../../shopping-lists/directives/add-to-shopping-list/add-to-shopping-list.directive';
 import { IngredientDetails, RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -31,9 +33,11 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatDividerModule,
     MatExpansionModule,
     MatIconModule,
+    MatMenuModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AddToShoppingListDirective
   ],
   templateUrl: './recipe-details.page.html',
   styleUrl: './recipe-details.page.scss',
@@ -65,6 +69,8 @@ export class RecipeDetailsPage {
   readonly completedSteps = signal<Set<string>>(new Set());
 
   readonly usedIngredients = signal<Set<string>>(new Set());
+
+  readonly selectedIngredient = signal<IngredientDetails | null>(null);
 
   readonly baseServings = computed(() => this.recipe()?.servings || 1);
 
@@ -269,7 +275,6 @@ export class RecipeDetailsPage {
   };
 
   readonly onAddToShoppingList = (ingredient: IngredientDetails): void => {
-    // Non-functional placeholder
-    void ingredient;
+    this.selectedIngredient.set(ingredient);
   };
 }

@@ -6,6 +6,9 @@
 @let ingredients = allIngredients();
 
 <div class="recipe-details-container">
+  <mat-menu #addToShoppingListMenu="matMenu" [appAddToShoppingList]="selectedIngredient()">
+  </mat-menu>
+
   <!-- Loading State -->
   @if (loading) {
     <div class="loading-state" data-testid="loading-spinner">
@@ -165,6 +168,7 @@
                     <button mat-icon-button
                             type="button"
                             matTooltip="Add to shopping list"
+                            [matMenuTriggerFor]="addToShoppingListMenu"
                             (click)="onAddToShoppingList(ingredient)"
                             aria-label="Add to shopping list"
                             data-testid="add-to-shopping-list-btn">
@@ -223,6 +227,7 @@
                             <button mat-icon-button
                                     type="button"
                                     matTooltip="Add to shopping list"
+                                    [matMenuTriggerFor]="addToShoppingListMenu"
                                     (click)="onAddToShoppingList(ingredient)"
                                     aria-label="Add to shopping list">
                               <mat-icon>add_shopping_cart</mat-icon>

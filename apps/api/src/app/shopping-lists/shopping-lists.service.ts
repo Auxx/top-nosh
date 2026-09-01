@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, ShoppingList } from '@prisma/client';
 import { PrismaService } from '@top-nosh/data-access';
 import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
 import { ShoppingListQueryDto } from './dto/shopping-list-query.dto';
@@ -39,6 +39,14 @@ export class ShoppingListsService {
       page,
       totalPages
     };
+  }
+
+  async getRecentShoppingLists(): Promise<ShoppingList[]> {
+    return this.prisma.shoppingList.findMany({
+      where: { deletedAt: null },
+      take: 5,
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
   async getShoppingListById(id: string): Promise<ShoppingListWithDetails> {

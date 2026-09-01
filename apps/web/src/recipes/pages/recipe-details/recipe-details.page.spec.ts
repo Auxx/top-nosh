@@ -1,9 +1,11 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { ConfirmationDialog } from '@top-nosh/ui';
 import { BehaviorSubject, of, throwError } from 'rxjs';
+import { ShoppingListManagementService } from '../../../shopping-lists/services/shopping-list-management/shopping-list-management.service';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { RecipeDetailsPage } from './recipe-details.page';
@@ -95,6 +97,16 @@ describe('RecipeDetailsPage', () => {
       observe: jest.fn().mockReturnValue(mockBreakpoint$.asObservable())
     };
 
+    const mockShoppingListService = {
+      recentShoppingLists: jest.fn().mockReturnValue(of([])),
+      addToShoppingList: jest.fn().mockReturnValue(of(true))
+    };
+
+    const snackBarMock = {
+      open: jest.fn(),
+      dismiss: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
       imports: [ RecipeDetailsPage ],
       providers: [
@@ -107,7 +119,9 @@ describe('RecipeDetailsPage', () => {
         },
         { provide: RecipeManagementService, useValue: mockRecipeService },
         { provide: BreakpointObserver, useValue: mockBreakpointObserver },
-        { provide: MatDialog, useValue: dialogMock }
+        { provide: MatDialog, useValue: dialogMock },
+        { provide: ShoppingListManagementService, useValue: mockShoppingListService },
+        { provide: MatSnackBar, useValue: snackBarMock }
       ]
     }).compileComponents();
 
@@ -595,8 +609,32 @@ describe('RecipeDetailsPage', () => {
     });
   });
 
-  it('should handle placeholder shopping list action without error', () => {
-    expect(() => component.onAddToShoppingList(mockRecipeDetails.stages[0].ingredients[0])).not.toThrow();
+  it('should update selectedIngredient when onAddToShoppingList is called', () => {
+    const targetIngredient = mockRecipeDetails.stages[0].ingredients[0];
+    component.onAddToShoppingList(targetIngredient);
+    expect(component.selectedIngredient()).toEqual(targetIngredient);
+  });
+
+  it('should trigger onAddToShoppingList and update selectedIngredient when clicking add to shopping list button in glance view', () => {
+    jest.spyOn(component, 'onAddToShoppingList');
+    const addBtn = fixture.nativeElement.querySelector('[data-testid="add-to-shopping-list-btn"]');
+    expect(addBtn).toBeTruthy();
+
+    addBtn.click();
+
+    expect(component.onAddToShoppingList).toHaveBeenCalledWith(mockRecipeDetails.stages[0].ingredients[0]);
+    expect(component.selectedIngredient()).toEqual(mockRecipeDetails.stages[0].ingredients[0]);
+  });
+
+  it('should trigger onAddToShoppingList and update selectedIngredient when clicking add to shopping list button in stage ingredients', () => {
+    jest.spyOn(component, 'onAddToShoppingList');
+    const stageAddBtns = fixture.nativeElement.querySelectorAll('.stage-ingredient-row button[mat-icon-button]');
+    expect(stageAddBtns.length).toBeGreaterThan(0);
+
+    stageAddBtns[0].click();
+
+    expect(component.onAddToShoppingList).toHaveBeenCalledWith(mockRecipeDetails.stages[0].ingredients[0]);
+    expect(component.selectedIngredient()).toEqual(mockRecipeDetails.stages[0].ingredients[0]);
   });
 
   it('should open ConfirmationDialog with correct data when onDeleteRecipe is called', () => {

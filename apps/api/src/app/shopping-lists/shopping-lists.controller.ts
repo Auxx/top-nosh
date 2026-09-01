@@ -11,6 +11,7 @@ import {
   Query,
   UseGuards
 } from '@nestjs/common';
+import { ShoppingList } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
 import { ShoppingListQueryDto } from './dto/shopping-list-query.dto';
@@ -33,6 +34,11 @@ export class ShoppingListsController {
     @Query() query: ShoppingListQueryDto
   ): Promise<PaginatedShoppingListResponse> {
     return this.shoppingListsService.getShoppingLists(query);
+  }
+
+  @Get('recent')
+  async getRecentShoppingLists(): Promise<ShoppingList[]> {
+    return this.shoppingListsService.getRecentShoppingLists();
   }
 
   @Get(':id')

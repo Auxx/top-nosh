@@ -50,6 +50,10 @@ describe('Shopping Lists Endpoints (Integration)', () => {
         .expect(401);
 
       await request(app.getHttpServer())
+        .get('/api/shopping-lists/recent')
+        .expect(401);
+
+      await request(app.getHttpServer())
         .get('/api/shopping-lists/some-id')
         .expect(401);
 
@@ -230,6 +234,44 @@ describe('Shopping Lists Endpoints (Integration)', () => {
         page: 1,
         totalPages: 0
       });
+    });
+  });
+
+  describe('GET /api/shopping-lists/recent', () => {
+    it('should return up to 5 most recent non-deleted shopping lists ordered by createdAt desc', async () => {
+      for (let i = 1; i <= 7; i++) {
+        await prismaService.shoppingList.create({
+          data: {
+            name: `List ${i}`,
+            description: `Desc ${i}`,
+            createdAt: new Date(`2026-01-0${i}T10:00:00Z`)
+          }
+        });
+      }
+
+      // Soft delete list 6
+      const list6 = await prismaService.shoppingList.findFirst({
+        where: { name: 'List 6' }
+      });
+      await prismaService.shoppingList.update({
+        where: { id: list6!.id },
+        data: { deletedAt: new Date() }
+      });
+
+      const response = await request(app.getHttpServer())
+        .get('/api/shopping-lists/recent')
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body).toHaveLength(5);
+      // Expected order: List 7, List 5, List 4, List 3, List 2 (List 6 soft-deleted, List 1 excluded by limit 5)
+      expect(response.body.map((l: { name: string; }) => l.name)).toEqual([
+        'List 7',
+        'List 5',
+        'List 4',
+        'List 3',
+        'List 2'
+      ]);
     });
   });
 

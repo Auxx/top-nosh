@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, switchMap } from 'rxjs';
 import {
   CreateShoppingListDto,
   defaultShoppingListFilters,
@@ -8,6 +8,7 @@ import {
   ShoppingListCreatedResponse,
   ShoppingListDetails,
   ShoppingListFilter,
+  ShoppingListItem,
   UpdateShoppingListDto
 } from '../../models/shopping-list.types';
 
@@ -16,6 +17,7 @@ export class ShoppingListManagementService {
   private readonly http = inject(HttpClient);
 
   private readonly filters$ = new BehaviorSubject<ShoppingListFilter>(defaultShoppingListFilters());
+  private readonly recentShoppingListsTrigger$ = new BehaviorSubject<boolean>(true);
 
   private readonly shoppingLists$: Observable<PaginatedShoppingListResponse> = this.filters$.pipe(
     switchMap(filters => {
@@ -38,9 +40,19 @@ export class ShoppingListManagementService {
     })
   );
 
+  private readonly recentShoppingLists$: Observable<ShoppingListItem[]> = this.recentShoppingListsTrigger$.pipe(
+    switchMap(() =>
+      this.http.get<ShoppingListItem[]>('/shopping-lists/recent').pipe(
+        catchError(() => of([]))
+      )
+    )
+  );
+
   readonly filters = (): Observable<ShoppingListFilter> => this.filters$.asObservable();
 
   readonly shoppingLists = (): Observable<PaginatedShoppingListResponse> => this.shoppingLists$;
+
+  readonly recentShoppingLists = (): Observable<ShoppingListItem[]> => this.recentShoppingLists$;
 
   readonly setPage = (page: number): void =>
     this.filters$.next({
@@ -52,6 +64,7 @@ export class ShoppingListManagementService {
 
   readonly reloadShoppingLists = (): void => {
     this.filters$.next(this.filters$.value);
+    this.recentShoppingListsTrigger$.next(true);
   };
 
   readonly create = (dto: CreateShoppingListDto): Observable<ShoppingListCreatedResponse> =>
@@ -62,4 +75,27 @@ export class ShoppingListManagementService {
 
   readonly getShoppingListById = (id: string): Observable<ShoppingListDetails> =>
     this.http.get<ShoppingListDetails>(`/shopping-lists/${id}`);
+
+  readonly addToShoppingList = (id: string, name: string): Observable<boolean> =>
+    this.getShoppingListById(id).pipe(
+      switchMap(list => {
+        const existingItems = list.items ?? [];
+        const newItem = {
+          name,
+          quantity: 1,
+          isBought: false,
+          order: existingItems.length
+        };
+        const updatedDto: UpdateShoppingListDto = {
+          name: list.name,
+          description: list.description,
+          items: [ ...existingItems, newItem ]
+        };
+        return this.update(id, updatedDto);
+      }),
+      map(() => {
+        this.reloadShoppingLists();
+        return true;
+      })
+    );
 }

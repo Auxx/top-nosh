@@ -91,6 +91,25 @@ describe('ShoppingListsService', () => {
     });
   });
 
+  describe('getRecentShoppingLists', () => {
+    it('should return up to 5 non-deleted shopping lists ordered by createdAt desc', async () => {
+      const mockLists = [
+        { id: '1', name: 'List 1' },
+        { id: '2', name: 'List 2' }
+      ];
+      prismaService.shoppingList.findMany.mockResolvedValue(mockLists);
+
+      const result = await service.getRecentShoppingLists();
+
+      expect(prismaService.shoppingList.findMany).toHaveBeenCalledWith({
+        where: { deletedAt: null },
+        take: 5,
+        orderBy: { createdAt: 'desc' }
+      });
+      expect(result).toEqual(mockLists);
+    });
+  });
+
   describe('getShoppingListById', () => {
     it('should return full shopping list with ordered items', async () => {
       const mockShoppingList = {

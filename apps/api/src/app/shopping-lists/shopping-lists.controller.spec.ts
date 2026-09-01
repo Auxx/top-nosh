@@ -6,6 +6,7 @@ describe('ShoppingListsController', () => {
   let controller: ShoppingListsController;
   let shoppingListsService: {
     getShoppingLists: jest.Mock;
+    getRecentShoppingLists: jest.Mock;
     getShoppingListById: jest.Mock;
     createShoppingList: jest.Mock;
     updateShoppingList: jest.Mock;
@@ -15,6 +16,7 @@ describe('ShoppingListsController', () => {
   beforeEach(async () => {
     shoppingListsService = {
       getShoppingLists: jest.fn(),
+      getRecentShoppingLists: jest.fn(),
       getShoppingListById: jest.fn(),
       createShoppingList: jest.fn(),
       updateShoppingList: jest.fn(),
@@ -48,6 +50,21 @@ describe('ShoppingListsController', () => {
 
       expect(shoppingListsService.getShoppingLists).toHaveBeenCalledWith(query);
       expect(result).toEqual(mockResult);
+    });
+  });
+
+  describe('getRecentShoppingLists', () => {
+    it('should delegate to ShoppingListsService.getRecentShoppingLists', async () => {
+      const mockLists = [
+        { id: 'list-1', name: 'Recent List 1' },
+        { id: 'list-2', name: 'Recent List 2' }
+      ];
+      shoppingListsService.getRecentShoppingLists.mockResolvedValue(mockLists);
+
+      const result = await controller.getRecentShoppingLists();
+
+      expect(shoppingListsService.getRecentShoppingLists).toHaveBeenCalled();
+      expect(result).toEqual(mockLists);
     });
   });
 
