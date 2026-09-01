@@ -1,0 +1,18 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-card {
+  @include mat.card-overrides((
+          elevated-container-color: var(--mat-sys-surface-container),
+          elevated-container-elevation: var(--mat-sys-level2),
+  ));
+
+  max-width: 500px;
+  min-width: 300px;
+}

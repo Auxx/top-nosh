@@ -1,57 +1,55 @@
 @let loading = isLoading();
 
-<div class="login-container">
-  <mat-card class="login-card">
+<mat-card-header>
+  <mat-card-title>Welcome!</mat-card-title>
+  <mat-card-subtitle>Please log in to continue</mat-card-subtitle>
+</mat-card-header>
 
-    <mat-card-header>
-      <mat-card-title>Login</mat-card-title>
-    </mat-card-header>
+<mat-card-content>
 
-    <mat-card-content>
+  <form class="single-column"
+        id="login-form"
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()">
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="name@example.com"/>
 
-          <input matInput type="email" formControlName="email" placeholder="name@example.com"/>
+      <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+        Email is required
+      </mat-error>
 
-          <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
-            Email is required
-          </mat-error>
+      <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+        Please enter a valid email address
+      </mat-error>
+    </mat-form-field>
 
-          <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
-            Please enter a valid email address
-          </mat-error>
-        </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" placeholder="Password"/>
 
-          <input matInput type="password" formControlName="password" placeholder="Password"/>
+      <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+        Password is required
+      </mat-error>
+    </mat-form-field>
 
-          <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
-            Password is required
-          </mat-error>
-        </mat-form-field>
+  </form>
 
-        <div class="form-actions">
-          <button mat-flat-button
-                  color="primary"
-                  type="submit"
-                  [disabled]="form.invalid || loading"
-                  class="full-width">
-            @if (loading) {
-              Logging in...
-            } @else {
-              Login
-            }
-          </button>
-        </div>
+</mat-card-content>
 
-      </form>
+<mat-card-actions>
+  <button matButton
+          type="submit"
+          form="login-form"
+          [disabled]="form.invalid || loading">
+    @if (loading) {
+      Logging in...
+    } @else {
+      LOGIN
+    }
+  </button>
+</mat-card-actions>
 
-    </mat-card-content>
-
-  </mat-card>
-</div>

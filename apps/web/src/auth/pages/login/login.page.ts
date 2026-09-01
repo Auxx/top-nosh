@@ -48,10 +48,8 @@ export class LoginPage {
       return;
     }
 
-    if (this.snackBarRef) {
-      this.snackBarRef.dismiss();
-      this.snackBarRef = null;
-    }
+    this.snackBarRef?.dismiss();
+    this.snackBarRef = null;
 
     this.isLoading.set(true);
 
@@ -69,10 +67,9 @@ export class LoginPage {
           )
           .then();
       },
-      error: error => {
+      error: () => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Login failed. Please check your credentials.';
-        this.snackBarRef = this.snackBar.open(errorMessage, 'OK');
+        this.snackBarRef = this.snackBar.open('Login failed. Please check your credentials.', 'OK');
       }
     });
   };

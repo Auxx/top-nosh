@@ -2,12 +2,14 @@ import { Route } from '@angular/router';
 import { authGuard } from '../system/guards/auth-guard/auth.guard';
 import { rootGuard } from '../system/guards/root-guard/root.guard';
 import { AuthorizedPage } from '../system/pages/authorized/authorized.page';
+import { GuestPage } from '../system/pages/guest/guest.page';
 import { RootPage } from '../system/pages/root/root.page';
 
 export const appRoutes: Route[] = [
   { path: '', component: RootPage, canActivate: [ rootGuard ] },
   {
     path: 'auth',
+    component: GuestPage,
     loadChildren: () => import('../auth/auth.routes').then(m => m.routes)
   },
   {

@@ -9,10 +9,11 @@
 html {
   height: 100%;
   @include mat.theme((
-    color: (
-      primary: mat.$magenta-palette,
-      tertiary: mat.$violet-palette,
-    ),
+    //color: (
+    //  primary: mat.$chartreuse-palette,
+    //  tertiary: mat.$red-palette,
+    //),
+    color: mat.$chartreuse-palette,
     typography: Roboto,
     density: 0,
   ));
@@ -22,7 +23,7 @@ body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
   // user's system settings.
-  color-scheme: light;
+  color-scheme: light dark;
 
   // Set a default background, font and text colors for the application using
   // Angular Material's system-level CSS variables. Learn more about these
@@ -36,3 +37,21 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+.full-width {
+  width: 100%;
+}
+
+form {
+  &.single-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+app-guest {
+  mat-card-header {
+    margin-bottom: 32px;
+  }
+}
