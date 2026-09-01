@@ -464,7 +464,7 @@ describe('RecipeDetailsPage', () => {
             order: 1,
             ingredients: [
               { id: 'ing-3', stageId: 'stage-2', name: 'Tomato Paste', quantity: 50, unit: 'GRAMS', order: 0 },
-              { id: 'ing-4', stageId: 'stage-2', name: 'Olive Oil', quantity: 15, unit: 'ml', order: 1 }
+              { id: 'ing-4', stageId: 'stage-2', name: 'Olive Oil', quantity: 15, unit: 'GRAMS', order: 1 }
             ],
             steps: [
               { id: 'step-2', stageId: 'stage-2', name: 'Simmer', description: 'Simmer for 10 minutes.', order: 0 }
