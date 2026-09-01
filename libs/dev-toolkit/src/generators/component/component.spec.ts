@@ -21,8 +21,7 @@ describe('Component Generator', () => {
         projectType: 'application',
         root: `apps/${appName}`,
         sourceRoot: `apps/${appName}/src`
-      },
-      true
+      }
     );
   });
 

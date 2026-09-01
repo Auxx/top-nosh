@@ -25,8 +25,7 @@ describe('Path Helper', () => {
         projectType: 'application',
         root: `apps/${appName}`,
         sourceRoot: `apps/${appName}/src`
-      },
-      true
+      }
     );
 
     addProjectConfiguration(
@@ -36,8 +35,7 @@ describe('Path Helper', () => {
         projectType: 'application',
         root: `libs/${libName}`,
         sourceRoot: `libs/${libName}/src`
-      },
-      true
+      }
     );
   });
 

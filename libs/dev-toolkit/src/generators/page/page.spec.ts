@@ -22,8 +22,7 @@ describe('Page Generator', () => {
         projectType: 'application',
         root: `apps/${appName}`,
         sourceRoot: `apps/${appName}/src`
-      },
-      true
+      }
     );
 
     await featureGenerator(tree, { name: featureName, project: appName });
