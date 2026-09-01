@@ -108,7 +108,14 @@
               <mat-icon>remove</mat-icon>
             </button>
 
-            <span class="servings-value" data-testid="servings-count">{{ currentServings }}</span>
+            <input type="number"
+                   min="1"
+                   [value]="currentServings"
+                   (input)="onServingsInput($event)"
+                   (blur)="onServingsBlur($event)"
+                   aria-label="Servings count"
+                   class="servings-input"
+                   data-testid="servings-count" />
 
             <button mat-icon-button
                     type="button"

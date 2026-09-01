@@ -150,6 +150,28 @@ export class RecipeDetailsPage {
     }
   };
 
+  readonly onServingsInput = (event: Event): void => {
+    const target = event.target as HTMLInputElement;
+
+    const parsed = parseInt(target.value, 10);
+
+    if (!isNaN(parsed) && parsed >= 1) {
+      this.servings.set(parsed);
+    }
+  };
+
+  readonly onServingsBlur = (event: Event): void => {
+    const target = event.target as HTMLInputElement;
+    const parsed = parseInt(target.value, 10);
+
+    if (isNaN(parsed) || parsed < 1) {
+      target.value = String(this.servings());
+    } else {
+      target.value = String(parsed);
+      this.servings.set(parsed);
+    }
+  };
+
   readonly getScaledQuantity = (quantity: number): number => {
     const base = this.baseServings();
     const current = this.servings();

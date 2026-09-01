@@ -128,6 +128,8 @@ describe('RecipeDetailsPage', () => {
     expect(Object.prototype.hasOwnProperty.call(component, 'setViewMode')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'incrementServings')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'decrementServings')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(component, 'onServingsInput')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(component, 'onServingsBlur')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'getScaledQuantity')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'formatUnit')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'toggleStepCompletion')).toBe(true);
@@ -225,8 +227,8 @@ describe('RecipeDetailsPage', () => {
     expect(component.getScaledQuantity(1)).toBe(2);
 
     fixture.detectChanges();
-    const servingsCount = fixture.nativeElement.querySelector('[data-testid="servings-count"]');
-    expect(servingsCount?.textContent?.trim()).toBe('8');
+    const servingsInput = fixture.nativeElement.querySelector('[data-testid="servings-count"]') as HTMLInputElement;
+    expect(servingsInput?.value).toBe('8');
 
     // Decrease servings to 2
     component.decrementServings();
@@ -246,6 +248,66 @@ describe('RecipeDetailsPage', () => {
     // Attempt to decrease below 1 should not change value
     component.decrementServings();
     expect(component.servings()).toBe(1);
+  });
+
+  it('should handle manual numeric input and update servings and scaled quantities', () => {
+    const servingsInput = fixture.nativeElement.querySelector('[data-testid="servings-count"]') as HTMLInputElement;
+    expect(servingsInput.value).toBe('4');
+
+    servingsInput.value = '6';
+    servingsInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(component.servings()).toBe(6);
+    expect(component.getScaledQuantity(500)).toBe(750);
+    expect(servingsInput.value).toBe('6');
+  });
+
+  it('should not update servings signal on invalid input values during typing', () => {
+    const servingsInput = fixture.nativeElement.querySelector('[data-testid="servings-count"]') as HTMLInputElement;
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '0';
+    servingsInput.dispatchEvent(new Event('input'));
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '-2';
+    servingsInput.dispatchEvent(new Event('input'));
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '';
+    servingsInput.dispatchEvent(new Event('input'));
+    expect(component.servings()).toBe(4);
+  });
+
+  it('should reset input value on blur when invalid or empty input is provided', () => {
+    const servingsInput = fixture.nativeElement.querySelector('[data-testid="servings-count"]') as HTMLInputElement;
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '0';
+    servingsInput.dispatchEvent(new Event('blur'));
+    expect(servingsInput.value).toBe('4');
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '';
+    servingsInput.dispatchEvent(new Event('blur'));
+    expect(servingsInput.value).toBe('4');
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '-5';
+    servingsInput.dispatchEvent(new Event('blur'));
+    expect(servingsInput.value).toBe('4');
+    expect(component.servings()).toBe(4);
+  });
+
+  it('should update and normalize input value on blur when valid input is provided', () => {
+    const servingsInput = fixture.nativeElement.querySelector('[data-testid="servings-count"]') as HTMLInputElement;
+    expect(component.servings()).toBe(4);
+
+    servingsInput.value = '8';
+    servingsInput.dispatchEvent(new Event('blur'));
+    expect(servingsInput.value).toBe('8');
+    expect(component.servings()).toBe(8);
   });
 
   it('should correctly format units', () => {

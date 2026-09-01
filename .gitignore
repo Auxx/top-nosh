@@ -49,4 +49,5 @@ Thumbs.db
 /generated/prisma
 .env
 dev.db
+prod.db
 app.properties
