@@ -133,7 +133,7 @@ describe('LoginPage', () => {
     component.onSubmit();
 
     expect(authServiceMock.login).toHaveBeenCalledWith('user@example.com', 'secret123');
-    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('Login failed. Please check your credentials.', 'OK');
     expect(component.isLoading()).toBe(false);
   });
 
