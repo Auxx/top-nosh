@@ -1,3 +1,105 @@
 :host {
   display: block;
+  padding: 24px;
+}
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+
+  .welcome-title {
+    margin: 0 0 8px 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 1rem;
+  }
+}
+
+.dashboard-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
+  align-items: stretch;
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    flex-direction: column;
+  }
+}
+
+mat-card {
+  max-width: 400px;
+
+  img {
+    width: 100%;
+    object-fit: contain;
+  }
+
+  mat-card-header {
+    margin-bottom: 12px;
+  }
+
+  mat-card-actions {
+    margin-top: auto;
+  }
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  text-align: center;
+}
+
+.error-state p {
+  color: var(--mat-sys-error, #ba1a1a);
+  margin: 0;
+}
+
+.empty-state .empty-message {
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  font-style: italic;
+}
+
+.items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .item-entry {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-link {
+      color: var(--mat-sys-primary, #006a6a);
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .item-name {
+      color: var(--mat-sys-on-surface);
+    }
+  }
 }
