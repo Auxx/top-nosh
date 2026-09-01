@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { RecipesModule } from './recipes/recipes.module';
+import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
 
 function getStaticRootPath(): string {
   const candidates = [
@@ -31,7 +32,8 @@ function getStaticRootPath(): string {
     }),
     PrismaModule,
     AuthModule,
-    RecipesModule
+    RecipesModule,
+    ShoppingListsModule
   ],
   controllers: [ AppController ],
   providers: [ AppService ]
