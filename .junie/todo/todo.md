@@ -3,8 +3,8 @@
 - [x] Onboarding
 - [x] Edit Recipe page
 - [x] Delete Recipe
-- [ ] Dashboard page
-- [ ] Implement shopping list
+- [x] Dashboard page
+- [x] Implement shopping list
 
 ## Docker
 
