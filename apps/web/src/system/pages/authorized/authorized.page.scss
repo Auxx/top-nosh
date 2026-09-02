@@ -10,7 +10,7 @@
   margin: auto;
   padding: var(--dim-x-large);
   width: 100%;
-  max-width: 1000px;
+  max-width: var(--page-max-width);
 
   @media (max-width: 599.98px) and (orientation: portrait) {
     padding: var(--dim-x-large) var(--dim-large);

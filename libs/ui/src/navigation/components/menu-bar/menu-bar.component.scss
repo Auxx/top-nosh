@@ -2,6 +2,8 @@
 
 :host {
   display: block;
+  height: 64px;
+  background-color: var(--mat-sys-primary);
 
   @media (max-width: 599.98px) and (orientation: portrait) {
     height: 56px;
@@ -17,6 +19,9 @@ mat-toolbar {
           container-background-color: var(--mat-sys-primary),
           container-text-color: var(--mat-sys-primary-container),
   ));
+
+  max-width: var(--page-max-width);
+  margin: auto;
 
   @media (max-width: 599.98px) and (orientation: portrait) {
     position: fixed;

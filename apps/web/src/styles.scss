@@ -21,6 +21,8 @@
   --dim-large: calc(var(--dim-medium) * 2); // 16px
   --dim-x-large: calc(var(--dim-medium) * 3); // 24px
   --dim-xx-large: calc(var(--dim-medium) * 4); // 32px
+
+  --page-max-width: 1000px;
 }
 
 html {
