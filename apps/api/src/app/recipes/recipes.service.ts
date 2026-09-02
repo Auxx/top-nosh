@@ -105,6 +105,7 @@ export class RecipesService {
         category: dto.category,
         description: dto.description,
         servings: dto.servings,
+        source: dto.source,
         stages: {
           create: dto.stages.map((stage, stageIdx) => ({
             name: stage.name,
@@ -160,7 +161,8 @@ export class RecipesService {
           cuisine: dto.cuisine,
           category: dto.category,
           description: dto.description,
-          servings: dto.servings
+          servings: dto.servings,
+          source: dto.source
         }
       });
 

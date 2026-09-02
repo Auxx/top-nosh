@@ -26,6 +26,7 @@ export interface RecipeListItem {
   category: string;
   description: string;
   servings: number;
+  source?: string | null;
   prepTime?: number;
   cookTime?: number;
   createdAt?: string | Date;

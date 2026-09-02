@@ -94,6 +94,10 @@ export class UpdateRecipeDto {
   @Min(1)
   servings!: number;
 
+  @IsString()
+  @IsOptional()
+  source?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateRecipeStageDto)

@@ -33,6 +33,7 @@ export interface RecipeDetails {
   category: string;
   description: string;
   servings: number;
+  source?: string | null;
   stages: RecipeStageDetails[];
   createdAt: string;
   updatedAt: string;

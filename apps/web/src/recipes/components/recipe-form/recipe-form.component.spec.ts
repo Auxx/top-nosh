@@ -80,6 +80,26 @@ describe('RecipeFormComponent', () => {
     expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropIngredient')).toBe(true);
   });
 
+  it('should initialize source control and populate it from recipe if provided', () => {
+    const fb = new FormBuilder();
+    const emptyForm = createRecipeForm(fb);
+    expect(emptyForm.controls['source'].value).toBe('');
+
+    const formWithSource = createRecipeForm(fb, {
+      id: '1',
+      name: 'Pasta',
+      cuisine: 'Italian',
+      category: 'Main',
+      description: 'Desc',
+      servings: 2,
+      source: 'https://example.com/pasta',
+      stages: [],
+      createdAt: '',
+      updatedAt: ''
+    });
+    expect(formWithSource.controls['source'].value).toBe('https://example.com/pasta');
+  });
+
   it('should filter cuisines suggestions based on input', () => {
     expect(recipeFormComponent.filteredCuisines()).toEqual([ 'Italian', 'Mexican', 'Japanese' ]);
 

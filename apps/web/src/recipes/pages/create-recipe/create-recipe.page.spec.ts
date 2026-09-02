@@ -98,6 +98,7 @@ describe('CreateRecipePage', () => {
     expect(component.recipeForm.controls.servings.value).toBeNull();
     expect(component.recipeForm.controls.cuisine.value).toBe('');
     expect(component.recipeForm.controls.category.value).toBe('');
+    expect(component.recipeForm.controls.source.value).toBe('');
     expect(component.recipeForm.controls.stages.length).toBe(0);
 
     const submitBtn: HTMLButtonElement = fixture.nativeElement.querySelector('button.submit-btn');
@@ -262,6 +263,7 @@ describe('CreateRecipePage', () => {
     component.recipeForm.controls.cuisine.setValue('Italian');
     component.recipeForm.controls.category.setValue('Pasta');
     component.recipeForm.controls.description.setValue('Layered pasta dish');
+    component.recipeForm.controls.source.setValue('https://example.com/lasagna');
 
     component.addStage();
     const stage = component.getStagesArray().at(0);
@@ -288,6 +290,7 @@ describe('CreateRecipePage', () => {
       category: 'Pasta',
       description: 'Layered pasta dish',
       servings: 6,
+      source: 'https://example.com/lasagna',
       stages: [
         {
           name: 'Meat Sauce',

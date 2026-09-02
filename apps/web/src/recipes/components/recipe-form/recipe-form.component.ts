@@ -63,6 +63,7 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     category: [ recipe?.category ?? '', [ Validators.required ] ],
     description: [ recipe?.description ?? '' ],
     servings: [ recipe?.servings ?? null, [ Validators.required, Validators.min(1) ] ],
+    source: [ recipe?.source ?? '' ],
     stages: fb.array<FormGroup>((recipe?.stages || []).map(stage => createStageGroup(fb, stage)))
   });
 }

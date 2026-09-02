@@ -190,6 +190,7 @@ export class CreateRecipePage {
       category: (formValue.category || '').trim(),
       description: (formValue.description || '').trim(),
       servings: Number(formValue.servings),
+      source: (formValue.source || '').trim() || undefined,
       stages: rawStages.map((stage, stageIdx) => ({
         name: (stage.name || '').trim(),
         order: stageIdx,

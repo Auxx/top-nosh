@@ -108,6 +108,43 @@
         line-height: 1.5;
         color: var(--mat-sys-on-surface-variant, #49454f);
       }
+
+      .recipe-source {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--mat-sys-on-surface-variant, #49454f);
+
+        .source-label {
+          font-weight: 600;
+        }
+
+        .source-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: var(--mat-sys-primary, #6750a4);
+          text-decoration: underline;
+          word-break: break-all;
+
+          &:hover {
+            text-decoration: none;
+          }
+
+          .external-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        .source-text {
+          color: var(--mat-sys-on-surface, #1d1b20);
+        }
+      }
     }
 
     .header-actions {

@@ -205,7 +205,7 @@ describe('RecipesService', () => {
   });
 
   describe('createRecipe', () => {
-    it('should create recipe with nested stages, steps, and ingredients', async () => {
+    it('should create recipe with nested stages, steps, and ingredients including source', async () => {
       prismaService.recipe.create.mockResolvedValue({ id: 'created-id' });
 
       const dto = {
@@ -214,6 +214,7 @@ describe('RecipesService', () => {
         category: 'Main',
         description: 'Classic pizza',
         servings: 4,
+        source: 'https://example.com/pizza',
         stages: [
           {
             name: 'Dough',
@@ -233,7 +234,12 @@ describe('RecipesService', () => {
 
       const result = await service.createRecipe(dto);
 
-      expect(prismaService.recipe.create).toHaveBeenCalled();
+      expect(prismaService.recipe.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          name: 'Pizza Margherita',
+          source: 'https://example.com/pizza'
+        })
+      });
       expect(result).toEqual({ id: 'created-id' });
     });
   });
@@ -298,6 +304,7 @@ describe('RecipesService', () => {
         category: 'Main',
         description: 'New Desc',
         servings: 4,
+        source: 'Grandma Cookbook',
         stages: [
           {
             id: 'stage-1',
@@ -331,7 +338,8 @@ describe('RecipesService', () => {
           cuisine: 'Italian',
           category: 'Main',
           description: 'New Desc',
-          servings: 4
+          servings: 4,
+          source: 'Grandma Cookbook'
         }
       });
 

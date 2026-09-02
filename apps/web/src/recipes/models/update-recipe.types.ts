@@ -29,5 +29,6 @@ export interface UpdateRecipeDto {
   category: string;
   description: string;
   servings: number;
+  source?: string;
   stages: UpdateRecipeStageDto[];
 }

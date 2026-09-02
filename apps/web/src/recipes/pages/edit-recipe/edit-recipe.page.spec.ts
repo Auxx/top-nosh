@@ -47,6 +47,7 @@ describe('EditRecipePage', () => {
     category: 'Pasta',
     description: 'Classic meat sauce pasta',
     servings: 4,
+    source: 'https://example.com/bolognese',
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
     stages: [
@@ -213,6 +214,7 @@ describe('EditRecipePage', () => {
       category: 'Pasta',
       description: 'Classic meat sauce pasta',
       servings: 6,
+      source: 'https://example.com/bolognese',
       stages: [
         {
           id: 'stage-1',

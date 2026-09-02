@@ -136,6 +136,7 @@ export class EditRecipePage {
       category: (formValue.category || '').trim(),
       description: (formValue.description || '').trim(),
       servings: Number(formValue.servings),
+      source: (formValue.source || '').trim() || undefined,
       stages: rawStages.map((stage, stageIdx) => ({
         id: stage.id || undefined,
         name: (stage.name || '').trim(),

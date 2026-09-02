@@ -150,6 +150,7 @@ describe('RecipeDetailsPage', () => {
     expect(Object.prototype.hasOwnProperty.call(component, 'toggleIngredientUsed')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'isStepCompleted')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'isIngredientUsed')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(component, 'isUrl')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'onBackToList')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'onEditRecipe')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(component, 'onDeleteRecipe')).toBe(true);
@@ -711,5 +712,90 @@ describe('RecipeDetailsPage', () => {
     expect(component.completedStepsCount()).toBe(0);
     expect(component.cookingProgress()).toBe(0);
     expect(component.allIngredients()).toEqual([]);
+  });
+
+  describe('recipe source display', () => {
+    it('should correctly identify valid HTTP/HTTPS URLs with isUrl', () => {
+      expect(component.isUrl('http://example.com')).toBe(true);
+      expect(component.isUrl('https://example.com/recipes/pasta?param=1#top')).toBe(true);
+      expect(component.isUrl('http://localhost:3000')).toBe(true);
+      expect(component.isUrl('https://sub.domain.co.uk')).toBe(true);
+
+      expect(component.isUrl('ftp://example.com')).toBe(false);
+      expect(component.isUrl('javascript:alert(1)')).toBe(false);
+      expect(component.isUrl('Grandma\'s recipe book')).toBe(false);
+      expect(component.isUrl('From food.com edition 2')).toBe(false);
+      expect(component.isUrl('')).toBe(false);
+      expect(component.isUrl('   ')).toBe(false);
+      expect(component.isUrl(null)).toBe(false);
+      expect(component.isUrl(undefined)).toBe(false);
+    });
+
+    it('should render source as a clickable hyperlink when source is a valid URL', () => {
+      const recipeWithUrlSource: RecipeDetails = {
+        ...mockRecipeDetails,
+        source: 'https://example.com/recipes/spaghetti'
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithUrlSource));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const sourceContainer = compiled.querySelector('[data-testid="recipe-source"]');
+      expect(sourceContainer).toBeTruthy();
+
+      const link = compiled.querySelector('[data-testid="recipe-source-link"]') as HTMLAnchorElement;
+      expect(link).toBeTruthy();
+      expect(link.getAttribute('href')).toBe('https://example.com/recipes/spaghetti');
+      expect(link.getAttribute('target')).toBe('_blank');
+      expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+      expect(link.textContent).toContain('https://example.com/recipes/spaghetti');
+      expect(compiled.querySelector('[data-testid="recipe-source-text"]')).toBeFalsy();
+    });
+
+    it('should render source as plain text when source is non-URL text', () => {
+      const recipeWithTextSource: RecipeDetails = {
+        ...mockRecipeDetails,
+        source: 'Grandma\'s secret cookbook (1985)'
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithTextSource));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const sourceContainer = compiled.querySelector('[data-testid="recipe-source"]');
+      expect(sourceContainer).toBeTruthy();
+
+      const textSpan = compiled.querySelector('[data-testid="recipe-source-text"]');
+      expect(textSpan).toBeTruthy();
+      expect(textSpan?.textContent?.trim()).toBe('Grandma\'s secret cookbook (1985)');
+      expect(compiled.querySelector('[data-testid="recipe-source-link"]')).toBeFalsy();
+    });
+
+    it('should not render source element when source is null or undefined', () => {
+      const recipeWithoutSource: RecipeDetails = {
+        ...mockRecipeDetails,
+        source: null
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithoutSource));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('[data-testid="recipe-source"]')).toBeFalsy();
+    });
+
+    it('should not render source element when source is empty or whitespace only', () => {
+      const recipeWithWhitespaceSource: RecipeDetails = {
+        ...mockRecipeDetails,
+        source: '    '
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithWhitespaceSource));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('[data-testid="recipe-source"]')).toBeFalsy();
+    });
   });
 });

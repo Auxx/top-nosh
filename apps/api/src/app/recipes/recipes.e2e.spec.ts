@@ -125,6 +125,7 @@ describe('Recipes Endpoints (Integration)', () => {
         category: 'Pasta',
         description: 'Classic meat sauce with pasta',
         servings: 4,
+        source: 'https://example.com/bolognese',
         stages: [
           {
             name: 'Sauce Preparation',
@@ -172,6 +173,7 @@ describe('Recipes Endpoints (Integration)', () => {
 
       expect(recipe).toBeDefined();
       expect(recipe!.name).toBe('Spaghetti Bolognese');
+      expect(recipe!.source).toBe('https://example.com/bolognese');
       expect(recipe!.stages).toHaveLength(2);
       expect(recipe!.stages[0].steps).toHaveLength(2);
       expect(recipe!.stages[0].ingredients).toHaveLength(2);
@@ -221,6 +223,7 @@ describe('Recipes Endpoints (Integration)', () => {
 
       expect(response.body.id).toBe(createRes.body.id);
       expect(response.body.name).toBe('Pancakes');
+      expect(response.body.source).toBeNull();
       expect(response.body.stages).toHaveLength(1);
       expect(response.body.stages[0].steps[0].name).toBe('Mix dry ingredients');
       expect(response.body.stages[0].ingredients[0].name).toBe('Flour');
@@ -431,6 +434,7 @@ describe('Recipes Endpoints (Integration)', () => {
         category: 'Pasta',
         description: 'Updated description',
         servings: 6,
+        source: 'https://example.com/updated-recipe',
         stages: [
           {
             id: stage1.id,
@@ -462,6 +466,7 @@ describe('Recipes Endpoints (Integration)', () => {
 
       expect(updateRes.body.name).toBe('Updated Recipe Name');
       expect(updateRes.body.servings).toBe(6);
+      expect(updateRes.body.source).toBe('https://example.com/updated-recipe');
       expect(updateRes.body.stages).toHaveLength(2);
 
       // Verify Stage 1 preserved its ID

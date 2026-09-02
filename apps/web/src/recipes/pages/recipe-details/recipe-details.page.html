@@ -64,6 +64,24 @@
           @if (currentRecipe.description) {
             <p class="recipe-description" data-testid="recipe-description">{{ currentRecipe.description }}</p>
           }
+
+          @if (currentRecipe.source && currentRecipe.source.trim()) {
+            <div class="recipe-source" data-testid="recipe-source">
+              <span class="source-label">Source:</span>
+              @if (isUrl(currentRecipe.source)) {
+                <a [href]="currentRecipe.source.trim()"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="source-link"
+                   data-testid="recipe-source-link">
+                  {{ currentRecipe.source.trim() }}
+                  <mat-icon class="external-icon">open_in_new</mat-icon>
+                </a>
+              } @else {
+                <span class="source-text" data-testid="recipe-source-text">{{ currentRecipe.source.trim() }}</span>
+              }
+            </div>
+          }
         </div>
 
         <div class="header-actions">

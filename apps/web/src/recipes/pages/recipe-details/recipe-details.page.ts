@@ -234,6 +234,18 @@ export class RecipeDetailsPage {
     return this.usedIngredients().has(ingredientId);
   };
 
+  readonly isUrl = (source?: string | null): boolean => {
+    if (!source || !source.trim()) {
+      return false;
+    }
+    try {
+      const url = new URL(source.trim());
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
   readonly onBackToList = (): void => {
     this.router.navigate([ '/recipes' ]);
   };
