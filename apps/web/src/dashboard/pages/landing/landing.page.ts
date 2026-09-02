@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
+import { PageHeaderComponent } from '@top-nosh/ui';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardData } from '../../services/dashboard/dashboard.service.types';
 
@@ -15,7 +16,8 @@ import { DashboardData } from '../../services/dashboard/dashboard.service.types'
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    PageHeaderComponent
   ],
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',

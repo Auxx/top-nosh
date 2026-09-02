@@ -1,38 +1,3 @@
-.recipe-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  .header-title {
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 600;
-    }
-
-    .subtitle {
-      margin: 0.25rem 0 0;
-      color: var(--mat-sys-on-surface-variant, #666);
-    }
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-  }
-}
-
 .filters-card {
   border-radius: 12px;
 

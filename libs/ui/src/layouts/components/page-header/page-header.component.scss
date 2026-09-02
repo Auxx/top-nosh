@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: var(--dim-xx-large);
+
+  gap: var(--dim-medium);
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    flex-direction: column;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-large);
+
+  ::ng-deep {
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: flex-end;
+}
