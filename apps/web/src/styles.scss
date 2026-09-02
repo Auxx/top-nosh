@@ -191,3 +191,20 @@ table.item-list-table {
   display: flex;
   gap: var(--dim-medium);
 }
+
+mat-accordion {
+  &.split-variant {
+    mat-expansion-panel {
+      border-radius: 12px !important;
+      margin-bottom: var(--dim-x-medium) !important;
+    }
+
+    h4 {
+      margin: 0 0 var(--dim-medium);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--mat-sys-on-surface-variant);
+      text-transform: uppercase;
+    }
+  }
+}

@@ -190,24 +190,18 @@
             </mat-card>
 
           } @else {
-            <mat-accordion multi class="stages-accordion" data-testid="stages-accordion">
+            <mat-accordion multi class="stages-accordion split-variant" data-testid="stages-accordion">
               @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
                 <mat-expansion-panel [expanded]="false" class="stage-expansion-panel" data-testid="stage-panel">
                   <mat-expansion-panel-header>
-                    <mat-panel-title class="stage-title">
-                      <span class="stage-number">{{ stageIndex + 1 }}.</span>
-                      <span>{{ stage.name }}</span>
+                    <mat-panel-title>
+                      <span>{{ stageIndex + 1 }}. {{ stage.name }}</span>
                     </mat-panel-title>
-
-                    <mat-panel-description class="stage-summary">
-                      {{ stage.steps.length }} {{ stage.steps.length === 1 ? 'step' : 'steps' }} ·
-                      {{ stage.ingredients.length }} {{ stage.ingredients.length === 1 ? 'ingredient' : 'ingredients' }}
-                    </mat-panel-description>
                   </mat-expansion-panel-header>
 
                   <!-- Stage Steps -->
                   @if (stage.steps && stage.steps.length > 0) {
-                    <div class="stage-section stage-steps-section">
+                    <div>
                       <h4>Steps</h4>
 
                       <ol class="stage-steps-list">

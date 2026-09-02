@@ -223,89 +223,28 @@ h2 {
 
     .stages-accordion {
       .stage-expansion-panel {
-        border-radius: 12px !important;
-        margin-bottom: 0.75rem !important;
-        border: 1px solid var(--mat-sys-outline-variant, #cac4d0);
-
-        .stage-title {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-weight: 600;
-          font-size: 1.05rem;
-
-          .stage-number {
-            color: var(--mat-sys-primary, #1976d2);
-          }
-        }
-
-        .stage-summary {
-          justify-content: flex-end;
-          color: var(--mat-sys-on-surface-variant, #666);
-          font-size: 0.875rem;
-        }
-
-        .stage-section {
-          margin-top: 1rem;
-
-          h4 {
-            margin: 0 0 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--mat-sys-on-surface-variant, #666);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-        }
-
-        .stage-ingredients-list {
-          list-style: none;
-          padding: 0;
-          margin: 0 0 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-
-          .stage-ingredient-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.9rem;
-            padding: 0.25rem 0;
-
-            .ingredient-amount {
-              font-weight: 600;
-              min-width: 60px;
-              color: var(--mat-sys-primary, #1976d2);
-            }
-
-            .ingredient-name {
-              flex: 1;
-            }
-          }
-        }
 
         .stage-steps-list {
-          padding-left: 0;
+          padding: 0;
           margin: 0;
           list-style: none;
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: var(--dim-x-medium);
 
           .stage-step-item {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
-            padding: 0.5rem 0.75rem;
-            background-color: var(--mat-sys-surface-container-lowest, #fff);
+            gap: var(--dim-small);
+            padding: var(--dim-medium) var(--dim-x-medium);
+            background-color: var(--mat-sys-surface-container-lowest);
             border-radius: 8px;
-            border: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+            border: 1px solid var(--mat-sys-outline-variant);
 
             .step-header {
               display: flex;
               align-items: center;
-              gap: 0.5rem;
+              gap: var(--dim-medium);
 
               .step-badge {
                 display: flex;
@@ -314,8 +253,8 @@ h2 {
                 width: 22px;
                 height: 22px;
                 border-radius: 50%;
-                background-color: var(--mat-sys-primary-container, #d3e4ff);
-                color: var(--mat-sys-on-primary-container, #041e49);
+                background-color: var(--mat-sys-secondary-container);
+                color: var(--mat-sys-on-secondary-container);
                 font-size: 0.75rem;
                 font-weight: 700;
               }
