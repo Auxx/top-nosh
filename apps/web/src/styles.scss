@@ -16,7 +16,7 @@
   --base-dimension: calc(8px * var(--app-density));
 
   --dim-medium: var(--base-dimension); // 8px
-  --dim-x-medium: var(--base-dimension * 1.5); // 12px
+  --dim-x-medium: calc(var(--base-dimension) * 1.5); // 12px
   --dim-small: calc(var(--dim-medium) / 2); // 4px
   --dim-large: calc(var(--dim-medium) * 2); // 16px
   --dim-x-large: calc(var(--dim-medium) * 3); // 24px
