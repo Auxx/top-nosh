@@ -216,7 +216,7 @@
           } @else {
             <mat-accordion multi class="stages-accordion" data-testid="stages-accordion">
               @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
-                <mat-expansion-panel [expanded]="true" class="stage-expansion-panel" data-testid="stage-panel">
+                <mat-expansion-panel [expanded]="false" class="stage-expansion-panel" data-testid="stage-panel">
                   <mat-expansion-panel-header>
                     <mat-panel-title class="stage-title">
                       <span class="stage-number">{{ stageIndex + 1 }}.</span>
@@ -228,34 +228,6 @@
                       {{ stage.ingredients.length }} {{ stage.ingredients.length === 1 ? 'ingredient' : 'ingredients' }}
                     </mat-panel-description>
                   </mat-expansion-panel-header>
-
-                  <!-- Stage Ingredients -->
-                  @if (stage.ingredients && stage.ingredients.length > 0) {
-                    <div class="stage-section stage-ingredients-section">
-                      <h4>Stage Ingredients</h4>
-                      <ul class="stage-ingredients-list">
-                        @for (ingredient of stage.ingredients; track ingredient.id || ingredient.name) {
-                          <li class="stage-ingredient-row">
-                            <span class="ingredient-amount">
-                              {{ getScaledQuantity(ingredient.quantity) }}
-                              {{ formatUnit(ingredient.unit, getScaledQuantity(ingredient.quantity)) }}
-                            </span>
-
-                            <span class="ingredient-name">{{ ingredient.name }}</span>
-
-                            <button mat-icon-button
-                                    type="button"
-                                    matTooltip="Add to shopping list"
-                                    [matMenuTriggerFor]="addToShoppingListMenu"
-                                    (click)="onAddToShoppingList(ingredient)"
-                                    aria-label="Add to shopping list">
-                              <mat-icon>add_shopping_cart</mat-icon>
-                            </button>
-                          </li>
-                        }
-                      </ul>
-                    </div>
-                  }
 
                   <!-- Stage Steps -->
                   @if (stage.steps && stage.steps.length > 0) {
