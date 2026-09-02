@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import { PrismaClient } from '@prisma/client';
+import { IngredientUnit, PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
 import * as path from 'path';
 
@@ -95,6 +95,98 @@ async function main() {
   }
 
   console.log('Seeded shopping list:', shoppingList);
+
+  let recipe = await prisma.recipe.findFirst({
+    where: { name: 'Pizza', deletedAt: null },
+    include: {
+      stages: {
+        include: {
+          ingredients: true,
+          steps: true
+        }
+      }
+    }
+  });
+
+  const recipeData = {
+    name: 'Pizza',
+    cuisine: 'Italian',
+    category: 'Pizza',
+    servings: 4,
+    description: 'Authentic Italian Pizza',
+    stages: {
+      create: [
+        {
+          name: 'Main',
+          order: 0,
+          ingredients: {
+            create: [
+              {
+                name: 'dough',
+                quantity: 200,
+                unit: IngredientUnit.GRAMS,
+                order: 0
+              },
+              {
+                name: 'toppings',
+                quantity: 150,
+                unit: IngredientUnit.GRAMS,
+                order: 1
+              }
+            ]
+          },
+          steps: {
+            create: [
+              {
+                name: 'Add toppings to the dough',
+                description: 'Add toppings to the dough.',
+                order: 0
+              }
+            ]
+          }
+        }
+      ]
+    }
+  };
+
+  if (!recipe) {
+    recipe = await prisma.recipe.create({
+      data: recipeData,
+      include: {
+        stages: {
+          include: {
+            ingredients: true,
+            steps: true
+          }
+        }
+      }
+    });
+  } else {
+    await prisma.recipeStage.deleteMany({
+      where: { recipeId: recipe.id }
+    });
+
+    recipe = await prisma.recipe.update({
+      where: { id: recipe.id },
+      data: {
+        cuisine: recipeData.cuisine,
+        category: recipeData.category,
+        servings: recipeData.servings,
+        description: recipeData.description,
+        stages: recipeData.stages
+      },
+      include: {
+        stages: {
+          include: {
+            ingredients: true,
+            steps: true
+          }
+        }
+      }
+    });
+  }
+
+  console.log('Seeded recipe:', recipe);
 }
 
 main()
