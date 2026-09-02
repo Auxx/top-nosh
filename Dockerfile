@@ -28,9 +28,11 @@ COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma7.config.ts ./
 
+COPY docker/startup.sh ./
+RUN chmod +x ./startup.sh
+
 RUN npm ci --omit=dev && npm cache clean --force
 RUN npx -y prisma generate
-RUN npx -y prisma migrate deploy
 
 COPY --from=builder /app/dist ./dist
 
@@ -39,4 +41,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["node", "dist/apps/api/main.js"]
+CMD ["./startup.sh"]
