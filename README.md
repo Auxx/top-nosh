@@ -2,6 +2,12 @@
 
 A self-hosted recipe library management system with shopping lists.
 
+## Seed data
+
+```shell
+prisma db seed
+```
+
 ## Docker Deployment
 
 TopNosh is packaged as a single-container deployment where the NestJS API

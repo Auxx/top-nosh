@@ -43,6 +43,58 @@ async function main() {
   });
 
   console.log('Seeded user:', user);
+
+  const seedItems = [
+    'Milk',
+    'Eggs',
+    'Bread',
+    'Butter',
+    'Cheese',
+    'Apples',
+    'Bananas'
+  ];
+
+  let shoppingList = await prisma.shoppingList.findFirst({
+    where: { name: 'Groceries', deletedAt: null },
+    include: { items: true }
+  });
+
+  if (!shoppingList) {
+    shoppingList = await prisma.shoppingList.create({
+      data: {
+        name: 'Groceries',
+        description: 'Weekly groceries',
+        items: {
+          create: seedItems.map((name, index) => ({
+            name,
+            quantity: 1,
+            isBought: false,
+            order: index
+          }))
+        }
+      },
+      include: { items: true }
+    });
+  } else {
+    await prisma.shoppingListItem.deleteMany({
+      where: { shoppingListId: shoppingList.id }
+    });
+    await prisma.shoppingListItem.createMany({
+      data: seedItems.map((name, index) => ({
+        shoppingListId: shoppingList.id,
+        name,
+        quantity: 1,
+        isBought: false,
+        order: index
+      }))
+    });
+    shoppingList = await prisma.shoppingList.findFirst({
+      where: { id: shoppingList.id },
+      include: { items: true }
+    });
+  }
+
+  console.log('Seeded shopping list:', shoppingList);
 }
 
 main()
