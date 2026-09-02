@@ -26,9 +26,12 @@ import { ShoppingListManagementService } from '../../services/shopping-list-mana
   standalone: true,
   imports: [ CommonModule, MatMenuModule, RouterLink, MatDivider ],
   template: `
+    @let allLists = lists();
     <button mat-menu-item routerLink="/shopping-lists/new">Create new Shopping List</button>
-    <mat-divider/>
-    @for (list of lists(); track list.id) {
+    @if (allLists.length > 0) {
+      <mat-divider/>
+    }
+    @for (list of allLists; track list.id) {
       <button mat-menu-item (click)="onItemClick(list)">{{ list.name }}</button>
     }
   `,
