@@ -6,7 +6,8 @@
 @let ingredients = allIngredients();
 
 <div class="recipe-details-container">
-  <mat-menu #addToShoppingListMenu="matMenu" [appAddToShoppingList]="selectedIngredient()">
+  <mat-menu #addToShoppingListMenu="matMenu">
+    <ng-template [appAddToShoppingList]="selectedIngredient()"></ng-template>
   </mat-menu>
 
   <!-- Loading State -->
@@ -118,7 +119,7 @@
                    (blur)="onServingsBlur($event)"
                    aria-label="Servings count"
                    class="servings-input"
-                   data-testid="servings-count" />
+                   data-testid="servings-count"/>
 
             <button mat-icon-button
                     type="button"

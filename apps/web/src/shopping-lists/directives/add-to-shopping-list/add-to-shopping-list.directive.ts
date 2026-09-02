@@ -13,8 +13,10 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatDivider } from '@angular/material/list';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterLink } from '@angular/router';
 import { IngredientDetails } from '../../../recipes/models/recipe-details.types';
 import { ShoppingListItem } from '../../models/shopping-list.types';
 import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
@@ -22,12 +24,12 @@ import { ShoppingListManagementService } from '../../services/shopping-list-mana
 @Component({
   selector: 'app-add-to-shopping-list-content',
   standalone: true,
-  imports: [ CommonModule, MatMenuModule ],
+  imports: [ CommonModule, MatMenuModule, RouterLink, MatDivider ],
   template: `
+    <button mat-menu-item routerLink="/shopping-lists/new">Create new Shopping List</button>
+    <mat-divider/>
     @for (list of lists(); track list.id) {
-      <button mat-menu-item type="button" (click)="onItemClick(list)">
-        <span>{{ list.name }}</span>
-      </button>
+      <button mat-menu-item (click)="onItemClick(list)">{{ list.name }}</button>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,7 +45,7 @@ export class AddToShoppingListContentComponent {
 }
 
 @Directive({
-  selector: 'mat-menu[appAddToShoppingList]',
+  selector: '[appAddToShoppingList]',
   standalone: true
 })
 export class AddToShoppingListDirective implements OnInit {
