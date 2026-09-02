@@ -6,6 +6,23 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+:root {
+  --density-regular: 1;
+  --density-compact: 0.75;
+  --density-large: 1.5;
+
+  --app-density: var(--density-regular);
+
+  --base-dimension: calc(8px * var(--app-density));
+
+  --dim-medium: var(--base-dimension); // 8px
+  --dim-x-medium: var(--base-dimension * 1.5); // 12px
+  --dim-small: calc(var(--dim-medium) / 2); // 4px
+  --dim-large: calc(var(--dim-medium) * 2); // 16px
+  --dim-x-large: calc(var(--dim-medium) * 3); // 24px
+  --dim-xx-large: calc(var(--dim-medium) * 4); // 32px
+}
+
 html {
   height: 100%;
   @include mat.theme((
@@ -38,6 +55,10 @@ body {
 }
 /* You can add global styles to this file, and also import other style files */
 
+* {
+  box-sizing: border-box;
+}
+
 .full-width {
   width: 100%;
 }
@@ -53,5 +74,22 @@ form {
 app-guest {
   mat-card-header {
     margin-bottom: 32px;
+  }
+}
+
+.content-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-large);
+  margin-bottom: var(--dim-xx-large);
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+}
+
+h3 {
+  &.subtitle {
+    font-weight: normal;
   }
 }

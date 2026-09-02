@@ -1,28 +1,5 @@
 :host {
   display: block;
-  padding: 24px;
-}
-
-.dashboard-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dashboard-header {
-  margin-bottom: 32px;
-
-  .welcome-title {
-    margin: 0 0 8px 0;
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--mat-sys-on-surface);
-  }
-
-  .subtitle {
-    margin: 0;
-    color: var(--mat-sys-on-surface-variant);
-    font-size: 1rem;
-  }
 }
 
 .dashboard-grid {
@@ -46,7 +23,7 @@ mat-card {
   }
 
   mat-card-header {
-    margin-bottom: 12px;
+    margin-bottom: var(--dim-x-medium);
   }
 
   mat-card-actions {
@@ -81,7 +58,7 @@ mat-card {
   margin: 0;
 
   .item-entry {
-    padding: 8px 0;
+    padding: var(--dim-medium) 0;
     border-bottom: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
 
     &:last-child {
