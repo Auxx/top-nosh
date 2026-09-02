@@ -1,6 +1,23 @@
 <mat-toolbar>
   <span>Top Nosh</span>
+
   <span class="spacer"></span>
-  <a mat-button routerLink="/recipes">Recipes</a>
-  <a mat-button routerLink="/shopping-lists">Shopping Lists</a>
+
+  <a matButton routerLink="/dashboard" class="action">Dashboard</a>
+  <a matButton routerLink="/recipes" class="action">Recipes</a>
+  <a matButton routerLink="/shopping-lists" class="action">Shopping Lists</a>
+  <a matButton href="#" class="action">Settings</a>
+
+  <button matIconButton
+          class="collapsed"
+          [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
 </mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="/dashboard">Dashboard</button>
+  <button mat-menu-item routerLink="/recipes">Recipes</button>
+  <button mat-menu-item routerLink="/shopping-lists">Shopping Lists</button>
+  <button mat-menu-item>Settings</button>
+</mat-menu>

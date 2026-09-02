@@ -1,7 +1,45 @@
+@use '@angular/material' as mat;
+
 :host {
   display: block;
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    height: 56px;
+  }
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+mat-toolbar {
+  @include mat.toolbar-overrides((
+          container-background-color: var(--mat-sys-primary),
+          container-text-color: var(--mat-sys-primary-container),
+  ));
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    position: fixed;
+    z-index: 1000;
+  }
+}
+
+button {
+  @include mat.icon-button-overrides((
+          icon-color: var(--mat-sys-primary-container),
+  ));
+}
+
+.action {
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    display: none;
+  }
+}
+
+.collapsed {
+  display: none;
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    display: flex;
+  }
 }
