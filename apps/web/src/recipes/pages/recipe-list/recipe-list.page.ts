@@ -59,7 +59,7 @@ export class RecipeListPage {
 
   readonly isMobile = toSignal(
     this.breakpointObserver
-      .observe(Breakpoints.Handset)
+      .observe(Breakpoints.HandsetPortrait)
       .pipe(map(result => result.matches)),
     { initialValue: false }
   );

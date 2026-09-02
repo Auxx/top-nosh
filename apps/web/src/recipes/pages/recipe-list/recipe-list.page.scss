@@ -1,105 +1,31 @@
-.filters-card {
-  border-radius: 12px;
+:host {
+  display: block;
+  width: 100%;
+}
 
-  mat-card-content {
-    padding: 1rem;
+form {
+  display: flex;
+  gap: var(--dim-large);
+
+  .filter-actions {
+    display: flex;
+    align-items: center;
   }
 
-  .filter-form {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
+  mat-form-field:first-child {
+    flex: 1;
+  }
 
-    .filter-field {
-      flex: 1 1 200px;
-      min-width: 180px;
+  @media (max-width: 780px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
-      &.search-field {
-        flex: 2 1 300px;
-      }
+    mat-form-field:first-child {
+      grid-column: 1 / span 2;
     }
 
     .filter-actions {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.34375em;
-    }
-  }
-}
-
-.table-card {
-  border-radius: 12px;
-  overflow: hidden;
-
-  .table-container {
-    padding: 0;
-    overflow-x: auto;
-  }
-
-  .recipe-table {
-    width: 100%;
-
-    .name-cell {
-      font-weight: 500;
-
-      .recipe-name-link {
-        color: var(--mat-sys-primary, #1976d2);
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
-    .description-cell {
-      max-width: 300px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--mat-sys-on-surface-variant, #666);
-    }
-
-    .badge-cell {
-      .cuisine-badge,
-      .category-badge {
-        display: inline-block;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        font-size: 0.8125rem;
-        background-color: var(--mat-sys-surface-variant, #f0f0f0);
-      }
-    }
-
-    .actions-header,
-    .actions-cell {
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    .empty-table-cell {
-      text-align: center;
-      padding: 3rem 1rem;
-
-      .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--mat-sys-on-surface-variant, #888);
-
-        .empty-icon {
-          font-size: 48px;
-          width: 48px;
-          height: 48px;
-        }
-
-        p {
-          margin: 0;
-          font-size: 1rem;
-        }
-      }
+      display: none;
     }
   }
 }

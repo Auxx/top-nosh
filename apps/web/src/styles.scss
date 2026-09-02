@@ -83,6 +83,87 @@ h3 {
   }
 }
 
+a {
+  color: var(--mat-sys-primary, #1976d2);
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &.label {
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 .spacer {
   flex: 1;
+}
+
+.layout-gap {
+  margin-top: var(--dim-large);
+}
+
+table.item-list-table {
+  width: 100%;
+
+  td {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .item-description-medium {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .actions {
+    text-align: right;
+    white-space: nowrap;
+
+    [mat-icon-button] {
+      &:not(.warn) {
+        @include mat.icon-button-overrides((
+                icon-color: var(--mat-sys-primary),
+        ));
+      }
+    }
+  }
+
+  .empty-table-cell {
+    text-align: center;
+    padding: 3rem 1rem;
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--mat-sys-on-surface-variant);
+
+      .empty-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+[mat-icon-button] {
+  &.warn {
+    @include mat.icon-button-overrides((
+            icon-color: var(--mat-sys-error),
+    ));
+  }
 }
