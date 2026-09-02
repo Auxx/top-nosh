@@ -1,4 +1,3 @@
-
 // Include theming for Angular Material with `mat.theme()`.
 // This Sass mixin will define CSS variables that are used for styling Angular Material
 // components according to the Material 3 design spec.
@@ -32,9 +31,9 @@ html {
     //  primary: mat.$chartreuse-palette,
     //  tertiary: mat.$red-palette,
     //),
-    color: mat.$chartreuse-palette,
-    typography: Roboto,
-    density: 0,
+          color: mat.$chartreuse-palette,
+          typography: Roboto,
+          density: 0,
   ));
 }
 
@@ -55,6 +54,7 @@ body {
   margin: 0;
   height: 100%;
 }
+
 /* You can add global styles to this file, and also import other style files */
 
 * {
@@ -77,6 +77,11 @@ app-guest {
   mat-card-header {
     margin-bottom: 32px;
   }
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
 h3 {
@@ -180,4 +185,9 @@ table.item-list-table {
   justify-content: flex-end;
   gap: var(--dim-large);
   height: 56px;
+}
+
+.badge-container {
+  display: flex;
+  gap: var(--dim-medium);
 }
