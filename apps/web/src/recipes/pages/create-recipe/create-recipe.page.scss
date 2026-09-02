@@ -1,59 +1,10 @@
-.create-recipe-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  .header-title {
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 600;
-    }
-
-    .subtitle {
-      margin: 0.25rem 0 0;
-      color: var(--mat-sys-on-surface-variant, #666);
-    }
-  }
+:host {
+  display: block;
+  width: 100%;
 }
 
 .recipe-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.section-card {
-  border-radius: 12px;
-
-  mat-card-header {
-    margin-bottom: 1rem;
-
-    mat-card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-  }
-}
-
-.actions-card .form-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 1rem;
-
-  .submit-btn {
-    min-width: 140px;
-  }
+  gap: var(--dim-x-large);
 }

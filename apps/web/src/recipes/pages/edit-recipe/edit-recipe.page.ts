@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageHeaderComponent } from '@top-nosh/ui';
 import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
@@ -23,7 +24,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    RecipeFormComponent
+    RecipeFormComponent,
+    PageHeaderComponent
   ],
   templateUrl: './edit-recipe.page.html',
   styleUrl: './edit-recipe.page.scss',

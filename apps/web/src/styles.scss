@@ -171,3 +171,11 @@ table.item-list-table {
     ));
   }
 }
+
+.form-section-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--dim-large);
+  height: 56px;
+}

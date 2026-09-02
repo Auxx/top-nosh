@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { PageHeaderComponent } from '@top-nosh/ui';
 import {
   createIngredientGroup,
   createRecipeForm,
@@ -26,7 +27,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RecipeFormComponent
+    RecipeFormComponent,
+    PageHeaderComponent
   ],
   templateUrl: './create-recipe.page.html',
   styleUrl: './create-recipe.page.scss',

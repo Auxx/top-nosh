@@ -2,79 +2,61 @@
 @let error = hasError();
 @let submitting = isSubmitting();
 
-<div class="edit-recipe-container">
-  <!-- Loading State -->
-  @if (loading) {
-    <div class="loading-state" data-testid="loading-spinner">
-      <mat-spinner diameter="48"></mat-spinner>
-      <p>Loading recipe details...</p>
+<!-- Loading State -->
+@if (loading) {
+  <div class="loading-state" data-testid="loading-spinner">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading recipe details...</p>
+  </div>
+}
+
+<!-- Error / Not Found State -->
+@if (!loading && error) {
+  <mat-card data-testid="error-state">
+    <mat-card-content>
+      <mat-icon>error_outline</mat-icon>
+      <h2>Recipe Not Found</h2>
+
+      <p>The recipe you are trying to edit could not be found or failed to load.</p>
+
+      <button matButton="text"
+              (click)="onCancel()"
+              data-testid="error-back-btn">
+        <mat-icon>arrow_back</mat-icon>
+        Go Back
+      </button>
+    </mat-card-content>
+  </mat-card>
+}
+
+<!-- Recipe Edit Content -->
+@if (!loading && !error && recipe()) {
+  <!-- Page Header -->
+  <ui-page-header>
+    <h1>Edit Recipe</h1>
+    <h3 class="subtitle">
+      Modify recipe metadata, cooking stages, steps, and ingredients
+    </h3>
+
+    <button matButton="text" (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Go Back</span>
+    </button>
+  </ui-page-header>
+
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
+    <app-recipe-form [form]="recipeForm"/>
+
+    <!-- Form Actions Card -->
+    <div class="form-section-actions">
+      <button matButton="filled"
+              type="submit"
+              [disabled]="recipeForm.invalid || submitting">
+        @if (!submitting) {
+          <mat-icon>save</mat-icon>
+        }
+        <span>{{ submitting ? 'Saving Recipe...' : 'Save Recipe' }}</span>
+      </button>
     </div>
-  }
-
-  <!-- Error / Not Found State -->
-  @if (!loading && error) {
-    <mat-card class="error-card" data-testid="error-state">
-      <mat-card-content class="error-content">
-        <mat-icon class="error-icon" color="warn">error_outline</mat-icon>
-        <h2>Recipe Not Found</h2>
-
-        <p>The recipe you are trying to edit could not be found or failed to load.</p>
-
-        <button mat-flat-button
-                color="primary"
-                (click)="onCancel()"
-                data-testid="error-back-btn">
-          <mat-icon>arrow_back</mat-icon>
-          Go Back
-        </button>
-      </mat-card-content>
-    </mat-card>
-  }
-
-  <!-- Recipe Edit Content -->
-  @if (!loading && !error && recipe()) {
-    <header class="page-header">
-      <div class="header-title">
-        <h1>Edit Recipe</h1>
-        <p class="subtitle">Modify recipe metadata, cooking stages, steps, and ingredients</p>
-      </div>
-
-      <div class="header-actions">
-        <button mat-stroked-button type="button" (click)="onCancel()" data-testid="back-btn">
-          <mat-icon>arrow_back</mat-icon>
-          Go Back
-        </button>
-      </div>
-    </header>
-
-    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
-      <app-recipe-form [form]="recipeForm" />
-
-      <!-- Form Actions Card -->
-      <mat-card class="section-card actions-card">
-        <mat-card-content>
-          <div class="form-actions">
-            <button mat-stroked-button
-                    type="button"
-                    (click)="onCancel()"
-                    [disabled]="submitting"
-                    data-testid="cancel-btn">
-              Cancel
-            </button>
-            <button mat-flat-button
-                    color="primary"
-                    type="submit"
-                    [disabled]="recipeForm.invalid || submitting"
-                    class="submit-btn"
-                    data-testid="save-btn">
-              @if (!submitting) {
-                <mat-icon>save</mat-icon>
-              }
-              <span>{{ submitting ? 'Saving Recipe...' : 'Save Recipe' }}</span>
-            </button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </form>
-  }
-</div>
+  </form>
+}
