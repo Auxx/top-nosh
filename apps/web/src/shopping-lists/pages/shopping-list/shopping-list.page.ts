@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { PageHeaderComponent } from '@top-nosh/ui';
 import { map } from 'rxjs';
 import { ShoppingListItem } from '../../models/shopping-list.types';
 import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
@@ -23,7 +24,8 @@ import { ShoppingListManagementService } from '../../services/shopping-list-mana
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    PageHeaderComponent
   ],
   templateUrl: './shopping-list.page.html',
   styleUrl: './shopping-list.page.scss',

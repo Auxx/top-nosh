@@ -135,6 +135,10 @@ table.item-list-table {
     }
   }
 
+  .nowrap-item {
+    white-space: nowrap;
+  }
+
   .empty-table-cell {
     text-align: center;
     padding: 3rem 1rem;
