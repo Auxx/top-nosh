@@ -1,9 +1,11 @@
 @let currentRecipe = recipe();
 @let currentServings = servings();
 @let baseServings = currentRecipe.servings;
-@let servingsMessage = `Scaled for ${ currentServings } ${ currentServings === 1 ? 'serving' : 'servings' }`;
+@let servingsMessage = `For ${ currentServings } ${ currentServings === 1 ? 'serving' : 'servings' }`;
 @let stageGrouping = groupByStage();
 @let allIngredientsList = allIngredients();
+@let isSelectable = selectable();
+@let showItemMenu = showMenu();
 
 <ui-section-header title="Ingredients"
                    icon="shopping_basket"
@@ -15,27 +17,46 @@
 
   } @else {
     @if (stageGrouping) {
-      <div>GROUP BY STAGE</div>
+      @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
+        @if (stage.ingredients.length > 0) {
+          <div class="stage-name">
+            <ui-mini-badge color="secondary" [alternative]="true">
+              Stage {{ stageIndex + 1 }}
+            </ui-mini-badge>
+
+            <div class="label">
+              {{ stage.name }}
+            </div>
+          </div>
+
+          <ul class="grouped">
+            @for (ingredient of stage.ingredients; track ingredient.id || ingredient.name) {
+              <li>
+                @if (isSelectable) {
+                  <ng-container [ngTemplateOutlet]="selectableItem"
+                                [ngTemplateOutletContext]="{ingredient: ingredient}"/>
+
+                } @else {
+                  <ng-container [ngTemplateOutlet]="nonSelectableItem"
+                                [ngTemplateOutletContext]="{ingredient: ingredient}"/>
+                }
+              </li>
+            }
+          </ul>
+        }
+      }
 
     } @else {
       <ul class="ungrouped">
         @for (ingredient of allIngredientsList; track ingredient.id || ingredient.name) {
           <li>
-            <div class="quantity">
-              {{ ingredient.quantity | scaleQuantity:baseServings:currentServings | unit:ingredient.unit }}
-            </div>
+            @if (isSelectable) {
+              <ng-container [ngTemplateOutlet]="selectableItem"
+                            [ngTemplateOutletContext]="{ingredient: ingredient}"/>
 
-            <div class="label">{{ ingredient.name }}</div>
-
-            @if (showMenu()) {
-              <button matIconButton
-                      matTooltip="Add to shopping list"
-                      aria-label="Add to shopping list"
-                      data-testid="add-to-shopping-list-btn"
-                      [matMenuTriggerFor]="addToShoppingListMenu"
-                      (click)="onAddToShoppingList(ingredient)">
-                <mat-icon>add_shopping_cart</mat-icon>
-              </button>
+            } @else {
+              <ng-container [ngTemplateOutlet]="nonSelectableItem"
+                            [ngTemplateOutletContext]="{ingredient: ingredient}"/>
             }
           </li>
         }
@@ -47,3 +68,32 @@
 <mat-menu #addToShoppingListMenu="matMenu">
   <ng-template [appAddToShoppingList]="selectedIngredient()"></ng-template>
 </mat-menu>
+
+<ng-template #selectableItem let-ingredient="ingredient">
+  <mat-checkbox>
+    <span class="quantity">
+      {{ ingredient.quantity | scaleQuantity:baseServings:currentServings | unit:ingredient.unit }}
+    </span>
+
+    <span class="label">{{ ingredient.name }}</span>
+  </mat-checkbox>
+</ng-template>
+
+<ng-template #nonSelectableItem let-ingredient="ingredient">
+  <div class="quantity">
+    {{ ingredient.quantity | scaleQuantity:baseServings:currentServings | unit:ingredient.unit }}
+  </div>
+
+  <div class="label">{{ ingredient.name }}</div>
+
+  @if (showItemMenu) {
+    <button matIconButton
+            matTooltip="Add to shopping list"
+            aria-label="Add to shopping list"
+            data-testid="add-to-shopping-list-btn"
+            [matMenuTriggerFor]="addToShoppingListMenu"
+            (click)="onAddToShoppingList(ingredient)">
+      <mat-icon>add_shopping_cart</mat-icon>
+    </button>
+  }
+</ng-template>

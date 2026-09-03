@@ -1,9 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
-import { NoticeComponent, ScaleQuantityPipe, SectionHeaderComponent, UnitPipe } from '@top-nosh/ui';
+import { MiniBadgeComponent, NoticeComponent, ScaleQuantityPipe, SectionHeaderComponent, UnitPipe } from '@top-nosh/ui';
 import {
   AddToShoppingListDirective
 } from '../../../shopping-lists/directives/add-to-shopping-list/add-to-shopping-list.directive';
@@ -21,7 +23,10 @@ import { IngredientDetails, RecipeDetails } from '../../models/recipe-details.ty
     MatTooltip,
     MatMenu,
     AddToShoppingListDirective,
-    MatMenuTrigger
+    MatMenuTrigger,
+    MiniBadgeComponent,
+    MatCheckbox,
+    NgTemplateOutlet
   ],
   templateUrl: './ingredient-list.component.html',
   styleUrl: './ingredient-list.component.scss',

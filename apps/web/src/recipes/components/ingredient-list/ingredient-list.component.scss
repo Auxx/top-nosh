@@ -26,8 +26,31 @@ ul {
       font-size: 0.95rem;
     }
 
-    button {
+    mat-checkbox {
+      width: 100%;
+    }
+  }
 
+  &.grouped {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    padding-bottom: var(--dim-medium);
+    margin-bottom: var(--dim-large);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    li {
+      padding: 0 var(--dim-medium);
+      border-bottom: none;
+
+      .quantity {
+        font-size: var(--mat-sys-body-medium-size);
+      }
+
+      .label {
+        font-size: var(--mat-sys-body-medium-size);
+      }
     }
   }
 
@@ -41,5 +64,31 @@ ul {
         grid-row: 1 / span 2;
       }
     }
+  }
+
+  mat-checkbox {
+    .quantity {
+      display: inline-block;
+      margin-right: var(--dim-medium);
+    }
+
+    &.mat-mdc-checkbox-checked {
+      opacity: 0.6;
+
+      .quantity, .label {
+        text-decoration: line-through;
+      }
+    }
+  }
+}
+
+.stage-name {
+  display: flex;
+  align-items: center;
+  gap: var(--dim-medium);
+
+  .label {
+    font-weight: 500;
+    font-size: 0.95rem;
   }
 }
