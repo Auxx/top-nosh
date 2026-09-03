@@ -232,21 +232,18 @@
     @if (mode === 'cooking') {
       <div class="cooking-view-container" data-testid="cooking-view">
         <!-- Progress Bar Card -->
-        <mat-card class="progress-card" data-testid="cooking-progress-card">
-          <mat-card-content>
-            <div class="progress-header">
-              <span class="progress-title">Cooking Progress</span>
-              <span class="progress-stats" data-testid="progress-text">
-                {{ completedStepsCount() }} of {{ totalSteps() }} steps completed ({{ progress }}%)
-              </span>
-            </div>
+        <div class="progress-container">
+          <h2>Cooking Progress</h2>
 
-            <mat-progress-bar mode="determinate"
-                              [value]="progress"
-                              class="cooking-progress-bar"
-                              data-testid="cooking-progress-bar"/>
-          </mat-card-content>
-        </mat-card>
+          <div class="notice">
+            {{ completedStepsCount() }} of {{ totalSteps() }} steps completed ({{ progress }}%)
+          </div>
+
+          <mat-progress-bar mode="determinate"
+                            [value]="progress"
+                            class="cooking-progress-bar"
+                            data-testid="cooking-progress-bar"/>
+        </div>
 
         <div class="cooking-grid">
           <!-- Ingredients Checklist -->
