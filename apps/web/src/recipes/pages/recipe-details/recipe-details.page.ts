@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationDialog, DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { AddToShoppingListDirective } from '../../../shopping-lists/directives/add-to-shopping-list/add-to-shopping-list.directive';
+import { GlanceComponent } from '../../components/glance/glance.component';
 import { IngredientDetails, RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -40,7 +41,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     AddToShoppingListDirective,
     PageHeaderComponent,
     MiniBadgeComponent,
-    DomainPipe
+    DomainPipe,
+    GlanceComponent
   ],
   templateUrl: './recipe-details.page.html',
   styleUrl: './recipe-details.page.scss',

@@ -127,6 +127,9 @@
 
     <!-- VIEW MODE: GLANCE -->
     @if (mode === 'glance') {
+      <app-glance [recipe]="currentRecipe"
+                  [servings]="currentServings"></app-glance>
+
       <div class="glance-view-container" data-testid="glance-view">
         <!-- Ingredients List -->
         <div class="ingredients-list-container">

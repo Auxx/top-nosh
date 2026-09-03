@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.contents {
+  margin-top: var(--dim-medium);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    margin: 0;
+    padding: var(--dim-small) var(--dim-medium);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+    .quantity {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--mat-sys-primary);
+    }
+
+    .label {
+      font-size: 0.95rem;
+    }
+
+    button {
+
+    }
+  }
+
+  &.ungrouped {
+    li {
+      display: grid;
+      grid-template-columns: 1fr max-content;
+
+      button {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@let currentRecipe = recipe();
+@let currentServings = servings();
+@let baseServings = currentRecipe.servings;
+@let servingsMessage = `Scaled for ${ currentServings } ${ currentServings === 1 ? 'serving' : 'servings' }`;
+@let stageGrouping = groupByStage();
+@let allIngredientsList = allIngredients();
+
+<ui-section-header title="Ingredients"
+                   icon="shopping_basket"
+                   [description]="servingsMessage"/>
+
+<div class="contents">
+  @if (allIngredientsList.length === 0) {
+    <ui-notice>No ingredients listed for this recipe.</ui-notice>
+
+  } @else {
+    @if (stageGrouping) {
+      <div>GROUP BY STAGE</div>
+
+    } @else {
+      <ul class="ungrouped">
+        @for (ingredient of allIngredientsList; track ingredient.id || ingredient.name) {
+          <li>
+            <div class="quantity">
+              {{ ingredient.quantity | scaleQuantity:baseServings:currentServings | unit:ingredient.unit }}
+            </div>
+
+            <div class="label">{{ ingredient.name }}</div>
+
+            @if (showMenu()) {
+              <button matIconButton
+                      matTooltip="Add to shopping list"
+                      aria-label="Add to shopping list"
+                      data-testid="add-to-shopping-list-btn"
+                      [matMenuTriggerFor]="addToShoppingListMenu"
+                      (click)="onAddToShoppingList(ingredient)">
+                <mat-icon>add_shopping_cart</mat-icon>
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    }
+  }
+</div>
+
+<mat-menu #addToShoppingListMenu="matMenu">
+  <ng-template [appAddToShoppingList]="selectedIngredient()"></ng-template>
+</mat-menu>

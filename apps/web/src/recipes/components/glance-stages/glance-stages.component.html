@@ -1,0 +1,19 @@
+@let currentRecipe = recipe();
+
+<ui-section-header title="Cooking Instructions" icon="timer"/>
+
+<div class="contents">
+  @if (currentRecipe.stages.length === 0) {
+    <mat-card>
+      <mat-card-content>
+        <ui-notice>No stages defined for this recipe.</ui-notice>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card>
+      <mat-card-content>
+        <ui-notice>No stages defined for this recipe.</ui-notice>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

@@ -1,0 +1,12 @@
+@let iconValue = icon();
+
+<h2>
+  @if (iconValue !== undefined) {
+    <mat-icon>{{ iconValue }}</mat-icon>
+  }
+  {{ title() }}
+</h2>
+
+<div class="description">
+  {{ description() }}
+</div>
