@@ -128,11 +128,14 @@
     <!-- VIEW MODE: GLANCE -->
     @if (mode === 'glance') {
       <app-glance [recipe]="currentRecipe"
-                  [servings]="currentServings"></app-glance>
+                  [servings]="currentServings"/>
     }
 
     <!-- VIEW MODE: COOKING -->
     @if (mode === 'cooking') {
+      <app-cooking-mode [recipe]="currentRecipe"
+                        [servings]="currentServings"/>
+
       <div class="cooking-view-container" data-testid="cooking-view">
         <!-- Progress Bar Card -->
         <div class="progress-container">
