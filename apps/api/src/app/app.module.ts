@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
+import { UsersModule } from './users/users.module';
 
 function getStaticRootPath(): string {
   const candidates = [
@@ -35,7 +36,8 @@ function getStaticRootPath(): string {
     AuthModule,
     DashboardModule,
     RecipesModule,
-    ShoppingListsModule
+    ShoppingListsModule,
+    UsersModule
   ],
   controllers: [ AppController ],
   providers: [ AppService ]
