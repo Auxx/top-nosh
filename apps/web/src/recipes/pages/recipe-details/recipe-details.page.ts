@@ -1,13 +1,11 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,11 +14,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationDialog, DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
-import { AddToShoppingListDirective } from '../../../shopping-lists/directives/add-to-shopping-list/add-to-shopping-list.directive';
+import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
 import { GlanceComponent } from '../../components/glance/glance.component';
-import { IngredientDetails, RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
+import { RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
 @Component({
@@ -39,7 +36,6 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    AddToShoppingListDirective,
     PageHeaderComponent,
     MiniBadgeComponent,
     DomainPipe,
@@ -57,9 +53,7 @@ export class RecipeDetailsPage {
 
   private readonly recipeService = inject(RecipeManagementService);
 
-  private readonly breakpointObserver = inject(BreakpointObserver);
-
-  private readonly dialog = inject(MatDialog);
+  // private readonly dialog = inject(MatDialog);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -72,46 +66,6 @@ export class RecipeDetailsPage {
   readonly viewMode = signal<RecipeViewMode>('glance');
 
   readonly servings = signal<number>(1);
-
-  readonly completedSteps = signal<Set<string>>(new Set());
-
-  readonly usedIngredients = signal<Set<string>>(new Set());
-
-  readonly selectedIngredient = signal<IngredientDetails | null>(null);
-
-  readonly baseServings = computed(() => this.recipe()?.servings || 1);
-
-  readonly totalSteps = computed(() => {
-    const r = this.recipe();
-
-    if (!r?.stages) {
-      return 0;
-    }
-
-    return r.stages.reduce((acc, stage) => acc + (stage.steps?.length || 0), 0);
-  });
-
-  readonly completedStepsCount = computed(() => this.completedSteps().size);
-
-  readonly cookingProgress = computed(() => {
-    const total = this.totalSteps();
-
-    if (total === 0) {
-      return 0;
-    }
-
-    return Math.round((this.completedStepsCount() / total) * 100);
-  });
-
-  readonly allIngredients = computed(() => {
-    const r = this.recipe();
-
-    if (!r?.stages) {
-      return [];
-    }
-
-    return r.stages.flatMap(stage => stage.ingredients || []);
-  });
 
   constructor() {
     this.route.paramMap
@@ -138,8 +92,6 @@ export class RecipeDetailsPage {
         next: recipe => {
           this.recipe.set(recipe);
           this.servings.set(recipe.servings || 1);
-          this.completedSteps.set(new Set());
-          this.usedIngredients.set(new Set());
           this.isLoading.set(false);
         },
         error: () => {
@@ -149,15 +101,11 @@ export class RecipeDetailsPage {
       });
   };
 
-  readonly setViewMode = (mode: RecipeViewMode): void => {
-    this.viewMode.set(mode);
-  };
+  readonly setViewMode = (mode: RecipeViewMode) => this.viewMode.set(mode);
 
-  readonly incrementServings = (): void => {
-    this.servings.update(s => s + 1);
-  };
+  readonly incrementServings = () => this.servings.update(s => s + 1);
 
-  readonly decrementServings = (): void => {
+  readonly decrementServings = () => {
     if (this.servings() > 1) {
       this.servings.update(s => s - 1);
     }
@@ -185,62 +133,6 @@ export class RecipeDetailsPage {
     }
   };
 
-  readonly getScaledQuantity = (quantity: number): number => {
-    const base = this.baseServings();
-    const current = this.servings();
-
-    if (base <= 0) {
-      return quantity;
-    }
-
-    const scaled = (quantity * current) / base;
-    return Math.round(scaled * 100) / 100;
-  };
-
-  readonly formatUnit = (unit: string, quantity: number): string => {
-    if (unit === 'GRAMS') {
-      return 'g';
-    }
-
-    if (unit === 'ITEM_COUNT') {
-      return quantity === 1 ? 'item' : 'items';
-    }
-
-    return unit;
-  };
-
-  readonly toggleStepCompletion = (stepId: string): void => {
-    const next = new Set(this.completedSteps());
-
-    if (next.has(stepId)) {
-      next.delete(stepId);
-    } else {
-      next.add(stepId);
-    }
-
-    this.completedSteps.set(next);
-  };
-
-  readonly toggleIngredientUsed = (ingredientId: string): void => {
-    const next = new Set(this.usedIngredients());
-
-    if (next.has(ingredientId)) {
-      next.delete(ingredientId);
-    } else {
-      next.add(ingredientId);
-    }
-
-    this.usedIngredients.set(next);
-  };
-
-  readonly isStepCompleted = (stepId: string): boolean => {
-    return this.completedSteps().has(stepId);
-  };
-
-  readonly isIngredientUsed = (ingredientId: string): boolean => {
-    return this.usedIngredients().has(ingredientId);
-  };
-
   readonly isUrl = (source?: string | null): boolean => {
     if (!source || !source.trim()) {
       return false;
@@ -253,11 +145,9 @@ export class RecipeDetailsPage {
     }
   };
 
-  readonly onBackToList = (): void => {
-    this.router.navigate([ '/recipes' ]);
-  };
+  readonly onBackToList = () => this.router.navigate([ '/recipes' ]);
 
-  readonly onEditRecipe = (): void => {
+  /*readonly onEditRecipe = (): void => {
     const currentRecipe = this.recipe();
     if (currentRecipe) {
       this.router.navigate([ '/recipes', currentRecipe.id, 'edit' ], {
@@ -291,9 +181,5 @@ export class RecipeDetailsPage {
             });
         }
       });
-  };
-
-  readonly onAddToShoppingList = (ingredient: IngredientDetails): void => {
-    this.selectedIngredient.set(ingredient);
-  };
+  };*/
 }

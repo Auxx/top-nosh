@@ -2,12 +2,6 @@
 @let error = hasError();
 @let mode = viewMode();
 @let currentServings = servings();
-@let progress = cookingProgress();
-@let ingredients = allIngredients();
-
-<mat-menu #addToShoppingListMenu="matMenu">
-  <ng-template [appAddToShoppingList]="selectedIngredient()"></ng-template>
-</mat-menu>
 
 <!-- Loading State -->
 @if (loading) {
@@ -135,126 +129,6 @@
     @if (mode === 'cooking') {
       <app-cooking-mode [recipe]="currentRecipe"
                         [servings]="currentServings"/>
-
-      <div class="cooking-view-container" data-testid="cooking-view">
-        <!-- Progress Bar Card -->
-        <div class="progress-container">
-          <h2>Cooking Progress</h2>
-
-          <div class="notice">
-            {{ completedStepsCount() }} of {{ totalSteps() }} steps completed ({{ progress }}%)
-          </div>
-
-          <mat-progress-bar mode="determinate"
-                            [value]="progress"
-                            class="cooking-progress-bar"
-                            data-testid="cooking-progress-bar"/>
-        </div>
-
-        <div class="cooking-grid">
-          <!-- Ingredients Checklist -->
-          <mat-card class="cooking-ingredients-card">
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>checklist</mat-icon>
-                Ingredients Checklist
-              </mat-card-title>
-
-              <mat-card-subtitle>
-                Check off ingredients as you use them
-              </mat-card-subtitle>
-            </mat-card-header>
-
-            <mat-card-content>
-              @if (ingredients.length === 0) {
-                <p class="empty-hint">No ingredients needed.</p>
-              } @else {
-                @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
-                  @if (stage.ingredients && stage.ingredients.length > 0) {
-                    <div class="checklist-stage-group" data-testid="checklist-stage-group">
-                      <h4 class="checklist-stage-title" data-testid="checklist-stage-title">
-                        <span class="stage-index-badge">Stage {{ stageIndex + 1 }}</span>
-                        {{ stage.name }}
-                      </h4>
-
-                      <ul class="checklist">
-                        @for (ingredient of stage.ingredients; track ingredient.id || ingredient.name) {
-                          <li class="checklist-item"
-                              [class.used]="isIngredientUsed(ingredient.id)"
-                              data-testid="cooking-ingredient-item">
-
-                            <mat-checkbox [checked]="isIngredientUsed(ingredient.id)"
-                                          (change)="toggleIngredientUsed(ingredient.id)"
-                                          data-testid="ingredient-checkbox">
-                              <span class="ingredient-scaled-amount">
-                                {{ getScaledQuantity(ingredient.quantity) }}
-                                {{ formatUnit(ingredient.unit, getScaledQuantity(ingredient.quantity)) }}
-                              </span>
-
-                              <span class="ingredient-item-name">{{ ingredient.name }}</span>
-                            </mat-checkbox>
-
-                          </li>
-                        }
-                      </ul>
-                    </div>
-                  }
-                }
-              }
-            </mat-card-content>
-          </mat-card>
-
-          <!-- Step-by-Step Cooking Steps -->
-          <div class="cooking-steps-container">
-            @if (currentRecipe.stages.length === 0) {
-              <mat-card>
-                <mat-card-content>
-                  <p class="empty-hint">No steps to follow.</p>
-                </mat-card-content>
-              </mat-card>
-            } @else {
-              @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
-                <mat-card class="cooking-stage-card" data-testid="cooking-stage-card">
-                  <mat-card-header>
-                    <mat-card-title class="cooking-stage-title">
-                      <span class="stage-index-badge">Stage {{ stageIndex + 1 }}</span>
-                      {{ stage.name }}
-                    </mat-card-title>
-                  </mat-card-header>
-
-                  <mat-card-content>
-                    <div class="cooking-steps-list">
-                      @for (step of stage.steps; track step.id || step.name; let stepIndex = $index) {
-                        <div class="cooking-step-card"
-                             [class.completed]="isStepCompleted(step.id)"
-                             data-testid="cooking-step-item">
-
-                          <div class="step-checkbox-wrapper">
-                            <mat-checkbox [checked]="isStepCompleted(step.id)"
-                                          (change)="toggleStepCompletion(step.id)"
-                                          data-testid="step-checkbox">
-                              <span class="step-title" [class.line-through]="isStepCompleted(step.id)">
-                                {{ step.name }}
-                              </span>
-                            </mat-checkbox>
-                          </div>
-
-                          @if (step.description) {
-                            <p class="step-desc" [class.faded]="isStepCompleted(step.id)">
-                              {{ step.description }}
-                            </p>
-                          }
-
-                        </div>
-                      }
-                    </div>
-                  </mat-card-content>
-                </mat-card>
-              }
-            }
-          </div>
-        </div>
-      </div>
     }
   </div>
 }

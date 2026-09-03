@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-large);
+  margin-top: var(--dim-medium);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--dim-x-medium);
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+mat-card-header {
+  margin-bottom: var(--dim-medium);
+}

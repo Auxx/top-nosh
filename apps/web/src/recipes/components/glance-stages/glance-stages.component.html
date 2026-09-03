@@ -6,9 +6,10 @@
   @if (currentRecipe.stages.length === 0) {
     <mat-card>
       <mat-card-content>
-        <ui-notice>No stages defined for this recipe.</ui-notice>
+        <ui-notice>No cooking instructions for this recipe.</ui-notice>
       </mat-card-content>
     </mat-card>
+
   } @else {
     <mat-accordion multi class="split-variant">
       @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
@@ -20,7 +21,7 @@
           </mat-expansion-panel-header>
 
           @if (stage.steps.length > 0) {
-            <ol>
+            <ol class="steps-list">
               @for (step of stage.steps; track step.id || step.name; let stepIndex = $index) {
                 <li>
                   <div class="badge">{{ stepIndex + 1 }}</div>
