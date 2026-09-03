@@ -1,0 +1,9 @@
+@let currentRecipe = recipe();
+@let currentServings = servings();
+
+<app-ingredient-list [recipe]="currentRecipe"
+                     [servings]="currentServings"
+                     [groupByStage]="true"
+                     [selectable]="true"/>
+
+<app-cooking-stages [recipe]="currentRecipe"/>

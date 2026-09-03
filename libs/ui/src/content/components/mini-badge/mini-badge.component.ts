@@ -8,11 +8,14 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[style.--background]': 'background()',
-    '[style.--foreground]': 'foreground()'
+    '[style.--foreground]': 'foreground()',
+    '[class.alternative]': 'alternative()'
   }
 })
 export class MiniBadgeComponent {
   readonly color = input.required<'primary' | 'secondary' | 'tertiary' | 'error'>();
+
+  readonly alternative = input(false);
 
   readonly background = computed(() => `var(--mat-sys-${this.color()}-container)`);
 

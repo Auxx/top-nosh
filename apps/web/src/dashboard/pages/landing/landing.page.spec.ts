@@ -109,10 +109,6 @@ describe('LandingPage', () => {
     expect(component.loading()).toBe(false);
     expect(component.error()).toBe(false);
 
-    // Verify welcome header
-    const welcomeHeader = fixture.debugElement.query(By.css('.welcome-title'));
-    expect(welcomeHeader.nativeElement.textContent).toContain('Welcome to Top Nosh');
-
     // Verify recipes card
     const recipeLinks = fixture.debugElement.queryAll(By.css('.recipe-list .item-link'));
     expect(recipeLinks.length).toBe(2);

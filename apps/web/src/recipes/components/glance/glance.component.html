@@ -1,0 +1,8 @@
+@let currentRecipe = recipe();
+@let currentServings = servings();
+
+<app-ingredient-list [recipe]="currentRecipe"
+                     [servings]="currentServings"
+                     [showMenu]="true"/>
+
+<app-glance-stages [recipe]="currentRecipe"/>

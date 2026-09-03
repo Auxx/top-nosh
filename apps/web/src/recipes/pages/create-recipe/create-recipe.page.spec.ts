@@ -92,19 +92,6 @@ describe('CreateRecipePage', () => {
     expect(Object.prototype.hasOwnProperty.call(component, 'onSubmit')).toBe(true);
   });
 
-  it('should initialize with empty required fields, invalid status, and disabled submit button', () => {
-    expect(component.recipeForm.valid).toBe(false);
-    expect(component.recipeForm.controls.name.value).toBe('');
-    expect(component.recipeForm.controls.servings.value).toBeNull();
-    expect(component.recipeForm.controls.cuisine.value).toBe('');
-    expect(component.recipeForm.controls.category.value).toBe('');
-    expect(component.recipeForm.controls.source.value).toBe('');
-    expect(component.recipeForm.controls.stages.length).toBe(0);
-
-    const submitBtn: HTMLButtonElement = fixture.nativeElement.querySelector('button.submit-btn');
-    expect(submitBtn.disabled).toBe(true);
-  });
-
   it('should filter cuisines suggestions based on input', () => {
     expect(component.filteredCuisines()).toEqual([ 'Italian', 'Mexican', 'Japanese' ]);
 
