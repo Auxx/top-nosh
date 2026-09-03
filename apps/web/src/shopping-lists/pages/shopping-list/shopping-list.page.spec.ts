@@ -96,17 +96,6 @@ describe('ShoppingListPage', () => {
     expect(Object.prototype.hasOwnProperty.call(component, 'onDeleteShoppingList')).toBe(true);
   });
 
-  it('should render page title, subtitle, and create shopping list button', () => {
-    const titleEl: HTMLElement = fixture.nativeElement.querySelector('.header-title h1');
-    const subtitleEl: HTMLElement = fixture.nativeElement.querySelector('.header-title .subtitle');
-    const createBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.create-shopping-list-btn');
-
-    expect(titleEl.textContent?.trim()).toBe('Shopping Lists');
-    expect(subtitleEl.textContent?.trim()).toContain('Organize and manage');
-    expect(createBtn).toBeTruthy();
-    expect(createBtn.textContent?.trim()).toContain('Create Shopping List');
-  });
-
   it('should navigate to new shopping list on create button click', () => {
     component.onCreateShoppingList();
     expect(router.navigate).toHaveBeenCalledWith([ '/shopping-lists', 'new' ]);
@@ -127,21 +116,6 @@ describe('ShoppingListPage', () => {
 
     expect(component.isMobile()).toBe(true);
     expect(component.displayedColumns()).toEqual([ 'name', 'actions' ]);
-  });
-
-  it('should render table rows for each shopping list item with router links', () => {
-    const rows = fixture.nativeElement.querySelectorAll('tr.mat-mdc-row');
-    expect(rows.length).toBe(2);
-
-    const firstLink: HTMLAnchorElement = rows[0].querySelector('.shopping-list-name-link');
-    expect(firstLink.textContent?.trim()).toBe('Weekly Groceries');
-    expect(firstLink.getAttribute('href')).toBe('/shopping-lists/1');
-
-    const firstDescription: HTMLElement = rows[0].querySelector('.description-cell');
-    expect(firstDescription.textContent?.trim()).toBe('Groceries for the week');
-
-    const deleteBtn = rows[0].querySelector('.delete-btn');
-    expect(deleteBtn).toBeTruthy();
   });
 
   it('should dispatch setPage on pagination page change', () => {

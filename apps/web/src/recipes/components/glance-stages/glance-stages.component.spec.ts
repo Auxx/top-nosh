@@ -6,6 +6,10 @@ describe('GlanceStagesComponent', () => {
   let component: GlanceStagesComponent;
   let fixture: ComponentFixture<GlanceStagesComponent>;
 
+  const recipe = {
+    stages: []
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ GlanceStagesComponent ]
@@ -14,6 +18,7 @@ describe('GlanceStagesComponent', () => {
 
     fixture = TestBed.createComponent(GlanceStagesComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('recipe', recipe);
     await fixture.whenStable();
   });
 

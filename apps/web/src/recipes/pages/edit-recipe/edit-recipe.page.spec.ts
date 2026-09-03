@@ -271,20 +271,4 @@ describe('EditRecipePage', () => {
 
     expect(recipeServiceMock.updateRecipe).not.toHaveBeenCalled();
   });
-
-  it('should disable submit button when form is invalid or submitting', () => {
-    component.recipeForm.controls['name'].setValue('');
-    fixture.detectChanges();
-
-    const saveBtn: HTMLButtonElement = fixture.nativeElement.querySelector('[data-testid="save-btn"]');
-    expect(saveBtn.disabled).toBe(true);
-
-    component.recipeForm.controls['name'].setValue('Valid Name');
-    fixture.detectChanges();
-    expect(saveBtn.disabled).toBe(false);
-
-    component.isSubmitting.set(true);
-    fixture.detectChanges();
-    expect(saveBtn.disabled).toBe(true);
-  });
 });

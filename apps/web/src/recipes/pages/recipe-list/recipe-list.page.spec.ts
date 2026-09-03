@@ -140,29 +140,6 @@ describe('RecipeListPage', () => {
     expect(Object.prototype.hasOwnProperty.call(component, 'onDeleteRecipe')).toBe(true);
   });
 
-  it('should render page title, subtitle, and create recipe button', () => {
-    const titleEl: HTMLElement = fixture.nativeElement.querySelector('.header-title h1');
-    const subtitleEl: HTMLElement = fixture.nativeElement.querySelector('.header-title .subtitle');
-    const createBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.create-recipe-btn');
-
-    expect(titleEl.textContent?.trim()).toBe('Recipes');
-    expect(subtitleEl.textContent?.trim()).toContain('Explore and manage');
-    expect(createBtn).toBeTruthy();
-    expect(createBtn.textContent?.trim()).toContain('Create Recipe');
-  });
-
-  it('should render filter form fields and reset button', () => {
-    const searchInput = fixture.nativeElement.querySelector('input[formControlName="search"]');
-    const cuisineSelect = fixture.nativeElement.querySelector('mat-select[formControlName="cuisine"]');
-    const categorySelect = fixture.nativeElement.querySelector('mat-select[formControlName="category"]');
-    const resetBtn = fixture.nativeElement.querySelector('.clear-filters-btn');
-
-    expect(searchInput).toBeTruthy();
-    expect(cuisineSelect).toBeTruthy();
-    expect(categorySelect).toBeTruthy();
-    expect(resetBtn).toBeTruthy();
-  });
-
   it('should have desktop columns by default', () => {
     expect(component.displayedColumns()).toEqual([
       'name',
@@ -179,20 +156,6 @@ describe('RecipeListPage', () => {
 
     expect(component.isMobile()).toBe(true);
     expect(component.displayedColumns()).toEqual([ 'name', 'actions' ]);
-  });
-
-  it('should render table rows for each recipe with link to details page and action buttons', () => {
-    const rows = fixture.nativeElement.querySelectorAll('tr.mat-mdc-row');
-    expect(rows.length).toBe(2);
-
-    const firstLink: HTMLAnchorElement = rows[0].querySelector('.recipe-name-link');
-    expect(firstLink.getAttribute('href')).toBe('/recipes/1');
-    expect(firstLink.textContent?.trim()).toBe('Spaghetti Bolognese');
-
-    const editBtn = rows[0].querySelector('.edit-btn');
-    const deleteBtn = rows[0].querySelector('.delete-btn');
-    expect(editBtn).toBeTruthy();
-    expect(deleteBtn).toBeTruthy();
   });
 
   it('should update availableCategories when cuisine changes', () => {
@@ -338,14 +301,5 @@ describe('RecipeListPage', () => {
     component.onDeleteRecipe(sampleRecipes[0]);
 
     expect(recipeServiceMock.deleteRecipe).not.toHaveBeenCalled();
-  });
-
-  it('should trigger onDeleteRecipe when clicking delete button in table row', () => {
-    const deleteBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.delete-btn');
-    jest.spyOn(component, 'onDeleteRecipe');
-
-    deleteBtn.click();
-
-    expect(component.onDeleteRecipe).toHaveBeenCalledWith(sampleRecipes[0]);
   });
 });

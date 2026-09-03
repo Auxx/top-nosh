@@ -14,6 +14,7 @@ describe('MiniBadgeComponent', () => {
 
     fixture = TestBed.createComponent(MiniBadgeComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('color', 'primary');
     await fixture.whenStable();
   });
 
