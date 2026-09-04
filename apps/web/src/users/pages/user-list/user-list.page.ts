@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,9 +31,11 @@ import { UserManagementService } from '../../services/user-management/user-manag
   styleUrl: './user-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserListPage implements OnInit {
+export class UserListPage {
   private readonly userManagementService = inject(UserManagementService);
+
   private readonly breakpointObserver = inject(BreakpointObserver);
+
   private readonly router = inject(Router);
 
   readonly isMobile = toSignal(
@@ -51,19 +53,13 @@ export class UserListPage implements OnInit {
       : [ 'fullName', 'email', 'createdAt', 'updatedAt', 'actions' ]
   );
 
-  ngOnInit(): void {
+  constructor() {
     this.userManagementService.resetFilters();
   }
 
-  readonly onPageChange = (event: PageEvent): void => {
-    this.userManagementService.setPage(event.pageIndex + 1);
-  };
+  readonly onPageChange = (event: PageEvent) => this.userManagementService.setPage(event.pageIndex + 1);
 
-  readonly onCreateUser = (): void => {
-    this.router.navigate([ '/users', 'new' ]);
-  };
+  readonly onCreateUser = () => this.router.navigate([ '/users', 'new' ]);
 
-  readonly onEditUser = (user: UserResponseDto): void => {
-    this.router.navigate([ '/users', user.id, 'edit' ]);
-  };
+  readonly onEditUser = (user: UserResponseDto) => this.router.navigate([ '/users', user.id, 'edit' ]);
 }
