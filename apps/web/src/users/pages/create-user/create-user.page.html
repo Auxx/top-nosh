@@ -1,0 +1,78 @@
+@let submitting = isSubmitting();
+
+<!-- Page Header -->
+<ui-page-header>
+  <h1>Create User</h1>
+  <h3 class="subtitle">
+    Create a new system user account.
+  </h3>
+
+  <button matButton="text" (click)="onCancel()">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Back to Users</span>
+  </button>
+</ui-page-header>
+
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <form class="single-column"
+          id="create-user-form"
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()">
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Full Name</mat-label>
+        <input matInput type="text" formControlName="fullName" placeholder="Full Name"/>
+        <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
+          Full name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="Email"/>
+        <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+          Email is required
+        </mat-error>
+        <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+          Please enter a valid email address
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Password"/>
+        <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+          Password is required
+        </mat-error>
+        <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
+          Password must be at least 12 characters long
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" placeholder="Confirm Password"/>
+        <mat-error *uiWhenError="form.controls.confirmPassword; errorCode: 'required'">
+          Confirm password is required
+        </mat-error>
+        <mat-error *uiWhenError="form; errorCode: 'passwordMismatch'">
+          Passwords do not match
+        </mat-error>
+      </mat-form-field>
+
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button matButton="filled"
+            type="submit"
+            form="create-user-form"
+            [disabled]="form.invalid || submitting">
+      @if (!submitting) {
+        <mat-icon>check</mat-icon>
+      }
+      <span>{{ submitting ? 'Creating User...' : 'Create User' }}</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

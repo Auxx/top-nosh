@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 import { OnboardingRequiredResponse, OnboardUserPayload, OnboardUserResponse } from './authentication.service.types';
 
@@ -9,13 +9,32 @@ export * from './authentication.service.types';
 export interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
+  userId: string | null;
 }
 
 export const authStorageKey = 'auth_state';
 
+const extractUserIdFromToken = (token: string | null): string | null => {
+  if (!token) {
+    return null;
+  }
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) {
+      return null;
+    }
+    const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(atob(payloadBase64));
+    return typeof decoded?.sub === 'string' ? decoded.sub : null;
+  } catch {
+    return null;
+  }
+};
+
 const guestAuthState = (): AuthState => ({
   isAuthenticated: false,
-  token: null
+  token: null,
+  userId: null
 });
 
 @Injectable({ providedIn: 'root' })
@@ -33,9 +52,15 @@ export class AuthenticationService {
       const parsed = JSON.parse(stored) as Partial<AuthState>;
 
       if (typeof parsed?.isAuthenticated === 'boolean') {
+        const token = typeof parsed.token === 'string' ? parsed.token : null;
+        const userId = typeof parsed.userId === 'string'
+          ? parsed.userId
+          : extractUserIdFromToken(token);
+
         return {
           isAuthenticated: parsed.isAuthenticated,
-          token: typeof parsed.token === 'string' ? parsed.token : null
+          token,
+          userId
         };
       }
 
@@ -87,7 +112,11 @@ export class AuthenticationService {
       )
       .pipe(
         map(response => {
-          this.updateState({ isAuthenticated: true, token: response.token });
+          this.updateState({
+            isAuthenticated: true,
+            token: response.token,
+            userId: extractUserIdFromToken(response.token)
+          });
 
           return { forcePasswordChange: response.forcePasswordChange };
         })
