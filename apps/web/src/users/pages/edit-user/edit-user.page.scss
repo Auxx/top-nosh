@@ -1,0 +1,38 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+}
+
+.single-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding: 16px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-x-large);
+}

@@ -20,7 +20,7 @@ mat-toolbar {
           container-text-color: var(--mat-sys-primary-container),
   ));
 
-  max-width: var(--page-max-width);
+  max-width: calc(var(--page-max-width) - var(--dim-large));
   margin: auto;
 
   @media (max-width: 599.98px) and (orientation: portrait) {

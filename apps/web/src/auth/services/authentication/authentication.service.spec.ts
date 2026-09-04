@@ -43,16 +43,20 @@ describe('AuthenticationService', () => {
     service.state().subscribe(state => {
       expect(state).toEqual({
         isAuthenticated: false,
-        token: null
+        token: null,
+        userId: null
       });
       done();
     });
   });
 
   it('should initialize with saved state when localStorage contains valid state', done => {
+    const payload = btoa(JSON.stringify({ sub: 'user-123', email: 'user@example.com' }));
+    const mockToken = `header.${payload}.signature`;
     const savedState: AuthState = {
       isAuthenticated: true,
-      token: 'persisted-jwt-token'
+      token: mockToken,
+      userId: 'user-123'
     };
     localStorage.setItem(authStorageKey, JSON.stringify(savedState));
 
@@ -90,16 +94,18 @@ describe('AuthenticationService', () => {
     newService.state().subscribe(state => {
       expect(state).toEqual({
         isAuthenticated: false,
-        token: null
+        token: null,
+        userId: null
       });
       done();
     });
   });
 
-  it('should send POST request to /auth/login, update state, and save to localStorage on successful login', done => {
+  it('should send POST request to /auth/login, update state with userId from token, and save to localStorage on successful login', done => {
     const testEmail = 'user@example.com';
     const testPassword = 'password123';
-    const mockToken = 'mocked-jwt-token';
+    const payload = btoa(JSON.stringify({ sub: 'user-123', email: testEmail }));
+    const mockToken = `header.${payload}.signature`;
 
     const states: AuthState[] = [];
     service.state().subscribe(s => {
@@ -111,12 +117,14 @@ describe('AuthenticationService', () => {
         expect(result).toEqual({ forcePasswordChange: false });
         expect(states[states.length - 1]).toEqual({
           isAuthenticated: true,
-          token: mockToken
+          token: mockToken,
+          userId: 'user-123'
         });
         const stored = JSON.parse(localStorage.getItem(authStorageKey) || '{}');
         expect(stored).toEqual({
           isAuthenticated: true,
-          token: mockToken
+          token: mockToken,
+          userId: 'user-123'
         });
         done();
       }
@@ -179,7 +187,8 @@ describe('AuthenticationService', () => {
         expect(error.status).toBe(401);
         expect(currentState).toEqual({
           isAuthenticated: false,
-          token: null
+          token: null,
+          userId: null
         });
         done();
       }
@@ -264,9 +273,12 @@ describe('AuthenticationService', () => {
   });
 
   it('should reset state and update localStorage on logout', done => {
+    const payload = btoa(JSON.stringify({ sub: 'user-123', email: 'user@example.com' }));
+    const mockToken = `header.${payload}.signature`;
     const savedState: AuthState = {
       isAuthenticated: true,
-      token: 'persisted-jwt-token'
+      token: mockToken,
+      userId: 'user-123'
     };
     localStorage.setItem(authStorageKey, JSON.stringify(savedState));
 
@@ -286,14 +298,34 @@ describe('AuthenticationService', () => {
     loggedInService.state().subscribe(state => {
       expect(state).toEqual({
         isAuthenticated: false,
-        token: null
+        token: null,
+        userId: null
       });
       const stored = JSON.parse(localStorage.getItem(authStorageKey) || '{}');
       expect(stored).toEqual({
         isAuthenticated: false,
-        token: null
+        token: null,
+        userId: null
       });
       done();
     });
+  });
+
+  it('should set userId to null when login token payload is invalid', done => {
+    const testEmail = 'user@example.com';
+    const testPassword = 'password123';
+    const mockToken = 'invalid.jwt.token';
+
+    service.login(testEmail, testPassword).subscribe({
+      next: () => {
+        service.state().subscribe(state => {
+          expect(state.userId).toBeNull();
+          done();
+        });
+      }
+    });
+
+    const req = httpTesting.expectOne('/auth/login');
+    req.flush({ token: mockToken, forcePasswordChange: false });
   });
 });
