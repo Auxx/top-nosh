@@ -92,10 +92,7 @@
             type="submit"
             form="create-user-form"
             [disabled]="form.invalid || submitting">
-      @if (!submitting) {
-        <mat-icon>check</mat-icon>
-      }
-      <span>{{ submitting ? 'Creating User...' : 'Create User' }}</span>
+      <span>{{ submitting ? 'Creating User...' : 'CREATE USER' }}</span>
     </button>
   </mat-card-actions>
 </mat-card>

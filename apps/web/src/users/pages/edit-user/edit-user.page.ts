@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { NoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { take } from 'rxjs';
 import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
 import { UserResponseDto } from '../../models/user.types';
@@ -55,7 +55,8 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatIconModule,
     MatProgressSpinnerModule,
     PageHeaderComponent,
-    WhenError
+    WhenError,
+    NoticeComponent
   ],
   templateUrl: './edit-user.page.html',
   styleUrl: './edit-user.page.scss',
