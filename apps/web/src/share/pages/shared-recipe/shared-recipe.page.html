@@ -109,7 +109,8 @@
     <!-- VIEW MODE: GLANCE -->
     @if (mode === 'glance') {
       <app-glance [recipe]="currentRecipe"
-                  [servings]="currentServings"/>
+                  [servings]="currentServings"
+                  [disableShoppingLists]="true"/>
     }
 
     <!-- VIEW MODE: COOKING -->

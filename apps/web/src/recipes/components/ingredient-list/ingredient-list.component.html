@@ -65,8 +65,11 @@
   }
 </div>
 
+
 <mat-menu #addToShoppingListMenu="matMenu">
-  <ng-template [appAddToShoppingList]="selectedIngredient()"></ng-template>
+  @if (showItemMenu) {
+    <ng-template [appAddToShoppingList]="selectedIngredient()"></ng-template>
+  }
 </mat-menu>
 
 <ng-template #selectableItem let-ingredient="ingredient">
@@ -95,5 +98,7 @@
             (click)="onAddToShoppingList(ingredient)">
       <mat-icon>add_shopping_cart</mat-icon>
     </button>
+  } @else {
+    <div class="button-placeholder"></div>
   }
 </ng-template>

@@ -9,7 +9,9 @@ export class SharedDataService {
   private readonly http = inject(HttpClient);
 
   readonly getSharedRecipeById = (id: string): Observable<RecipeDetails> =>
-    this.http.get<RecipeDetails>(`/share/recipe/${id}`, {
-      context: new HttpContext().set(HTTP_AUTH_ENABLED, false)
-    });
+    this.http
+      .get<RecipeDetails>(
+        `/share/recipe/${id}`,
+        { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
+      );
 }

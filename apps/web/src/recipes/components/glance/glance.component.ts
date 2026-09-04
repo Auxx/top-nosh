@@ -17,4 +17,6 @@ export class GlanceComponent {
   readonly recipe = input.required<RecipeDetails>();
 
   readonly servings = input.required<number>();
+
+  readonly disableShoppingLists = input<boolean>(false);
 }
