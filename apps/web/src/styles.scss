@@ -69,7 +69,13 @@ form {
   &.single-column {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--dim-large);
+  }
+
+  &.dual-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--dim-large);
   }
 }
 

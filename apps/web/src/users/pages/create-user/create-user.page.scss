@@ -2,16 +2,3 @@
   display: block;
   width: 100%;
 }
-
-.single-column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 600px;
-}
-
-mat-card-actions {
-  display: flex;
-  justify-content: flex-start;
-  padding: 16px;
-}

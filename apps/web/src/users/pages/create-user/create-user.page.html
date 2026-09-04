@@ -13,49 +13,72 @@
   </button>
 </ui-page-header>
 
-<mat-card appearance="outlined">
+<mat-card>
   <mat-card-content>
-    <form class="single-column"
+    <form class="dual-column"
           id="create-user-form"
           [formGroup]="form"
           (ngSubmit)="onSubmit()">
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline">
         <mat-label>Full Name</mat-label>
-        <input matInput type="text" formControlName="fullName" placeholder="Full Name"/>
+
+        <input matInput
+               type="text"
+               formControlName="fullName"
+               placeholder="Full Name"/>
+
         <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
           Full name is required
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" placeholder="Email"/>
+
+        <input matInput
+               type="email"
+               formControlName="email"
+               placeholder="Email"/>
+
         <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
           Email is required
         </mat-error>
+
         <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
           Please enter a valid email address
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" placeholder="Password"/>
+
+        <input matInput
+               type="password"
+               formControlName="password"
+               placeholder="Password"/>
+
         <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
           Password is required
         </mat-error>
+
         <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
           Password must be at least 12 characters long
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
-        <input matInput type="password" formControlName="confirmPassword" placeholder="Confirm Password"/>
+
+        <input matInput
+               type="password"
+               formControlName="confirmPassword"
+               placeholder="Confirm Password"/>
+
         <mat-error *uiWhenError="form.controls.confirmPassword; errorCode: 'required'">
           Confirm password is required
         </mat-error>
+
         <mat-error *uiWhenError="form; errorCode: 'passwordMismatch'">
           Passwords do not match
         </mat-error>
@@ -65,7 +88,7 @@
   </mat-card-content>
 
   <mat-card-actions>
-    <button matButton="filled"
+    <button matButton
             type="submit"
             form="create-user-form"
             [disabled]="form.invalid || submitting">
