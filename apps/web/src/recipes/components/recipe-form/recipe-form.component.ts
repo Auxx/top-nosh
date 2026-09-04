@@ -6,6 +6,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -64,6 +65,7 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     description: [ recipe?.description ?? '' ],
     servings: [ recipe?.servings ?? null, [ Validators.required, Validators.min(1) ] ],
     source: [ recipe?.source ?? '' ],
+    isShared: [ recipe?.isShared ?? false ],
     stages: fb.array<FormGroup>((recipe?.stages || []).map(stage => createStageGroup(fb, stage)))
   });
 }
@@ -74,6 +76,7 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     CommonModule,
     ReactiveFormsModule,
     MatCardModule,
+    MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -99,10 +102,24 @@ export class RecipeFormComponent implements OnInit {
 
   readonly form = input.required<FormGroup>();
 
+  readonly recipeId = input<string | undefined>(undefined);
+
   readonly unitOptions: { value: IngredientUnit; label: string; }[] = [
     { value: 'GRAMS', label: 'Grams (g)' },
     { value: 'ITEM_COUNT', label: 'Item count (pcs)' }
   ];
+
+  readonly isShared = signal<boolean>(false);
+
+  readonly shareUrl = computed(() => {
+    const id = this.recipeId();
+    if (!id) {
+      return '';
+    }
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    return `${protocol}//${host}/share/recipe/${id}`;
+  });
 
   readonly cuisineInput = signal<string>('');
 
@@ -148,6 +165,14 @@ export class RecipeFormComponent implements OnInit {
 
   ngOnInit(): void {
     const formGroup = this.form();
+    const isSharedCtrl = formGroup.get('isShared');
+    if (isSharedCtrl) {
+      this.isShared.set(!!isSharedCtrl.value);
+      isSharedCtrl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(val => this.isShared.set(!!val));
+    }
+
     const cuisineCtrl = formGroup.get('cuisine');
     if (cuisineCtrl) {
       this.cuisineInput.set(cuisineCtrl.value || '');

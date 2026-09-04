@@ -10,11 +10,12 @@ import { createRecipeForm, RecipeFormComponent } from './recipe-form.component';
 @Component({
   standalone: true,
   imports: [ ReactiveFormsModule, RecipeFormComponent ],
-  template: `<app-recipe-form [form]="form()" />`
+  template: `<app-recipe-form [form]="form()" [recipeId]="recipeId()" />`
 })
 class TestHostComponent {
   private readonly fb = new FormBuilder();
   readonly form = signal<FormGroup>(createRecipeForm(this.fb));
+  readonly recipeId = signal<string | undefined>(undefined);
 }
 
 describe('RecipeFormComponent', () => {
@@ -93,11 +94,13 @@ describe('RecipeFormComponent', () => {
       description: 'Desc',
       servings: 2,
       source: 'https://example.com/pasta',
+      isShared: true,
       stages: [],
       createdAt: '',
       updatedAt: ''
     });
     expect(formWithSource.controls['source'].value).toBe('https://example.com/pasta');
+    expect(formWithSource.controls['isShared'].value).toBe(true);
   });
 
   it('should filter cuisines suggestions based on input', () => {
@@ -235,5 +238,45 @@ describe('RecipeFormComponent', () => {
 
     expect(recipeFormComponent.getIngredientsArray(0).at(0).get('name')?.value).toBe('Water');
     expect(recipeFormComponent.getIngredientsArray(0).at(1).get('name')?.value).toBe('Flour');
+  });
+
+  describe('Share Recipe Card', () => {
+    it('should NOT render Share Recipe card when recipeId is undefined', () => {
+      hostComponent.recipeId.set(undefined);
+      fixture.detectChanges();
+
+      const shareCard = fixture.nativeElement.querySelector('[data-testid="share-recipe-card"]');
+      expect(shareCard).toBeNull();
+    });
+
+    it('should render Share Recipe card when recipeId is provided', () => {
+      hostComponent.recipeId.set('recipe-abc-123');
+      fixture.detectChanges();
+
+      const shareCard = fixture.nativeElement.querySelector('[data-testid="share-recipe-card"]');
+      expect(shareCard).toBeTruthy();
+    });
+
+    it('should not display public link when isShared is false', () => {
+      hostComponent.recipeId.set('recipe-abc-123');
+      hostComponent.form().controls['isShared'].setValue(false);
+      fixture.detectChanges();
+
+      const shareLink = fixture.nativeElement.querySelector('[data-testid="share-recipe-link"]');
+      expect(shareLink).toBeNull();
+    });
+
+    it('should display public link when isShared is true and compute correct URL', () => {
+      hostComponent.recipeId.set('recipe-abc-123');
+      hostComponent.form().controls['isShared'].setValue(true);
+      fixture.detectChanges();
+
+      const shareLink = fixture.nativeElement.querySelector('[data-testid="share-recipe-link"]') as HTMLAnchorElement;
+      expect(shareLink).toBeTruthy();
+
+      const expectedUrl = `${window.location.protocol}//${window.location.host}/share/recipe/recipe-abc-123`;
+      expect(shareLink.href).toBe(expectedUrl);
+      expect(shareLink.textContent?.trim()).toBe(expectedUrl);
+    });
   });
 });

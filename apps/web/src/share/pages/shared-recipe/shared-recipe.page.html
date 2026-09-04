@@ -1,0 +1,121 @@
+@let loading = isLoading();
+@let error = hasError();
+@let mode = viewMode();
+@let currentServings = servings();
+
+<!-- Loading State -->
+@if (loading) {
+  <div class="loading-state" data-testid="loading-spinner">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading recipe details...</p>
+  </div>
+}
+
+<!-- Error / Not Found State -->
+@if (!loading && error) {
+  <mat-card class="error-card" data-testid="error-state">
+    <mat-card-content class="error-content">
+      <mat-icon class="error-icon" color="warn">error_outline</mat-icon>
+      <h2>Recipe Not Found</h2>
+
+      <p>The recipe you are looking for could not be found or failed to load.</p>
+    </mat-card-content>
+  </mat-card>
+}
+
+<!-- Recipe Details Content -->
+@if (!loading && !error && recipe(); as currentRecipe) {
+  <!-- Page Header & Top Bar -->
+  <ui-page-header>
+    <h1>{{ currentRecipe.name }}</h1>
+    <div class="badge-container">
+      <ui-mini-badge data-testid="recipe-cuisine" color="primary">{{ currentRecipe.cuisine }}</ui-mini-badge>
+      <ui-mini-badge data-testid="recipe-category" color="secondary">{{ currentRecipe.category }}</ui-mini-badge>
+    </div>
+  </ui-page-header>
+
+  <div class="meta">
+    @if (currentRecipe.description) {
+      <p class="recipe-description" data-testid="recipe-description">{{ currentRecipe.description }}</p>
+    }
+
+    @if (currentRecipe.source && currentRecipe.source.trim()) {
+      <div class="recipe-source" data-testid="recipe-source">
+        <span class="label">Source:</span>
+
+        @if (isUrl(currentRecipe.source)) {
+          <a [href]="currentRecipe.source.trim()"
+             rel="noopener noreferrer"
+             data-testid="recipe-source-link">
+            {{ currentRecipe.source | domain }}
+          </a>
+        } @else {
+          <span class="source-text" data-testid="recipe-source-text">{{ currentRecipe.source.trim() }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="wrapper">
+    <!-- Controls Toolbar: Mode Switcher & Servings Stepper -->
+    <mat-card class="recipe-toolbar">
+      <mat-card-content>
+        <mat-button-toggle-group [value]="mode"
+                                 (change)="setViewMode($event.value)"
+                                 aria-label="Recipe View Mode"
+                                 data-testid="mode-toggle-group">
+          <mat-button-toggle value="glance" data-testid="glance-mode-toggle">
+            <span>At a Glance</span>
+          </mat-button-toggle>
+
+          <mat-button-toggle value="cooking" data-testid="cooking-mode-toggle">
+            <span>Cooking Mode</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <div class="servings-stepper" data-testid="servings-stepper">
+          <span class="servings-label">Servings:</span>
+          <div class="stepper-controls">
+            <button mat-icon-button
+                    type="button"
+                    [disabled]="currentServings <= 1"
+                    (click)="decrementServings()"
+                    aria-label="Decrease servings"
+                    data-testid="decrement-servings-btn">
+              <mat-icon>remove</mat-icon>
+            </button>
+
+            <input type="number"
+                   min="1"
+                   [value]="currentServings"
+                   (input)="onServingsInput($event)"
+                   (blur)="onServingsBlur($event)"
+                   aria-label="Servings count"
+                   class="servings-input"
+                   data-testid="servings-count"/>
+
+            <button mat-icon-button
+                    type="button"
+                    (click)="incrementServings()"
+                    aria-label="Increase servings"
+                    data-testid="increment-servings-btn">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- VIEW MODE: GLANCE -->
+    @if (mode === 'glance') {
+      <app-glance [recipe]="currentRecipe"
+                  [servings]="currentServings"/>
+    }
+
+    <!-- VIEW MODE: COOKING -->
+    @if (mode === 'cooking') {
+      <app-cooking-mode [recipe]="currentRecipe"
+                        [servings]="currentServings"/>
+    }
+  </div>
+}

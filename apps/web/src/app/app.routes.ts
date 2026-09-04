@@ -13,6 +13,10 @@ export const appRoutes: Route[] = [
     loadChildren: () => import('../auth/auth.routes').then(m => m.routes)
   },
   {
+    path: 'share',
+    loadChildren: () => import('../share/share.routes').then(m => m.routes)
+  },
+  {
     path: 'dashboard',
     canActivate: [ authGuard ],
     component: AuthorizedPage,

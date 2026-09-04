@@ -349,6 +349,7 @@ describe('RecipeManagementService', () => {
       category: 'Pasta',
       description: 'Updated description',
       servings: 4,
+      isShared: false,
       createdAt: '2026-01-01T00:00:00.000Z',
       updatedAt: '2026-01-02T00:00:00.000Z',
       stages: []
@@ -456,6 +457,7 @@ describe('RecipeManagementService', () => {
       category: 'Pasta',
       description: 'Classic meat sauce pasta',
       servings: 4,
+      isShared: false,
       createdAt: '2026-01-01T00:00:00.000Z',
       updatedAt: '2026-01-01T00:00:00.000Z',
       stages: [

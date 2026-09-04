@@ -31,6 +31,32 @@
   }
 }
 
+.share-recipe-card {
+  .share-recipe-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    .share-link-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+
+      .share-link-label {
+        font-weight: 500;
+        color: var(--mat-sys-on-surface-variant);
+      }
+
+      .share-link {
+        color: var(--mat-sys-primary);
+        word-break: break-all;
+      }
+    }
+  }
+}
+
 .stages-section {
   display: flex;
   flex-direction: column;

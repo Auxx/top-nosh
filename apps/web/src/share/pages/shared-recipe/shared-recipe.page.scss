@@ -1,0 +1,155 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: auto;
+  padding: var(--dim-x-large);
+  box-sizing: border-box;
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    padding: var(--dim-x-large) var(--dim-large);
+  }
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-medium);
+  margin-bottom: var(--dim-x-large);
+  color: var(--mat-sys-on-surface-variant);
+
+  .recipe-description {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .recipe-source {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+
+    .label {
+      display: inline-block;
+      margin-right: var(--dim-medium);
+      font-weight: 500;
+    }
+
+    a {
+      display: inline-block;
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-x-large);
+}
+
+.recipe-toolbar {
+  mat-card-content {
+    display: flex;
+    justify-content: space-between;
+
+    mat-button-toggle-group {
+      width: fit-content;
+    }
+
+    @media (max-width: 650px) {
+      flex-direction: column;
+      gap: var(--dim-large);
+      align-items: center;
+    }
+  }
+}
+
+.servings-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .servings-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .stepper-controls {
+    display: flex;
+    align-items: center;
+    background-color: var(--mat-sys-surface, #fff);
+    border: 1px solid var(--mat-sys-outline, #79747e);
+    border-radius: 8px;
+    padding: 2px 4px;
+
+    .servings-input {
+      width: 44px;
+      min-width: 28px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      font-family: inherit;
+      color: inherit;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      outline: none;
+      padding: 2px 0;
+      margin: 0 2px;
+      -moz-appearance: textfield;
+      appearance: textfield;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &:focus-visible {
+        border-color: var(--mat-sys-primary, #1976d2);
+        background-color: var(--mat-sys-surface-container-highest, #e6e0e9);
+      }
+    }
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  gap: 1rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.error-card {
+  border-radius: 12px;
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 500px;
+
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2.5rem 1.5rem;
+
+    .error-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      color: var(--mat-sys-on-surface-variant, #666);
+    }
+  }
+}

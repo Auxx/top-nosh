@@ -193,6 +193,7 @@ export class CreateRecipePage {
       description: (formValue.description || '').trim(),
       servings: Number(formValue.servings),
       source: (formValue.source || '').trim() || undefined,
+      isShared: formValue.isShared ?? false,
       stages: rawStages.map((stage, stageIdx) => ({
         name: (stage.name || '').trim(),
         order: stageIdx,

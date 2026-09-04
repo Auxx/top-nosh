@@ -237,7 +237,8 @@ describe('RecipesService', () => {
       expect(prismaService.recipe.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           name: 'Pizza Margherita',
-          source: 'https://example.com/pizza'
+          source: 'https://example.com/pizza',
+          isShared: false
         })
       });
       expect(result).toEqual({ id: 'created-id' });
@@ -305,6 +306,7 @@ describe('RecipesService', () => {
         description: 'New Desc',
         servings: 4,
         source: 'Grandma Cookbook',
+        isShared: true,
         stages: [
           {
             id: 'stage-1',
@@ -339,7 +341,8 @@ describe('RecipesService', () => {
           category: 'Main',
           description: 'New Desc',
           servings: 4,
-          source: 'Grandma Cookbook'
+          source: 'Grandma Cookbook',
+          isShared: true
         }
       });
 

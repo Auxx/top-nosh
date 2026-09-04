@@ -36,6 +36,7 @@ model Recipe {
   description String
   servings    Int
   source      String?
+  isShared    Boolean       @default(false) @map("is_shared")
   stages      RecipeStage[]
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")

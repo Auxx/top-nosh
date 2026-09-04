@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RecipesModule } from './recipes/recipes.module';
+import { SharingModule } from './sharing/sharing.module';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
 import { UsersModule } from './users/users.module';
 
@@ -36,6 +37,7 @@ function getStaticRootPath(): string {
     AuthModule,
     DashboardModule,
     RecipesModule,
+    SharingModule,
     ShoppingListsModule,
     UsersModule
   ],
