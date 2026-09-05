@@ -2,12 +2,12 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import {
   ShoppingListManagementService
 } from '../../../shopping-lists/services/shopping-list-management/shopping-list-management.service';
+import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { RecipeDetailsPage } from './recipe-details.page';
@@ -19,6 +19,10 @@ describe('RecipeDetailsPage', () => {
   let mockRecipeService: {
     getRecipeById: jest.Mock;
     deleteRecipe: jest.Mock;
+  };
+  let mockWakeLockService: {
+    acquire: jest.Mock;
+    release: jest.Mock;
   };
   let dialogMock: {
     open: jest.Mock;
@@ -90,6 +94,11 @@ describe('RecipeDetailsPage', () => {
       deleteRecipe: jest.fn().mockReturnValue(of(true))
     };
 
+    mockWakeLockService = {
+      acquire: jest.fn().mockResolvedValue(true),
+      release: jest.fn().mockResolvedValue(true)
+    };
+
     dialogMock = {
       open: jest.fn().mockReturnValue({
         afterClosed: jest.fn().mockReturnValue(of(true))
@@ -121,6 +130,7 @@ describe('RecipeDetailsPage', () => {
           }
         },
         { provide: RecipeManagementService, useValue: mockRecipeService },
+        { provide: WakeLockService, useValue: mockWakeLockService },
         { provide: BreakpointObserver, useValue: mockBreakpointObserver },
         { provide: MatDialog, useValue: dialogMock },
         { provide: ShoppingListManagementService, useValue: mockShoppingListService },
@@ -316,6 +326,53 @@ describe('RecipeDetailsPage', () => {
 
       const descriptionEl = fixture.nativeElement.querySelector('[data-testid="recipe-description"]');
       expect(descriptionEl).toBeFalsy();
+    });
+  });
+
+  describe('screen wake lock', () => {
+    it('should acquire wake lock when switching viewMode to cooking', () => {
+      component.setViewMode('cooking');
+
+      expect(mockWakeLockService.acquire).toHaveBeenCalledTimes(1);
+    });
+
+    it('should release wake lock when switching viewMode to glance', () => {
+      component.setViewMode('cooking');
+      mockWakeLockService.release.mockClear();
+
+      component.setViewMode('glance');
+
+      expect(mockWakeLockService.release).toHaveBeenCalledTimes(1);
+    });
+
+    it('should release wake lock on component destroy', () => {
+      mockWakeLockService.release.mockClear();
+
+      fixture.destroy();
+
+      expect(mockWakeLockService.release).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log error when acquire rejects without throwing', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+      mockWakeLockService.acquire.mockRejectedValueOnce(new Error('Acquire failed'));
+
+      expect(() => component.setViewMode('cooking')).not.toThrow();
+      await Promise.resolve();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire wake lock:', expect.any(Error));
+      consoleErrorSpy.mockRestore();
+    });
+
+    it('should log error when release rejects without throwing', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+      mockWakeLockService.release.mockRejectedValueOnce(new Error('Release failed'));
+
+      expect(() => component.setViewMode('glance')).not.toThrow();
+      await Promise.resolve();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to release wake lock:', expect.any(Error));
+      consoleErrorSpy.mockRestore();
     });
   });
 });

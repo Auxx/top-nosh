@@ -17,6 +17,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
+import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
 import { GlanceComponent } from '../../components/glance/glance.component';
 import { RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
@@ -56,6 +57,8 @@ export class RecipeDetailsPage {
 
   private readonly recipeService = inject(RecipeManagementService);
 
+  private readonly wakeLockService = inject(WakeLockService);
+
   private readonly titleService = inject(Title);
 
   // private readonly dialog = inject(MatDialog);
@@ -73,6 +76,10 @@ export class RecipeDetailsPage {
   readonly servings = signal<number>(1);
 
   constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.wakeLockService.release().catch(err => console.error('Failed to release wake lock on destroy:', err));
+    });
+
     this.route.paramMap
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
@@ -107,7 +114,14 @@ export class RecipeDetailsPage {
       });
   };
 
-  readonly setViewMode = (mode: RecipeViewMode) => this.viewMode.set(mode);
+  readonly setViewMode = (mode: RecipeViewMode): void => {
+    this.viewMode.set(mode);
+    if (mode === 'cooking') {
+      this.wakeLockService.acquire().catch(err => console.error('Failed to acquire wake lock:', err));
+    } else if (mode === 'glance') {
+      this.wakeLockService.release().catch(err => console.error('Failed to release wake lock:', err));
+    }
+  };
 
   readonly incrementServings = () => this.servings.update(s => s + 1);
 

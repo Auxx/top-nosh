@@ -67,7 +67,7 @@ describe('MarkdownPreviewDialog', () => {
 
     const emptyStateEl: HTMLElement = fixture.nativeElement.querySelector('.empty-state');
     expect(emptyStateEl).toBeTruthy();
-    expect(emptyStateEl.textContent?.trim()).toBe('No description provided.');
+    expect(emptyStateEl.textContent?.trim()).toBe('No Markdown content was provided.');
   });
 
   it('should close dialog when clicking close button', async () => {
