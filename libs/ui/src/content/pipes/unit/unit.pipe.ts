@@ -12,6 +12,10 @@ export class UnitPipe implements PipeTransform {
         return 'g';
       case 'ITEM_COUNT':
         return Number(quantity) === 1 ? ' item' : ' items';
+      case 'TSP':
+        return ' Teaspoons';
+      case 'TBSP':
+        return ' Table spoons';
     }
 
     return unit;

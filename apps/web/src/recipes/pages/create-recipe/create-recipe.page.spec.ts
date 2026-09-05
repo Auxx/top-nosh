@@ -333,4 +333,59 @@ describe('CreateRecipePage', () => {
     component.onSubmit();
     expect(recipeServiceMock.createRecipe).not.toHaveBeenCalled();
   });
+
+  it('should include TSP and TBSP in unitOptions', () => {
+    expect(component.unitOptions).toEqual([
+      { value: 'GRAMS', label: 'Grams (g)' },
+      { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
+      { value: 'TSP', label: 'Teaspoons' },
+      { value: 'TBSP', label: 'Table spoons' }
+    ]);
+  });
+
+  it('should submit valid form with TSP and TBSP ingredient units', () => {
+    component.recipeForm.controls.name.setValue('Salad Dressing');
+    component.recipeForm.controls.servings.setValue(2);
+    component.recipeForm.controls.cuisine.setValue('French');
+    component.recipeForm.controls.category.setValue('Salad');
+    component.recipeForm.controls.description.setValue('Simple vinaigrette');
+
+    component.addStage();
+    const stage = component.getStagesArray().at(0);
+    stage.get('name')?.setValue('Dressing');
+
+    component.addStep(0);
+    const step = component.getStepsArray(0).at(0);
+    step.get('name')?.setValue('Whisk');
+    step.get('description')?.setValue('Whisk vinegar and oil');
+
+    component.addIngredient(0);
+    const ing1 = component.getIngredientsArray(0).at(0);
+    ing1.get('name')?.setValue('Salt');
+    ing1.get('quantity')?.setValue(1);
+    ing1.get('unit')?.setValue('TSP');
+
+    component.addIngredient(0);
+    const ing2 = component.getIngredientsArray(0).at(1);
+    ing2.get('name')?.setValue('Olive Oil');
+    ing2.get('quantity')?.setValue(3);
+    ing2.get('unit')?.setValue('TBSP');
+
+    expect(component.recipeForm.valid).toBe(true);
+
+    component.onSubmit();
+
+    expect(recipeServiceMock.createRecipe).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stages: [
+          expect.objectContaining({
+            ingredients: [
+              { name: 'Salt', quantity: 1, unit: 'TSP', order: 0 },
+              { name: 'Olive Oil', quantity: 3, unit: 'TBSP', order: 1 }
+            ]
+          })
+        ]
+      })
+    );
+  });
 });

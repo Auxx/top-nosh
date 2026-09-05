@@ -7,7 +7,9 @@
     "format:check": "dprint check",
     "prepare": "husky || true",
     "lint": "nx run-many --all --target=lint --no-tui",
-    "test": "nx run-many --all --target=test"
+    "test": "nx run-many --all --target=test",
+    "serve:api": "nx run api:serve:development",
+    "serve:web": "set PORT=5999 && nx run web:serve:development"
   },
   "private": true,
   "dependencies": {

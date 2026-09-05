@@ -187,6 +187,29 @@ describe('RecipeFormComponent', () => {
     expect(recipeFormComponent.getIngredientsArray(0).length).toBe(0);
   });
 
+  it('should include TSP and TBSP in unitOptions', () => {
+    expect(recipeFormComponent.unitOptions).toEqual([
+      { value: 'GRAMS', label: 'Grams (g)' },
+      { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
+      { value: 'TSP', label: 'Teaspoons' },
+      { value: 'TBSP', label: 'Table spoons' }
+    ]);
+  });
+
+  it('should support TSP and TBSP in ingredient form group', () => {
+    recipeFormComponent.addStage();
+    recipeFormComponent.addIngredient(0);
+    const ingGroup = recipeFormComponent.getIngredientsArray(0).at(0);
+
+    ingGroup.get('name')?.setValue('Salt');
+    ingGroup.get('quantity')?.setValue(2);
+    ingGroup.get('unit')?.setValue('TSP');
+    expect(ingGroup.valid).toBe(true);
+
+    ingGroup.get('unit')?.setValue('TBSP');
+    expect(ingGroup.valid).toBe(true);
+  });
+
   it('should reorder stages via CDK drag-and-drop handler', () => {
     recipeFormComponent.addStage();
     recipeFormComponent.addStage();

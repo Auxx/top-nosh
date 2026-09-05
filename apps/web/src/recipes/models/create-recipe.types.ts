@@ -1,4 +1,4 @@
-export type IngredientUnit = 'GRAMS' | 'ITEM_COUNT';
+export type IngredientUnit = 'GRAMS' | 'ITEM_COUNT' | 'TSP' | 'TBSP';
 
 export interface CreateIngredientDto {
   name: string;
