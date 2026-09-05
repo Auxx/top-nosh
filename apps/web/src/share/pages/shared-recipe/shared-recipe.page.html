@@ -36,7 +36,9 @@
 
   <div class="meta">
     @if (currentRecipe.description) {
-      <p class="recipe-description" data-testid="recipe-description">{{ currentRecipe.description }}</p>
+      <div class="recipe-description" data-testid="recipe-description">
+        <remark [markdown]="currentRecipe.description" />
+      </div>
     }
 
     @if (currentRecipe.source && currentRecipe.source.trim()) {

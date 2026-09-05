@@ -2,6 +2,8 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MarkdownPreviewDialog } from '@top-nosh/ui';
 import { BehaviorSubject } from 'rxjs';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -27,6 +29,9 @@ describe('RecipeFormComponent', () => {
   let recipeServiceMock: {
     cuisinesCategories: jest.Mock;
   };
+  let dialogMock: {
+    open: jest.Mock;
+  };
 
   const sampleCuisinesCategories: CuisinesCategoriesResponse = {
     cuisines: [ 'Italian', 'Mexican', 'Japanese' ],
@@ -44,10 +49,15 @@ describe('RecipeFormComponent', () => {
       cuisinesCategories: jest.fn().mockReturnValue(mockCuisinesCategories$.asObservable())
     };
 
+    dialogMock = {
+      open: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
       imports: [ TestHostComponent ],
       providers: [
-        { provide: RecipeManagementService, useValue: recipeServiceMock }
+        { provide: RecipeManagementService, useValue: recipeServiceMock },
+        { provide: MatDialog, useValue: dialogMock }
       ]
     }).compileComponents();
 
@@ -79,6 +89,7 @@ describe('RecipeFormComponent', () => {
     expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropStage')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropStep')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropIngredient')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onPreviewDescription')).toBe(true);
   });
 
   it('should initialize source control and populate it from recipe if provided', () => {
@@ -300,6 +311,41 @@ describe('RecipeFormComponent', () => {
       const expectedUrl = `${window.location.protocol}//${window.location.host}/share/recipe/recipe-abc-123`;
       expect(shareLink.href).toBe(expectedUrl);
       expect(shareLink.textContent?.trim()).toBe(expectedUrl);
+    });
+  });
+
+  describe('Description Markdown Preview', () => {
+    it('should open MarkdownPreviewDialog with current description value when preview button is clicked', () => {
+      hostComponent.form().controls['description'].setValue('# Delicious Pasta\nWith **fresh** basil.');
+      fixture.detectChanges();
+
+      const previewBtn = fixture.nativeElement.querySelector(
+        '[data-testid="preview-description-btn"]'
+      ) as HTMLButtonElement;
+      expect(previewBtn).toBeTruthy();
+
+      previewBtn.click();
+
+      expect(dialogMock.open).toHaveBeenCalledWith(MarkdownPreviewDialog, {
+        data: {
+          markdown: '# Delicious Pasta\nWith **fresh** basil.',
+          title: 'Recipe Description Preview'
+        }
+      });
+    });
+
+    it('should pass empty string to MarkdownPreviewDialog when description is not set', () => {
+      hostComponent.form().controls['description'].setValue('');
+      fixture.detectChanges();
+
+      recipeFormComponent.onPreviewDescription();
+
+      expect(dialogMock.open).toHaveBeenCalledWith(MarkdownPreviewDialog, {
+        data: {
+          markdown: '',
+          title: 'Recipe Description Preview'
+        }
+      });
     });
   });
 });

@@ -31,6 +31,16 @@
   }
 }
 
+.description-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+
+  .description-field {
+    flex: 1;
+  }
+}
+
 .share-recipe-card {
   .share-recipe-content {
     display: flex;

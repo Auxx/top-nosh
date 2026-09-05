@@ -302,4 +302,53 @@ describe('RecipeListPage', () => {
 
     expect(recipeServiceMock.deleteRecipe).not.toHaveBeenCalled();
   });
+
+  describe('description rendering with markdown stripping and truncation', () => {
+    it('should strip markdown tokens and display plain text', () => {
+      mockRecipes$.next({
+        data: [
+          {
+            id: '10',
+            name: 'Markdown Recipe',
+            cuisine: 'Italian',
+            category: 'Pasta',
+            description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
+            servings: 2
+          }
+        ],
+        total: 1,
+        page: 1,
+        totalPages: 1
+      });
+      fixture.detectChanges();
+
+      const descriptionCell = fixture.nativeElement.querySelector('.item-description-medium');
+      expect(descriptionCell).toBeTruthy();
+      expect(descriptionCell.textContent.trim()).toBe('Amazing Pasta with tasty sauce');
+    });
+
+    it('should truncate descriptions longer than 100 characters with ellipsis', () => {
+      const longText = 'A'.repeat(120);
+      mockRecipes$.next({
+        data: [
+          {
+            id: '11',
+            name: 'Long Recipe',
+            cuisine: 'Italian',
+            category: 'Pasta',
+            description: `**${longText}**`,
+            servings: 2
+          }
+        ],
+        total: 1,
+        page: 1,
+        totalPages: 1
+      });
+      fixture.detectChanges();
+
+      const descriptionCell = fixture.nativeElement.querySelector('.item-description-medium');
+      expect(descriptionCell).toBeTruthy();
+      expect(descriptionCell.textContent.trim()).toBe('A'.repeat(100) + '...');
+    });
+  });
 });

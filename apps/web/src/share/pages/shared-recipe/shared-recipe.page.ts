@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
+import { RemarkComponent } from 'ngx-remark';
 import { CookingModeComponent } from '../../../recipes/components/cooking-mode/cooking-mode.component';
 import { GlanceComponent } from '../../../recipes/components/glance/glance.component';
 import { RecipeDetails, RecipeViewMode } from '../../../recipes/models/recipe-details.types';
@@ -30,6 +31,7 @@ import { SharedDataService } from '../../services/shared-data/shared-data.servic
     PageHeaderComponent,
     MiniBadgeComponent,
     DomainPipe,
+    RemarkComponent,
     GlanceComponent,
     CookingModeComponent
   ],
