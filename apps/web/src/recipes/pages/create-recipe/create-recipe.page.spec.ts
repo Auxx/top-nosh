@@ -334,15 +334,6 @@ describe('CreateRecipePage', () => {
     expect(recipeServiceMock.createRecipe).not.toHaveBeenCalled();
   });
 
-  it('should include TSP and TBSP in unitOptions', () => {
-    expect(component.unitOptions).toEqual([
-      { value: 'GRAMS', label: 'Grams (g)' },
-      { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
-      { value: 'TSP', label: 'Teaspoons' },
-      { value: 'TBSP', label: 'Table spoons' }
-    ]);
-  });
-
   it('should submit valid form with TSP and TBSP ingredient units', () => {
     component.recipeForm.controls.name.setValue('Salad Dressing');
     component.recipeForm.controls.servings.setValue(2);

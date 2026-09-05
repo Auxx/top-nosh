@@ -19,14 +19,14 @@ describe('UnitPipe', () => {
   });
 
   it('should format TSP correctly', () => {
-    expect(pipe.transform(1, 'TSP')).toBe('1 Teaspoons');
-    expect(pipe.transform(2, 'TSP')).toBe('2 Teaspoons');
-    expect(pipe.transform(0.5, 'TSP')).toBe('0.5 Teaspoons');
+    expect(pipe.transform(1, 'TSP')).toBe('1 teaspoon');
+    expect(pipe.transform(2, 'TSP')).toBe('2 teaspoons');
+    expect(pipe.transform(0.5, 'TSP')).toBe('0.5 teaspoons');
   });
 
   it('should format TBSP correctly', () => {
-    expect(pipe.transform(1, 'TBSP')).toBe('1 Table spoons');
-    expect(pipe.transform(3, 'TBSP')).toBe('3 Table spoons');
+    expect(pipe.transform(1, 'TBSP')).toBe('1 table spoon');
+    expect(pipe.transform(3, 'TBSP')).toBe('3 table spoons');
   });
 
   it('should fallback to unit string for unknown units', () => {

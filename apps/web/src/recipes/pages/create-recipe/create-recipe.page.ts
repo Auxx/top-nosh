@@ -47,13 +47,6 @@ export class CreateRecipePage {
 
   readonly isSubmitting = signal<boolean>(false);
 
-  readonly unitOptions: { value: IngredientUnit; label: string; }[] = [
-    { value: 'GRAMS', label: 'Grams (g)' },
-    { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
-    { value: 'TSP', label: 'Teaspoons' },
-    { value: 'TBSP', label: 'Table spoons' }
-  ];
-
   readonly recipeForm = createRecipeForm(this.fb);
 
   readonly cuisineInput = signal<string>('');
