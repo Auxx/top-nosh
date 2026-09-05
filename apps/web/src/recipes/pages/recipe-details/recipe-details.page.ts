@@ -13,6 +13,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
@@ -53,6 +54,8 @@ export class RecipeDetailsPage {
 
   private readonly recipeService = inject(RecipeManagementService);
 
+  private readonly titleService = inject(Title);
+
   // private readonly dialog = inject(MatDialog);
 
   private readonly destroyRef = inject(DestroyRef);
@@ -92,6 +95,7 @@ export class RecipeDetailsPage {
         next: recipe => {
           this.recipe.set(recipe);
           this.servings.set(recipe.servings || 1);
+          this.titleService.setTitle(`Top Nosh - ${recipe.name}`);
           this.isLoading.set(false);
         },
         error: () => {

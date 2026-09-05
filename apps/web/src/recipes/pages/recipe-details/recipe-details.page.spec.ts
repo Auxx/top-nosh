@@ -2,6 +2,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import {

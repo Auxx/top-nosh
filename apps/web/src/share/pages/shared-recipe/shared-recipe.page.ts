@@ -8,6 +8,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { CookingModeComponent } from '../../../recipes/components/cooking-mode/cooking-mode.component';
@@ -40,6 +41,8 @@ export class SharedRecipePage {
   private readonly route = inject(ActivatedRoute);
 
   private readonly sharedDataService = inject(SharedDataService);
+
+  private readonly titleService = inject(Title);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -78,6 +81,7 @@ export class SharedRecipePage {
         next: recipe => {
           this.recipe.set(recipe);
           this.servings.set(recipe.servings || 1);
+          this.titleService.setTitle(`Top Nosh - ${recipe.name}`);
           this.isLoading.set(false);
         },
         error: () => {

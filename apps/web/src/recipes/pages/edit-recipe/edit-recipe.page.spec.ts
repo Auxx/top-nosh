@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecipeDetails } from '../../models/recipe-details.types';
@@ -123,6 +124,11 @@ describe('EditRecipePage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set document title to "Top Nosh - Edit <Recipe Name>" upon loading recipe', () => {
+    const titleService = TestBed.inject(Title);
+    expect(titleService.getTitle()).toBe('Top Nosh - Edit Spaghetti Bolognese');
   });
 
   it('should have all class methods declared as readonly arrow function properties', () => {

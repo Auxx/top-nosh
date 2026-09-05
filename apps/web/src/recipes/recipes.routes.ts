@@ -5,8 +5,8 @@ import { RecipeDetailsPage } from './pages/recipe-details/recipe-details.page';
 import { RecipeListPage } from './pages/recipe-list/recipe-list.page';
 
 export const routes: Route[] = [
-  { path: '', component: RecipeListPage },
-  { path: 'new', component: CreateRecipePage },
+  { path: '', component: RecipeListPage, title: 'Recipes' },
+  { path: 'new', component: CreateRecipePage, title: 'Create new recipe' },
   { path: ':id/edit', component: EditRecipePage },
   { path: ':id', component: RecipeDetailsPage }
 ];
