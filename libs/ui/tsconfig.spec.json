@@ -8,6 +8,7 @@
       "jest",
       "node"
     ],
+    "esModuleInterop": true,
     "moduleResolution": "node10"
   },
   "files": [

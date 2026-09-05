@@ -94,7 +94,7 @@
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef>Description</th>
       <td mat-cell *matCellDef="let recipe" class="item-description-medium">
-        {{ recipe.description }}
+        {{ recipe.description | stripMarkdown | truncate: 100 }}
       </td>
     </ng-container>
 

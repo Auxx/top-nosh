@@ -75,14 +75,25 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field full-width description-field">
-          <mat-label>Description</mat-label>
+        <div class="description-container full-width">
+          <mat-form-field appearance="outline" class="form-field description-field">
+            <mat-label>Description</mat-label>
 
-          <textarea matInput
-                    formControlName="description"
-                    rows="3"
-                    placeholder="Brief summary or background story of the dish"></textarea>
-        </mat-form-field>
+            <textarea matInput
+                      formControlName="description"
+                      rows="3"
+                      placeholder="Brief summary or background story of the dish"></textarea>
+          </mat-form-field>
+
+          <button mat-stroked-button
+                  type="button"
+                  class="preview-description-btn"
+                  data-testid="preview-description-btn"
+                  (click)="onPreviewDescription()">
+            <mat-icon>visibility</mat-icon>
+            <span>Preview</span>
+          </button>
+        </div>
 
         <mat-form-field appearance="outline" class="form-field full-width source-field">
           <mat-label>Source</mat-label>

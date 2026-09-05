@@ -7,12 +7,13 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { WhenError } from '@top-nosh/ui';
+import { MarkdownPreviewDialog, WhenError } from '@top-nosh/ui';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -97,6 +98,8 @@ export class RecipeFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   private readonly recipeService = inject(RecipeManagementService);
+
+  private readonly dialog = inject(MatDialog);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -253,5 +256,15 @@ export class RecipeFormComponent implements OnInit {
       event.currentIndex
     );
     this.getIngredientsArray(stageIndex).updateValueAndValidity();
+  };
+
+  readonly onPreviewDescription = (): void => {
+    const description = this.form().get('description')?.value || '';
+    this.dialog.open(MarkdownPreviewDialog, {
+      data: {
+        markdown: description,
+        title: 'Recipe Description Preview'
+      }
+    });
   };
 }
