@@ -1,6 +1,11 @@
 # Add Markdown support for recipe descriptions
 
-Recipe descriptions should be rendered as Markdown content.
+Recipe descriptions should be rendered as Markdown content. Use `ngx-remark` library to render Markdown content.
+
+## Using ngx-remark
+
+- The library is already installed and configured.
+- Add `remark` tag and pass Markdown contents to `markdown` property: `<remark [markdown]="recipe.description"/>`.
 
 ## Recipe List Page requirements
 
@@ -20,3 +25,4 @@ Recipe descriptions should be rendered as Markdown content.
 
 ## Recipe Details Page requirements
 
+- Update description display to render Markdown content instead of a plain string.
