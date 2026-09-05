@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>{{ data.title || 'Description Preview' }}</h2>
+<mat-dialog-content>
+  @if (data.markdown) {
+    <remark [markdown]="data.markdown" />
+  } @else {
+    <p class="empty-state">No description provided.</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true">Close</button>
+</mat-dialog-actions>

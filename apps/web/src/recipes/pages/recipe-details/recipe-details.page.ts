@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
+import { RemarkComponent } from 'ngx-remark';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
 import { GlanceComponent } from '../../components/glance/glance.component';
 import { RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
@@ -40,6 +41,7 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     PageHeaderComponent,
     MiniBadgeComponent,
     DomainPipe,
+    RemarkComponent,
     GlanceComponent,
     CookingModeComponent
   ],

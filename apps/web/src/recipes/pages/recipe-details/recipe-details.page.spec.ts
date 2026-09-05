@@ -292,4 +292,30 @@ describe('RecipeDetailsPage', () => {
       expect(compiled.querySelector('[data-testid="recipe-source"]')).toBeFalsy();
     });
   });
+
+  describe('recipe description rendering', () => {
+    it('should render remark markdown component when description is present', () => {
+      fixture.detectChanges();
+
+      const descriptionEl = fixture.nativeElement.querySelector('[data-testid="recipe-description"]');
+      expect(descriptionEl).toBeTruthy();
+
+      const remarkEl = descriptionEl.querySelector('remark');
+      expect(remarkEl).toBeTruthy();
+      expect(descriptionEl.textContent).toContain('A classic Italian pasta dish.');
+    });
+
+    it('should not render description container when description is empty or missing', () => {
+      const recipeWithoutDescription: RecipeDetails = {
+        ...mockRecipeDetails,
+        description: ''
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithoutDescription));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const descriptionEl = fixture.nativeElement.querySelector('[data-testid="recipe-description"]');
+      expect(descriptionEl).toBeFalsy();
+    });
+  });
 });
