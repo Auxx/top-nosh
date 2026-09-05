@@ -9,7 +9,7 @@ Recipe descriptions should be rendered as Markdown content. Use `ngx-remark` lib
 
 ## Recipe List Page requirements
 
-- Strip Markdown markup from descriptions on the table.
+- Strip Markdown markup from descriptions in the table.
 - Limit description text shown in the table to 100 characters. Add an ellipsis at the end if description was truncated.
 
 ## Create/Edit Recipe pages requirements
