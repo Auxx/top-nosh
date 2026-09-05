@@ -106,6 +106,7 @@ export class RecipesService {
         description: dto.description,
         servings: dto.servings,
         source: dto.source,
+        isShared: dto.isShared ?? false,
         stages: {
           create: dto.stages.map((stage, stageIdx) => ({
             name: stage.name,
@@ -162,7 +163,8 @@ export class RecipesService {
           category: dto.category,
           description: dto.description,
           servings: dto.servings,
-          source: dto.source
+          source: dto.source,
+          ...(dto.isShared !== undefined ? { isShared: dto.isShared } : {})
         }
       });
 

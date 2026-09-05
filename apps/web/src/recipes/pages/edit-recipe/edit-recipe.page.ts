@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
@@ -41,6 +42,8 @@ export class EditRecipePage {
   private readonly router = inject(Router);
 
   private readonly route = inject(ActivatedRoute);
+
+  private readonly titleService = inject(Title);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -91,6 +94,7 @@ export class EditRecipePage {
         next: recipe => {
           this.recipe.set(recipe);
           this.recipeForm = createRecipeForm(this.fb, recipe);
+          this.titleService.setTitle(`Top Nosh - Edit ${recipe.name}`);
           this.isLoading.set(false);
         },
         error: () => {
@@ -139,6 +143,7 @@ export class EditRecipePage {
       description: (formValue.description || '').trim(),
       servings: Number(formValue.servings),
       source: (formValue.source || '').trim() || undefined,
+      isShared: formValue.isShared ?? false,
       stages: rawStages.map((stage, stageIdx) => ({
         id: stage.id || undefined,
         name: (stage.name || '').trim(),

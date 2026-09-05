@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecipeDetails } from '../../models/recipe-details.types';
@@ -48,6 +49,7 @@ describe('EditRecipePage', () => {
     description: 'Classic meat sauce pasta',
     servings: 4,
     source: 'https://example.com/bolognese',
+    isShared: false,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
     stages: [
@@ -122,6 +124,11 @@ describe('EditRecipePage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set document title to "Top Nosh - Edit <Recipe Name>" upon loading recipe', () => {
+    const titleService = TestBed.inject(Title);
+    expect(titleService.getTitle()).toBe('Top Nosh - Edit Spaghetti Bolognese');
   });
 
   it('should have all class methods declared as readonly arrow function properties', () => {
@@ -215,6 +222,7 @@ describe('EditRecipePage', () => {
       description: 'Classic meat sauce pasta',
       servings: 6,
       source: 'https://example.com/bolognese',
+      isShared: false,
       stages: [
         {
           id: 'stage-1',
@@ -249,6 +257,17 @@ describe('EditRecipePage', () => {
       { duration: 5000 }
     );
     expect(routerMock.navigate).toHaveBeenCalledWith([ '/recipes', 'recipe-123' ]);
+  });
+
+  it('should include isShared: true in update payload when toggled', () => {
+    component.recipeForm.controls['isShared'].setValue(true);
+
+    component.onSubmit();
+
+    expect(recipeServiceMock.updateRecipe).toHaveBeenCalledWith(
+      'recipe-123',
+      expect.objectContaining({ isShared: true })
+    );
   });
 
   it('should show persistent error snackbar with OK action when update fails', () => {

@@ -7,7 +7,8 @@ describe('ShoppingLists Routes', () => {
   it('should define route for ShoppingListPage at root path', () => {
     expect(routes).toContainEqual({
       path: '',
-      component: ShoppingListPage
+      component: ShoppingListPage,
+      title: 'Shopping Lists'
     });
   });
 

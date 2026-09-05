@@ -1,6 +1,7 @@
 @let loading = isLoading();
 @let error = hasError();
 @let submitting = isSubmitting();
+@let recipeValue = recipe();
 
 <!-- Loading State -->
 @if (loading) {
@@ -30,7 +31,7 @@
 }
 
 <!-- Recipe Edit Content -->
-@if (!loading && !error && recipe()) {
+@if (!loading && !error && recipeValue !== null) {
   <!-- Page Header -->
   <ui-page-header>
     <h1>Edit Recipe</h1>
@@ -45,7 +46,7 @@
   </ui-page-header>
 
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
-    <app-recipe-form [form]="recipeForm"/>
+    <app-recipe-form [form]="recipeForm" [recipeId]="recipeValue.id"/>
 
     <!-- Form Actions Card -->
     <div class="form-section-actions">

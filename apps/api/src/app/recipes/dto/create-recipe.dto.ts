@@ -2,6 +2,7 @@ import { IngredientUnit } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -85,6 +86,10 @@ export class CreateRecipeDto {
   @IsString()
   @IsOptional()
   source?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isShared?: boolean;
 
   @IsArray()
   @ValidateNested({ each: true })

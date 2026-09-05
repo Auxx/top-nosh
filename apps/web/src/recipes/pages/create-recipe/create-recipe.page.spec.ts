@@ -278,6 +278,7 @@ describe('CreateRecipePage', () => {
       description: 'Layered pasta dish',
       servings: 6,
       source: 'https://example.com/lasagna',
+      isShared: false,
       stages: [
         {
           name: 'Meat Sauce',

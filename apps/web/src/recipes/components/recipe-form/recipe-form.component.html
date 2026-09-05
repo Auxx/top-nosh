@@ -95,6 +95,36 @@
     </mat-card-content>
   </mat-card>
 
+  <!-- Share Recipe Card -->
+  @if (recipeId()) {
+    <mat-card class="section-card share-recipe-card" data-testid="share-recipe-card">
+      <mat-card-header>
+        <mat-card-title>Share Recipe</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="share-recipe-content">
+          <mat-checkbox formControlName="isShared" data-testid="share-recipe-checkbox">
+            Share this recipe publicly
+          </mat-checkbox>
+
+          @if (isShared()) {
+            <div class="share-link-container" data-testid="share-link-container">
+              <span class="share-link-label">Public link:</span>
+              <a [href]="shareUrl()"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="share-link"
+                 data-testid="share-recipe-link">
+                {{ shareUrl() }}
+              </a>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
   <!-- Stages Section -->
   <div class="stages-section">
     <div class="section-header">

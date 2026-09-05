@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { WhenError } from '@top-nosh/ui';
 import { catchError, debounceTime, map, Observable, of, tap } from 'rxjs';
@@ -106,6 +107,8 @@ export class ShoppingListDetailsPage implements OnInit {
 
   private readonly elementRef = inject(ElementRef);
 
+  private readonly titleService = inject(Title);
+
   private readonly destroyRef = inject(DestroyRef);
 
   readonly currentId = signal<string | null>(null);
@@ -158,8 +161,15 @@ export class ShoppingListDetailsPage implements OnInit {
             createShoppingListItemFormGroup(this.fb, { quantity: 1, isBought: false, order: 0 }),
             { emitEvent: false }
           );
+          this.updateTitle('');
           this.cdr.markForCheck();
         }
+      });
+
+    this.form.get('name')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(name => {
+        this.updateTitle(name);
       });
 
     this.form.valueChanges
@@ -172,6 +182,15 @@ export class ShoppingListDetailsPage implements OnInit {
           this.save().subscribe();
         }
       });
+  }
+
+  private updateTitle(name?: string | null): void {
+    const trimmed = name?.trim();
+    if (trimmed) {
+      this.titleService.setTitle(`Top Nosh - ${trimmed}`);
+    } else {
+      this.titleService.setTitle('Top Nosh - Create new shopping list');
+    }
   }
 
   readonly loadShoppingList = (id: string): void => {

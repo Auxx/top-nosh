@@ -3,6 +3,6 @@
 
 <app-ingredient-list [recipe]="currentRecipe"
                      [servings]="currentServings"
-                     [showMenu]="true"/>
+                     [showMenu]="!disableShoppingLists()"/>
 
 <app-glance-stages [recipe]="currentRecipe"/>

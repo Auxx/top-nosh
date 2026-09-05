@@ -34,6 +34,7 @@ export interface RecipeDetails {
   description: string;
   servings: number;
   source?: string | null;
+  isShared: boolean;
   stages: RecipeStageDetails[];
   createdAt: string;
   updatedAt: string;

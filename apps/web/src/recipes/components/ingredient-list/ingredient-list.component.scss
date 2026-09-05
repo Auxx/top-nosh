@@ -59,7 +59,7 @@ ul {
       display: grid;
       grid-template-columns: 1fr max-content;
 
-      button {
+      button, .button-placeholder {
         grid-column: 2;
         grid-row: 1 / span 2;
       }

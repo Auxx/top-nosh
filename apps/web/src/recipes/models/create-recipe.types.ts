@@ -27,6 +27,7 @@ export interface CreateRecipeDto {
   description: string;
   servings: number;
   source?: string;
+  isShared?: boolean;
   stages: CreateRecipeStageDto[];
 }
 
