@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormArray, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
@@ -289,5 +290,28 @@ describe('EditRecipePage', () => {
     component.onSubmit();
 
     expect(recipeServiceMock.updateRecipe).not.toHaveBeenCalled();
+  });
+
+  it('should update recipe with TSP and TBSP ingredient units', () => {
+    const stagesArray = component.recipeForm.controls['stages'] as FormArray<FormGroup>;
+    const ingArray = stagesArray.at(0).controls['ingredients'] as FormArray<FormGroup>;
+    ingArray.at(0).controls['unit'].setValue('TSP');
+
+    component.onSubmit();
+
+    expect(recipeServiceMock.updateRecipe).toHaveBeenCalledWith(
+      'recipe-123',
+      expect.objectContaining({
+        stages: [
+          expect.objectContaining({
+            ingredients: [
+              expect.objectContaining({
+                unit: 'TSP'
+              })
+            ]
+          })
+        ]
+      })
+    );
   });
 });

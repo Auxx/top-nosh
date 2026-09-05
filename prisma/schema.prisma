@@ -26,6 +26,8 @@ model User {
 enum IngredientUnit {
   GRAMS
   ITEM_COUNT
+  TSP
+  TBSP
 }
 
 model Recipe {

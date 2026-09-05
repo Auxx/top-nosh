@@ -243,6 +243,61 @@ describe('RecipesService', () => {
       });
       expect(result).toEqual({ id: 'created-id' });
     });
+
+    it('should create recipe with TSP and TBSP ingredient units', async () => {
+      prismaService.recipe.create.mockResolvedValue({ id: 'created-id-units' });
+
+      const dto = {
+        name: 'Seasoned Dish',
+        cuisine: 'International',
+        category: 'Main',
+        description: 'Dish with spices and oils',
+        servings: 2,
+        stages: [
+          {
+            name: 'Seasoning',
+            order: 0,
+            steps: [ { name: 'Mix', description: 'Mix spices', order: 0 } ],
+            ingredients: [
+              {
+                name: 'Salt',
+                quantity: 2,
+                unit: IngredientUnit.TSP,
+                order: 0
+              },
+              {
+                name: 'Olive Oil',
+                quantity: 1,
+                unit: IngredientUnit.TBSP,
+                order: 1
+              }
+            ]
+          }
+        ]
+      };
+
+      const result = await service.createRecipe(dto);
+
+      expect(prismaService.recipe.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          name: 'Seasoned Dish',
+          stages: {
+            create: [
+              expect.objectContaining({
+                name: 'Seasoning',
+                ingredients: {
+                  create: [
+                    { name: 'Salt', quantity: 2, unit: IngredientUnit.TSP, order: 0 },
+                    { name: 'Olive Oil', quantity: 1, unit: IngredientUnit.TBSP, order: 1 }
+                  ]
+                }
+              })
+            ]
+          }
+        })
+      });
+      expect(result).toEqual({ id: 'created-id-units' });
+    });
   });
 
   describe('updateRecipe', () => {

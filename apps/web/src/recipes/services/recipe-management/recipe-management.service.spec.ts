@@ -297,6 +297,54 @@ describe('RecipeManagementService', () => {
     expect(recipeListEmissions).toBe(2);
   });
 
+  it('should create a recipe with TSP and TBSP ingredient units', done => {
+    const newRecipePayload: CreateRecipeDto = {
+      name: 'Salad Dressing',
+      cuisine: 'French',
+      category: 'Salad',
+      description: 'Vinaigrette',
+      servings: 2,
+      stages: [
+        {
+          name: 'Mix',
+          order: 0,
+          steps: [ { name: 'Whisk', description: 'Whisk together', order: 0 } ],
+          ingredients: [
+            { name: 'Salt', quantity: 1, unit: 'TSP', order: 0 },
+            { name: 'Olive Oil', quantity: 2, unit: 'TBSP', order: 1 }
+          ]
+        }
+      ]
+    };
+
+    let recipeListEmissions = 0;
+    service.recipes().subscribe(() => {
+      recipeListEmissions++;
+    });
+
+    const initialFetch = httpTesting.expectOne('/recipes?page=1');
+    initialFetch.flush(mockRecipesResponse);
+
+    service.createRecipe(newRecipePayload).subscribe(response => {
+      expect(response).toEqual({ id: 'recipe-tsp-123' });
+      done();
+    });
+
+    const postReq = httpTesting.expectOne('/recipes');
+    expect(postReq.request.method).toBe('POST');
+    expect(postReq.request.body).toEqual(newRecipePayload);
+    postReq.flush({ id: 'recipe-tsp-123' });
+
+    const reloadFetch = httpTesting.expectOne('/recipes?page=1');
+    reloadFetch.flush(mockRecipesResponse);
+
+    const cuisinesReq = httpTesting.expectOne('/recipes/cuisines-categories');
+    expect(cuisinesReq.request.method).toBe('GET');
+    cuisinesReq.flush(mockRawCuisinesCategories);
+
+    expect(recipeListEmissions).toBe(2);
+  });
+
   it('should propagate error when createRecipe fails without reloading recipe list', done => {
     const newRecipePayload: CreateRecipeDto = {
       name: 'Failed Recipe',

@@ -106,7 +106,9 @@ export class RecipeFormComponent implements OnInit {
 
   readonly unitOptions: { value: IngredientUnit; label: string; }[] = [
     { value: 'GRAMS', label: 'Grams (g)' },
-    { value: 'ITEM_COUNT', label: 'Item count (pcs)' }
+    { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
+    { value: 'TSP', label: 'Teaspoons' },
+    { value: 'TBSP', label: 'Table spoons' }
   ];
 
   readonly isShared = signal<boolean>(false);
