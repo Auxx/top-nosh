@@ -109,6 +109,8 @@ export class RecipeFormComponent implements OnInit {
 
   readonly form = input.required<FormGroup>();
 
+  readonly isSubmitting = input.required<boolean>();
+
   readonly recipeId = input<string | undefined>(undefined);
 
   readonly unitOptions: { value: IngredientUnit; label: string; }[] = [

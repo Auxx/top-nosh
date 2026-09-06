@@ -7,21 +7,33 @@
     <div>
       {{ t('description') }}
     </div>
+
+    <button matIconButton
+            form="recipe-form"
+            type="submit"
+            [disabled]="recipeForm.invalid || submitting">
+      <mat-icon>save</mat-icon>
+    </button>
   </ui-page-header>
 
-  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
-    <app-recipe-form [form]="recipeForm"/>
+  <form [formGroup]="recipeForm"
+        (ngSubmit)="onSubmit()"
+        id="recipe-form"
+        class="recipe-form">
+    <!-- Recipe Form -->
+    <app-recipe-form [form]="recipeForm"
+                     [isSubmitting]="submitting"/>
 
     <!-- Form Actions Card -->
     <div class="form-section-actions">
-        <button matButton="filled"
-                type="submit"
-                [disabled]="recipeForm.invalid || submitting">
-          @if (!submitting) {
-            <mat-icon>check</mat-icon>
-          }
-          <span>{{ submitting ? t('creating') : t('submit') }}</span>
-        </button>
+      <button matButton="text"
+              type="submit"
+              [disabled]="recipeForm.invalid || submitting">
+        @if (!submitting) {
+          <mat-icon>save</mat-icon>
+        }
+        <span>{{ submitting ? t('creating') : t('submit') }}</span>
+      </button>
     </div>
   </form>
 </ng-container>

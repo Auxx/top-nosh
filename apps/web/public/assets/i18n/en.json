@@ -174,7 +174,7 @@
       "description": "Define recipe metadata, cooking stages, steps, and ingredients",
       "cancel": "Cancel",
       "creating": "Creating Recipe...",
-      "submit": "Create Recipe",
+      "submit": "CREATE RECIPE",
       "success": "Recipe created successfully!",
       "failure": "Failed to create recipe. Please check your input and try again."
     },
@@ -186,7 +186,7 @@
       "title": "Edit Recipe",
       "description": "Modify recipe metadata, cooking stages, steps, and ingredients",
       "saving": "Saving Recipe...",
-      "submit": "Save Recipe",
+      "submit": "SAVE RECIPE",
       "success": "Recipe updated successfully!",
       "failure": "Failed to update recipe. Please check your input and try again."
     },
