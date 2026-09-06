@@ -2,6 +2,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, TitleStrategy, withComponentInputBinding } from '@angular/router';
 import { getBrowserLang, provideTransloco } from '@jsverse/transloco';
+import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { authInterceptor } from '../auth/interceptors/auth/auth.interceptor';
 import { baseUrlInterceptor } from '../system/interceptors/base-url/base-url.interceptor';
 import { appRoutes } from './app.routes';
@@ -23,6 +24,9 @@ export const appConfig: ApplicationConfig = {
         fallbackLang: 'en'
       },
       loader: TranslocoHttpLoader
+    }),
+    provideTranslocoMessageformat({
+      locales: [ 'en-GB', 'ru-RU' ]
     })
   ]
 };

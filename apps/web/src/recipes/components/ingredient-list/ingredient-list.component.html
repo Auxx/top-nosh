@@ -2,7 +2,7 @@
   @let currentRecipe = recipe();
   @let currentServings = servings();
   @let baseServings = currentRecipe.servings;
-  @let servingsMessage = currentServings === 1 ? t('servingsMessageSingle', { count: currentServings }) : t('servingsMessagePlural', { count: currentServings });
+  @let servingsMessage = t('servingsMessage', { count: currentServings });
   @let stageGrouping = groupByStage();
   @let allIngredientsList = allIngredients();
   @let isSelectable = selectable();

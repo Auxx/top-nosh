@@ -107,8 +107,7 @@
     },
     "IngredientListComponent": {
       "title": "Ingredients",
-      "servingsMessageSingle": "For {{ count }} serving",
-      "servingsMessagePlural": "For {{ count }} servings",
+      "servingsMessage": "For {count, plural, =1 {# serving} other {# servings}}",
       "empty": "No ingredients listed for this recipe.",
       "stage": "Stage {{ index }}",
       "addToShoppingList": "Add to shopping list"

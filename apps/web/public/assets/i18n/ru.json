@@ -8,5 +8,38 @@
   },
   "pageHeader": {
     "back": "Назад"
+  },
+  "web": {
+    "SharedRecipePage": {
+      "loading": "Загрузка...",
+      "notFoundTitle": "Рецепт не найден",
+      "notFoundDescription": "Не удалось найти рецепт по указанному идентификатору.",
+      "source": "Источник:",
+      "modeAriaLabel": "Recipe View Mode",
+      "modeGlance": "Обзор",
+      "modeCooking": "Готовка",
+      "servings": "Порции:",
+      "decreaseServingsAriaLabel": "Уменьшить количество порций",
+      "servingsCountAriaLabel": "Количество порций",
+      "increaseServingsAriaLabel": "Увеличить количество порций"
+    },
+    "CookingModeComponent": {},
+    "CookingStagesComponent": {
+      "title": "Инструкция",
+      "empty": "Инструкции для данного рецепта не указаны.",
+      "stage": "Этап {{ index }}"
+    },
+    "GlanceComponent": {},
+    "GlanceStagesComponent": {
+      "title": "Инструкция",
+      "empty": "Инструкции для данного рецепта не указаны."
+    },
+    "IngredientListComponent": {
+      "title": "Ингридиенты",
+      "servingsMessage": "На {count, plural, =1 {# порцию} =2 {# порции} =3 {# порции} =4 {# порции} other {# порций}}",
+      "empty": "Ингридиенты для данного рецепта не указаны.",
+      "stage": "Этап {{ index }}",
+      "addToShoppingList": "Добавить в список покупок"
+    }
   }
 }
