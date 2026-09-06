@@ -1,16 +1,11 @@
 @let submitting = isSubmitting();
 
 <!-- Page Header -->
-<ui-page-header>
+<ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
   <h1>Create New Recipe</h1>
-  <h3 class="subtitle">
+  <div>
     Define recipe metadata, cooking stages, steps, and ingredients
-  </h3>
-
-  <button matButton="text" (click)="onCancel()">
-    <mat-icon>arrow_back</mat-icon>
-    <span>Back to Recipes</span>
-  </button>
+  </div>
 </ui-page-header>
 
 <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
