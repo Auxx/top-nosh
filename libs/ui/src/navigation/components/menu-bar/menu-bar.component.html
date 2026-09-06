@@ -5,11 +5,19 @@
     <span class="spacer"></span>
 
     @for (item of menuItems; track item.url) {
-      <a matButton [routerLink]="item.url"
-         routerLinkActive="selected"
-         class="action">
-        {{ t(item.label) }}
-      </a>
+      @if (item.icon === undefined) {
+        <a matButton [routerLink]="item.url"
+           routerLinkActive="selected"
+           class="action">
+          {{ t(item.label) }}
+        </a>
+      } @else {
+        <button matIconButton
+                [routerLink]="item.url"
+                class="action">
+          <mat-icon size="18">{{ item.icon }}</mat-icon>
+        </button>
+      }
     }
 
     <button matIconButton

@@ -174,14 +174,6 @@ table.item-list-table {
   }
 }
 
-[mat-icon-button] {
-  &.warn {
-    @include mat.icon-button-overrides((
-            icon-color: var(--mat-sys-error),
-    ));
-  }
-}
-
 .form-section-actions {
   display: flex;
   align-items: center;

@@ -24,7 +24,7 @@ mat-toolbar {
     z-index: 1000;
   }
 
-  a.action.mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
+  a.action.mat-mdc-button-base.mat-unthemed {
     @include mat.button-overrides((
             text-label-text-color: var(--mat-sys-inverse-primary),
             text-label-text-weight: 400,
@@ -40,6 +40,12 @@ mat-toolbar {
     @media (max-width: 599.98px) and (orientation: portrait) {
       display: none;
     }
+  }
+
+  button.action.mat-mdc-button-base.mat-unthemed {
+    @include mat.icon-button-overrides((
+            icon-color:var(--mat-sys-inverse-primary),
+    ))
   }
 }
 

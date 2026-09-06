@@ -5,7 +5,8 @@
       "dashboard": "Dashboard",
       "recipes": "Recipes",
       "shoppingLists": "Shopping Lists",
-      "settings": "Settings"
+      "settings": "Settings",
+      "logout": "Log out"
     },
     "pageHeader": {
       "back": "Back"

@@ -6,11 +6,18 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 
-const menuItems = (): { url: string; label: string; }[] => [
+interface MenuItem {
+  url: string;
+  label: string;
+  icon?: string;
+}
+
+const menuItems = (): MenuItem[] => [
   { url: '/dashboard', label: 'dashboard' },
   { url: '/recipes', label: 'recipes' },
   { url: '/shopping-lists', label: 'shoppingLists' },
-  { url: '/users', label: 'settings' }
+  { url: '/users', label: 'settings' },
+  { url: '/logout', label: 'logout', icon: 'logout' }
 ];
 
 @Component({
