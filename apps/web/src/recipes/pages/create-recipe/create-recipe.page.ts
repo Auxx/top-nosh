@@ -1,8 +1,6 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,13 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
-import {
-  createIngredientGroup,
-  createRecipeForm,
-  createStageGroup,
-  createStepGroup,
-  RecipeFormComponent
-} from '../../components/recipe-form/recipe-form.component';
+import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
 import { CreateRecipeDto, IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -45,8 +37,6 @@ export class CreateRecipePage {
 
   private readonly router = inject(Router);
 
-  private readonly destroyRef = inject(DestroyRef);
-
   private readonly successMessage = translateSignal('web.CreateRecipePage.success');
 
   private readonly failureMessage = translateSignal('web.CreateRecipePage.failure');
@@ -54,121 +44,6 @@ export class CreateRecipePage {
   readonly isSubmitting = signal<boolean>(false);
 
   readonly recipeForm = createRecipeForm(this.fb);
-
-  readonly cuisineInput = signal<string>('');
-
-  readonly categoryInput = signal<string>('');
-
-  readonly cuisinesCategories = toSignal(
-    this.recipeService.cuisinesCategories(),
-    {
-      initialValue: { cuisines: [], categories: {} }
-    }
-  );
-
-  readonly filteredCuisines = computed(() => {
-    const search = this.cuisineInput().toLowerCase().trim();
-    const options = this.cuisinesCategories().cuisines || [];
-
-    if (!search) {
-      return options;
-    }
-
-    return options.filter(c => c.toLowerCase().includes(search));
-  });
-
-  readonly filteredCategories = computed(() => {
-    const currentCuisine = this.cuisineInput().trim();
-    const currentCategoryInput = this.categoryInput().toLowerCase().trim();
-    const options = this.cuisinesCategories();
-
-    let pool: string[] = [];
-
-    if (currentCuisine && options.categories && options.categories[currentCuisine]) {
-      pool = options.categories[currentCuisine];
-    } else if (options.categories) {
-      pool = Array.from(new Set(Object.values(options.categories).flat()));
-    }
-
-    if (!currentCategoryInput) {
-      return pool;
-    }
-
-    return pool.filter(cat => cat.toLowerCase().includes(currentCategoryInput));
-  });
-
-  constructor() {
-    this.recipeForm.controls['cuisine'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(val => this.cuisineInput.set(val || ''));
-
-    this.recipeForm.controls['category'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(val => this.categoryInput.set(val || ''));
-  }
-
-  readonly createStepGroup = (name = '', description = ''): FormGroup =>
-    createStepGroup(this.fb, { name, description });
-
-  readonly createIngredientGroup = (
-    name = '',
-    quantity: number | null = null,
-    unit: IngredientUnit = 'GRAMS'
-  ): FormGroup => createIngredientGroup(this.fb, { name, quantity, unit });
-
-  readonly createStageGroup = (name = ''): FormGroup => createStageGroup(this.fb, { name });
-
-  readonly getStagesArray = (): FormArray => this.recipeForm.controls['stages'] as FormArray;
-
-  readonly getStepsArray = (stageIndex: number): FormArray =>
-    (this.getStagesArray().at(stageIndex) as FormGroup).controls['steps'] as FormArray;
-
-  readonly getIngredientsArray = (stageIndex: number): FormArray =>
-    (this.getStagesArray().at(stageIndex) as FormGroup).controls['ingredients'] as FormArray;
-
-  readonly addStage = (): void => {
-    this.getStagesArray().push(this.createStageGroup());
-  };
-
-  readonly removeStage = (event: Event, stageIndex: number): void => {
-    event.stopPropagation();
-    this.getStagesArray().removeAt(stageIndex);
-  };
-
-  readonly addStep = (stageIndex: number): void => {
-    this.getStepsArray(stageIndex).push(this.createStepGroup());
-  };
-
-  readonly removeStep = (stageIndex: number, stepIndex: number): void => {
-    this.getStepsArray(stageIndex).removeAt(stepIndex);
-  };
-
-  readonly addIngredient = (stageIndex: number): void => {
-    this.getIngredientsArray(stageIndex).push(this.createIngredientGroup());
-  };
-
-  readonly removeIngredient = (stageIndex: number, ingredientIndex: number): void => {
-    this.getIngredientsArray(stageIndex).removeAt(ingredientIndex);
-  };
-
-  readonly onDropStage = (event: CdkDragDrop<unknown[]>): void => {
-    moveItemInArray(this.getStagesArray().controls, event.previousIndex, event.currentIndex);
-    this.getStagesArray().updateValueAndValidity();
-  };
-
-  readonly onDropStep = (event: CdkDragDrop<unknown[]>, stageIndex: number): void => {
-    moveItemInArray(this.getStepsArray(stageIndex).controls, event.previousIndex, event.currentIndex);
-    this.getStepsArray(stageIndex).updateValueAndValidity();
-  };
-
-  readonly onDropIngredient = (event: CdkDragDrop<unknown[]>, stageIndex: number): void => {
-    moveItemInArray(
-      this.getIngredientsArray(stageIndex).controls,
-      event.previousIndex,
-      event.currentIndex
-    );
-    this.getIngredientsArray(stageIndex).updateValueAndValidity();
-  };
 
   readonly onCancel = () => this.router.navigate([ '/recipes' ]);
 
@@ -212,16 +87,18 @@ export class CreateRecipePage {
       }))
     };
 
-    this.recipeService.createRecipe(payload).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
-        this.router.navigate([ '/recipes' ]).then();
-      },
-      error: () => {
-        this.isSubmitting.set(false);
-        this.snackBar.open(this.failureMessage(), 'OK');
-      }
-    });
+    this.recipeService
+      .createRecipe(payload)
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
+          this.router.navigate([ '/recipes' ]).then();
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.snackBar.open(this.failureMessage(), 'OK');
+        }
+      });
   };
 }
