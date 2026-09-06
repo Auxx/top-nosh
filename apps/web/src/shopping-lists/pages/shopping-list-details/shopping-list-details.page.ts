@@ -21,7 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { catchError, debounceTime, map, Observable, of, tap } from 'rxjs';
 import {
@@ -75,7 +75,6 @@ export function createShoppingListForm(
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
