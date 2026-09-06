@@ -65,6 +65,18 @@ body {
   width: 100%;
 }
 
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--dim-large);
+}
+
+@for $i from 1 through 12 {
+  .grid-12-col-#{$i} {
+    grid-column: span #{$i};
+  }
+}
+
 form {
   &.single-column {
     display: flex;
@@ -304,4 +316,32 @@ mat-form-field {
             container-height: 40px
     ))
   }
+}
+
+.markdown-preview {
+  position: relative;
+  padding: var(--dim-small) var(--dim-medium);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  height: 160px;
+
+  .scroller {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .label {
+    position: absolute;
+    transform: scale(0.75);
+    font-size: 1rem;
+    color: var(--mat-sys-on-surface-variant);
+    background-color: var(--mat-sys-surface-container-low);
+    padding: 0 var(--dim-small);
+    top: -10px;
+    left: 0;
+  }
+}
+
+.mat-mdc-form-field-textarea-control.no-resize {
+  resize: none;
 }

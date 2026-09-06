@@ -7,14 +7,14 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { MarkdownPreviewDialog, WhenError } from '@top-nosh/ui';
+import { TranslocoDirective } from '@jsverse/transloco';
+import { WhenError } from '@top-nosh/ui';
+import { RemarkComponent } from 'ngx-remark';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -90,7 +90,8 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     CdkDrag,
     CdkDragHandle,
     WhenError,
-    TranslocoDirective
+    TranslocoDirective,
+    RemarkComponent
   ],
   templateUrl: './recipe-form.component.html',
   styleUrl: './recipe-form.component.scss',
@@ -101,11 +102,7 @@ export class RecipeFormComponent implements OnInit {
 
   private readonly recipeService = inject(RecipeManagementService);
 
-  private readonly dialog = inject(MatDialog);
-
   private readonly destroyRef = inject(DestroyRef);
-
-  private readonly previewTitle = translateSignal('web.RecipeFormComponent.previewTitle');
 
   readonly form = input.required<FormGroup>();
 
@@ -262,15 +259,5 @@ export class RecipeFormComponent implements OnInit {
       event.currentIndex
     );
     this.getIngredientsArray(stageIndex).updateValueAndValidity();
-  };
-
-  readonly onPreviewDescription = (): void => {
-    const description = this.form().get('description')?.value || '';
-    this.dialog.open(MarkdownPreviewDialog, {
-      data: {
-        markdown: description,
-        title: this.previewTitle()
-      }
-    });
   };
 }

@@ -1,35 +1,26 @@
 .recipe-form-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--dim-large);
 }
 
-.section-card {
-  border-radius: 12px;
-
-  mat-card-header {
-    margin-bottom: 1rem;
-
-    mat-card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-  }
+mat-card {
+  gap: var(--dim-large);
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-
-  @media (min-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
-
-    .full-width {
-      grid-column: span 2;
-    }
-  }
-}
+//.info-grid {
+//  display: grid;
+//  grid-template-columns: 1fr;
+//  gap: 1rem;
+//
+//  @media (min-width: 600px) {
+//    grid-template-columns: repeat(2, 1fr);
+//
+//    .full-width {
+//      grid-column: span 2;
+//    }
+//  }
+//}
 
 .description-container {
   display: flex;

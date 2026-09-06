@@ -167,7 +167,7 @@
       "removeStepAriaLabel": "Remove Step",
       "emptySteps": "No cooking steps in this stage. Click \"Add Step\" to add one.",
       "emptyStages": "No cooking stages added yet. Click \"Add Stage\" above to begin structuring your recipe.",
-      "previewTitle": "Recipe Description Preview"
+      "preview": "Preview"
     },
     "CreateRecipePage": {
       "title": "Create New Recipe",

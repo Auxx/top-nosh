@@ -1,38 +1,41 @@
+@let formGroup = form();
+
 <ng-container *transloco="let t; prefix: 'web.RecipeFormComponent'">
-  <div [formGroup]="form()" class="recipe-form-content">
+  <div [formGroup]="formGroup" class="recipe-form-content">
     <!-- Recipe Info Card -->
-    <mat-card class="section-card recipe-info-card">
+    <mat-card>
       <mat-card-header>
         <mat-card-title>{{ t('infoTitle') }}</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
-        <div class="info-grid">
-          <mat-form-field appearance="outline">
+        <div class="grid-12">
+          <mat-form-field appearance="outline" class="grid-12-col-9">
             <mat-label>{{ t('name') }}</mat-label>
 
             <input matInput formControlName="name" [placeholder]="t('namePlaceholder')" required/>
 
-            <mat-error *uiWhenError="form().controls['name']; errorCode: 'required'">
+            <mat-error *uiWhenError="formGroup.controls['name']; errorCode: 'required'">
               {{ t('nameRequired') }}
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="grid-12-col-3">
             <mat-label>{{ t('servings') }}</mat-label>
 
-            <input matInput type="number" formControlName="servings" min="1" [placeholder]="t('servingsPlaceholder')" required/>
+            <input matInput type="number" formControlName="servings" min="1" [placeholder]="t('servingsPlaceholder')"
+                   required/>
 
-            <mat-error *uiWhenError="form().controls['servings']; errorCode: 'required'">
+            <mat-error *uiWhenError="formGroup.controls['servings']; errorCode: 'required'">
               {{ t('servingsRequired') }}
             </mat-error>
 
-            <mat-error *uiWhenError="form().controls['servings']; errorCode: 'min'">
+            <mat-error *uiWhenError="formGroup.controls['servings']; errorCode: 'min'">
               {{ t('servingsMin') }}
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="grid-12-col-4">
             <mat-label>{{ t('cuisine') }}</mat-label>
 
             <input matInput
@@ -49,12 +52,12 @@
               }
             </mat-autocomplete>
 
-            <mat-error *uiWhenError="form().controls['cuisine']; errorCode: 'required'">
+            <mat-error *uiWhenError="formGroup.controls['cuisine']; errorCode: 'required'">
               {{ t('cuisineRequired') }}
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="grid-12-col-4">
             <mat-label>{{ t('category') }}</mat-label>
 
             <input matInput
@@ -71,37 +74,35 @@
               }
             </mat-autocomplete>
 
-            <mat-error *uiWhenError="form().controls['category']; errorCode: 'required'">
+            <mat-error *uiWhenError="formGroup.controls['category']; errorCode: 'required'">
               {{ t('categoryRequired') }}
             </mat-error>
           </mat-form-field>
 
-          <div class="description-container full-width">
-            <mat-form-field appearance="outline" class="description-field">
-              <mat-label>{{ t('description') }}</mat-label>
-
-              <textarea matInput
-                        formControlName="description"
-                        rows="3"
-                        [placeholder]="t('descriptionPlaceholder')"></textarea>
-            </mat-form-field>
-
-            <button matButton="text"
-                    type="button"
-                    data-testid="preview-description-btn"
-                    (click)="onPreviewDescription()">
-              <mat-icon>visibility</mat-icon>
-              <span>{{ t('preview') }}</span>
-            </button>
-          </div>
-
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" class="grid-12-col-4">
             <mat-label>{{ t('source') }}</mat-label>
 
             <input matInput
                    formControlName="source"
                    [placeholder]="t('sourcePlaceholder')"/>
           </mat-form-field>
+
+          <mat-form-field appearance="outline" class="grid-12-col-6" subscriptSizing="dynamic">
+            <mat-label>{{ t('description') }}</mat-label>
+
+            <textarea matInput
+                      formControlName="description"
+                      rows="6"
+                      class="no-resize"
+                      [placeholder]="t('descriptionPlaceholder')"></textarea>
+          </mat-form-field>
+
+          <div class="grid-12-col-6 markdown-preview">
+            <div class="scroller">
+              <remark [markdown]="formGroup.controls['description'].value"/>
+            </div>
+            <div class="label">{{ t('preview') }}</div>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>
@@ -167,7 +168,12 @@
                       <mat-icon class="drag-handle-icon">drag_indicator</mat-icon>
                     </span>
                     <span class="stage-title-text">
-                      {{ t('stageTitle', { index: stageIndex + 1, name: stageControl.get('name')?.value || t('untitledStage') }) }}
+                      {{
+                        t('stageTitle', {
+                          index: stageIndex + 1,
+                          name: stageControl.get('name')?.value || t('untitledStage')
+                        })
+                      }}
                     </span>
                   </mat-panel-title>
 
@@ -222,7 +228,8 @@
                             <mat-form-field appearance="outline" class="form-field ingredient-name">
                               <mat-label>{{ t('ingredientName') }}</mat-label>
 
-                              <input matInput formControlName="name" [placeholder]="t('ingredientNamePlaceholder')" required/>
+                              <input matInput formControlName="name" [placeholder]="t('ingredientNamePlaceholder')"
+                                     required/>
 
                               <mat-error *uiWhenError="$any(ingredientControl).controls.name; errorCode: 'required'">
                                 {{ t('ingredientNameRequired') }}
@@ -232,10 +239,12 @@
                             <mat-form-field appearance="outline" class="form-field ingredient-qty">
                               <mat-label>{{ t('quantity') }}</mat-label>
 
-                              <input matInput type="number" formControlName="quantity" min="0" [placeholder]="t('quantityPlaceholder')"
+                              <input matInput type="number" formControlName="quantity" min="0"
+                                     [placeholder]="t('quantityPlaceholder')"
                                      required/>
 
-                              <mat-error *uiWhenError="$any(ingredientControl).controls.quantity; errorCode: 'required'">
+                              <mat-error
+                                *uiWhenError="$any(ingredientControl).controls.quantity; errorCode: 'required'">
                                 {{ t('quantityRequired') }}
                               </mat-error>
 
@@ -307,7 +316,8 @@
                               <mat-form-field appearance="outline" class="form-field step-name">
                                 <mat-label>{{ t('stepTitle') }}</mat-label>
 
-                                <input matInput formControlName="name" [placeholder]="t('stepTitlePlaceholder')" required/>
+                                <input matInput formControlName="name" [placeholder]="t('stepTitlePlaceholder')"
+                                       required/>
 
                                 <mat-error *uiWhenError="$any(stepControl).controls.name; errorCode: 'required'">
                                   {{ t('stepTitleRequired') }}
