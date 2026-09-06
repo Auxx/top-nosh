@@ -296,3 +296,12 @@ ol.steps-list {
     ));
   }
 }
+
+mat-form-field {
+  &.mat-form-field-appearance-outline {
+    @include mat.form-field-overrides((
+            container-vertical-padding: 8px,
+            container-height: 40px
+    ))
+  }
+}
