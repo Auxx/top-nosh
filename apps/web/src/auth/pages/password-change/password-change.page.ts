@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { WhenError } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
@@ -46,7 +47,8 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    WhenError
+    WhenError,
+    TranslocoDirective
   ],
   templateUrl: './password-change.page.html',
   styleUrl: './password-change.page.scss',
@@ -64,6 +66,10 @@ export class PasswordChangePage {
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   readonly isLoading = signal<boolean>(false);
+
+  private readonly okMessage = translateSignal('ui.System.ok');
+
+  private readonly failureMessage = translateSignal('web.PasswordChangePage.failure');
 
   readonly form = this.fb.nonNullable.group(
     {
@@ -94,8 +100,8 @@ export class PasswordChangePage {
       },
       error: error => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Password change failed. Please try again.';
-        this.snackBarRef = this.snackBar.open(errorMessage, 'OK');
+        const errorMessage = error?.error?.message || error?.message || this.failureMessage();
+        this.snackBarRef = this.snackBar.open(errorMessage, this.okMessage());
       }
     });
   };

@@ -1,69 +1,72 @@
 @let loading = isLoading();
 
+<ng-container *transloco="let t; prefix: 'web.OnboardPage'">
 
-<mat-card-header>
-  <mat-card-title>Welcome to Top Nosh!</mat-card-title>
-  <mat-card-subtitle>Let's create your account.</mat-card-subtitle>
-</mat-card-header>
+  <mat-card-header>
+    <mat-card-title>{{ t('title') }}</mat-card-title>
+    <mat-card-subtitle>{{ t('description') }}</mat-card-subtitle>
+  </mat-card-header>
 
-<mat-card-content>
+  <mat-card-content>
 
-  <form class="single-column"
-        id="onboard-form"
-        [formGroup]="form"
-        (ngSubmit)="onSubmit()">
+    <form class="single-column"
+          id="onboard-form"
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()">
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Full Name</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ t('fullName') }}</mat-label>
 
-      <input matInput type="text" formControlName="fullName" placeholder="Full Name"/>
+        <input matInput type="text" formControlName="fullName" [placeholder]="t('fullNamePlaceholder')"/>
 
-      <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
-        Full name is required
-      </mat-error>
-    </mat-form-field>
+        <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
+          {{ t('fullNameRequired') }}
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ t('email') }}</mat-label>
 
-      <input matInput type="email" formControlName="email" placeholder="name@example.com"/>
+        <input matInput type="email" formControlName="email" [placeholder]="t('emailPlaceholder')"/>
 
-      <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
-        Email is required
-      </mat-error>
+        <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+          {{ t('emailRequired') }}
+        </mat-error>
 
-      <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
-        Please enter a valid email address
-      </mat-error>
-    </mat-form-field>
+        <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+          {{ t('emailInvalid') }}
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Password</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ t('password') }}</mat-label>
 
-      <input matInput type="password" formControlName="password" placeholder="Password"/>
+        <input matInput type="password" formControlName="password" [placeholder]="t('passwordPlaceholder')"/>
 
-      <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
-        Password is required
-      </mat-error>
+        <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+          {{ t('passwordRequired') }}
+        </mat-error>
 
-      <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
-        Password must be at least 12 characters long
-      </mat-error>
-    </mat-form-field>
+        <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
+          {{ t('passwordMinLength') }}
+        </mat-error>
+      </mat-form-field>
 
-  </form>
+    </form>
 
-</mat-card-content>
+  </mat-card-content>
 
-<mat-card-actions>
-  <button matButton
-          type="submit"
-          form="onboard-form"
-          [disabled]="form.invalid || loading">
-    @if (loading) {
-      Processing...
-    } @else {
-      CREATE ACCOUNT
-    }
-  </button>
-</mat-card-actions>
+  <mat-card-actions>
+    <button matButton
+            type="submit"
+            form="onboard-form"
+            [disabled]="form.invalid || loading">
+      @if (loading) {
+        {{ t('loading') }}
+      } @else {
+        {{ t('submit') }}
+      }
+    </button>
+  </mat-card-actions>
+
+</ng-container>

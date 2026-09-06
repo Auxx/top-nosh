@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardData } from '../../services/dashboard/dashboard.service.types';
@@ -17,7 +18,8 @@ import { DashboardData } from '../../services/dashboard/dashboard.service.types'
     MatButtonModule,
     MatProgressSpinnerModule,
     NgOptimizedImage,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslocoDirective
   ],
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',
@@ -27,6 +29,8 @@ export class LandingPage implements OnInit {
   private readonly dashboardService = inject(DashboardService);
 
   private readonly router = inject(Router);
+
+  private readonly defaultShoppingListTitle = translateSignal('web.LandingPage.defaultShoppingListTitle');
 
   readonly loading = signal<boolean>(true);
 
@@ -43,7 +47,7 @@ export class LandingPage implements OnInit {
 
   readonly shoppingListTitle = computed(() => {
     const list = this.data()?.shoppingList;
-    return list?.name || 'Shopping List';
+    return list?.name || this.defaultShoppingListTitle();
   });
 
   ngOnInit(): void {

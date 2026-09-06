@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { WhenError } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
@@ -19,7 +20,8 @@ import { AuthenticationService } from '../../services/authentication/authenticat
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    WhenError
+    WhenError,
+    TranslocoDirective
   ],
   templateUrl: './onboard.page.html',
   styleUrl: './onboard.page.scss',
@@ -37,6 +39,12 @@ export class OnboardPage {
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   readonly isLoading = signal<boolean>(false);
+
+  private readonly okMessage = translateSignal('ui.System.ok');
+
+  private readonly successMessage = translateSignal('web.OnboardPage.success');
+
+  private readonly failureMessage = translateSignal('web.OnboardPage.failure');
 
   readonly form = this.fb.nonNullable.group({
     fullName: [ '', [ Validators.required ] ],
@@ -61,13 +69,13 @@ export class OnboardPage {
     this.authService.onboardUser({ fullName, email, password }).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.snackBar.open('User onboarded successfully', undefined, { duration: 5000 });
+        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         this.router.navigate([ '/auth', 'login' ]).then();
       },
       error: error => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Onboarding failed. Please try again.';
-        this.snackBarRef = this.snackBar.open(errorMessage, 'OK');
+        const errorMessage = error?.error?.message || error?.message || this.failureMessage();
+        this.snackBarRef = this.snackBar.open(errorMessage, this.okMessage());
       }
     });
   };

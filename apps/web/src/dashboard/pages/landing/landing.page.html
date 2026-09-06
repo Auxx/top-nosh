@@ -1,133 +1,137 @@
-<!-- Page Header / Welcome message -->
-<ui-page-header>
-  <h1>Welcome to Top Nosh!</h1>
-  <h3 class="subtitle">
-    Your personal culinary assistant for recipes and shopping lists.
-  </h3>
-</ui-page-header>
+<ng-container *transloco="let t; prefix: 'web.LandingPage'">
 
-<!-- Dashboard Cards Grid -->
-<div class="dashboard-grid">
-  <!-- Recent Recipes Card -->
-  <mat-card class="recipes-card">
-    <mat-card-header>
-      <mat-card-title>Recent Recipes</mat-card-title>
-    </mat-card-header>
+  <!-- Page Header / Welcome message -->
+  <ui-page-header>
+    <h1>{{ t('title') }}</h1>
+    <h3 class="subtitle">
+      {{ t('subtitle') }}
+    </h3>
+  </ui-page-header>
 
-    <img mat-card-image
-         ngSrc="/images/recipes.avif"
-         alt="Recent Recipes"
-         width="400"
-         height="240"
-         class="card-image"/>
+  <!-- Dashboard Cards Grid -->
+  <div class="dashboard-grid">
+    <!-- Recent Recipes Card -->
+    <mat-card class="recipes-card">
+      <mat-card-header>
+        <mat-card-title>{{ t('recentRecipes') }}</mat-card-title>
+      </mat-card-header>
 
-    <mat-card-content>
-      @if (loading()) {
-        <div class="loading-state">
-          <mat-spinner diameter="40" aria-label="Loading recent recipes"/>
-        </div>
+      <img mat-card-image
+           ngSrc="/images/recipes.avif"
+           [alt]="t('recentRecipesAlt')"
+           width="400"
+           height="240"
+           class="card-image"/>
 
-      } @else if (error()) {
-        <div class="error-state">
-          <p>Failed to load dashboard data. Please try again later.</p>
-        </div>
+      <mat-card-content>
+        @if (loading()) {
+          <div class="loading-state">
+            <mat-spinner diameter="40" [attr.aria-label]="t('loadingRecipes')"/>
+          </div>
 
-      } @else if (hasRecipes()) {
-        <ul class="items-list recipe-list">
-          @for (recipe of data()?.recipes; track recipe.id) {
-            <li class="item-entry">
-              <a [routerLink]="['/recipes', recipe.id]"
-                 class="item-link">
-                {{ recipe.name }}
-              </a>
-            </li>
-          }
-        </ul>
+        } @else if (error()) {
+          <div class="error-state">
+            <p>{{ t('loadError') }}</p>
+          </div>
 
-      } @else {
-        <div class="empty-state">
-          <p class="empty-message">No recipes added yet</p>
-        </div>
-      }
-    </mat-card-content>
-
-    @if (!loading() && !error()) {
-      <mat-card-actions>
-        @if (hasRecipes()) {
-          <button matButton
-                  class="navigate-btn"
-                  (click)="onNavigateToRecipes()">
-            VIEW RECIPES
-          </button>
+        } @else if (hasRecipes()) {
+          <ul class="items-list recipe-list">
+            @for (recipe of data()?.recipes; track recipe.id) {
+              <li class="item-entry">
+                <a [routerLink]="['/recipes', recipe.id]"
+                   class="item-link">
+                  {{ recipe.name }}
+                </a>
+              </li>
+            }
+          </ul>
 
         } @else {
-          <button matButton
-                  class="create-btn"
-                  (click)="onCreateRecipe()">
-            CREATE RECIPE
-          </button>
+          <div class="empty-state">
+            <p class="empty-message">{{ t('noRecipes') }}</p>
+          </div>
         }
-      </mat-card-actions>
-    }
-  </mat-card>
+      </mat-card-content>
 
-  <!-- Shopping Items Card -->
-  <mat-card class="shopping-card">
-    <mat-card-header>
-      <mat-card-title>{{ shoppingListTitle() }}</mat-card-title>
-    </mat-card-header>
+      @if (!loading() && !error()) {
+        <mat-card-actions>
+          @if (hasRecipes()) {
+            <button matButton
+                    class="navigate-btn"
+                    (click)="onNavigateToRecipes()">
+              {{ t('viewRecipes') }}
+            </button>
 
-    <img mat-card-image
-         ngSrc="/images/shopping-lists.avif"
-         width="400"
-         height="240"
-         alt="Shopping Lists"
-         class="card-image"/>
-
-    <mat-card-content>
-      @if (loading()) {
-        <div class="loading-state">
-          <mat-spinner diameter="40" aria-label="Loading shopping list items"/>
-        </div>
-
-      } @else if (error()) {
-        <div class="error-state">
-          <p>Failed to load dashboard data. Please try again later.</p>
-        </div>
-
-      } @else if (hasShoppingListItems()) {
-        <ul class="items-list shopping-items-list">
-          @for (item of data()?.shoppingList?.items; track item.id) {
-            <li class="item-entry">
-              <span class="item-name">{{ item.name }}</span>
-            </li>
+          } @else {
+            <button matButton
+                    class="create-btn"
+                    (click)="onCreateRecipe()">
+              {{ t('createRecipe') }}
+            </button>
           }
-        </ul>
-
-      } @else {
-        <div class="empty-state">
-          <p class="empty-message">No shopping list items yet</p>
-        </div>
+        </mat-card-actions>
       }
-    </mat-card-content>
+    </mat-card>
 
-    @if (!loading() && !error()) {
-      <mat-card-actions>
-        @if (hasShoppingListItems()) {
-          <button matButton
-                  class="navigate-btn"
-                  (click)="onNavigateToShoppingList(data()?.shoppingList?.id)">
-            VIEW SHOPPING LIST
-          </button>
+    <!-- Shopping Items Card -->
+    <mat-card class="shopping-card">
+      <mat-card-header>
+        <mat-card-title>{{ shoppingListTitle() }}</mat-card-title>
+      </mat-card-header>
+
+      <img mat-card-image
+           ngSrc="/images/shopping-lists.avif"
+           width="400"
+           height="240"
+           [alt]="t('shoppingListsAlt')"
+           class="card-image"/>
+
+      <mat-card-content>
+        @if (loading()) {
+          <div class="loading-state">
+            <mat-spinner diameter="40" [attr.aria-label]="t('loadingShoppingList')"/>
+          </div>
+
+        } @else if (error()) {
+          <div class="error-state">
+            <p>{{ t('loadError') }}</p>
+          </div>
+
+        } @else if (hasShoppingListItems()) {
+          <ul class="items-list shopping-items-list">
+            @for (item of data()?.shoppingList?.items; track item.id) {
+              <li class="item-entry">
+                <span class="item-name">{{ item.name }}</span>
+              </li>
+            }
+          </ul>
 
         } @else {
-          <button matButton
-                  class="create-btn"
-                  (click)="onCreateShoppingList()">
-            CREATE SHOPPING LIST
-          </button>
+          <div class="empty-state">
+            <p class="empty-message">{{ t('noShoppingListItems') }}</p>
+          </div>
         }
-      </mat-card-actions>
-    }
-  </mat-card>
-</div>
+      </mat-card-content>
+
+      @if (!loading() && !error()) {
+        <mat-card-actions>
+          @if (hasShoppingListItems()) {
+            <button matButton
+                    class="navigate-btn"
+                    (click)="onNavigateToShoppingList(data()?.shoppingList?.id)">
+              {{ t('viewShoppingList') }}
+            </button>
+
+          } @else {
+            <button matButton
+                    class="create-btn"
+                    (click)="onCreateShoppingList()">
+              {{ t('createShoppingList') }}
+            </button>
+          }
+        </mat-card-actions>
+      }
+    </mat-card>
+  </div>
+
+</ng-container>
