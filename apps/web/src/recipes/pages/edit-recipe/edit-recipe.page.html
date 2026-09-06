@@ -22,7 +22,7 @@
         <p>{{ t('notFoundDescription') }}</p>
 
         <button matButton="text"
-                (click)="onCancel()"
+                (click)="navigateBack()"
                 data-testid="error-back-btn">
           <mat-icon>arrow_back</mat-icon>
           {{ t('goBack') }}
@@ -34,7 +34,7 @@
   <!-- Recipe Edit Content -->
   @if (!loading && !error && recipeValue !== null) {
     <!-- Page Header -->
-    <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
+    <ui-page-header [showBackButton]="true" (navigatedBack)="navigateBack()">
       <h1>{{ t('title') }}</h1>
       <div>
         {{ t('description') }}

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -47,8 +46,6 @@ export class EditRecipePage {
 
   private readonly titleService = inject(Title);
 
-  private readonly destroyRef = inject(DestroyRef);
-
   private readonly successMessage = translateSignal('web.EditRecipePage.success');
 
   private readonly failureMessage = translateSignal('web.EditRecipePage.failure');
@@ -68,14 +65,13 @@ export class EditRecipePage {
   recipeForm: FormGroup = createRecipeForm(this.fb);
 
   constructor() {
+    // TODO Refactor into input signal
     this.route.queryParamMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         this.origin.set(params.get('from'));
       });
 
     this.route.paramMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         const id = params.get('id');
         this.recipeId.set(id);
@@ -95,7 +91,6 @@ export class EditRecipePage {
 
     this.recipeService
       .getRecipeById(id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: recipe => {
           this.recipe.set(recipe);
@@ -110,19 +105,13 @@ export class EditRecipePage {
       });
   };
 
-  readonly onCancel = (): void => {
-    this.navigateBack();
-  };
-
   readonly navigateBack = (): void => {
     const from = this.origin();
     const id = this.recipeId();
 
-    if (from === 'list' || !id) {
-      this.router.navigate([ '/recipes' ]);
-    } else {
-      this.router.navigate([ '/recipes', id ]);
-    }
+    this.router
+      .navigate(from === 'list' || id === null ? [ '/recipes' ] : [ '/recipes', id ])
+      .then();
   };
 
   readonly onSubmit = (): void => {
