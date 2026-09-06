@@ -1,23 +1,27 @@
-<mat-toolbar>
-  <span>Top Nosh</span>
+<ng-container *transloco="let t; prefix: 'menuBar'">
+  <mat-toolbar>
+    <span>Top Nosh</span>
 
-  <span class="spacer"></span>
+    <span class="spacer"></span>
 
-  <a matButton routerLink="/dashboard" class="action">Dashboard</a>
-  <a matButton routerLink="/recipes" class="action">Recipes</a>
-  <a matButton routerLink="/shopping-lists" class="action">Shopping Lists</a>
-  <a matButton routerLink="/users" class="action">Settings</a>
+    @for (item of menuItems; track item.url) {
+      <a matButton [routerLink]="item.url"
+         routerLinkActive="selected"
+         class="action">
+        {{ t(item.label) }}
+      </a>
+    }
 
-  <button matIconButton
-          class="collapsed"
-          [matMenuTriggerFor]="menu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
-</mat-toolbar>
+    <button matIconButton
+            class="collapsed"
+            [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-toolbar>
 
-<mat-menu #menu="matMenu">
-  <button mat-menu-item routerLink="/dashboard">Dashboard</button>
-  <button mat-menu-item routerLink="/recipes">Recipes</button>
-  <button mat-menu-item routerLink="/shopping-lists">Shopping Lists</button>
-  <button mat-menu-item routerLink="/users">Settings</button>
-</mat-menu>
+  <mat-menu #menu="matMenu">
+    @for (item of menuItems; track item.url) {
+      <button mat-menu-item [routerLink]="item.url">{{ t(item.label) }}</button>
+    }
+  </mat-menu>
+</ng-container>

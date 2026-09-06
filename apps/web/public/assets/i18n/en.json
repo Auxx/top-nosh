@@ -1,1 +1,9 @@
-{}
+{
+  "menuBar": {
+    "title": "Top Nosh",
+    "dashboard": "Dashboard",
+    "recipes": "Recipes",
+    "shoppingLists": "Shopping Lists",
+    "settings": "Settings"
+  }
+}

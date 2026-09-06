@@ -10,10 +10,6 @@
   }
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
-
 mat-toolbar {
   @include mat.toolbar-overrides((
           container-background-color: var(--mat-sys-primary),
@@ -27,18 +23,30 @@ mat-toolbar {
     position: fixed;
     z-index: 1000;
   }
+
+  a.action.mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
+    @include mat.button-overrides((
+            text-label-text-color: var(--mat-sys-inverse-primary),
+            text-label-text-weight: 400,
+    ));
+
+    &.selected {
+      @include mat.button-overrides((
+              text-label-text-color: var(--mat-toolbar-container-text-color),
+              text-label-text-weight: 500,
+      ));
+    }
+
+    @media (max-width: 599.98px) and (orientation: portrait) {
+      display: none;
+    }
+  }
 }
 
 button {
   @include mat.icon-button-overrides((
           icon-color: var(--mat-sys-primary-container),
   ));
-}
-
-.action {
-  @media (max-width: 599.98px) and (orientation: portrait) {
-    display: none;
-  }
 }
 
 .collapsed {

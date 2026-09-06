@@ -1,1 +1,9 @@
-{}
+{
+  "menuBar": {
+    "title": "Top Nosh",
+    "dashboard": "Главная",
+    "recipes": "Рецепты",
+    "shoppingLists": "Списки покупок",
+    "settings": "Настройки"
+  }
+}
