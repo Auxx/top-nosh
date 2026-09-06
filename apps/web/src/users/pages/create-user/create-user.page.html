@@ -1,16 +1,11 @@
 @let submitting = isSubmitting();
 
 <!-- Page Header -->
-<ui-page-header>
+<ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
   <h1>Create User</h1>
-  <h3 class="subtitle">
+  <div>
     Create a new system user account.
-  </h3>
-
-  <button matButton="text" (click)="onCancel()">
-    <mat-icon>arrow_back</mat-icon>
-    <span>Back to Users</span>
-  </button>
+  </div>
 </ui-page-header>
 
 <mat-card>

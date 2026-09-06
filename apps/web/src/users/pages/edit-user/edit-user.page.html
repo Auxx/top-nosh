@@ -4,7 +4,7 @@
 @let editable = canEdit();
 
 <!-- Page Header -->
-<ui-page-header>
+<ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
   <h1>
     @if (editable) {
     Edit User
@@ -12,18 +12,13 @@
       View User
     }
   </h1>
-  <h3 class="subtitle">
+  <div>
     @if (editable) {
       Update your profile and account credentials.
     } @else {
       View user profile details.
     }
-  </h3>
-
-  <button matButton="text" (click)="onCancel()">
-    <mat-icon>arrow_back</mat-icon>
-    <span>Back to Users</span>
-  </button>
+  </div>
 </ui-page-header>
 
 @if (loading) {

@@ -1,19 +1,18 @@
 <div class="shopping-list-details-container">
   <!-- Page Header -->
-  <div class="page-header">
-    <div class="header-title">
-      <button mat-icon-button routerLink="/shopping-lists" aria-label="Back to shopping lists" class="back-btn">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <h1>{{ isEditMode() ? 'Edit Shopping List' : 'Create Shopping List' }}</h1>
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onNavigateBack()">
+    <h1>{{ isEditMode() ? 'Edit Shopping List' : 'Create Shopping List' }}</h1>
+    <div>
+      Organize and manage your shopping lists.
     </div>
-    @if (isSaving()) {
-      <div class="header-status">
-        <mat-spinner diameter="16"></mat-spinner>
-        <span>Saving...</span>
-      </div>
-    }
-  </div>
+  </ui-page-header>
+
+  @if (isSaving()) {
+    <div class="header-status">
+      <mat-spinner diameter="16"></mat-spinner>
+      <span>Saving...</span>
+    </div>
+  }
 
   @if (isLoading()) {
     <div class="loading-container">
