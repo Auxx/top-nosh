@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { WhenError } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
@@ -19,7 +20,8 @@ import { AuthenticationService } from '../../services/authentication/authenticat
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    WhenError
+    WhenError,
+    TranslocoDirective
   ],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
@@ -37,6 +39,10 @@ export class LoginPage {
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   readonly isLoading = signal<boolean>(false);
+
+  private readonly okMessage = translateSignal('ui.System.ok');
+
+  private readonly loginFailedMessage = translateSignal('web.LoginPage.loginFailed');
 
   readonly form = this.fb.nonNullable.group({
     email: [ '', [ Validators.required, Validators.email ] ],
@@ -69,7 +75,7 @@ export class LoginPage {
       },
       error: () => {
         this.isLoading.set(false);
-        this.snackBarRef = this.snackBar.open('Login failed. Please check your credentials.', 'OK');
+        this.snackBarRef = this.snackBar.open(this.loginFailedMessage(), this.okMessage());
       }
     });
   };

@@ -1,6 +1,6 @@
 {
   "ui": {
-    "menuBar": {
+    "MenuBar": {
       "title": "Top Nosh",
       "dashboard": "Dashboard",
       "recipes": "Recipes",
@@ -8,8 +8,27 @@
       "settings": "Settings",
       "logout": "Log out"
     },
-    "pageHeader": {
+    "PageHeader": {
       "back": "Back"
+    },
+    "System": {
+      "ok": "OK"
+    }
+  },
+  "web": {
+    "LoginPage": {
+      "title": "Welcome!",
+      "description": "Please log in to continue.",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "password": "Password",
+      "passwordPlaceholder": "Password",
+      "passwordRequired": "Password is required",
+      "login": "LOG IN",
+      "loading": "Logging in...",
+      "loginFailed": "Login failed. Please check your credentials."
     }
   }
 }
