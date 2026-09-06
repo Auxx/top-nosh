@@ -1,16 +1,27 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, TitleStrategy, withComponentInputBinding } from '@angular/router';
+import { provideTransloco } from '@jsverse/transloco';
 import { authInterceptor } from '../auth/interceptors/auth/auth.interceptor';
 import { baseUrlInterceptor } from '../system/interceptors/base-url/base-url.interceptor';
 import { appRoutes } from './app.routes';
 import { AppTitleStrategy } from './strategies/app-title.strategy';
+import { TranslocoHttpLoader } from './transloco-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([ baseUrlInterceptor, authInterceptor ])),
-    { provide: TitleStrategy, useClass: AppTitleStrategy }
+    { provide: TitleStrategy, useClass: AppTitleStrategy },
+    provideTransloco({
+      config: {
+        availableLangs: [ 'en', 'ru' ],
+        defaultLang: 'en',
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode()
+      },
+      loader: TranslocoHttpLoader
+    })
   ]
 };
