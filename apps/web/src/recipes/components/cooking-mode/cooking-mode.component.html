@@ -1,9 +1,11 @@
-@let currentRecipe = recipe();
-@let currentServings = servings();
+<ng-container *transloco="let t; prefix: 'web.CookingModeComponent'">
+  @let currentRecipe = recipe();
+  @let currentServings = servings();
 
-<app-ingredient-list [recipe]="currentRecipe"
-                     [servings]="currentServings"
-                     [groupByStage]="true"
-                     [selectable]="true"/>
+  <app-ingredient-list [recipe]="currentRecipe"
+                       [servings]="currentServings"
+                       [groupByStage]="true"
+                       [selectable]="true"/>
 
-<app-cooking-stages [recipe]="currentRecipe"/>
+  <app-cooking-stages [recipe]="currentRecipe"/>
+</ng-container>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { MiniBadgeComponent, NoticeComponent, SectionHeaderComponent } from '@top-nosh/ui';
 import { RecipeDetails } from '../../models/recipe-details.types';
 
@@ -14,7 +15,8 @@ import { RecipeDetails } from '../../models/recipe-details.types';
     MatCardHeader,
     MatCardTitle,
     MiniBadgeComponent,
-    MatCheckbox
+    MatCheckbox,
+    TranslocoDirective
   ],
   templateUrl: './cooking-stages.component.html',
   styleUrl: './cooking-stages.component.scss',

@@ -1,93 +1,95 @@
-@let submitting = isSubmitting();
+<ng-container *transloco="let t; prefix: 'web.CreateUserPage'">
+  @let submitting = isSubmitting();
 
-<!-- Page Header -->
-<ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
-  <h1>Create User</h1>
-  <div>
-    Create a new system user account.
-  </div>
-</ui-page-header>
+  <!-- Page Header -->
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
+    <h1>{{ t('title') }}</h1>
+    <div>
+      {{ t('description') }}
+    </div>
+  </ui-page-header>
 
-<mat-card>
-  <mat-card-content>
-    <form class="dual-column"
-          id="create-user-form"
-          [formGroup]="form"
-          (ngSubmit)="onSubmit()">
+  <mat-card>
+    <mat-card-content>
+      <form class="dual-column"
+            id="create-user-form"
+            [formGroup]="form"
+            (ngSubmit)="onSubmit()">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Full Name</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('fullName') }}</mat-label>
 
-        <input matInput
-               type="text"
-               formControlName="fullName"
-               placeholder="Full Name"/>
+          <input matInput
+                 type="text"
+                 formControlName="fullName"
+                 [placeholder]="t('fullNamePlaceholder')"/>
 
-        <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
-          Full name is required
-        </mat-error>
-      </mat-form-field>
+          <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
+            {{ t('fullNameRequired') }}
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('email') }}</mat-label>
 
-        <input matInput
-               type="email"
-               formControlName="email"
-               placeholder="Email"/>
+          <input matInput
+                 type="email"
+                 formControlName="email"
+                 [placeholder]="t('emailPlaceholder')"/>
 
-        <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
-          Email is required
-        </mat-error>
+          <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+            {{ t('emailRequired') }}
+          </mat-error>
 
-        <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
-          Please enter a valid email address
-        </mat-error>
-      </mat-form-field>
+          <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+            {{ t('emailInvalid') }}
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('password') }}</mat-label>
 
-        <input matInput
-               type="password"
-               formControlName="password"
-               placeholder="Password"/>
+          <input matInput
+                 type="password"
+                 formControlName="password"
+                 [placeholder]="t('passwordPlaceholder')"/>
 
-        <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
-          Password is required
-        </mat-error>
+          <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+            {{ t('passwordRequired') }}
+          </mat-error>
 
-        <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
-          Password must be at least 12 characters long
-        </mat-error>
-      </mat-form-field>
+          <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
+            {{ t('passwordMinLength') }}
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Confirm Password</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('confirmPassword') }}</mat-label>
 
-        <input matInput
-               type="password"
-               formControlName="confirmPassword"
-               placeholder="Confirm Password"/>
+          <input matInput
+                 type="password"
+                 formControlName="confirmPassword"
+                 [placeholder]="t('confirmPasswordPlaceholder')"/>
 
-        <mat-error *uiWhenError="form.controls.confirmPassword; errorCode: 'required'">
-          Confirm password is required
-        </mat-error>
+          <mat-error *uiWhenError="form.controls.confirmPassword; errorCode: 'required'">
+            {{ t('confirmPasswordRequired') }}
+          </mat-error>
 
-        <mat-error *uiWhenError="form; errorCode: 'passwordMismatch'">
-          Passwords do not match
-        </mat-error>
-      </mat-form-field>
+          <mat-error *uiWhenError="form; errorCode: 'passwordMismatch'">
+            {{ t('passwordMismatch') }}
+          </mat-error>
+        </mat-form-field>
 
-    </form>
-  </mat-card-content>
+      </form>
+    </mat-card-content>
 
-  <mat-card-actions>
-    <button matButton
-            type="submit"
-            form="create-user-form"
-            [disabled]="form.invalid || submitting">
-      <span>{{ submitting ? 'Creating User...' : 'CREATE USER' }}</span>
-    </button>
-  </mat-card-actions>
-</mat-card>
+    <mat-card-actions>
+      <button matButton
+              type="submit"
+              form="create-user-form"
+              [disabled]="form.invalid || submitting">
+        <span>{{ submitting ? t('creating') : t('submit') }}</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>

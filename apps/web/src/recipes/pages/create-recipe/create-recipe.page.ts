@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import {
   createIngredientGroup,
@@ -28,7 +29,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatButtonModule,
     MatIconModule,
     RecipeFormComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslocoDirective
   ],
   templateUrl: './create-recipe.page.html',
   styleUrl: './create-recipe.page.scss',
@@ -44,6 +46,10 @@ export class CreateRecipePage {
   private readonly router = inject(Router);
 
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly successMessage = translateSignal('web.CreateRecipePage.success');
+
+  private readonly failureMessage = translateSignal('web.CreateRecipePage.failure');
 
   readonly isSubmitting = signal<boolean>(false);
 
@@ -209,12 +215,12 @@ export class CreateRecipePage {
     this.recipeService.createRecipe(payload).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('Recipe created successfully!', undefined, { duration: 5000 });
+        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         this.router.navigate([ '/recipes' ]).then();
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('Failed to create recipe. Please check your input and try again.', 'OK');
+        this.snackBar.open(this.failureMessage(), 'OK');
       }
     });
   };

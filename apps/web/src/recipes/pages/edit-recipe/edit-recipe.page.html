@@ -1,58 +1,60 @@
-@let loading = isLoading();
-@let error = hasError();
-@let submitting = isSubmitting();
-@let recipeValue = recipe();
+<ng-container *transloco="let t; prefix: 'web.EditRecipePage'">
+  @let loading = isLoading();
+  @let error = hasError();
+  @let submitting = isSubmitting();
+  @let recipeValue = recipe();
 
-<!-- Loading State -->
-@if (loading) {
-  <div class="loading-state" data-testid="loading-spinner">
-    <mat-spinner diameter="48"></mat-spinner>
-    <p>Loading recipe details...</p>
-  </div>
-}
-
-<!-- Error / Not Found State -->
-@if (!loading && error) {
-  <mat-card data-testid="error-state">
-    <mat-card-content>
-      <mat-icon>error_outline</mat-icon>
-      <h2>Recipe Not Found</h2>
-
-      <p>The recipe you are trying to edit could not be found or failed to load.</p>
-
-      <button matButton="text"
-              (click)="onCancel()"
-              data-testid="error-back-btn">
-        <mat-icon>arrow_back</mat-icon>
-        Go Back
-      </button>
-    </mat-card-content>
-  </mat-card>
-}
-
-<!-- Recipe Edit Content -->
-@if (!loading && !error && recipeValue !== null) {
-  <!-- Page Header -->
-  <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
-    <h1>Edit Recipe</h1>
-    <div>
-      Modify recipe metadata, cooking stages, steps, and ingredients
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-state" data-testid="loading-spinner">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>{{ t('loading') }}</p>
     </div>
-  </ui-page-header>
+  }
 
-  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
-    <app-recipe-form [form]="recipeForm" [recipeId]="recipeValue.id"/>
+  <!-- Error / Not Found State -->
+  @if (!loading && error) {
+    <mat-card data-testid="error-state">
+      <mat-card-content>
+        <mat-icon>error_outline</mat-icon>
+        <h2>{{ t('notFoundTitle') }}</h2>
 
-    <!-- Form Actions Card -->
-    <div class="form-section-actions">
-      <button matButton="filled"
-              type="submit"
-              [disabled]="recipeForm.invalid || submitting">
-        @if (!submitting) {
-          <mat-icon>save</mat-icon>
-        }
-        <span>{{ submitting ? 'Saving Recipe...' : 'Save Recipe' }}</span>
-      </button>
-    </div>
-  </form>
-}
+        <p>{{ t('notFoundDescription') }}</p>
+
+        <button matButton="text"
+                (click)="onCancel()"
+                data-testid="error-back-btn">
+          <mat-icon>arrow_back</mat-icon>
+          {{ t('goBack') }}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Recipe Edit Content -->
+  @if (!loading && !error && recipeValue !== null) {
+    <!-- Page Header -->
+    <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
+      <h1>{{ t('title') }}</h1>
+      <div>
+        {{ t('description') }}
+      </div>
+    </ui-page-header>
+
+    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
+      <app-recipe-form [form]="recipeForm" [recipeId]="recipeValue.id"/>
+
+      <!-- Form Actions Card -->
+      <div class="form-section-actions">
+        <button matButton="filled"
+                type="submit"
+                [disabled]="recipeForm.invalid || submitting">
+          @if (!submitting) {
+            <mat-icon>save</mat-icon>
+          }
+          <span>{{ submitting ? t('saving') : t('submit') }}</span>
+        </button>
+      </div>
+    </form>
+  }
+</ng-container>

@@ -1,129 +1,123 @@
-@let loading = isLoading();
-@let submitting = isSubmitting();
-@let error = hasError();
-@let editable = canEdit();
+<ng-container *transloco="let t; prefix: 'web.EditUserPage'">
+  @let loading = isLoading();
+  @let submitting = isSubmitting();
+  @let error = hasError();
+  @let editable = canEdit();
 
-<!-- Page Header -->
-<ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
-  <h1>
-    @if (editable) {
-    Edit User
-    } @else {
-      View User
-    }
-  </h1>
-  <div>
-    @if (editable) {
-      Update your profile and account credentials.
-    } @else {
-      View user profile details.
-    }
-  </div>
-</ui-page-header>
+  <!-- Page Header -->
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
+    <h1>
+      {{ editable ? t('titleEdit') : t('titleView') }}
+    </h1>
+    <div>
+      {{ editable ? t('descriptionEdit') : t('descriptionView') }}
+    </div>
+  </ui-page-header>
 
-@if (loading) {
-  <div class="loading-container">
-    <mat-spinner diameter="40"/>
-  </div>
-} @else if (error) {
-  <mat-card appearance="outlined">
-    <mat-card-content class="error-content">
-      <mat-icon color="warn">error</mat-icon>
-      <p>Failed to load user information. Please try again.</p>
-    </mat-card-content>
-  </mat-card>
-} @else {
-  <mat-card appearance="outlined">
-    <mat-card-content>
-      @if (!editable) {
-        <ui-notice>
-          <span>You can only edit your own user profile.</span>
-        </ui-notice>
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"/>
+    </div>
+  } @else if (error) {
+    <mat-card appearance="outlined">
+      <mat-card-content class="error-content">
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ t('loadError') }}</p>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        @if (!editable) {
+          <ui-notice>
+            <span>{{ t('noticeOnlySelf') }}</span>
+          </ui-notice>
+        }
+
+        <form class="dual-column"
+              id="edit-user-form"
+              [formGroup]="form"
+              (ngSubmit)="onSubmit()">
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('fullName') }}</mat-label>
+
+            <input matInput
+                   type="text"
+                   formControlName="fullName"
+                   readonly
+                   [placeholder]="t('fullNamePlaceholder')"/>
+
+            <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
+              {{ t('fullNameRequired') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('email') }}</mat-label>
+
+            <input matInput
+                   type="email"
+                   formControlName="email"
+                   readonly
+                   [placeholder]="t('emailPlaceholder')"/>
+
+            <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
+              {{ t('emailRequired') }}
+            </mat-error>
+
+            <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
+              {{ t('emailInvalid') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('password') }}</mat-label>
+
+            <input matInput
+                   type="password"
+                   formControlName="password"
+                   [placeholder]="t('passwordPlaceholder')"/>
+
+            <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
+              {{ t('passwordRequired') }}
+            </mat-error>
+
+            <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
+              {{ t('passwordMinLength') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('confirmPassword') }}</mat-label>
+
+            <input matInput
+                   type="password"
+                   formControlName="confirmPassword"
+                   [placeholder]="t('confirmPasswordPlaceholder')"/>
+
+            <mat-error *uiWhenError="form.controls.confirmPassword; errorCode: 'required'">
+              {{ t('confirmPasswordRequired') }}
+            </mat-error>
+
+            <mat-error *uiWhenError="form; errorCode: 'passwordMismatch'">
+              {{ t('passwordMismatch') }}
+            </mat-error>
+          </mat-form-field>
+
+        </form>
+      </mat-card-content>
+
+      @if (editable) {
+        <mat-card-actions>
+          <button matButton
+                  type="submit"
+                  form="edit-user-form"
+                  [disabled]="form.invalid || submitting">
+            <span>{{ submitting ? t('updating') : t('submit') }}</span>
+          </button>
+        </mat-card-actions>
       }
-
-      <form class="dual-column"
-            id="edit-user-form"
-            [formGroup]="form"
-            (ngSubmit)="onSubmit()">
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Full Name</mat-label>
-
-          <input matInput
-                 type="text"
-                 formControlName="fullName"
-                 readonly
-                 placeholder="Full Name"/>
-
-          <mat-error *uiWhenError="form.controls.fullName; errorCode: 'required'">
-            Full name is required
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-
-          <input matInput
-                 type="email"
-                 formControlName="email"
-                 readonly
-                 placeholder="Email"/>
-
-          <mat-error *uiWhenError="form.controls.email; errorCode: 'required'">
-            Email is required
-          </mat-error>
-
-          <mat-error *uiWhenError="form.controls.email; errorCode: 'email'">
-            Please enter a valid email address
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-
-          <input matInput
-                 type="password"
-                 formControlName="password"
-                 placeholder="Password"/>
-
-          <mat-error *uiWhenError="form.controls.password; errorCode: 'required'">
-            Password is required
-          </mat-error>
-
-          <mat-error *uiWhenError="form.controls.password; errorCode: 'minlength'">
-            Password must be at least 12 characters long
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Confirm Password</mat-label>
-
-          <input matInput
-                 type="password"
-                 formControlName="confirmPassword"
-                 placeholder="Confirm Password"/>
-
-          <mat-error *uiWhenError="form.controls.confirmPassword; errorCode: 'required'">
-            Confirm password is required
-          </mat-error>
-
-          <mat-error *uiWhenError="form; errorCode: 'passwordMismatch'">
-            Passwords do not match
-          </mat-error>
-        </mat-form-field>
-
-      </form>
-    </mat-card-content>
-
-    @if (editable) {
-      <mat-card-actions>
-        <button matButton
-                type="submit"
-                form="edit-user-form"
-                [disabled]="form.invalid || submitting">
-          <span>{{ submitting ? 'Updating User...' : 'UPDATE PASSWORD' }}</span>
-        </button>
-      </mat-card-actions>
-    }
-  </mat-card>
-}
+    </mat-card>
+  }
+</ng-container>

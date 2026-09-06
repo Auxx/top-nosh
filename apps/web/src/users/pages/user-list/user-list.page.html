@@ -1,86 +1,88 @@
-@let columns = displayedColumns();
+<ng-container *transloco="let t; prefix: 'web.UserListPage'">
+  @let columns = displayedColumns();
 
-<!-- Page Header -->
-<ui-page-header>
-  <h1>Users</h1>
-  <div>
-    Manage system users and their accounts.
-  </div>
+  <!-- Page Header -->
+  <ui-page-header>
+    <h1>{{ t('title') }}</h1>
+    <div>
+      {{ t('description') }}
+    </div>
 
-  <button matButton (click)="onCreateUser()">
-    <mat-icon>add</mat-icon>
-    <span>Create User</span>
-  </button>
-</ui-page-header>
+    <button matButton (click)="onCreateUser()">
+      <mat-icon>add</mat-icon>
+      <span>{{ t('createUser') }}</span>
+    </button>
+  </ui-page-header>
 
-<!-- Table Card -->
-@if (users$ | async; as usersData) {
-  <table mat-table [dataSource]="usersData.data" class="item-list-table">
-    <!-- Full Name Column -->
-    <ng-container matColumnDef="fullName">
-      <th mat-header-cell *matHeaderCellDef>Full Name</th>
-      <td mat-cell *matCellDef="let item">
-        <a [routerLink]="['/users', item.id, 'edit']" class="label">
-          {{ item.fullName }}
-        </a>
-      </td>
-    </ng-container>
+  <!-- Table Card -->
+  @if (users$ | async; as usersData) {
+    <table mat-table [dataSource]="usersData.data" class="item-list-table">
+      <!-- Full Name Column -->
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnFullName') }}</th>
+        <td mat-cell *matCellDef="let item">
+          <a [routerLink]="['/users', item.id, 'edit']" class="label">
+            {{ item.fullName }}
+          </a>
+        </td>
+      </ng-container>
 
-    <!-- Email Column -->
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let item" class="item-description-medium">
-        {{ item.email }}
-      </td>
-    </ng-container>
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnEmail') }}</th>
+        <td mat-cell *matCellDef="let item" class="item-description-medium">
+          {{ item.email }}
+        </td>
+      </ng-container>
 
-    <!-- Created At Column -->
-    <ng-container matColumnDef="createdAt">
-      <th mat-header-cell *matHeaderCellDef>Created At</th>
-      <td mat-cell *matCellDef="let item" class="nowrap-item">
-        {{ item.createdAt | date }}
-      </td>
-    </ng-container>
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnCreatedAt') }}</th>
+        <td mat-cell *matCellDef="let item" class="nowrap-item">
+          {{ item.createdAt | date }}
+        </td>
+      </ng-container>
 
-    <!-- Updated At Column -->
-    <ng-container matColumnDef="updatedAt">
-      <th mat-header-cell *matHeaderCellDef>Updated At</th>
-      <td mat-cell *matCellDef="let item" class="nowrap-item">
-        {{ item.updatedAt | date }}
-      </td>
-    </ng-container>
+      <!-- Updated At Column -->
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnUpdatedAt') }}</th>
+        <td mat-cell *matCellDef="let item" class="nowrap-item">
+          {{ item.updatedAt | date }}
+        </td>
+      </ng-container>
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef class="actions">Actions</th>
-      <td mat-cell *matCellDef="let item" class="actions">
-        <button mat-icon-button
-                aria-label="Edit user"
-                (click)="onEditUser(item)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions">{{ t('columnActions') }}</th>
+        <td mat-cell *matCellDef="let item" class="actions">
+          <button mat-icon-button
+                  [attr.aria-label]="t('editUserAriaLabel')"
+                  (click)="onEditUser(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columns"></tr>
-    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
 
-    <!-- No Data Row -->
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell empty-table-cell" [attr.colspan]="columns.length">
-        <div class="empty-state">
-          <mat-icon class="empty-icon">person_off</mat-icon>
-          <p>No users found</p>
-        </div>
-      </td>
-    </tr>
-  </table>
+      <!-- No Data Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-table-cell" [attr.colspan]="columns.length">
+          <div class="empty-state">
+            <mat-icon class="empty-icon">person_off</mat-icon>
+            <p>{{ t('noUsers') }}</p>
+          </div>
+        </td>
+      </tr>
+    </table>
 
-  <!-- Paginator -->
-  <mat-paginator [length]="usersData.total"
-                 [pageSize]="50"
-                 [pageIndex]="usersData.page - 1"
-                 [pageSizeOptions]="[50]"
-                 (page)="onPageChange($event)"
-                 aria-label="Select users page"/>
-}
+    <!-- Paginator -->
+    <mat-paginator [length]="usersData.total"
+                   [pageSize]="50"
+                   [pageIndex]="usersData.page - 1"
+                   [pageSizeOptions]="[50]"
+                   (page)="onPageChange($event)"
+                   [attr.aria-label]="t('paginatorAriaLabel')"/>
+  }
+</ng-container>

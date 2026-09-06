@@ -1,25 +1,27 @@
-@let submitting = isSubmitting();
+<ng-container *transloco="let t; prefix: 'web.CreateRecipePage'">
+  @let submitting = isSubmitting();
 
-<!-- Page Header -->
-<ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
-  <h1>Create New Recipe</h1>
-  <div>
-    Define recipe metadata, cooking stages, steps, and ingredients
-  </div>
-</ui-page-header>
+  <!-- Page Header -->
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
+    <h1>{{ t('title') }}</h1>
+    <div>
+      {{ t('description') }}
+    </div>
+  </ui-page-header>
 
-<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
-  <app-recipe-form [form]="recipeForm"/>
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
+    <app-recipe-form [form]="recipeForm"/>
 
-  <!-- Form Actions Card -->
-  <div class="form-section-actions">
-      <button matButton="filled"
-              type="submit"
-              [disabled]="recipeForm.invalid || submitting">
-        @if (!submitting) {
-          <mat-icon>check</mat-icon>
-        }
-        <span>{{ submitting ? 'Creating Recipe...' : 'Create Recipe' }}</span>
-      </button>
-  </div>
-</form>
+    <!-- Form Actions Card -->
+    <div class="form-section-actions">
+        <button matButton="filled"
+                type="submit"
+                [disabled]="recipeForm.invalid || submitting">
+          @if (!submitting) {
+            <mat-icon>check</mat-icon>
+          }
+          <span>{{ submitting ? t('creating') : t('submit') }}</span>
+        </button>
+    </div>
+  </form>
+</ng-container>

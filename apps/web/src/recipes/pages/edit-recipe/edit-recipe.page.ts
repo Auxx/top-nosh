@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
@@ -26,7 +27,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatIconModule,
     MatProgressSpinnerModule,
     RecipeFormComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslocoDirective
   ],
   templateUrl: './edit-recipe.page.html',
   styleUrl: './edit-recipe.page.scss',
@@ -46,6 +48,10 @@ export class EditRecipePage {
   private readonly titleService = inject(Title);
 
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly successMessage = translateSignal('web.EditRecipePage.success');
+
+  private readonly failureMessage = translateSignal('web.EditRecipePage.failure');
 
   readonly recipeId = signal<string | null>(null);
 
@@ -167,12 +173,12 @@ export class EditRecipePage {
     this.recipeService.updateRecipe(id, payload).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('Recipe updated successfully!', undefined, { duration: 5000 });
+        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         this.navigateBack();
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('Failed to update recipe. Please check your input and try again.', 'OK');
+        this.snackBar.open(this.failureMessage(), 'OK');
       }
     });
   };

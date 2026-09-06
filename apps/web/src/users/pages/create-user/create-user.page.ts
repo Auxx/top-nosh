@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 
@@ -49,7 +50,8 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatButtonModule,
     MatIconModule,
     PageHeaderComponent,
-    WhenError
+    WhenError,
+    TranslocoDirective
   ],
   templateUrl: './create-user.page.html',
   styleUrl: './create-user.page.scss',
@@ -60,6 +62,10 @@ export class CreateUserPage {
   private readonly userManagementService = inject(UserManagementService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
+
+  private readonly okMessage = translateSignal('ui.System.ok');
+  private readonly successMessage = translateSignal('web.CreateUserPage.success');
+  private readonly failureMessage = translateSignal('web.CreateUserPage.failure');
 
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
@@ -96,13 +102,13 @@ export class CreateUserPage {
     this.userManagementService.create({ fullName, email, password }).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('User created successfully', undefined, { duration: 5000 });
+        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         this.router.navigate([ '/users' ]).then();
       },
       error: error => {
         this.isSubmitting.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to create user. Please try again.';
-        this.snackBarRef = this.snackBar.open(errorMessage, 'OK');
+        const errorMessage = error?.error?.message || error?.message || this.failureMessage();
+        this.snackBarRef = this.snackBar.open(errorMessage, this.okMessage());
       }
     });
   };

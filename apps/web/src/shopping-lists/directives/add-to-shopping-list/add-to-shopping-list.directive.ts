@@ -17,6 +17,7 @@ import { MatDivider } from '@angular/material/list';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { IngredientDetails } from '../../../recipes/models/recipe-details.types';
 import { ShoppingListItem } from '../../models/shopping-list.types';
 import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
@@ -24,16 +25,18 @@ import { ShoppingListManagementService } from '../../services/shopping-list-mana
 @Component({
   selector: 'app-add-to-shopping-list-content',
   standalone: true,
-  imports: [ CommonModule, MatMenuModule, RouterLink, MatDivider ],
+  imports: [ CommonModule, MatMenuModule, RouterLink, MatDivider, TranslocoDirective ],
   template: `
-    @let allLists = lists();
-    <button mat-menu-item routerLink="/shopping-lists/new">Create new Shopping List</button>
-    @if (allLists.length > 0) {
-      <mat-divider/>
-    }
-    @for (list of allLists; track list.id) {
-      <button mat-menu-item (click)="onItemClick(list)">{{ list.name }}</button>
-    }
+    <ng-container *transloco="let t; prefix: 'web.AddToShoppingListContentComponent'">
+      @let allLists = lists();
+      <button mat-menu-item routerLink="/shopping-lists/new">{{ t('createNew') }}</button>
+      @if (allLists.length > 0) {
+        <mat-divider/>
+      }
+      @for (list of allLists; track list.id) {
+        <button mat-menu-item (click)="onItemClick(list)">{{ list.name }}</button>
+      }
+    </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -61,6 +64,10 @@ export class AddToShoppingListDirective implements OnInit {
   private readonly viewContainer = inject(ViewContainerRef);
 
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly successMessage = translateSignal('web.AddToShoppingListDirective.success');
+
+  private readonly failureMessage = translateSignal('web.AddToShoppingListDirective.failure');
 
   readonly ingredient = input<IngredientDetails | string | null>(null, {
     alias: 'appAddToShoppingList'
@@ -101,10 +108,10 @@ export class AddToShoppingListDirective implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open('Added to shopping list', undefined, { duration: 5000 });
+          this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         },
         error: () => {
-          this.snackBar.open('Failed to add to shopping list', 'OK', { duration: 5000 });
+          this.snackBar.open(this.failureMessage(), 'OK', { duration: 5000 });
         }
       });
   };

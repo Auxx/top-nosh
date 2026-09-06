@@ -1,157 +1,159 @@
-@let columns = displayedColumns();
+<ng-container *transloco="let t; prefix: 'web.RecipeListPage'">
+  @let columns = displayedColumns();
 
-<!-- Page Header -->
-<ui-page-header>
-  <h1>Recipes</h1>
-  <div>
-    Explore and manage your collection of delicious recipes.
-  </div>
+  <!-- Page Header -->
+  <ui-page-header>
+    <h1>{{ t('title') }}</h1>
+    <div>
+      {{ t('description') }}
+    </div>
 
-  <button matButton (click)="onCreateRecipe()">
-    <mat-icon>add</mat-icon>
-    <span>Create Recipe</span>
-  </button>
-</ui-page-header>
+    <button matButton (click)="onCreateRecipe()">
+      <mat-icon>add</mat-icon>
+      <span>{{ t('createRecipe') }}</span>
+    </button>
+  </ui-page-header>
 
-<!-- Filters Card -->
-<mat-card>
-  <mat-card-content>
-    <form [formGroup]="filterForm">
-      <!-- Search Input -->
-      <mat-form-field appearance="outline"
-                      floatLabel="always"
-                      subscriptSizing="dynamic">
-        <mat-label>Search</mat-label>
-        <input matInput
-               formControlName="search"
-               placeholder="Search recipes..."
-               (input)="onSearchInput($event)"/>
-        <mat-icon matPrefix>search</mat-icon>
-      </mat-form-field>
+  <!-- Filters Card -->
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="filterForm">
+        <!-- Search Input -->
+        <mat-form-field appearance="outline"
+                        floatLabel="always"
+                        subscriptSizing="dynamic">
+          <mat-label>{{ t('search') }}</mat-label>
+          <input matInput
+                 formControlName="search"
+                 [placeholder]="t('searchPlaceholder')"
+                 (input)="onSearchInput($event)"/>
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
 
-      <!-- Cuisine Select -->
-      <mat-form-field appearance="outline"
-                      floatLabel="always"
-                      subscriptSizing="dynamic">
-        <mat-label>Cuisine</mat-label>
-        <mat-select formControlName="cuisine"
-                    (selectionChange)="onCuisineChange($event.value)">
+        <!-- Cuisine Select -->
+        <mat-form-field appearance="outline"
+                        floatLabel="always"
+                        subscriptSizing="dynamic">
+          <mat-label>{{ t('cuisine') }}</mat-label>
+          <mat-select formControlName="cuisine"
+                      (selectionChange)="onCuisineChange($event.value)">
 
-          <mat-option value="">All Cuisines</mat-option>
+            <mat-option value="">{{ t('allCuisines') }}</mat-option>
 
-          @for (cuisine of cuisinesCategories().cuisines; track cuisine) {
-            <mat-option [value]="cuisine">{{ cuisine }}</mat-option>
-          }
+            @for (cuisine of cuisinesCategories().cuisines; track cuisine) {
+              <mat-option [value]="cuisine">{{ cuisine }}</mat-option>
+            }
 
-        </mat-select>
-      </mat-form-field>
+          </mat-select>
+        </mat-form-field>
 
-      <!-- Category Select (dependent on cuisine) -->
-      <mat-form-field appearance="outline"
-                      floatLabel="always"
-                      subscriptSizing="dynamic">
-        <mat-label>Category</mat-label>
-        <mat-select formControlName="category"
-                    (selectionChange)="onCategoryChange($event.value)">
+        <!-- Category Select (dependent on cuisine) -->
+        <mat-form-field appearance="outline"
+                        floatLabel="always"
+                        subscriptSizing="dynamic">
+          <mat-label>{{ t('category') }}</mat-label>
+          <mat-select formControlName="category"
+                      (selectionChange)="onCategoryChange($event.value)">
 
-          <mat-option value="">All Categories</mat-option>
+            <mat-option value="">{{ t('allCategories') }}</mat-option>
 
-          @for (category of availableCategories(); track category) {
-            <mat-option [value]="category">{{ category }}</mat-option>
-          }
+            @for (category of availableCategories(); track category) {
+              <mat-option [value]="category">{{ category }}</mat-option>
+            }
 
-        </mat-select>
-      </mat-form-field>
+          </mat-select>
+        </mat-form-field>
 
-      <!-- Clear / Reset button -->
-      <div class="filter-actions">
-        <button matIconButton
-                type="button"
-                (click)="onClearFilters()">
-          <mat-icon>clear</mat-icon>
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
-
-<div class="layout-gap"></div>
-
-<!-- Table Card -->
-@if (recipes$ | async; as recipesData) {
-  <table mat-table [dataSource]="recipesData.data" class="item-list-table">
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let recipe">
-        <a [routerLink]="['/recipes', recipe.id]" class="label">
-          {{ recipe.name }}
-        </a>
-      </td>
-    </ng-container>
-
-    <!-- Description Column -->
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef>Description</th>
-      <td mat-cell *matCellDef="let recipe" class="item-description-medium">
-        {{ recipe.description | stripMarkdown | truncate: 100 }}
-      </td>
-    </ng-container>
-
-    <!-- Cuisine Column -->
-    <ng-container matColumnDef="cuisine">
-      <th mat-header-cell *matHeaderCellDef>Cuisine</th>
-      <td mat-cell *matCellDef="let recipe">
-        {{ recipe.cuisine }}
-      </td>
-    </ng-container>
-
-    <!-- Category Column -->
-    <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef>Category</th>
-      <td mat-cell *matCellDef="let recipe">
-        {{ recipe.category }}
-      </td>
-    </ng-container>
-
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef class="actions">Actions</th>
-      <td mat-cell *matCellDef="let recipe" class="actions">
-        <button mat-icon-button
-                aria-label="Edit recipe"
-                (click)="onEditRecipe(recipe)">
-          <mat-icon>edit</mat-icon>
-        </button>
-
-        <button matIconButton
-                aria-label="Delete recipe"
-                class="warn"
-                (click)="onDeleteRecipe(recipe)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="columns"></tr>
-    <tr mat-row *matRowDef="let row; columns: columns"></tr>
-
-    <!-- No Data Row -->
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell empty-table-cell" [attr.colspan]="columns.length">
-        <div class="empty-state">
-          <mat-icon class="empty-icon">menu_book</mat-icon>
-          <p>No recipes found</p>
+        <!-- Clear / Reset button -->
+        <div class="filter-actions">
+          <button matIconButton
+                  type="button"
+                  (click)="onClearFilters()">
+            <mat-icon>clear</mat-icon>
+          </button>
         </div>
-      </td>
-    </tr>
-  </table>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
-  <!-- Paginator -->
-  <mat-paginator [length]="recipesData.total"
-                 [pageSize]="50"
-                 [pageIndex]="recipesData.page - 1"
-                 [pageSizeOptions]="[50]"
-                 (page)="onPageChange($event)"
-                 aria-label="Select recipe page"/>
-}
+  <div class="layout-gap"></div>
+
+  <!-- Table Card -->
+  @if (recipes$ | async; as recipesData) {
+    <table mat-table [dataSource]="recipesData.data" class="item-list-table">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnName') }}</th>
+        <td mat-cell *matCellDef="let recipe">
+          <a [routerLink]="['/recipes', recipe.id]" class="label">
+            {{ recipe.name }}
+          </a>
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnDescription') }}</th>
+        <td mat-cell *matCellDef="let recipe" class="item-description-medium">
+          {{ recipe.description | stripMarkdown | truncate: 100 }}
+        </td>
+      </ng-container>
+
+      <!-- Cuisine Column -->
+      <ng-container matColumnDef="cuisine">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnCuisine') }}</th>
+        <td mat-cell *matCellDef="let recipe">
+          {{ recipe.cuisine }}
+        </td>
+      </ng-container>
+
+      <!-- Category Column -->
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>{{ t('columnCategory') }}</th>
+        <td mat-cell *matCellDef="let recipe">
+          {{ recipe.category }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions">{{ t('columnActions') }}</th>
+        <td mat-cell *matCellDef="let recipe" class="actions">
+          <button mat-icon-button
+                  [attr.aria-label]="t('editRecipeAriaLabel')"
+                  (click)="onEditRecipe(recipe)">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button matIconButton
+                  [attr.aria-label]="t('deleteRecipeAriaLabel')"
+                  class="warn"
+                  (click)="onDeleteRecipe(recipe)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
+      <!-- No Data Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-table-cell" [attr.colspan]="columns.length">
+          <div class="empty-state">
+            <mat-icon class="empty-icon">menu_book</mat-icon>
+            <p>{{ t('noRecipes') }}</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Paginator -->
+    <mat-paginator [length]="recipesData.total"
+                   [pageSize]="50"
+                   [pageIndex]="recipesData.page - 1"
+                   [pageSizeOptions]="[50]"
+                   (page)="onPageChange($event)"
+                   [attr.aria-label]="t('paginatorAriaLabel')"/>
+  }
+</ng-container>

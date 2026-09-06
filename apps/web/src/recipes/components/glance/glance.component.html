@@ -1,8 +1,10 @@
-@let currentRecipe = recipe();
-@let currentServings = servings();
+<ng-container *transloco="let t; prefix: 'web.GlanceComponent'">
+  @let currentRecipe = recipe();
+  @let currentServings = servings();
 
-<app-ingredient-list [recipe]="currentRecipe"
-                     [servings]="currentServings"
-                     [showMenu]="!disableShoppingLists()"/>
+  <app-ingredient-list [recipe]="currentRecipe"
+                       [servings]="currentServings"
+                       [showMenu]="!disableShoppingLists()"/>
 
-<app-glance-stages [recipe]="currentRecipe"/>
+  <app-glance-stages [recipe]="currentRecipe"/>
+</ng-container>

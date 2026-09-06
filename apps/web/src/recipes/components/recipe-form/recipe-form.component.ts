@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { MarkdownPreviewDialog, WhenError } from '@top-nosh/ui';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
@@ -88,7 +89,8 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    WhenError
+    WhenError,
+    TranslocoDirective
   ],
   templateUrl: './recipe-form.component.html',
   styleUrl: './recipe-form.component.scss',
@@ -102,6 +104,8 @@ export class RecipeFormComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
 
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly previewTitle = translateSignal('web.RecipeFormComponent.previewTitle');
 
   readonly form = input.required<FormGroup>();
 
@@ -263,7 +267,7 @@ export class RecipeFormComponent implements OnInit {
     this.dialog.open(MarkdownPreviewDialog, {
       data: {
         markdown: description,
-        title: 'Recipe Description Preview'
+        title: this.previewTitle()
       }
     });
   };
