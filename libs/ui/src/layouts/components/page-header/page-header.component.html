@@ -1,0 +1,23 @@
+<ng-container *transloco="let t; prefix: 'pageHeader'">
+  <div class="header">
+    <ng-content select="h1,h2,h3,h4,h5,h6"/>
+  </div>
+
+  <div class="subheader">
+    <ng-content select="div"/>
+  </div>
+
+  <div class="actions">
+    @if (showBackButton()) {
+      <button matButton="text"
+              (click)="navigatedBack.emit()">
+        <mat-icon>arrow_back</mat-icon>
+        {{ t('back') }}
+      </button>
+
+      <div class="actions-spacer"></div>
+    }
+
+    <ng-content select="button"/>
+  </div>
+</ng-container>

@@ -5,5 +5,8 @@
     "recipes": "Recipes",
     "shoppingLists": "Shopping Lists",
     "settings": "Settings"
+  },
+  "pageHeader": {
+    "back": "Back"
   }
 }

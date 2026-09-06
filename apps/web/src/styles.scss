@@ -85,6 +85,10 @@ app-guest {
   }
 }
 
+h1 {
+  font-weight: 500;
+}
+
 h2 {
   font-size: 1.25rem;
   font-weight: 500;
@@ -92,6 +96,7 @@ h2 {
 
 h3 {
   &.subtitle {
+    // TODO Remove?
     font-weight: normal;
   }
 }
@@ -138,14 +143,6 @@ table.item-list-table {
   .actions {
     text-align: right;
     white-space: nowrap;
-
-    [mat-icon-button] {
-      &:not(.warn) {
-        @include mat.icon-button-overrides((
-                icon-color: var(--mat-sys-primary),
-        ));
-      }
-    }
   }
 
   .nowrap-item {
@@ -225,7 +222,6 @@ ol.steps-list {
   gap: var(--dim-medium);
 
   li {
-    padding: 0;
     margin: 0;
 
     display: grid;
@@ -294,5 +290,17 @@ ol.steps-list {
         }
       }
     }
+  }
+}
+
+.mat-mdc-icon-button {
+  @include mat.icon-button-overrides((
+          icon-color: var(--mat-sys-primary),
+  ));
+
+  &.warn {
+    @include mat.icon-button-overrides((
+            icon-color: var(--mat-sys-error),
+    ));
   }
 }

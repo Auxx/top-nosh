@@ -1,13 +1,21 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'ui-page-header',
-  imports: [],
-  template: '<div class="content"><ng-content select="h1,h2,h3,h4,h5,h6,div" /></div>'
-    + '<div class="spacer"></div>'
-    + '<div class="actions"><ng-content select="button"/></div>',
+  imports: [
+    MatButton,
+    TranslocoDirective,
+    MatIcon
+  ],
+  templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageHeaderComponent {
+  readonly showBackButton = input<boolean>(false);
+
+  readonly navigatedBack = output();
 }

@@ -34,23 +34,26 @@
 <!-- Recipe Details Content -->
 @if (!loading && !error && recipe(); as currentRecipe) {
   <!-- Page Header & Top Bar -->
-  <ui-page-header>
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onBackToList()">
     <h1>{{ currentRecipe.name }}</h1>
     <div class="badge-container">
       <ui-mini-badge data-testid="recipe-cuisine" color="primary">{{ currentRecipe.cuisine }}</ui-mini-badge>
       <ui-mini-badge data-testid="recipe-category" color="secondary">{{ currentRecipe.category }}</ui-mini-badge>
     </div>
 
-    <button matButton="text" (click)="onBackToList()">
-      <mat-icon>arrow_back</mat-icon>
-      <span>Back to Recipes</span>
+    <button matIconButton (click)="onEditRecipe()">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <button matIconButton class="warn" (click)="onDeleteRecipe()">
+      <mat-icon>delete</mat-icon>
     </button>
   </ui-page-header>
 
   <div class="meta">
     @if (currentRecipe.description) {
       <div class="recipe-description" data-testid="recipe-description">
-        <remark [markdown]="currentRecipe.description" />
+        <remark [markdown]="currentRecipe.description"/>
       </div>
     }
 

@@ -33,16 +33,11 @@
 <!-- Recipe Edit Content -->
 @if (!loading && !error && recipeValue !== null) {
   <!-- Page Header -->
-  <ui-page-header>
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
     <h1>Edit Recipe</h1>
-    <h3 class="subtitle">
+    <div>
       Modify recipe metadata, cooking stages, steps, and ingredients
-    </h3>
-
-    <button matButton="text" (click)="onCancel()">
-      <mat-icon>arrow_back</mat-icon>
-      <span>Go Back</span>
-    </button>
+    </div>
   </ui-page-header>
 
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
