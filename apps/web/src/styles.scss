@@ -69,11 +69,23 @@ body {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: var(--dim-large);
-}
 
-@for $i from 1 through 12 {
-  .grid-12-col-#{$i} {
-    grid-column: span #{$i};
+  @for $i from 1 through 12 {
+    .grid-12-col-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+
+  @media (max-width: 599.98px) {
+    &.mobile-single-column {
+      grid-template-columns: 1fr;
+
+      @for $i from 1 through 12 {
+        .grid-12-col-#{$i} {
+          grid-column: auto;
+        }
+      }
+    }
   }
 }
 
