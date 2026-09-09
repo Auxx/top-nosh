@@ -12,9 +12,14 @@ import { TranslocoDirective } from '@jsverse/transloco';
   ],
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.compact]': 'compact()'
+  }
 })
 export class PageHeaderComponent {
+  readonly compact = input<boolean>(false);
+
   readonly showBackButton = input<boolean>(false);
 
   readonly navigatedBack = output();

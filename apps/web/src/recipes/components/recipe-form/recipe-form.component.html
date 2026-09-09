@@ -143,17 +143,31 @@
 
     <!-- Stages Section -->
     <div class="stages-section">
-      <div class="section-header">
-        <div class="section-title">
-          <h2>{{ t('stagesTitle') }}</h2>
-          <p class="section-subtitle">{{ t('stagesSubtitle') }}</p>
-        </div>
+      <ui-page-header [compact]="true">
+        <h2>{{ t('stagesTitle') }}</h2>
 
-        <button mat-flat-button color="accent" type="button" (click)="addStage()" class="add-stage-btn">
+        <div>{{ t('stagesSubtitle') }}</div>
+
+        <button matButton
+                type="button"
+                class="add-stage-btn"
+                (click)="addStage()">
           <mat-icon>add</mat-icon>
           {{ t('addStage') }}
         </button>
-      </div>
+      </ui-page-header>
+
+<!--      <div class="section-header">-->
+<!--        <div class="section-title">-->
+<!--          <h2>{{ t('stagesTitle') }}</h2>-->
+<!--          <p class="section-subtitle">{{ t('stagesSubtitle') }}</p>-->
+<!--        </div>-->
+
+<!--        <button mat-flat-button color="accent" type="button" (click)="addStage()" class="add-stage-btn">-->
+<!--          <mat-icon>add</mat-icon>-->
+<!--          {{ t('addStage') }}-->
+<!--        </button>-->
+<!--      </div>-->
 
       @if (getStagesArray().length > 0) {
         <div cdkDropList

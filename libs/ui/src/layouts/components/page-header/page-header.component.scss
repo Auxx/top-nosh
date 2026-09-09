@@ -6,6 +6,10 @@
   gap: var(--dim-large);
   margin-bottom: var(--dim-xx-large);
 
+  &.compact {
+    row-gap: var(--dim-small);
+  }
+
   @media (max-width: 599.98px) and (orientation: portrait) {
     display: flex;
     flex-direction: column;

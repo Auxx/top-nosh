@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { WhenError } from '@top-nosh/ui';
+import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
@@ -91,7 +91,8 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     CdkDragHandle,
     WhenError,
     TranslocoDirective,
-    RemarkComponent
+    RemarkComponent,
+    PageHeaderComponent
   ],
   templateUrl: './recipe-form.component.html',
   styleUrl: './recipe-form.component.scss',
