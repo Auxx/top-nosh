@@ -121,12 +121,14 @@
             </mat-checkbox>
 
             @if (isShared()) {
-              <a [href]="shareUrl()"
+              @let url = shareUrl();
+
+              <a [href]="url"
                  target="_blank"
                  rel="noopener noreferrer"
                  class="share-link"
                  data-testid="share-recipe-link">
-                {{ shareUrl() }}
+                {{ url }}
               </a>
 
               <!-- Copy To Clipboard button -->
