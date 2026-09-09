@@ -109,7 +109,7 @@
 
     <!-- Share Recipe Card -->
     @if (recipeId()) {
-      <mat-card class="section-card share-recipe-card" data-testid="share-recipe-card">
+      <mat-card class="share-recipe-card" data-testid="share-recipe-card">
         <mat-card-header>
           <mat-card-title>{{ t('shareTitle') }}</mat-card-title>
         </mat-card-header>
@@ -121,16 +121,18 @@
             </mat-checkbox>
 
             @if (isShared()) {
-              <div class="share-link-container" data-testid="share-link-container">
-                <span class="share-link-label">{{ t('publicLink') }}</span>
-                <a [href]="shareUrl()"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="share-link"
-                   data-testid="share-recipe-link">
-                  {{ shareUrl() }}
-                </a>
-              </div>
+              <a [href]="shareUrl()"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="share-link"
+                 data-testid="share-recipe-link">
+                {{ shareUrl() }}
+              </a>
+
+              <!-- Copy To Clipboard button -->
+              <button matIconButton type="button">
+                <mat-icon>share</mat-icon>
+              </button>
             }
           </div>
         </mat-card-content>
