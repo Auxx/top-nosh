@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponents } from 'ng-mocks';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { CookingStagesComponent } from '../cooking-stages/cooking-stages.component';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
 
@@ -13,6 +14,7 @@ describe('CookingModeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         CookingModeComponent,
+        getTranslocoModule(),
         MockComponents(
           IngredientListComponent,
           CookingStagesComponent

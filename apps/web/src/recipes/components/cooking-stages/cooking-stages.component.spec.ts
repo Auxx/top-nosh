@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 
 import { CookingStagesComponent } from './cooking-stages.component';
 
@@ -12,7 +13,10 @@ describe('CookingStagesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ CookingStagesComponent ]
+      imports: [
+        CookingStagesComponent,
+        getTranslocoModule()
+      ]
     })
       .compileComponents();
 

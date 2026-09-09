@@ -2,6 +2,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { PaginatedShoppingListResponse, ShoppingListItem } from '../../models/shopping-list.types';
 import {
   ShoppingListManagementService
@@ -66,7 +67,10 @@ describe('ShoppingListPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ ShoppingListPage ],
+      imports: [
+        ShoppingListPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
@@ -139,7 +143,7 @@ describe('ShoppingListPage', () => {
 
     const emptyState: HTMLElement = fixture.nativeElement.querySelector('.empty-state');
     expect(emptyState).toBeTruthy();
-    expect(emptyState.textContent?.trim()).toContain('No shopping lists found');
+    expect(emptyState.textContent?.trim()).toContain('ShoppingListPage.noShoppingLists');
   });
 
   it('should handle onCreateShoppingList and onDeleteShoppingList calls gracefully', () => {

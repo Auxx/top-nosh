@@ -15,6 +15,7 @@
     "src/**/*.test.ts",
     "jest.config.ts",
     "jest.config.cts",
-    "src/test-setup.ts"
+    "src/test-setup.ts",
+    "src/transloco-testing.module.ts"
   ]
 }

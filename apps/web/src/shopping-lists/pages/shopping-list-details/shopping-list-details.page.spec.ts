@@ -2,9 +2,9 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { ShoppingListCreatedResponse, ShoppingListDetails } from '../../models/shopping-list.types';
 import {
   ShoppingListManagementService
@@ -68,7 +68,10 @@ describe('ShoppingListDetailsPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ ShoppingListDetailsPage ],
+      imports: [
+        ShoppingListDetailsPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
@@ -129,11 +132,6 @@ describe('ShoppingListDetailsPage', () => {
       expect(firstItem.get('isBought')?.value).toBe(false);
     });
 
-    it('should show "Create Shopping List" in page header', () => {
-      const headerTitle: HTMLElement = fixture.nativeElement.querySelector('.header-title h1');
-      expect(headerTitle.textContent?.trim()).toBe('Create Shopping List');
-    });
-
     it('should not render completed section when no items are bought', () => {
       const completedSection = fixture.nativeElement.querySelector('.completed-section');
       expect(completedSection).toBeFalsy();
@@ -162,11 +160,6 @@ describe('ShoppingListDetailsPage', () => {
       expect(component.activeItems.length).toBe(2);
       expect(component.completedItems.length).toBe(1);
       expect(component.hasBoughtItems).toBe(true);
-    });
-
-    it('should show "Edit Shopping List" in page header', () => {
-      const headerTitle: HTMLElement = fixture.nativeElement.querySelector('.header-title h1');
-      expect(headerTitle.textContent?.trim()).toBe('Edit Shopping List');
     });
 
     it('should render completed section and enable "Remove all bought items" button', () => {

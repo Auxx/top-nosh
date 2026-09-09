@@ -5,8 +5,8 @@ import { AuthenticationService } from '../../../auth/services/authentication/aut
 @Component({
   selector: 'app-logout',
   imports: [],
-  templateUrl: './logout.page.html',
-  styleUrl: './logout.page.scss',
+  template: '',
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoutPage {

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponents } from 'ng-mocks';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { GlanceStagesComponent } from '../glance-stages/glance-stages.component';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
 
@@ -13,6 +14,7 @@ describe('GlanceComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         GlanceComponent,
+        getTranslocoModule(),
         MockComponents(
           IngredientListComponent,
           GlanceStagesComponent

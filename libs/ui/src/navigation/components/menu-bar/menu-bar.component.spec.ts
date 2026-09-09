@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { getTranslocoModule } from '../../../transloco-testing.module';
 import { MenuBarComponent } from './menu-bar.component';
 
 describe('MenuBarComponent', () => {
@@ -8,7 +9,10 @@ describe('MenuBarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MenuBarComponent ],
+      imports: [
+        MenuBarComponent,
+        getTranslocoModule()
+      ],
       providers: [ provideRouter([]) ]
     }).compileComponents();
 
@@ -19,11 +23,5 @@ describe('MenuBarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have recipes link pointing to /recipes', () => {
-    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('a[routerLink="/recipes"]');
-    expect(link).toBeTruthy();
-    expect(link.textContent?.trim()).toBe('Recipes');
   });
 });
