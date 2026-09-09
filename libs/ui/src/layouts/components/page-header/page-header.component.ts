@@ -14,11 +14,14 @@ import { TranslocoDirective } from '@jsverse/transloco';
   styleUrl: './page-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.compact]': 'compact()'
+    '[class.compact]': 'compact()',
+    '[class.single-line]': 'singleLine()'
   }
 })
 export class PageHeaderComponent {
   readonly compact = input<boolean>(false);
+
+  readonly singleLine = input<boolean>(false);
 
   readonly showBackButton = input<boolean>(false);
 

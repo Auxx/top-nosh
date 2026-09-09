@@ -1,4 +1,5 @@
 @let formGroup = form();
+@let submitting = isSubmitting();
 
 <ng-container *transloco="let t; prefix: 'web.RecipeFormComponent'">
   <div [formGroup]="formGroup" class="recipe-form-content">
@@ -142,7 +143,7 @@
     }
 
     <!-- Stages Section -->
-    <div class="stages-section">
+    <div>
       <ui-page-header [compact]="true">
         <h2>{{ t('stagesTitle') }}</h2>
 
@@ -157,35 +158,22 @@
         </button>
       </ui-page-header>
 
-<!--      <div class="section-header">-->
-<!--        <div class="section-title">-->
-<!--          <h2>{{ t('stagesTitle') }}</h2>-->
-<!--          <p class="section-subtitle">{{ t('stagesSubtitle') }}</p>-->
-<!--        </div>-->
+      @let stages = getStagesArray();
 
-<!--        <button mat-flat-button color="accent" type="button" (click)="addStage()" class="add-stage-btn">-->
-<!--          <mat-icon>add</mat-icon>-->
-<!--          {{ t('addStage') }}-->
-<!--        </button>-->
-<!--      </div>-->
-
-      @if (getStagesArray().length > 0) {
-        <div cdkDropList
-             (cdkDropListDropped)="onDropStage($event)"
-             class="stages-drop-list">
-
+      @if (stages.length > 0) {
+        <div cdkDropList (cdkDropListDropped)="onDropStage($event)">
           <mat-accordion multi="true">
-            @for (stageControl of getStagesArray().controls; track stageIndex; let stageIndex = $index) {
+            @for (stageControl of stages.controls; track stageIndex; let stageIndex = $index) {
               <mat-expansion-panel cdkDrag
                                    [formGroup]="$any(stageControl)"
-                                   [expanded]="true"
-                                   class="stage-panel">
+                                   [expanded]="true">
                 <mat-expansion-panel-header>
-                  <mat-panel-title class="stage-panel-title">
-                    <span cdkDragHandle class="drag-handle-wrapper">
-                      <mat-icon class="drag-handle-icon">drag_indicator</mat-icon>
+                  <mat-panel-title>
+                    <span cdkDragHandle>
+                      <mat-icon>drag_indicator</mat-icon>
                     </span>
-                    <span class="stage-title-text">
+
+                    <span class="mat-panel-title-content">
                       {{
                         t('stageTitle', {
                           index: stageIndex + 1,
@@ -195,20 +183,19 @@
                     </span>
                   </mat-panel-title>
 
-                  <mat-panel-description class="stage-panel-description">
-                    <button mat-icon-button
-                            color="warn"
+                  <mat-panel-description>
+                    <button matIconButton
+                            class="warn"
                             type="button"
                             (click)="removeStage($event, stageIndex)"
-                            [attr.aria-label]="t('removeStageAriaLabel')"
-                            class="remove-stage-btn">
+                            [attr.aria-label]="t('removeStageAriaLabel')">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <div class="stage-content">
-                  <mat-form-field appearance="outline" class="form-field stage-name-field">
+                  <mat-form-field appearance="outline">
                     <mat-label>{{ t('stageName') }}</mat-label>
 
                     <input matInput formControlName="name" [placeholder]="t('stageNamePlaceholder')" required/>
@@ -219,47 +206,58 @@
                   </mat-form-field>
 
                   <!-- Ingredients Subsection -->
-                  <div class="sub-section ingredients-sub-section">
-                    <div class="sub-section-header">
-                      <h3>{{ t('ingredientsTitle') }}</h3>
-                      <button mat-stroked-button
+                  <div class="sub-section">
+                    <ui-page-header [compact]="true" [singleLine]="true">
+                      <h4>{{ t('ingredientsTitle') }}</h4>
+
+                      <button matButton
                               type="button"
-                              (click)="addIngredient(stageIndex)"
-                              class="add-sub-item-btn">
+                              (click)="addIngredient(stageIndex)">
                         <mat-icon>add</mat-icon>
                         {{ t('addIngredient') }}
                       </button>
-                    </div>
 
-                    @if (getIngredientsArray(stageIndex).length > 0) {
+                      <button matIconButton
+                              type="submit"
+                              [disabled]="formGroup.invalid || submitting">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                    </ui-page-header>
+
+                    @let ingredients = getIngredientsArray(stageIndex);
+
+                    @if (ingredients.length > 0) {
                       <div cdkDropList
                            (cdkDropListDropped)="onDropIngredient($event, stageIndex)"
                            class="items-drop-list">
-                        @for (ingredientControl of getIngredientsArray(stageIndex).controls; track ingIndex; let ingIndex = $index) {
+                        @for (ingredientControl of ingredients.controls; track ingIndex; let ingIndex = $index) {
                           <div cdkDrag
                                [formGroup]="$any(ingredientControl)"
-                               class="item-row ingredient-row">
+                               class="item-row">
                             <span cdkDragHandle class="drag-handle-wrapper">
                               <mat-icon class="drag-handle-icon">drag_indicator</mat-icon>
                             </span>
 
-                            <mat-form-field appearance="outline" class="form-field ingredient-name">
+                            <mat-form-field appearance="outline" class="long-form-field">
                               <mat-label>{{ t('ingredientName') }}</mat-label>
 
-                              <input matInput formControlName="name" [placeholder]="t('ingredientNamePlaceholder')"
-                                     required/>
+                              <input matInput
+                                     formControlName="name"
+                                     [placeholder]="t('ingredientNamePlaceholder')"/>
 
                               <mat-error *uiWhenError="$any(ingredientControl).controls.name; errorCode: 'required'">
                                 {{ t('ingredientNameRequired') }}
                               </mat-error>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="form-field ingredient-qty">
+                            <mat-form-field appearance="outline">
                               <mat-label>{{ t('quantity') }}</mat-label>
 
-                              <input matInput type="number" formControlName="quantity" min="0"
-                                     [placeholder]="t('quantityPlaceholder')"
-                                     required/>
+                              <input matInput
+                                     type="number"
+                                     formControlName="quantity"
+                                     min="0"
+                                     [placeholder]="t('quantityPlaceholder')"/>
 
                               <mat-error
                                 *uiWhenError="$any(ingredientControl).controls.quantity; errorCode: 'required'">
@@ -271,10 +269,10 @@
                               </mat-error>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="form-field ingredient-unit">
+                            <mat-form-field appearance="outline">
                               <mat-label>{{ t('unit') }}</mat-label>
 
-                              <mat-select formControlName="unit" required>
+                              <mat-select formControlName="unit">
                                 @for (option of unitOptions; track option.value) {
                                   <mat-option [value]="option.value">
                                     {{ option.label }}
@@ -287,12 +285,12 @@
                               </mat-error>
                             </mat-form-field>
 
-                            <button mat-icon-button
-                                    color="warn"
+                            <button matIconButton
+                                    class="warn"
                                     type="button"
+                                    tabIndex="-1"
                                     (click)="removeIngredient(stageIndex, ingIndex)"
-                                    [attr.aria-label]="t('removeIngredientAriaLabel')"
-                                    class="remove-row-btn">
+                                    [attr.aria-label]="t('removeIngredientAriaLabel')">
                               <mat-icon>delete_outline</mat-icon>
                             </button>
                           </div>
@@ -306,58 +304,66 @@
                   </div>
 
                   <!-- Cooking Steps Subsection -->
-                  <div class="sub-section steps-sub-section">
-                    <div class="sub-section-header">
-                      <h3>{{ t('stepsTitle') }}</h3>
-                      <button mat-stroked-button
+                  <div class="sub-section">
+                    <ui-page-header [compact]="true" [singleLine]="true">
+                      <h4>{{ t('stepsTitle') }}</h4>
+
+                      <button matButton
                               type="button"
-                              (click)="addStep(stageIndex)"
-                              class="add-sub-item-btn">
+                              (click)="addStep(stageIndex)">
                         <mat-icon>add</mat-icon>
                         {{ t('addStep') }}
                       </button>
-                    </div>
 
-                    @if (getStepsArray(stageIndex).length > 0) {
+                      <button matIconButton
+                              type="submit"
+                              [disabled]="formGroup.invalid || submitting">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                    </ui-page-header>
+
+                    @let steps = getStepsArray(stageIndex);
+
+                    @if (steps.length > 0) {
                       <div cdkDropList
                            (cdkDropListDropped)="onDropStep($event, stageIndex)"
                            class="items-drop-list">
-                        @for (stepControl of getStepsArray(stageIndex).controls; track stepIndex; let stepIndex = $index) {
+                        @for (stepControl of steps.controls; track stepIndex; let stepIndex = $index) {
                           <div cdkDrag
                                [formGroup]="$any(stepControl)"
-                               class="item-row step-row">
+                               class="item-row">
                             <span cdkDragHandle class="drag-handle-wrapper">
                               <mat-icon class="drag-handle-icon">drag_indicator</mat-icon>
                             </span>
 
-                            <div class="step-fields">
-                              <mat-form-field appearance="outline" class="form-field step-name">
-                                <mat-label>{{ t('stepTitle') }}</mat-label>
+                            <mat-form-field appearance="outline" class="extra-long-form-field">
+                              <mat-label>{{ t('stepTitle') }}</mat-label>
 
-                                <input matInput formControlName="name" [placeholder]="t('stepTitlePlaceholder')"
-                                       required/>
+                              <input matInput
+                                     formControlName="name"
+                                     [placeholder]="t('stepTitlePlaceholder')"/>
 
-                                <mat-error *uiWhenError="$any(stepControl).controls.name; errorCode: 'required'">
-                                  {{ t('stepTitleRequired') }}
-                                </mat-error>
-                              </mat-form-field>
+                              <mat-error *uiWhenError="$any(stepControl).controls.name; errorCode: 'required'">
+                                {{ t('stepTitleRequired') }}
+                              </mat-error>
+                            </mat-form-field>
 
-                              <mat-form-field appearance="outline" class="form-field step-desc">
-                                <mat-label>{{ t('stepDescription') }}</mat-label>
+                            <mat-form-field appearance="outline" class="extra-long-form-field">
+                              <mat-label>{{ t('stepDescription') }}</mat-label>
 
-                                <textarea matInput
-                                          formControlName="description"
-                                          rows="2"
-                                          [placeholder]="t('stepDescriptionPlaceholder')"></textarea>
-                              </mat-form-field>
-                            </div>
+                              <textarea matInput
+                                        formControlName="description"
+                                        rows="3"
+                                        [placeholder]="t('stepDescriptionPlaceholder')">
+                              </textarea>
+                            </mat-form-field>
 
-                            <button mat-icon-button
-                                    color="warn"
+                            <button matIconButton
+                                    class="warn"
                                     type="button"
+                                    tabIndex="-1"
                                     (click)="removeStep(stageIndex, stepIndex)"
-                                    [attr.aria-label]="t('removeStepAriaLabel')"
-                                    class="remove-row-btn">
+                                    [attr.aria-label]="t('removeStepAriaLabel')">
                               <mat-icon>delete_outline</mat-icon>
                             </button>
                           </div>
@@ -374,6 +380,7 @@
             }
           </mat-accordion>
         </div>
+
       } @else {
         <div class="empty-stages-card">
           <mat-icon class="empty-icon">layers_clear</mat-icon>

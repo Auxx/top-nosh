@@ -10,7 +10,7 @@
     row-gap: var(--dim-small);
   }
 
-  @media (max-width: 599.98px) and (orientation: portrait) {
+  @media (max-width: 599.98px) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -23,6 +23,12 @@
       .actions-spacer {
         flex: 1;
       }
+    }
+
+    &.single-line {
+      display: grid;
+      grid-template-columns: 1fr max-content;
+      align-items: center;
     }
   }
 }
