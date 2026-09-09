@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { PasswordChangePage } from './password-change.page';
 
@@ -32,7 +33,10 @@ describe('PasswordChangePage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ PasswordChangePage ],
+      imports: [
+        PasswordChangePage,
+        getTranslocoModule()
+      ],
       providers: [
         { provide: AuthenticationService, useValue: authServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
@@ -128,7 +132,7 @@ describe('PasswordChangePage', () => {
     component.onSubmit();
 
     expect(authServiceMock.changePassword).toHaveBeenCalledWith('ValidPassword123!');
-    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'ui.System.ok');
     expect(component.isLoading()).toBe(false);
   });
 
@@ -140,7 +144,7 @@ describe('PasswordChangePage', () => {
 
     component.onSubmit();
 
-    expect(snackBarMock.open).toHaveBeenCalledWith('Password change failed. Please try again.', 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.PasswordChangePage.failure', 'ui.System.ok');
   });
 
   it('should dismiss any existing snackbar when a new submit is triggered', () => {

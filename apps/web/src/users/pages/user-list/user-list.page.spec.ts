@@ -2,6 +2,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { PaginatedUserResponse, UserResponseDto } from '../../models/user.types';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 import { UserListPage } from './user-list.page';
@@ -62,7 +63,10 @@ describe('UserListPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ UserListPage ],
+      imports: [
+        UserListPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: UserManagementService, useValue: userManagementServiceMock },
@@ -141,7 +145,7 @@ describe('UserListPage', () => {
 
     const emptyState: HTMLElement = fixture.nativeElement.querySelector('.empty-state');
     expect(emptyState).toBeTruthy();
-    expect(emptyState.textContent?.trim()).toContain('No users found');
+    expect(emptyState.textContent?.trim()).toContain('UserListPage.noUsers');
   });
 
   it('should render user rows in table when users are provided', () => {

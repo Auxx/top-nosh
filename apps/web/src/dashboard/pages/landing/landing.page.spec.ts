@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, Subject, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardData } from '../../services/dashboard/dashboard.service.types';
 import { LandingPage } from './landing.page';
@@ -51,7 +52,10 @@ describe('LandingPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ LandingPage ],
+      imports: [
+        LandingPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: DashboardService, useValue: dashboardServiceMock },
@@ -100,7 +104,7 @@ describe('LandingPage', () => {
     expect(component.error()).toBe(true);
     const errorContainers = fixture.debugElement.queryAll(By.css('.error-state'));
     expect(errorContainers.length).toBe(2);
-    expect(errorContainers[0].nativeElement.textContent).toContain('Failed to load dashboard data');
+    expect(errorContainers[0].nativeElement.textContent).toContain('web.LandingPage.loadError');
   });
 
   it('should display populated recipes and shopping list items when data loads successfully', () => {
@@ -145,7 +149,7 @@ describe('LandingPage', () => {
 
     // Verify recipe empty state
     const recipeEmpty = fixture.debugElement.query(By.css('.recipes-card .empty-state'));
-    expect(recipeEmpty.nativeElement.textContent).toContain('No recipes added yet');
+    expect(recipeEmpty.nativeElement.textContent).toContain('web.LandingPage.noRecipes');
 
     const createRecipeBtn = fixture.debugElement.query(By.css('.recipes-card .create-btn'));
     expect(createRecipeBtn).toBeTruthy();
@@ -154,7 +158,7 @@ describe('LandingPage', () => {
 
     // Verify shopping list empty state
     const shoppingEmpty = fixture.debugElement.query(By.css('.shopping-card .empty-state'));
-    expect(shoppingEmpty.nativeElement.textContent).toContain('No shopping list items yet');
+    expect(shoppingEmpty.nativeElement.textContent).toContain('web.LandingPage.noShoppingListItems');
 
     const createShoppingBtn = fixture.debugElement.query(By.css('.shopping-card .create-btn'));
     expect(createShoppingBtn).toBeTruthy();

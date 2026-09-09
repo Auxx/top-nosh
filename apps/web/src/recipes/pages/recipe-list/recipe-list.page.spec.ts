@@ -2,8 +2,11 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { provideRouter, Router } from '@angular/router';
-import { ConfirmationDialog } from '@top-nosh/ui';
+import { TranslocoTestingModule } from '@jsverse/transloco';
+import { ConfirmationDialog, PageHeaderComponent } from '@top-nosh/ui';
+import { MockComponents } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import {
   CuisinesCategoriesResponse,
   PaginatedRecipeResponse,
@@ -108,7 +111,11 @@ describe('RecipeListPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ RecipeListPage ],
+      imports: [
+        RecipeListPage,
+        MockComponents(PageHeaderComponent),
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: RecipeManagementService, useValue: recipeServiceMock },
@@ -247,7 +254,7 @@ describe('RecipeListPage', () => {
 
     const emptyCell = fixture.nativeElement.querySelector('.empty-table-cell');
     expect(emptyCell).toBeTruthy();
-    expect(emptyCell.textContent).toContain('No recipes found');
+    expect(emptyCell.textContent).toContain('RecipeListPage.noRecipes');
   });
 
   it('should navigate to /recipes/new when onCreateRecipe is called', () => {
@@ -267,8 +274,8 @@ describe('RecipeListPage', () => {
 
     expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialog, {
       data: {
-        title: 'Delete Recipe',
-        content: 'Are you sure you want to delete "Spaghetti Bolognese"?'
+        title: 'web.RecipeListPage.deleteConfirmTitle',
+        content: 'web.RecipeListPage.deleteConfirmContent'
       }
     });
   });

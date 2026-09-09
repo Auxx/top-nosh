@@ -8,6 +8,7 @@ import {
   ShoppingListManagementService
 } from '../../../shopping-lists/services/shopping-list-management/shopping-list-management.service';
 import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { RecipeDetailsPage } from './recipe-details.page';
@@ -120,7 +121,10 @@ describe('RecipeDetailsPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ RecipeDetailsPage ],
+      imports: [
+        RecipeDetailsPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         {
@@ -168,7 +172,7 @@ describe('RecipeDetailsPage', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const errorCard = compiled.querySelector('[data-testid="error-state"]');
     expect(errorCard).toBeTruthy();
-    expect(errorCard?.textContent).toContain('Recipe Not Found');
+    expect(errorCard?.textContent).toContain('RecipeDetailsPage.notFound');
 
     const errorBackBtn = compiled.querySelector('[data-testid="error-back-btn"]') as HTMLButtonElement;
     expect(errorBackBtn).toBeTruthy();

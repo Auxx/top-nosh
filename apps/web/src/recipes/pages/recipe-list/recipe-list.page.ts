@@ -45,13 +45,25 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
 })
 export class RecipeListPage {
   private readonly fb = inject(FormBuilder);
+
   private readonly recipeService = inject(RecipeManagementService);
+
   private readonly router = inject(Router);
+
   private readonly breakpointObserver = inject(BreakpointObserver);
+
   private readonly dialog = inject(MatDialog);
+
   private readonly destroyRef = inject(DestroyRef);
 
+  private readonly deleteRecipeName = signal({ name: '' });
+
   private readonly deleteConfirmTitle = translateSignal('web.RecipeListPage.deleteConfirmTitle');
+
+  private readonly deleteConfirmContent = translateSignal(
+    'web.RecipeListPage.deleteConfirmContent',
+    this.deleteRecipeName
+  );
 
   private readonly searchSubject = new Subject<string>();
 
@@ -151,14 +163,15 @@ export class RecipeListPage {
   };
 
   readonly onDeleteRecipe = (recipe: RecipeListItem): void => {
-    const dialogRef = this.dialog.open(ConfirmationDialog, {
-      data: {
-        title: this.deleteConfirmTitle(),
-        content: translateSignal('web.RecipeListPage.deleteConfirmContent', { name: recipe.name })()
-      }
-    });
+    this.deleteRecipeName.set({ name: recipe.name });
 
-    dialogRef
+    this.dialog
+      .open(ConfirmationDialog, {
+        data: {
+          title: this.deleteConfirmTitle(),
+          content: this.deleteConfirmContent()
+        }
+      })
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(confirmed => {

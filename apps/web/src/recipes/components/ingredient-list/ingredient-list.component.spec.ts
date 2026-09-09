@@ -1,10 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { MiniBadgeComponent, NoticeComponent, SectionHeaderComponent } from '@top-nosh/ui';
 import { MockComponents, MockDirectives } from 'ng-mocks';
 import {
   AddToShoppingListDirective
 } from '../../../shopping-lists/directives/add-to-shopping-list/add-to-shopping-list.directive';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 
 import { IngredientListComponent } from './ingredient-list.component';
 
@@ -30,7 +32,8 @@ describe('IngredientListComponent', () => {
         MockDirectives(
           MatMenuTrigger,
           AddToShoppingListDirective
-        )
+        ),
+        getTranslocoModule()
       ]
     })
       .compileComponents();

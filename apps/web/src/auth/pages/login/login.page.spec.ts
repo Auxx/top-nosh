@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { LoginPage } from './login.page';
 
@@ -34,7 +35,10 @@ describe('LoginPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ LoginPage ],
+      imports: [
+        LoginPage,
+        getTranslocoModule()
+      ],
       providers: [
         { provide: AuthenticationService, useValue: authServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
@@ -133,7 +137,7 @@ describe('LoginPage', () => {
     component.onSubmit();
 
     expect(authServiceMock.login).toHaveBeenCalledWith('user@example.com', 'secret123');
-    expect(snackBarMock.open).toHaveBeenCalledWith('Login failed. Please check your credentials.', 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.LoginPage.loginFailed', 'ui.System.ok');
     expect(component.isLoading()).toBe(false);
   });
 
@@ -145,7 +149,7 @@ describe('LoginPage', () => {
 
     component.onSubmit();
 
-    expect(snackBarMock.open).toHaveBeenCalledWith('Login failed. Please check your credentials.', 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.LoginPage.loginFailed', 'ui.System.ok');
   });
 
   it('should dismiss any existing snackbar when a new submit is triggered', () => {

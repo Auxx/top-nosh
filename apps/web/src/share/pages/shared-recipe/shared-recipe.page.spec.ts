@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecipeDetails } from '../../../recipes/models/recipe-details.types';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { SharedDataService } from '../../services/shared-data/shared-data.service';
 import { SharedRecipePage } from './shared-recipe.page';
 
@@ -63,7 +64,10 @@ describe('SharedRecipePage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ SharedRecipePage ],
+      imports: [
+        SharedRecipePage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: SharedDataService, useValue: mockSharedDataService },
@@ -109,7 +113,7 @@ describe('SharedRecipePage', () => {
 
       const errorCard = fixture.nativeElement.querySelector('[data-testid="error-state"]');
       expect(errorCard).toBeTruthy();
-      expect(errorCard.textContent).toContain('Recipe Not Found');
+      expect(errorCard.textContent).toContain('SharedRecipePage.notFound');
     });
 
     it('should display error state when route id param is missing', () => {
