@@ -297,5 +297,41 @@ describe('RecipeFormComponent', () => {
       expect(shareLink.href).toBe(expectedUrl);
       expect(shareLink.textContent?.trim()).toBe(expectedUrl);
     });
+
+    it('should copy share URL to clipboard when copy button is clicked', async () => {
+      const writeTextMock = jest.fn().mockResolvedValue(undefined);
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: writeTextMock
+        }
+      });
+
+      hostComponent.recipeId.set('recipe-abc-123');
+      hostComponent.form().controls['isShared'].setValue(true);
+      fixture.detectChanges();
+
+      const copyButton = fixture.nativeElement.querySelector('.share-recipe-content button') as HTMLButtonElement;
+      expect(copyButton).toBeTruthy();
+
+      copyButton.click();
+      await fixture.whenStable();
+
+      const expectedUrl = `${window.location.protocol}//${window.location.host}/share/recipe/recipe-abc-123`;
+      expect(writeTextMock).toHaveBeenCalledWith(expectedUrl);
+    });
+
+    it('should not call clipboard writeText if shareUrl is empty', async () => {
+      const writeTextMock = jest.fn().mockResolvedValue(undefined);
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: writeTextMock
+        }
+      });
+
+      hostComponent.recipeId.set(undefined);
+      await recipeFormComponent.copyShareLink();
+
+      expect(writeTextMock).not.toHaveBeenCalled();
+    });
   });
 });

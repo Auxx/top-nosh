@@ -260,4 +260,11 @@ export class RecipeFormComponent implements OnInit {
     );
     this.getIngredientsArray(stageIndex).updateValueAndValidity();
   };
+
+  readonly copyShareLink = async (): Promise<void> => {
+    const url = this.shareUrl();
+    if (url && typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+    }
+  };
 }

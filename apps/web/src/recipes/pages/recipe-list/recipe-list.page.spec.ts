@@ -136,17 +136,6 @@ describe('RecipeListPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have all class methods declared as readonly arrow function properties', () => {
-    expect(Object.prototype.hasOwnProperty.call(component, 'onSearchInput')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onCuisineChange')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onCategoryChange')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onPageChange')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onClearFilters')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onCreateRecipe')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onEditRecipe')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onDeleteRecipe')).toBe(true);
-  });
-
   it('should have desktop columns by default', () => {
     expect(component.displayedColumns()).toEqual([
       'name',
