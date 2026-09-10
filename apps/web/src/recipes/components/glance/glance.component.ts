@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { GlanceStagesComponent } from '../glance-stages/glance-stages.component';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
@@ -7,7 +8,8 @@ import { IngredientListComponent } from '../ingredient-list/ingredient-list.comp
   selector: 'app-glance',
   imports: [
     IngredientListComponent,
-    GlanceStagesComponent
+    GlanceStagesComponent,
+    TranslocoDirective
   ],
   templateUrl: './glance.component.html',
   styleUrl: './glance.component.scss',

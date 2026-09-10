@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 
 import { GlanceStagesComponent } from './glance-stages.component';
 
@@ -12,7 +13,10 @@ describe('GlanceStagesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ GlanceStagesComponent ]
+      imports: [
+        GlanceStagesComponent,
+        getTranslocoModule()
+      ]
     })
       .compileComponents();
 

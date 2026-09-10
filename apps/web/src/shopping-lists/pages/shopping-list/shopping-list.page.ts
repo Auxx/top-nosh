@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { map } from 'rxjs';
 import { ShoppingListItem } from '../../models/shopping-list.types';
@@ -25,7 +26,8 @@ import { ShoppingListManagementService } from '../../services/shopping-list-mana
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslocoDirective
   ],
   templateUrl: './shopping-list.page.html',
   styleUrl: './shopping-list.page.scss',

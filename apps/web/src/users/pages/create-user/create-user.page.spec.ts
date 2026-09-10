@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 import { CreateUserPage } from './create-user.page';
 
@@ -28,7 +29,10 @@ describe('CreateUserPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ CreateUserPage ],
+      imports: [
+        CreateUserPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: UserManagementService, useValue: userManagementServiceMock },
@@ -149,7 +153,7 @@ describe('CreateUserPage', () => {
       email: 'john@example.com',
       password: 'ValidPassword123!'
     });
-    expect(snackBarMock.open).toHaveBeenCalledWith('User created successfully', undefined, { duration: 5000 });
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.CreateUserPage.success', undefined, { duration: 5000 });
     expect(router.navigate).toHaveBeenCalledWith([ '/users' ]);
     expect(component.isSubmitting()).toBe(false);
   });
@@ -166,7 +170,7 @@ describe('CreateUserPage', () => {
     component.onSubmit();
 
     expect(userManagementServiceMock.create).toHaveBeenCalled();
-    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'ui.System.ok');
     expect(component.isSubmitting()).toBe(false);
   });
 
@@ -180,7 +184,7 @@ describe('CreateUserPage', () => {
 
     component.onSubmit();
 
-    expect(snackBarMock.open).toHaveBeenCalledWith('Failed to create user. Please try again.', 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.CreateUserPage.failure', 'ui.System.ok');
   });
 
   it('should dismiss any existing snackbar when a new submit is triggered', () => {

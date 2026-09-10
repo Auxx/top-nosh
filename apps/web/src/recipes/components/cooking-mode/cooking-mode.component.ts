@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { CookingStagesComponent } from '../cooking-stages/cooking-stages.component';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
@@ -7,7 +8,8 @@ import { IngredientListComponent } from '../ingredient-list/ingredient-list.comp
   selector: 'app-cooking-mode',
   imports: [
     IngredientListComponent,
-    CookingStagesComponent
+    CookingStagesComponent,
+    TranslocoDirective
   ],
   templateUrl: './cooking-mode.component.html',
   styleUrl: './cooking-mode.component.scss',

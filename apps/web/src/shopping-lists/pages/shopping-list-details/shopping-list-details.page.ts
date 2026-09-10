@@ -21,8 +21,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { WhenError } from '@top-nosh/ui';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
+import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { catchError, debounceTime, map, Observable, of, tap } from 'rxjs';
 import {
   CreateShoppingListDto,
@@ -75,7 +76,6 @@ export function createShoppingListForm(
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -86,7 +86,9 @@ export function createShoppingListForm(
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    WhenError
+    WhenError,
+    PageHeaderComponent,
+    TranslocoDirective
   ],
   templateUrl: './shopping-list-details.page.html',
   styleUrl: './shopping-list-details.page.scss',
@@ -505,4 +507,6 @@ export class ShoppingListDetailsPage implements OnInit {
 
     return true;
   };
+
+  readonly onNavigateBack = () => this.router.navigate([ '/shopping-lists' ]);
 }

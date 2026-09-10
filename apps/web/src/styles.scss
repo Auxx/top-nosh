@@ -65,6 +65,30 @@ body {
   width: 100%;
 }
 
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--dim-large);
+
+  @for $i from 1 through 12 {
+    .grid-12-col-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+
+  @media (max-width: 599.98px) {
+    &.mobile-single-column {
+      grid-template-columns: 1fr;
+
+      @for $i from 1 through 12 {
+        .grid-12-col-#{$i} {
+          grid-column: auto;
+        }
+      }
+    }
+  }
+}
+
 form {
   &.single-column {
     display: flex;
@@ -85,6 +109,10 @@ app-guest {
   }
 }
 
+h1 {
+  font-weight: 500;
+}
+
 h2 {
   font-size: 1.25rem;
   font-weight: 500;
@@ -92,6 +120,7 @@ h2 {
 
 h3 {
   &.subtitle {
+    // TODO Remove?
     font-weight: normal;
   }
 }
@@ -138,14 +167,6 @@ table.item-list-table {
   .actions {
     text-align: right;
     white-space: nowrap;
-
-    [mat-icon-button] {
-      &:not(.warn) {
-        @include mat.icon-button-overrides((
-                icon-color: var(--mat-sys-primary),
-        ));
-      }
-    }
   }
 
   .nowrap-item {
@@ -174,14 +195,6 @@ table.item-list-table {
         font-size: 1rem;
       }
     }
-  }
-}
-
-[mat-icon-button] {
-  &.warn {
-    @include mat.icon-button-overrides((
-            icon-color: var(--mat-sys-error),
-    ));
   }
 }
 
@@ -225,7 +238,6 @@ ol.steps-list {
   gap: var(--dim-medium);
 
   li {
-    padding: 0;
     margin: 0;
 
     display: grid;
@@ -295,4 +307,53 @@ ol.steps-list {
       }
     }
   }
+}
+
+.mat-mdc-icon-button {
+  @include mat.icon-button-overrides((
+          icon-color: var(--mat-sys-primary),
+  ));
+
+  &.warn {
+    @include mat.icon-button-overrides((
+            icon-color: var(--mat-sys-error),
+    ));
+  }
+}
+
+mat-form-field {
+  &.mat-form-field-appearance-outline {
+    @include mat.form-field-overrides((
+            container-vertical-padding: 8px,
+            container-height: 40px
+    ))
+  }
+}
+
+.markdown-preview {
+  position: relative;
+  padding: var(--dim-small) var(--dim-medium);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  height: 160px;
+
+  .scroller {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .label {
+    position: absolute;
+    transform: scale(0.75);
+    font-size: 1rem;
+    color: var(--mat-sys-on-surface-variant);
+    background-color: var(--mat-sys-surface-container-low);
+    padding: 0 var(--dim-small);
+    top: -10px;
+    left: 0;
+  }
+}
+
+.mat-mdc-form-field-textarea-control.no-resize {
+  resize: none;
 }

@@ -6,6 +6,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,7 +16,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
+import { ConfirmationDialog, DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
@@ -44,7 +46,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     DomainPipe,
     RemarkComponent,
     GlanceComponent,
-    CookingModeComponent
+    CookingModeComponent,
+    TranslocoDirective
   ],
   templateUrl: './recipe-details.page.html',
   styleUrl: './recipe-details.page.scss',
@@ -61,9 +64,11 @@ export class RecipeDetailsPage {
 
   private readonly titleService = inject(Title);
 
-  // private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(MatDialog);
 
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly deleteConfirmTitle = translateSignal('web.RecipeDetailsPage.deleteConfirmTitle');
 
   readonly recipe = signal<RecipeDetails | null>(null);
 
@@ -167,12 +172,13 @@ export class RecipeDetailsPage {
 
   readonly onBackToList = () => this.router.navigate([ '/recipes' ]);
 
-  /*readonly onEditRecipe = (): void => {
+  readonly onEditRecipe = (): void => {
     const currentRecipe = this.recipe();
     if (currentRecipe) {
-      this.router.navigate([ '/recipes', currentRecipe.id, 'edit' ], {
-        queryParams: { from: 'details' }
-      });
+      this.router.navigate(
+        [ '/recipes', currentRecipe.id, 'edit' ],
+        { queryParams: { from: 'details' } }
+      );
     }
   };
 
@@ -184,8 +190,8 @@ export class RecipeDetailsPage {
 
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       data: {
-        title: 'Delete Recipe',
-        content: `Are you sure you want to delete "${currentRecipe.name}"?`
+        title: this.deleteConfirmTitle(),
+        content: translateSignal('web.RecipeDetailsPage.deleteConfirmContent', { name: currentRecipe.name })()
       }
     });
 
@@ -201,5 +207,5 @@ export class RecipeDetailsPage {
             });
         }
       });
-  };*/
+  };
 }

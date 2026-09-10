@@ -1,46 +1,48 @@
-@let currentRecipe = recipe();
+<ng-container *transloco="let t; prefix: 'web.CookingStagesComponent'">
+  @let currentRecipe = recipe();
 
-<ui-section-header title="Cooking Instructions" icon="timer"/>
+  <ui-section-header [title]="t('title')" icon="timer"/>
 
-<div class="contents">
-  @if (currentRecipe.stages.length === 0) {
-    <mat-card>
-      <mat-card-content>
-        <ui-notice>No cooking instructions for this recipe.</ui-notice>
-      </mat-card-content>
-    </mat-card>
-
-  } @else {
-    @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
+  <div class="contents">
+    @if (currentRecipe.stages.length === 0) {
       <mat-card>
-        <mat-card-header>
-          <mat-card-title>
-            <div class="card-title">
-              <ui-mini-badge color="secondary" [alternative]="true">
-                Stage {{ stageIndex + 1 }}
-              </ui-mini-badge>
-
-              {{ stage.name }}
-            </div>
-          </mat-card-title>
-        </mat-card-header>
-
         <mat-card-content>
-          <ol class="steps-list with-checkboxes">
-            @for (step of stage.steps; track step.id || step.name; let stepIndex = $index) {
-              <li>
-                <mat-checkbox>
-                  {{ step.name }}
-                </mat-checkbox>
-
-                @if (step.description) {
-                  <div class="description">{{ step.description }}</div>
-                }
-              </li>
-            }
-          </ol>
+          <ui-notice>{{ t('empty') }}</ui-notice>
         </mat-card-content>
       </mat-card>
+
+    } @else {
+      @for (stage of currentRecipe.stages; track stage.id || stage.name; let stageIndex = $index) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <div class="card-title">
+                <ui-mini-badge color="secondary" [alternative]="true">
+                  {{ t('stage', { index: stageIndex + 1 }) }}
+                </ui-mini-badge>
+
+                {{ stage.name }}
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <ol class="steps-list with-checkboxes">
+              @for (step of stage.steps; track step.id || step.name; let stepIndex = $index) {
+                <li>
+                  <mat-checkbox>
+                    {{ step.name }}
+                  </mat-checkbox>
+
+                  @if (step.description) {
+                    <div class="description">{{ step.description }}</div>
+                  }
+                </li>
+              }
+            </ol>
+          </mat-card-content>
+        </mat-card>
+      }
     }
-  }
-</div>
+  </div>
+</ng-container>

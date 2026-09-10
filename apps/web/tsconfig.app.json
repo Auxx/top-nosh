@@ -11,6 +11,7 @@
     "src/**/*.stories.ts",
     "jest.config.ts",
     "jest.config.cts",
-    "src/test-setup.ts"
+    "src/test-setup.ts",
+    "src/system/transloco-testing.module.ts"
   ]
 }

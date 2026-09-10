@@ -13,6 +13,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { ConfirmationDialog, PageHeaderComponent, StripMarkdownPipe, TruncatePipe } from '@top-nosh/ui';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
 import { RecipeListItem } from '../../models/recipe-list.types';
@@ -35,7 +36,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatIconModule,
     PageHeaderComponent,
     StripMarkdownPipe,
-    TruncatePipe
+    TruncatePipe,
+    TranslocoDirective
   ],
   templateUrl: './recipe-list.page.html',
   styleUrl: './recipe-list.page.scss',
@@ -43,11 +45,25 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
 })
 export class RecipeListPage {
   private readonly fb = inject(FormBuilder);
+
   private readonly recipeService = inject(RecipeManagementService);
+
   private readonly router = inject(Router);
+
   private readonly breakpointObserver = inject(BreakpointObserver);
+
   private readonly dialog = inject(MatDialog);
+
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly deleteRecipeName = signal({ name: '' });
+
+  private readonly deleteConfirmTitle = translateSignal('web.RecipeListPage.deleteConfirmTitle');
+
+  private readonly deleteConfirmContent = translateSignal(
+    'web.RecipeListPage.deleteConfirmContent',
+    this.deleteRecipeName
+  );
 
   private readonly searchSubject = new Subject<string>();
 
@@ -147,14 +163,15 @@ export class RecipeListPage {
   };
 
   readonly onDeleteRecipe = (recipe: RecipeListItem): void => {
-    const dialogRef = this.dialog.open(ConfirmationDialog, {
-      data: {
-        title: 'Delete Recipe',
-        content: `Are you sure you want to delete "${recipe.name}"?`
-      }
-    });
+    this.deleteRecipeName.set({ name: recipe.name });
 
-    dialogRef
+    this.dialog
+      .open(ConfirmationDialog, {
+        data: {
+          title: this.deleteConfirmTitle(),
+          content: this.deleteConfirmContent()
+        }
+      })
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(confirmed => {

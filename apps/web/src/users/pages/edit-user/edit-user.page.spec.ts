@@ -3,6 +3,7 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { AuthenticationService, AuthState } from '../../../auth/services/authentication/authentication.service';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { UserResponseDto } from '../../models/user.types';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 import { EditUserPage } from './edit-user.page';
@@ -59,7 +60,10 @@ describe('EditUserPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ EditUserPage ],
+      imports: [
+        EditUserPage,
+        getTranslocoModule()
+      ],
       providers: [
         provideRouter([]),
         { provide: UserManagementService, useValue: userManagementServiceMock },
@@ -148,7 +152,7 @@ describe('EditUserPage', () => {
       email: 'alice.updated@example.com',
       password: 'NewPassword123!'
     });
-    expect(snackBarMock.open).toHaveBeenCalledWith('User updated successfully', undefined, { duration: 5000 });
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.EditUserPage.success', undefined, { duration: 5000 });
     expect(router.navigate).toHaveBeenCalledWith([ '/users' ]);
     expect(component.isSubmitting()).toBe(false);
   });
@@ -165,7 +169,7 @@ describe('EditUserPage', () => {
     component.onSubmit();
 
     expect(userManagementServiceMock.update).toHaveBeenCalled();
-    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'ui.System.ok');
     expect(component.isSubmitting()).toBe(false);
   });
 
@@ -179,7 +183,7 @@ describe('EditUserPage', () => {
 
     component.onSubmit();
 
-    expect(snackBarMock.open).toHaveBeenCalledWith('Failed to update user. Please try again.', 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.EditUserPage.failure', 'ui.System.ok');
   });
 
   it('should dismiss any existing snackbar when a new submit is triggered', () => {

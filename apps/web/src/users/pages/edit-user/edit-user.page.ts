@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { NoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { take } from 'rxjs';
 import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
@@ -56,7 +57,8 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatProgressSpinnerModule,
     PageHeaderComponent,
     WhenError,
-    NoticeComponent
+    NoticeComponent,
+    TranslocoDirective
   ],
   templateUrl: './edit-user.page.html',
   styleUrl: './edit-user.page.scss',
@@ -70,6 +72,10 @@ export class EditUserPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly okMessage = translateSignal('ui.System.ok');
+  private readonly successMessage = translateSignal('web.EditUserPage.success');
+  private readonly failureMessage = translateSignal('web.EditUserPage.failure');
 
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
@@ -125,7 +131,6 @@ export class EditUserPage {
             .state()
             .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(authState => {
-              console.log('authState.userId', authState.userId, 'id', id);
               if (authState.userId === id) {
                 this.canEdit.set(true);
                 this.form.enable();
@@ -165,13 +170,13 @@ export class EditUserPage {
     this.userManagementService.update(id, { fullName, email, password }).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('User updated successfully', undefined, { duration: 5000 });
+        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         this.router.navigate([ '/users' ]).then();
       },
       error: error => {
         this.isSubmitting.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to update user. Please try again.';
-        this.snackBarRef = this.snackBar.open(errorMessage, 'OK');
+        const errorMessage = error?.error?.message || error?.message || this.failureMessage();
+        this.snackBarRef = this.snackBar.open(errorMessage, this.okMessage());
       }
     });
   };

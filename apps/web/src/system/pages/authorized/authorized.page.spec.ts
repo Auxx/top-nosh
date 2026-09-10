@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { MenuBarComponent } from '@top-nosh/ui';
+import { MockComponents } from 'ng-mocks';
 
 import { AuthorizedPage } from './authorized.page';
 
@@ -9,7 +11,10 @@ describe('AuthorizedPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ AuthorizedPage ],
+      imports: [
+        AuthorizedPage,
+        MockComponents(MenuBarComponent)
+      ],
       providers: [ provideRouter([]) ]
     })
       .compileComponents();

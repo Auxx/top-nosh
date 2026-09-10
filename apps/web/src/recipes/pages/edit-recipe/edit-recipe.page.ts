@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
@@ -26,7 +26,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatIconModule,
     MatProgressSpinnerModule,
     RecipeFormComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslocoDirective
   ],
   templateUrl: './edit-recipe.page.html',
   styleUrl: './edit-recipe.page.scss',
@@ -45,7 +46,9 @@ export class EditRecipePage {
 
   private readonly titleService = inject(Title);
 
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly successMessage = translateSignal('web.EditRecipePage.success');
+
+  private readonly failureMessage = translateSignal('web.EditRecipePage.failure');
 
   readonly recipeId = signal<string | null>(null);
 
@@ -62,14 +65,13 @@ export class EditRecipePage {
   recipeForm: FormGroup = createRecipeForm(this.fb);
 
   constructor() {
+    // TODO Refactor into input signal
     this.route.queryParamMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         this.origin.set(params.get('from'));
       });
 
     this.route.paramMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         const id = params.get('id');
         this.recipeId.set(id);
@@ -89,7 +91,6 @@ export class EditRecipePage {
 
     this.recipeService
       .getRecipeById(id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: recipe => {
           this.recipe.set(recipe);
@@ -104,19 +105,13 @@ export class EditRecipePage {
       });
   };
 
-  readonly onCancel = (): void => {
-    this.navigateBack();
-  };
-
   readonly navigateBack = (): void => {
     const from = this.origin();
     const id = this.recipeId();
 
-    if (from === 'list' || !id) {
-      this.router.navigate([ '/recipes' ]);
-    } else {
-      this.router.navigate([ '/recipes', id ]);
-    }
+    this.router
+      .navigate(from === 'list' || id === null ? [ '/recipes' ] : [ '/recipes', id ])
+      .then();
   };
 
   readonly onSubmit = (): void => {
@@ -167,12 +162,12 @@ export class EditRecipePage {
     this.recipeService.updateRecipe(id, payload).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('Recipe updated successfully!', undefined, { duration: 5000 });
+        this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
         this.navigateBack();
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.snackBar.open('Failed to update recipe. Please check your input and try again.', 'OK');
+        this.snackBar.open(this.failureMessage(), 'OK');
       }
     });
   };

@@ -1,63 +1,72 @@
-@let loading = isLoading();
-@let error = hasError();
-@let submitting = isSubmitting();
-@let recipeValue = recipe();
+<ng-container *transloco="let t; prefix: 'web.EditRecipePage'">
+  @let loading = isLoading();
+  @let error = hasError();
+  @let submitting = isSubmitting();
+  @let recipeValue = recipe();
 
-<!-- Loading State -->
-@if (loading) {
-  <div class="loading-state" data-testid="loading-spinner">
-    <mat-spinner diameter="48"></mat-spinner>
-    <p>Loading recipe details...</p>
-  </div>
-}
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-state" data-testid="loading-spinner">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>{{ t('loading') }}</p>
+    </div>
+  }
 
-<!-- Error / Not Found State -->
-@if (!loading && error) {
-  <mat-card data-testid="error-state">
-    <mat-card-content>
-      <mat-icon>error_outline</mat-icon>
-      <h2>Recipe Not Found</h2>
+  <!-- Error / Not Found State -->
+  @if (!loading && error) {
+    <mat-card data-testid="error-state">
+      <mat-card-content>
+        <mat-icon>error_outline</mat-icon>
+        <h2>{{ t('notFoundTitle') }}</h2>
 
-      <p>The recipe you are trying to edit could not be found or failed to load.</p>
+        <p>{{ t('notFoundDescription') }}</p>
 
-      <button matButton="text"
-              (click)="onCancel()"
-              data-testid="error-back-btn">
-        <mat-icon>arrow_back</mat-icon>
-        Go Back
-      </button>
-    </mat-card-content>
-  </mat-card>
-}
+        <button matButton="text"
+                (click)="navigateBack()"
+                data-testid="error-back-btn">
+          <mat-icon>arrow_back</mat-icon>
+          {{ t('goBack') }}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
 
-<!-- Recipe Edit Content -->
-@if (!loading && !error && recipeValue !== null) {
-  <!-- Page Header -->
-  <ui-page-header>
-    <h1>Edit Recipe</h1>
-    <h3 class="subtitle">
-      Modify recipe metadata, cooking stages, steps, and ingredients
-    </h3>
+  <!-- Recipe Edit Content -->
+  @if (!loading && !error && recipeValue !== null) {
+    <!-- Page Header -->
+    <ui-page-header [showBackButton]="true" (navigatedBack)="navigateBack()">
+      <h1>{{ t('title') }}</h1>
+      <div>
+        {{ t('description') }}
+      </div>
 
-    <button matButton="text" (click)="onCancel()">
-      <mat-icon>arrow_back</mat-icon>
-      <span>Go Back</span>
-    </button>
-  </ui-page-header>
-
-  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
-    <app-recipe-form [form]="recipeForm" [recipeId]="recipeValue.id"/>
-
-    <!-- Form Actions Card -->
-    <div class="form-section-actions">
-      <button matButton="filled"
+      <button matIconButton
+              form="recipe-form"
               type="submit"
               [disabled]="recipeForm.invalid || submitting">
-        @if (!submitting) {
-          <mat-icon>save</mat-icon>
-        }
-        <span>{{ submitting ? 'Saving Recipe...' : 'Save Recipe' }}</span>
+        <mat-icon>save</mat-icon>
       </button>
-    </div>
-  </form>
-}
+    </ui-page-header>
+
+    <form [formGroup]="recipeForm"
+          (ngSubmit)="onSubmit()"
+          id="recipe-form"
+          class="recipe-form">
+      <app-recipe-form [form]="recipeForm"
+                       [recipeId]="recipeValue.id"
+                       [isSubmitting]="submitting"/>
+
+      <!-- Form Actions Card -->
+      <div class="form-section-actions">
+        <button matButton="text"
+                type="submit"
+                [disabled]="recipeForm.invalid || submitting">
+          @if (!submitting) {
+            <mat-icon>save</mat-icon>
+          }
+          <span>{{ submitting ? t('saving') : t('submit') }}</span>
+        </button>
+      </div>
+    </form>
+  }
+</ng-container>

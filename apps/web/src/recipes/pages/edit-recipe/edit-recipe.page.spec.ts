@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { UpdateRecipeDto } from '../../models/update-recipe.types';
@@ -103,7 +104,10 @@ describe('EditRecipePage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ EditRecipePage ],
+      imports: [
+        EditRecipePage,
+        getTranslocoModule()
+      ],
       providers: [
         { provide: RecipeManagementService, useValue: recipeServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
@@ -130,13 +134,6 @@ describe('EditRecipePage', () => {
   it('should set document title to "Top Nosh - Edit <Recipe Name>" upon loading recipe', () => {
     const titleService = TestBed.inject(Title);
     expect(titleService.getTitle()).toBe('Top Nosh - Edit Spaghetti Bolognese');
-  });
-
-  it('should have all class methods declared as readonly arrow function properties', () => {
-    expect(Object.prototype.hasOwnProperty.call(component, 'loadRecipe')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onCancel')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'navigateBack')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onSubmit')).toBe(true);
   });
 
   it('should fetch recipe by id on init and populate form with details', () => {
@@ -178,7 +175,7 @@ describe('EditRecipePage', () => {
 
     const errorCard = fixture.nativeElement.querySelector('[data-testid="error-state"]');
     expect(errorCard).toBeTruthy();
-    expect(errorCard.textContent).toContain('Recipe Not Found');
+    expect(errorCard.textContent).toContain('EditRecipePage.notFound');
   });
 
   it('should handle missing route param id gracefully', () => {
@@ -187,27 +184,6 @@ describe('EditRecipePage', () => {
 
     expect(component.isLoading()).toBe(false);
     expect(component.hasError()).toBe(true);
-  });
-
-  it('should navigate to /recipes when origin is list on cancel / error go back', () => {
-    mockQueryParamMap$.next(convertToParamMap({ from: 'list' }));
-    component.onCancel();
-
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/recipes' ]);
-  });
-
-  it('should navigate to /recipes/:id when origin is details on cancel', () => {
-    mockQueryParamMap$.next(convertToParamMap({ from: 'details' }));
-    component.onCancel();
-
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/recipes', 'recipe-123' ]);
-  });
-
-  it('should default navigate to /recipes/:id when origin is not specified', () => {
-    mockQueryParamMap$.next(convertToParamMap({}));
-    component.onCancel();
-
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/recipes', 'recipe-123' ]);
   });
 
   it('should submit valid update payload, show 5s snackbar, and navigate back on success', () => {
@@ -253,7 +229,7 @@ describe('EditRecipePage', () => {
     expect(recipeServiceMock.updateRecipe).toHaveBeenCalledWith('recipe-123', expectedPayload);
     expect(component.isSubmitting()).toBe(false);
     expect(snackBarMock.open).toHaveBeenCalledWith(
-      'Recipe updated successfully!',
+      'web.EditRecipePage.success',
       undefined,
       { duration: 5000 }
     );
@@ -278,7 +254,7 @@ describe('EditRecipePage', () => {
 
     expect(component.isSubmitting()).toBe(false);
     expect(snackBarMock.open).toHaveBeenCalledWith(
-      'Failed to update recipe. Please check your input and try again.',
+      'web.EditRecipePage.failure',
       'OK'
     );
   });

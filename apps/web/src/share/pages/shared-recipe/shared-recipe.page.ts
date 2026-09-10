@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { CookingModeComponent } from '../../../recipes/components/cooking-mode/cooking-mode.component';
@@ -33,7 +34,8 @@ import { SharedDataService } from '../../services/shared-data/shared-data.servic
     DomainPipe,
     RemarkComponent,
     GlanceComponent,
-    CookingModeComponent
+    CookingModeComponent,
+    TranslocoDirective
   ],
   templateUrl: './shared-recipe.page.html',
   styleUrl: './shared-recipe.page.scss',

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { getTranslocoModule } from '../../../transloco-testing.module';
 
 import { PageHeaderComponent } from './page-header.component';
 
@@ -8,7 +9,10 @@ describe('PageHeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ PageHeaderComponent ]
+      imports: [
+        PageHeaderComponent,
+        getTranslocoModule()
+      ]
     })
       .compileComponents();
 

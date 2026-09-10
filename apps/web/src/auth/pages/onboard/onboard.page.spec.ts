@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { OnboardPage } from './onboard.page';
 
@@ -32,7 +33,10 @@ describe('OnboardPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ OnboardPage ],
+      imports: [
+        OnboardPage,
+        getTranslocoModule()
+      ],
       providers: [
         { provide: AuthenticationService, useValue: authServiceMock },
         { provide: MatSnackBar, useValue: snackBarMock },
@@ -111,7 +115,7 @@ describe('OnboardPage', () => {
   });
 
   it('should call authService.onboardUser, show success snackbar for 5s, and navigate to /auth/login on successful submit', () => {
-    authServiceMock.onboardUser.mockReturnValue(of({ message: 'User onboarded successfully' }));
+    authServiceMock.onboardUser.mockReturnValue(of({ message: 'web.OnboardPage.success' }));
 
     component.form.controls.fullName.setValue('Admin User');
     component.form.controls.email.setValue('admin@example.com');
@@ -124,7 +128,7 @@ describe('OnboardPage', () => {
       email: 'admin@example.com',
       password: 'SuperSecure1234!'
     });
-    expect(snackBarMock.open).toHaveBeenCalledWith('User onboarded successfully', undefined, { duration: 5000 });
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.OnboardPage.success', undefined, { duration: 5000 });
     expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
     expect(component.isLoading()).toBe(false);
   });
@@ -144,7 +148,7 @@ describe('OnboardPage', () => {
       email: 'admin@example.com',
       password: 'SuperSecure1234!'
     });
-    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith(errorMessage, 'ui.System.ok');
     expect(component.isLoading()).toBe(false);
   });
 
@@ -157,7 +161,7 @@ describe('OnboardPage', () => {
 
     component.onSubmit();
 
-    expect(snackBarMock.open).toHaveBeenCalledWith('Onboarding failed. Please try again.', 'OK');
+    expect(snackBarMock.open).toHaveBeenCalledWith('web.OnboardPage.failure', 'ui.System.ok');
   });
 
   it('should dismiss any existing snackbar when a new submit is triggered', () => {

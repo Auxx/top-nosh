@@ -9,7 +9,7 @@
       "node"
     ],
     "esModuleInterop": true,
-    "moduleResolution": "node10"
+    "moduleResolution": "node16"
   },
   "files": [
     "src/test-setup.ts"

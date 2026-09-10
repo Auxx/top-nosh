@@ -6,6 +6,7 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { NoticeComponent, SectionHeaderComponent } from '@top-nosh/ui';
 import { RecipeDetails } from '../../models/recipe-details.types';
 
@@ -19,7 +20,8 @@ import { RecipeDetails } from '../../models/recipe-details.types';
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatExpansionPanelTitle
+    MatExpansionPanelTitle,
+    TranslocoDirective
   ],
   templateUrl: './glance-stages.component.html',
   styleUrl: './glance-stages.component.scss',

@@ -5,6 +5,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { MiniBadgeComponent, NoticeComponent, ScaleQuantityPipe, SectionHeaderComponent, UnitPipe } from '@top-nosh/ui';
 import {
   AddToShoppingListDirective
@@ -26,7 +27,8 @@ import { IngredientDetails, RecipeDetails } from '../../models/recipe-details.ty
     MatMenuTrigger,
     MiniBadgeComponent,
     MatCheckbox,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    TranslocoDirective
   ],
   templateUrl: './ingredient-list.component.html',
   styleUrl: './ingredient-list.component.scss',

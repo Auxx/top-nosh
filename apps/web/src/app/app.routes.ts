@@ -3,10 +3,12 @@ import { authGuard } from '../system/guards/auth-guard/auth.guard';
 import { rootGuard } from '../system/guards/root-guard/root.guard';
 import { AuthorizedPage } from '../system/pages/authorized/authorized.page';
 import { GuestPage } from '../system/pages/guest/guest.page';
+import { LogoutPage } from '../system/pages/logout/logout.page';
 import { RootPage } from '../system/pages/root/root.page';
 
 export const appRoutes: Route[] = [
   { path: '', component: RootPage, canActivate: [ rootGuard ] },
+  { path: 'logout', component: LogoutPage, canActivate: [ authGuard ] },
   {
     path: 'auth',
     component: GuestPage,

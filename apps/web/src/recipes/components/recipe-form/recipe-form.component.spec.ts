@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MarkdownPreviewDialog } from '@top-nosh/ui';
 import { BehaviorSubject } from 'rxjs';
+import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { createRecipeForm, RecipeFormComponent } from './recipe-form.component';
@@ -12,7 +13,7 @@ import { createRecipeForm, RecipeFormComponent } from './recipe-form.component';
 @Component({
   standalone: true,
   imports: [ ReactiveFormsModule, RecipeFormComponent ],
-  template: `<app-recipe-form [form]="form()" [recipeId]="recipeId()" />`
+  template: `<app-recipe-form [form]="form()" [recipeId]="recipeId()" [isSubmitting]="false" />`
 })
 class TestHostComponent {
   private readonly fb = new FormBuilder();
@@ -54,7 +55,10 @@ describe('RecipeFormComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ TestHostComponent ],
+      imports: [
+        TestHostComponent,
+        getTranslocoModule()
+      ],
       providers: [
         { provide: RecipeManagementService, useValue: recipeServiceMock },
         { provide: MatDialog, useValue: dialogMock }
@@ -71,25 +75,6 @@ describe('RecipeFormComponent', () => {
 
   it('should create', () => {
     expect(recipeFormComponent).toBeTruthy();
-  });
-
-  it('should have all class methods declared as readonly arrow function properties', () => {
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'createStepGroup')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'createIngredientGroup')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'createStageGroup')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'getStagesArray')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'getStepsArray')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'getIngredientsArray')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'addStage')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'removeStage')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'addStep')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'removeStep')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'addIngredient')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'removeIngredient')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropStage')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropStep')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onDropIngredient')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(recipeFormComponent, 'onPreviewDescription')).toBe(true);
   });
 
   it('should initialize source control and populate it from recipe if provided', () => {
@@ -312,40 +297,41 @@ describe('RecipeFormComponent', () => {
       expect(shareLink.href).toBe(expectedUrl);
       expect(shareLink.textContent?.trim()).toBe(expectedUrl);
     });
-  });
 
-  describe('Description Markdown Preview', () => {
-    it('should open MarkdownPreviewDialog with current description value when preview button is clicked', () => {
-      hostComponent.form().controls['description'].setValue('# Delicious Pasta\nWith **fresh** basil.');
-      fixture.detectChanges();
-
-      const previewBtn = fixture.nativeElement.querySelector(
-        '[data-testid="preview-description-btn"]'
-      ) as HTMLButtonElement;
-      expect(previewBtn).toBeTruthy();
-
-      previewBtn.click();
-
-      expect(dialogMock.open).toHaveBeenCalledWith(MarkdownPreviewDialog, {
-        data: {
-          markdown: '# Delicious Pasta\nWith **fresh** basil.',
-          title: 'Recipe Description Preview'
+    it('should copy share URL to clipboard when copy button is clicked', async () => {
+      const writeTextMock = jest.fn().mockResolvedValue(undefined);
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: writeTextMock
         }
       });
+
+      hostComponent.recipeId.set('recipe-abc-123');
+      hostComponent.form().controls['isShared'].setValue(true);
+      fixture.detectChanges();
+
+      const copyButton = fixture.nativeElement.querySelector('.share-recipe-content button') as HTMLButtonElement;
+      expect(copyButton).toBeTruthy();
+
+      copyButton.click();
+      await fixture.whenStable();
+
+      const expectedUrl = `${window.location.protocol}//${window.location.host}/share/recipe/recipe-abc-123`;
+      expect(writeTextMock).toHaveBeenCalledWith(expectedUrl);
     });
 
-    it('should pass empty string to MarkdownPreviewDialog when description is not set', () => {
-      hostComponent.form().controls['description'].setValue('');
-      fixture.detectChanges();
-
-      recipeFormComponent.onPreviewDescription();
-
-      expect(dialogMock.open).toHaveBeenCalledWith(MarkdownPreviewDialog, {
-        data: {
-          markdown: '',
-          title: 'Recipe Description Preview'
+    it('should not call clipboard writeText if shareUrl is empty', async () => {
+      const writeTextMock = jest.fn().mockResolvedValue(undefined);
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: writeTextMock
         }
       });
+
+      hostComponent.recipeId.set(undefined);
+      await recipeFormComponent.copyShareLink();
+
+      expect(writeTextMock).not.toHaveBeenCalled();
     });
   });
 });
