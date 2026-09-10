@@ -13,7 +13,7 @@ import { createRecipeForm, RecipeFormComponent } from './recipe-form.component';
 @Component({
   standalone: true,
   imports: [ ReactiveFormsModule, RecipeFormComponent ],
-  template: `<app-recipe-form [form]="form()" [recipeId]="recipeId()" />`
+  template: `<app-recipe-form [form]="form()" [recipeId]="recipeId()" [isSubmitting]="false" />`
 })
 class TestHostComponent {
   private readonly fb = new FormBuilder();

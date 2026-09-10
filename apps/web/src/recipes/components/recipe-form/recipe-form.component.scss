@@ -91,6 +91,14 @@ mat-panel-description {
   display: grid;
   grid-template-columns: 20px 1fr 150px 150px 40px;
   gap: var(--dim-x-medium);
+  background-color: var(--mat-sys-surface);
+
+  &.cdk-drag-preview {
+    background-color: var(--mat-sys-surface-container);
+    padding: 8px;
+    border-radius: var(--mat-sys-corner-small);
+    box-shadow: var(--mat-sys-level2);
+  }
 
   .drag-handle-wrapper {
     margin-top: 10px;
