@@ -115,8 +115,8 @@ Once the container is running:
 
 - **Web Interface**: Open `http://localhost:3000` in your browser to access the
   Angular application.
-- **REST API**: Send requests to `http://localhost:3000/api` (e.g.
-  `curl http://localhost:3000/api`).
+- **REST API**: Send requests to `http://localhost:3000/api` (e.g. `curl
+  http://localhost:3000/api`).
 - **Configuration Assets**: Verify mounted properties at
   `http://localhost:3000/assets/app.properties`.
 

@@ -7,7 +7,7 @@
     "format:check": "dprint check",
     "prepare": "husky || true",
     "lint": "nx run-many --all --target=lint --no-tui",
-    "test": "nx run-many --all --target=test",
+    "test": "nx run-many --all --target=test --no-tui",
     "serve:api": "nx run api:serve:development",
     "serve:web": "set PORT=5999 && nx run web:serve:development"
   },
@@ -75,7 +75,7 @@
     "@typescript-eslint/utils": "8.68.0",
     "angular-eslint": "22.1.0",
     "dotenv": "17.4.2",
-    "dprint": "0.56.1",
+    "dprint": "0.57.4",
     "eslint": "9.39.5",
     "husky": "9.1.7",
     "jest": "30.5.0",

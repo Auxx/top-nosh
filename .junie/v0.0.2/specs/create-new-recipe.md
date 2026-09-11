@@ -14,16 +14,16 @@ inside `RecipesController`.
 - Use CDK drag and drop to re-order and organise stages, cooking steps and
   ingredients.
 - Split the form into multiple sections for a better user experience:
-    - "Recipe Info" card: name, servings, description, and cuisine/category as
-      free-text inputs with MatAutocomplete suggestions pulled from the existing
-      cuisines-categories endpoint (already used by RecipeManagementService), so
-      new values are allowed but existing ones are easy to pick.
-    - A "Stages" section: `mat-accordion` with one expansion panel per stage
-      (name + remove button in the header). Inside each panel, two subsections —
-      Cooking Steps and Ingredients — each a CDK-drag-drop-reorderable list of
-      rows with add/remove buttons. Ingredients rows use a unit `mat-select`
-      (GRAMS / ITEM_COUNT). An "Add Stage" button appends a new panel.
-    - Actions: Cancel (navigates back to the list) and Create.
+  - "Recipe Info" card: name, servings, description, and cuisine/category as
+    free-text inputs with MatAutocomplete suggestions pulled from the existing
+    cuisines-categories endpoint (already used by RecipeManagementService), so
+    new values are allowed but existing ones are easy to pick.
+  - A "Stages" section: `mat-accordion` with one expansion panel per stage
+    (name + remove button in the header). Inside each panel, two subsections —
+    Cooking Steps and Ingredients — each a CDK-drag-drop-reorderable list of
+    rows with add/remove buttons. Ingredients rows use a unit `mat-select`
+    (GRAMS / ITEM_COUNT). An "Add Stage" button appends a new panel.
+  - Actions: Cancel (navigates back to the list) and Create.
 - All form fields should have correct validations based on the API
   implementation.
 - API call should be handled by `RecipeManagementService`.

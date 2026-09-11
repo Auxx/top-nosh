@@ -1,7 +1,7 @@
 # Migrate from hardcoded strings to translations
 
-This is the second part of a series of steps to migrate from hardcoded strings to
-translations in the application. The goal is to replace all hardcoded strings
+This is the second part of a series of steps to migrate from hardcoded strings
+to translations in the application. The goal is to replace all hardcoded strings
 with translation keys and then update the corresponding messages in the
 translation file. This part should only update pages and components inside
 `share` `recipes`, `shopping-lists` and `users` features of `web` project.
@@ -13,24 +13,24 @@ translation file. This part should only update pages and components inside
 - Only English translations should be updated.
 - The translation file is located at `apps/web/public/assets/i18n/en.json`.
 - Update only the following pages and components:
-    - `SharedRecipePage`
-    - `CookingModeComponent`
-    - `CookingStagesComponent`
-    - `GlanceComponent`
-    - `GlanceStagesComponent`
-    - `IngredientListComponent`
-    - `RecipeFormComponent`
-    - `CreateRecipePage`
-    - `EditRecipePage`
-    - `RecipeDetailsPage`
-    - `RecipeListPage`
-    - `AddToShoppingListDirective`
-    - `AddToShoppingListContentComponent`
-    - `ShoppingListPage`
-    - `ShoppingListDetailsPage`
-    - `CreateUserPage`
-    - `EditUserPage`
-    - `UserListPage`
+  - `SharedRecipePage`
+  - `CookingModeComponent`
+  - `CookingStagesComponent`
+  - `GlanceComponent`
+  - `GlanceStagesComponent`
+  - `IngredientListComponent`
+  - `RecipeFormComponent`
+  - `CreateRecipePage`
+  - `EditRecipePage`
+  - `RecipeDetailsPage`
+  - `RecipeListPage`
+  - `AddToShoppingListDirective`
+  - `AddToShoppingListContentComponent`
+  - `ShoppingListPage`
+  - `ShoppingListDetailsPage`
+  - `CreateUserPage`
+  - `EditUserPage`
+  - `UserListPage`
 
 ## HTML template requirements
 

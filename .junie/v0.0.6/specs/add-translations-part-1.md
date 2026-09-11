@@ -13,9 +13,9 @@ translation file. This part should only update pages and components inside
 - Only English translations should be updated.
 - The translation file is located at `apps/web/public/assets/i18n/en.json`.
 - Update only the following pages and components:
-    - `OnboardPage`
-    - `PasswordChangePage`
-    - `LandingPage`
+  - `OnboardPage`
+  - `PasswordChangePage`
+  - `LandingPage`
 
 ## HTML template requirements
 

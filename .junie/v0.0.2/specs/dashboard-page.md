@@ -34,8 +34,8 @@ API.
 - Cards should show a progress spinner while data is being fetched.
 - If the data fails to load, cards should show a generic error message.
 - Two cards should be displayed as a column on mobile devices which match
-  `HandsetPortrait` breakpoint defined in CDK
-  (`(max-width: 599.98px) and (orientation: portrait)`).
+  `HandsetPortrait` breakpoint defined in CDK (`(max-width: 599.98px) and
+  (orientation: portrait)`).
 - Two cards should be displayed side by side on larger screens.
 
 ## Most recent recipes card requirements

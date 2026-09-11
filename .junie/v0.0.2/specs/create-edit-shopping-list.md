@@ -67,9 +67,8 @@ Shopping list items should be easy to view, add, remove and update.
   should be placed at the end of the name.
 - When the user presses the Enter key in the item name field, a new empty item
   should be added to the list after the current one automatically with a
-  `quantity`
-  set to 1 and `isBought` set to `false`, and the focus should move to the new
-  item.
+  `quantity` set to 1 and `isBought` set to `false`, and the focus should move
+  to the new item.
 - A user should be able to order items by dragging them within their section. A
   user should not be able to drag bought items into non-bought items and vice
   versa.

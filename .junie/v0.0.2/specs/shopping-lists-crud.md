@@ -17,9 +17,9 @@ Each shopping list should have the following:
 - Updated at
 - Deleted at (to allow soft delete)
 - A list of items to buy. Each item should have
-    - Name
-    - Quantity (just a number)
-    - An indicator if the item was bought
+  - Name
+  - Quantity (just a number)
+  - An indicator if the item was bought
 
 ## Shopping list listing endpoint
 

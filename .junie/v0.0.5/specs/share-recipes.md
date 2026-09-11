@@ -51,5 +51,3 @@ extended to allow sharing recipes publicly.
 - Public recipe link should consist of current page protocol, domain and port
   plus a path to `SharedRecipePage` with current `recipeId`.
 - Save `isShared` flag to the recipe object.
-
-

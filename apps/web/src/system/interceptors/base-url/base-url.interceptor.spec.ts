@@ -11,7 +11,7 @@ describe('baseUrlInterceptor', () => {
   beforeEach(() => {
     jest.spyOn(envModule, 'environment').mockReturnValue({
       production: false,
-      apiUrl: 'http://localhost:3000/api'
+      apiUrl: 'http://localhost:3000/'
     });
 
     TestBed.configureTestingModule({
@@ -55,7 +55,7 @@ describe('baseUrlInterceptor', () => {
   it('should normalize trailing slash on apiUrl when prepending relative URL', done => {
     jest.spyOn(envModule, 'environment').mockReturnValue({
       production: false,
-      apiUrl: 'http://localhost:3000/api/'
+      apiUrl: 'http://localhost:3000/'
     });
 
     httpClient.get('/recipes').subscribe(response => {
@@ -107,7 +107,7 @@ describe('baseUrlInterceptor', () => {
       done();
     });
 
-    const req = httpTesting.expectOne('http://localhost:3000/api');
+    const req = httpTesting.expectOne('http://localhost:3000');
     expect(req.request.method).toBe('GET');
     req.flush({ data: 'ok' });
   });

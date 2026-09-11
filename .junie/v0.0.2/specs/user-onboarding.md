@@ -22,11 +22,11 @@ scenario.
   no users in the `users` table. If there are any users in the database already,
   the end-point should return a 401 Unauthorized response.
 - `onboardUser` end-point should accept a payload with the following fields:
-    - `fullName`: The full name of the new user, required and should have at
-      least one character.
-    - `email`: The email of the new user, required and should be a valid email.
-    - `password`: The password of the new user, required and should have at
-      least 12 characters.
+  - `fullName`: The full name of the new user, required and should have at least
+    one character.
+  - `email`: The email of the new user, required and should be a valid email.
+  - `password`: The password of the new user, required and should have at least
+    12 characters.
 
 ## Web changes
 

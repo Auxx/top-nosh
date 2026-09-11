@@ -11,10 +11,10 @@ based on filters, pagination, and search term provided by the user.
 - Current filters, pagination, and search term should be described in an
   interface called `RecipeListFilters`.
 - `RecipeListFilters` should contain the following fields (all optional):
-    - cuisine: string
-    - category: string
-    - search: string
-    - page: number
+  - cuisine: string
+  - category: string
+  - search: string
+  - page: number
 - default filters should be an object with only one field `page` set to `1` and
   it should be returned by a function to ensure immutability.
 - A current state of filters described as `RecipeListFilters` should be stored
