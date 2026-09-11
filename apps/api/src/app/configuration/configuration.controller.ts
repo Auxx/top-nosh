@@ -1,7 +1,7 @@
 import { Controller, Get, Header } from '@nestjs/common';
 
 @Controller()
-export class Configuration {
+export class ConfigurationController {
   @Get('assets/app.properties')
   @Header('Content-Type', 'text/plain; charset=utf-8')
   webProperties(): string {
@@ -9,5 +9,3 @@ export class Configuration {
     return `PRODUCTION=true\nAPI_URL=${apiUrl}\n`;
   }
 }
-
-export { Configuration as ConfigurationController };

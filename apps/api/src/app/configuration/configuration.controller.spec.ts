@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Configuration } from './configuration.controller';
+import { ConfigurationController } from './configuration.controller';
 
 describe('Configuration Controller', () => {
-  let controller: Configuration;
+  let controller: ConfigurationController;
   const originalEnv = process.env;
 
   beforeEach(async () => {
     process.env = { ...originalEnv };
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ Configuration ]
+      controllers: [ ConfigurationController ]
     }).compile();
 
-    controller = module.get<Configuration>(Configuration);
+    controller = module.get<ConfigurationController>(ConfigurationController);
   });
 
   afterAll(() => {
