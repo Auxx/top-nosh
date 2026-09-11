@@ -55,7 +55,8 @@
           "buildTarget": "web:build:production"
         },
         "development": {
-          "buildTarget": "web:build:development"
+          "buildTarget": "web:build:development",
+          "host": "0.0.0.0"
         }
       }
     },
