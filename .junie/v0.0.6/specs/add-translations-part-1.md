@@ -9,7 +9,7 @@ translation file. This part should only update pages and components inside
 ## Requirements
 
 - `@jsverse/transloco` library is used to manage translations in the
-  application.
+    application.
 - Only English translations should be updated.
 - The translation file is located at `apps/web/public/assets/i18n/en.json`.
 - Update only the following pages and components:
@@ -21,11 +21,11 @@ translation file. This part should only update pages and components inside
 
 - See `LoginPage` template for a working example.
 - Wrap the contents of the HTML template with `ng-container` with Transloco
-  directive attached.
+    directive attached.
 - Pass `prefix` to the directive in the following format:
-  `web.<PageOrComponentName>`. For example: `web.LoginPage` for `LoginPage`.
+    `web.<PageOrComponentName>`. For example: `web.LoginPage` for `LoginPage`.
 - Move text messages into the translation file and replace them with Transloco
-  translation directive with correct keys.
+    translation directive with correct keys.
 
 ## Component code requirements
 
@@ -55,4 +55,4 @@ The translation file has the following structure:
 - The section called `web` contains translations for the `web` feature.
 - The next level is the name of a component or page, for example `LoginPage`.
 - The next level is the name of a translation key, for example `loginFailed`.
-  And its value is a string which should be displayed to the user.
+    And its value is a string which should be displayed to the user.

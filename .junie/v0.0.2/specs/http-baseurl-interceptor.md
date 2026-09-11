@@ -22,13 +22,13 @@ requests.
 
 - Detect whether the request URL is an absolute URL.
 - If the request URL is not an absolute URL, prepend the `apiUrl` from the
-  environment to the request URL. Ensure that the resulting URL does not have
-  double slashes inside if `apiUrl` ends with a slash and the request URL starts
-  with a slash.
+    environment to the request URL. Ensure that the resulting URL does not have
+    double slashes inside if `apiUrl` ends with a slash and the request URL
+    starts with a slash.
 - Do not modify the request URL if it is an absolute URL.
 - Ensure that this interceptor is loaded before any other interceptors.
 
 ## Update Existing Services
 
 - Update `AuthenticationService` and `RecipeManagementService` to remove manual
-  construction of the full end-point URLs for their API requests.
+    construction of the full end-point URLs for their API requests.

@@ -1,7 +1,8 @@
 # Cuisine and Category Bug
 
-Select boxes for cuisine and category on `RecipeListPage` and `CreateRecipePage` are not populated.
-The API is working correctly, but these select boxes are empty.
+Select boxes for cuisine and category on `RecipeListPage` and `CreateRecipePage`
+are not populated. The API is working correctly, but these select boxes are
+empty.
 
 ## API response example
 

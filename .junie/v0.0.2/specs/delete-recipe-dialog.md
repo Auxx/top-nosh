@@ -10,14 +10,14 @@ when the user confirms the dialog.
 - Confirmation dialog should be agnostic to the action being confirmed.
 - Dialog title and content should be customizable.
 - `Yes` button should close the dialog and return a `true` value to indicate
-  that the user confirmed the action.
+    that the user confirmed the action.
 - `No` button should close the dialog and return a `false` value to indicate
-  that the user cancelled the action.
+    that the user cancelled the action.
 
 ## RecipeManagementService Update
 
 - Add a method to delete a recipe by ID. It should call `deleteRecipe` API
-  endpoint.
+    endpoint.
 - Update `reloadRecipeList` when the recipe is deleted successfully.
 - Return a boolean value indicating whether the recipe was deleted successfully.
 - If the call to the API endpoint fails, throw an error.
@@ -25,15 +25,15 @@ when the user confirms the dialog.
 ## Update RecipeListPage
 
 - When the Delete Recipe button is pressed, open the confirmation dialog, pass
-  an informative title and message to the confirmation dialog.
+    an informative title and message to the confirmation dialog.
 - If the user confirms the dialog, call the `deleteRecipe` method of
-  `RecipeManagementService`.
+    `RecipeManagementService`.
 - If the user cancels the dialog, do nothing.
 
 ## Update RecipeDetailsPage
 
 - When the Delete Recipe button is pressed, open the confirmation dialog, pass
-  an informative title and message to the confirmation dialog.
+    an informative title and message to the confirmation dialog.
 - If the user confirms the dialog, call the `deleteRecipe` method of
-  `RecipeManagementService` and navigate back to the recipe list page.
+    `RecipeManagementService` and navigate back to the recipe list page.
 - If the user cancels the dialog, do nothing.

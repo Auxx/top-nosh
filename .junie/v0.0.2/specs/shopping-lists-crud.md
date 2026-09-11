@@ -24,13 +24,13 @@ Each shopping list should have the following:
 ## Shopping list listing endpoint
 
 - This end-point should return a list of all shopping lists which are not
-  deleted.
+    deleted.
 - The result should be ordered by created at date.
 - The result should be paginated.
 - The result should include the total number of shopping lists.
 - The result should include the total number of pages.
 - The result should only contain Shopping list model data without children
-  models.
+    models.
 
 ## Delete end-point
 
@@ -39,7 +39,7 @@ delete instead.
 
 - The end-point should accept a shopping list ID as a parameter.
 - The end-point should return a success message if the shopping list was
-  successfully deleted.
+    successfully deleted.
 - The end-point should throw an error if the shopping list was not found.
 - The end-point should NOT delete any linked data.
 
@@ -50,7 +50,7 @@ This end-point should return the details of a single shopping list.
 - The end-point should accept a shopping list ID as a parameter.
 - The end-point should return the shopping list details.
 - The end-point should throw an error message if the shopping list was not
-  found.
+    found.
 - The end-point should include the shopping list's items.
 
 ## Create end-point
@@ -58,12 +58,12 @@ This end-point should return the details of a single shopping list.
 This end-point should create a new shopping list.
 
 - The end-point should accept a shopping list object as a parameter, which
-  should include all items.
+    should include all items.
 - The end-point should create new records in the database based on the provided
-  shopping list object.
+    shopping list object.
 - The end-point should return the ID of a created shopping list.
 - The end-point should throw an error message if the shopping list was not
-  created.
+    created.
 
 ## Update end-point
 
@@ -71,11 +71,11 @@ This end-point should update an shopping list recipe.
 
 - The end-point should accept a shopping list ID as a parameter.
 - The end-point should accept a shopping list object as a parameter, which
-  should include all items and their status.
+    should include all items and their status.
 - The end-point should update the existing shopping list in the database based
-  on the provided shopping list object.
+    on the provided shopping list object.
 - The end-point should detect if any items have been added, removed, or updated,
-  and update the database accordingly.
+    and update the database accordingly.
 - The end-point should return the updated shopping list model.
 - The end-point should throw an error message if the shopping list was not
-  updated.
+    updated.

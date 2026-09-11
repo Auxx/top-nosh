@@ -13,13 +13,13 @@ reading, and updating users. There should be NO endpoints for deleting users.
     - `password`
 - Create user endpoint should set forcePasswordChange flag to `true`.
 - Update user endpoint should only be accessible to the user themselves and
-  should deduct user ID from JWT token.
+    should deduct user ID from JWT token.
 - Update user endpoint should accept a JSON payload with the following fields:
     - `fullName`
     - `email`
     - `password`
 - List users endpoint should return a list of users sorted by `fullName` with
-  the following fields:
+    the following fields:
     - `id`
     - `fullName`
     - `email`

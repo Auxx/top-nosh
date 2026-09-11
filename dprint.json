@@ -46,7 +46,12 @@
     "trailingCommas": "never"
   },
   "markdown": {
-    "newLineKind": "auto"
+    "lineWidth": 80,
+    "newLineKind": "auto",
+    "textWrap": "always",
+    "list.indentKind": "pythonMarkdown",
+    "codeBlock.skipFormat": true,
+    "codeBlock.preserveIndentation": true
   },
   "includes": [
     "**/*.{ts,tsx,js,jsx,json,md}"
@@ -59,7 +64,11 @@
     "**/test.ts",
     "**/*-lock.json",
     "**/*.d.ts",
-    "**/.*"
+    "**/.idea",
+    "**/.nx",
+    "**/.vscode",
+    ".agents/skills",
+    ".junie/**/plans/*"
   ],
   "plugins": [
     "npm:@dprint/typescript@0.96.1",

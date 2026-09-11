@@ -114,27 +114,27 @@ docker run -d `
 Once the container is running:
 
 - **Web Interface**: Open `http://localhost:3000` in your browser to access the
-  Angular application.
-- **REST API**: Send requests to `http://localhost:3000/api` (e.g.
-  `curl http://localhost:3000/api`).
+    Angular application.
+- **REST API**: Send requests to `http://localhost:3000/api` (e.g. `curl
+    http://localhost:3000/api`).
 - **Configuration Assets**: Verify mounted properties at
-  `http://localhost:3000/assets/app.properties`.
+    `http://localhost:3000/assets/app.properties`.
 
 ### 5. Managing the Container
 
 - View logs:
-  ```bash
-  docker logs -f top-nosh
-  ```
+    ```bash
+    docker logs -f top-nosh
+    ```
 - Stop container:
-  ```bash
-  docker stop top-nosh
-  ```
+    ```bash
+    docker stop top-nosh
+    ```
 - Restart container:
-  ```bash
-  docker restart top-nosh
-  ```
+    ```bash
+    docker restart top-nosh
+    ```
 - Remove container:
-  ```bash
-  docker rm -f top-nosh
-  ```
+    ```bash
+    docker rm -f top-nosh
+    ```

@@ -18,4 +18,4 @@ the current page.
 - `SharedRecipePage` should have a recipe name in the title.
 - `ShoppingListPage` should have `Shopping Lists` title.
 - `ShoppingListDetailsPage` should have Shopping List name in the title or
-  `Create new shopping list` if the name is empty.
+    `Create new shopping list` if the name is empty.
