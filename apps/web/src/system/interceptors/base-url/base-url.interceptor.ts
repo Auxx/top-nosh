@@ -17,7 +17,7 @@ export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
 
   const baseUrl = environment().apiUrl.replace(/\/+$/, '');
   const cleanPath = req.url.replace(/^\/+/, '');
-  const resolvedUrl = cleanPath ? `${baseUrl}/${cleanPath}` : baseUrl;
+  const resolvedUrl = cleanPath ? `${baseUrl}/api/${cleanPath}` : baseUrl;
 
   return next(req.clone({ url: resolvedUrl }));
 };

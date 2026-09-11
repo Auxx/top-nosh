@@ -6,6 +6,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { ConfigurationModule } from './configuration/configuration.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { SharingModule } from './sharing/sharing.module';
@@ -35,6 +36,7 @@ function getStaticRootPath(): string {
     }),
     PrismaModule,
     AuthModule,
+    ConfigurationModule,
     DashboardModule,
     RecipesModule,
     SharingModule,
