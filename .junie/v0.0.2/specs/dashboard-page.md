@@ -11,10 +11,10 @@ responsible for providing dashboard-related data to the front-end.
 
 - All endpoints should require authentication.
 - Create a new end-point which will return a response containing a list of five
-    most recent recipes, and a list of five top items from the most recent
-    shopping list with shopping list id.
+  most recent recipes, and a list of five top items from the most recent
+  shopping list with shopping list id.
 - It should return empty lists if there are no recipes or items and shopping
-    lists.
+  lists.
 
 ## Dashboard service requirements
 
@@ -34,19 +34,19 @@ API.
 - Cards should show a progress spinner while data is being fetched.
 - If the data fails to load, cards should show a generic error message.
 - Two cards should be displayed as a column on mobile devices which match
-    `HandsetPortrait` breakpoint defined in CDK (`(max-width: 599.98px) and
-    (orientation: portrait)`).
+  `HandsetPortrait` breakpoint defined in CDK (`(max-width: 599.98px) and
+  (orientation: portrait)`).
 - Two cards should be displayed side by side on larger screens.
 
 ## Most recent recipes card requirements
 
 - The card should show an image - `/images/recipes.avif`.
 - The recipe list should contain recipe names, and they should be linked to the
-    recipe details page.
+  recipe details page.
 - The card should have one action - navigate to the recipe list page.
 - If the recipe list is empty, then the card should display a message that no
-    recipes are added yet, and a card action to create a recipe should be
-    displayed.
+  recipes are added yet, and a card action to create a recipe should be
+  displayed.
 
 # Shopping items card requirements
 
@@ -55,5 +55,5 @@ API.
 - The card should display the names of the items as plain text.
 - The card should have one action - navigate to the shopping list details page.
 - If the shopping list is empty, then the card should display a message that no
-    items are added yet, and a card action to create a shopping list should be
-    displayed.
+  items are added yet, and a card action to create a shopping list should be
+  displayed.

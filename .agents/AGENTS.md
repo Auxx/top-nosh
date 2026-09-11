@@ -28,29 +28,28 @@ Docker.
 - Front-end project is located at `apps/web`.
 - Custom UI components are located inside `ui` library project at `libs/ui`.
 - Custom NX generators and executors are located inside `dev-toolkit` library
-    project at `libs/dev-toolkit`.
+  project at `libs/dev-toolkit`.
 
 ## Front-end project structure
 
 - The source code of front-end projects is located in `src` folder of the
-    project, for example, `apps/web/src` for `web` project.
+  project, for example, `apps/web/src` for `web` project.
 - Each project is split into features; each feature contains a set of related
-    components, services, and other files in corresponding subfolders. For
-    example, a feature called `auth` for `web` project is located at
-    `apps/web/src/auth`, and it contains subfolders like `components` and
-    `services`.
+  components, services, and other files in corresponding subfolders. For
+  example, a feature called `auth` for `web` project is located at
+  `apps/web/src/auth`, and it contains subfolders like `components` and
+  `services`.
 
 ## Back-end project structure
 
 - The source code of back-end projects is located in `src` folder of the
-    project, for example, `apps/api/src` for `api` project.
+  project, for example, `apps/api/src` for `api` project.
 - Each project is split into features; each feature contains a set of related
-    controllers, services, and other files. Features are located inside `app`
-    subfolder. For example, a feature called `auth` for `api` project is located
-    at `apps/api/src/app/auth`. Controllers and services live inside the feature
-    folder. DTOs, guards, and other files live inside corresponding subfolders.
-    For example, login DTO is located at
-    `apps/api/src/app/auth/dto/login.dto.ts`.
+  controllers, services, and other files. Features are located inside `app`
+  subfolder. For example, a feature called `auth` for `api` project is located
+  at `apps/api/src/app/auth`. Controllers and services live inside the feature
+  folder. DTOs, guards, and other files live inside corresponding subfolders.
+  For example, login DTO is located at `apps/api/src/app/auth/dto/login.dto.ts`.
 - Database schema is located at `prisma/schema.prisma`.
 - Database migrations are located at `prisma/migrations`.
 

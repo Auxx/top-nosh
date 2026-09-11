@@ -6,7 +6,7 @@ to the unit list.
 ## API requirements
 
 - Update `IngredientUnit` enum, add `TSP` for teaspoons, and `TBSP` for table
-    spoons.
+  spoons.
 
 ## Web app requirements
 
@@ -15,4 +15,4 @@ to the unit list.
 - `TSP` unit should be displayed as `Teaspoons`.
 - `TBSP` unit should be displayed as `Table spoons`.
 - Update `RecipeManagementService` to pass and retrieve new units correctly from
-    the API.
+  the API.

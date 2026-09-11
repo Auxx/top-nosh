@@ -7,6 +7,6 @@ ingredients by recipe stage.
 ## RecipeDetailsPage updates
 
 - Update `Ingredients Checklist` block to show ingredients grouped by recipe
-    stage.
+  stage.
 - Recipe stage order and ingredient order inside the stage should be preserved.
 - Ingredient list shown in "At A Glance" mode should not change.

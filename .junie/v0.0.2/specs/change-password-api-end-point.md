@@ -10,6 +10,6 @@ Add a new end-point to `AuthController` inside `api` project.
 - Password should be hashed using argon2.
 - Endpoint should throw an error if the password is not changed successfully.
 - Endpoint should return a success response if the password is changed
-    successfully.
+  successfully.
 - Endpoint path should be `/api/auth/change-password` and it should be a `POST`
-    request.
+  request.

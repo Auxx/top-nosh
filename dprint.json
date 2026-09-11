@@ -49,7 +49,6 @@
     "lineWidth": 80,
     "newLineKind": "auto",
     "textWrap": "always",
-    "list.indentKind": "pythonMarkdown",
     "codeBlock.skipFormat": true,
     "codeBlock.preserveIndentation": true
   },
