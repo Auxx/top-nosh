@@ -6,6 +6,7 @@ Top Nosh needs a way to store, modify, and retrieve its configuration from the d
 
 Create a service in `api` project which will be responsible for configuration management together with required tables and migrations to support its functionality. 
 
+- The service should be available to all parts of `api` project.
 - Configuration should be stored as key value pairs.
 - Each value is a string field without length limitation - the values will be validated by other parts of the application and might contain long JSON data.
 - Each value can be `null`.
