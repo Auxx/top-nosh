@@ -17,7 +17,8 @@ Create a service in `api` project which will be responsible for configuration ma
 - Once a key is added it cannot be removed from the database, but its value can be set to `null`.
 - Add a set of methods to create and update configuration keys. If the key does not exist, the update method should insert it.
 - If a key does not exist, then try to retrieve its value from the environment variable, if all fails - return `null` instead.
-  - Environment variables are defined using uppercase snake case.
+  - Environment variables are defined using uppercase snake case, for example `FILES_STORAGE_TYPE` - implement automatic conversion.
+  - Environment variable fallback should only be implemented when reading a single key. All other operations should ignore environment variables.
 - It should be possible to access keys either by full name as a single string like `files.storage.type`, or by providing three separate string arguments `domain`, `group`, and `entity`.
 - There should be a method to query all keys and their values by `domain`.
 - There should be a method to query all keys and their values by `domain` and `group`.
