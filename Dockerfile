@@ -1,10 +1,9 @@
 # Stage 1: Build
-FROM node:24.20.0-bookworm-slim AS builder
+FROM node:24.20.0-alpine AS builder
 
 WORKDIR /app
 
-# Install build tools for native addons
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache python3 make g++
 
 COPY package*.json ./
 COPY prisma ./prisma/
@@ -14,25 +13,25 @@ RUN npm ci
 
 COPY . .
 
-RUN npx prisma generate
+RUN npx prisma@7.10.0 generate
 RUN npx nx run-many --target=build --projects=api,web --configuration=production
 
 # Stage 2: Production Runtime
-FROM node:24.20.0-bookworm-slim AS runner
+FROM node:24.20.0-alpine AS runner
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache python3 make g++
 
 COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma7.config.ts ./
-
 COPY docker/startup.sh ./
-RUN chmod +x ./startup.sh
 
-RUN npm ci --omit=dev && npm cache clean --force
-RUN npx -y prisma generate
+RUN chmod +x ./startup.sh
+RUN npm ci --omit=dev
+RUN npm cache clean --force
+RUN npx -y prisma@7.10.0 generate
 
 COPY --from=builder /app/dist ./dist
 
