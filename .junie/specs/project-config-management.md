@@ -4,7 +4,7 @@ Top Nosh needs a way to store, modify, and retrieve its configuration from the d
 
 ## Configuration Management Service requirements
 
-Create a service which will be responsible for configuration management together with required tables and migrations to support its functionality. 
+Create a service in `api` project which will be responsible for configuration management together with required tables and migrations to support its functionality. 
 
 - Configuration should be stored as key value pairs.
 - Each value is a string field without length limitation - the values will be validated by other parts of the application and might contain long JSON data.
@@ -12,3 +12,9 @@ Create a service which will be responsible for configuration management together
 - Each key should be composed from three parts: `domain`, `group`, and `entity`. They should be one string field in the database.
 - The key name should be all three parts joined by a dot. For example `files.storage.type`.
 - Each key name should be unique.
+- The table should follow best practices and include an auto-generated id, created at and updated at fields as it is done with other tables and models in the project.
+- Once a key is added it cannot be removed from the database, but its value can be set to `null`.
+- Add a set of methods to create, read and update configuration keys.
+- It should be possible to access keys either by full name as a single string like `files.storage.type`, or by providing three separate string arguments `domain`, `group`, and `entity`.
+- There should be a method to query all keys and their values by `domain`.
+- There should be a method to query all keys and their values by `domain` and `group`.
