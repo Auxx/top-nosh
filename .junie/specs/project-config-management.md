@@ -23,6 +23,7 @@ Create a service in `api` project which will be responsible for configuration ma
 - There should be a method to query all keys and their values by `domain`.
 - There should be a method to query all keys and their values by `domain` and `group`.
 - Keys with `null` values should be removed from key lists.
+- Add JSDoc documentation to all methods.
 
 ## Configuration Management Controller requirements
 
