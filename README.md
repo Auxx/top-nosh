@@ -1,140 +1,71 @@
-# TopNosh
+# Top Nosh
 
 A self-hosted recipe library management system with shopping lists.
 
-## Seed data
+## Project status
 
-```shell
-prisma db seed
+- Authorisation works.
+- Basic onboarding works.
+- Recipe management works.
+- User management works.
+- Shopping Lists management works but requires UI improvements, especially for
+  mobile devices.
+- File upload is not implemented yet.
+- OICD is not implemented yet.
+
+## Installation
+
+**Top Nosh** is only distributed as a Docker container. You will need to create
+an empty folder to store the database and specify some environment variables.
+
+It is recommended to use Docker Compose.
+
+```yml
+services:
+  top-nosh:
+    image: auxx/top-nosh:latest
+    container_name: top-nosh
+    volumes:
+      - /path/to/data:/app/data
+    environment:
+      SERVER_HTTP_DOMAIN: "http://your-domain:3000/"
+      SECURITY_JWT_SECRET: "your-secret-key-make-it-a-random-long-string"
+      SECURITY_JWT_EXPIRES_IN: "24h"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
 ```
 
-## Docker Deployment
+Replace `/path/to/data` with a path to the directory you wish to persist the
+database and other files.
 
-TopNosh is packaged as a single-container deployment where the NestJS API
-application serves both the REST API endpoints and the static Angular frontend
-SPA from a single Node.js process on port `3000`.
+Set `SERVER_HTTP_DOMAIN` to your domain. If running locally, you can use
+`http://localhost:3000`. It is advised to put Top Nosh behind a reverse proxy
+with an SSL termination if you plan to have a publicly accessible instance.
+Adjust the domain name accordingly.
 
-Database persistence (SQLite) and configuration files (`.env` for API,
-`app.properties` for Angular frontend) are maintained on the host machine and
-mounted into the container.
+`SECURITY_JWT_SECRET` should contain a random string of at least 32 characters.
 
-### 1. Configuration Setup
+`SECURITY_JWT_EXPIRES_IN` specifies how fast authentication tokens should
+expire. It is recommended to set this value as low as possible to improve the
+security of public instances. Top Nosh does not support automatic token refresh
+yet, so the recommended value is 24 hours (`24h`). Once token refresh is
+implemented, the recommended value will be 15 minutes (`15m`).
 
-Before building and running the container, create the configuration files from
-their provided examples and initialize the database file on the host.
+Other settings can be changed through the UI, but they can be set through
+environment variables too. UI will tell you which settings can be changed
+through environment variables and which variable names should be used.
 
-#### API Environment (`.env`)
+## First login
 
-Copy `.env.example` to `.env` and configure your secret keys and database URL:
+You will be able to create an account once you start and visit Top Nosh for the
+first time. You will be welcomed with a simple onboarding process.
 
-```bash
-cp .env.example .env
-```
+## IOCD support
 
-Ensure `DATABASE_URL` in `.env` points to the container path:
+IOCD support is not implemented yet but is planned in the near future.
 
-```env
-DATABASE_URL="file:/app/dev.db"
-JWT_SECRET="your-secure-jwt-secret"
-```
+## File uploads
 
-#### Frontend Configuration (`app.properties`)
-
-Copy `apps/web/public/assets/app.properties.example` to `app.properties` on the
-host:
-
-```bash
-cp apps/web/public/assets/app.properties.example app.properties
-```
-
-Configure runtime settings:
-
-```properties
-PRODUCTION=true
-API_URL=http://localhost:3000/api
-```
-
-#### Database Initialization
-
-Initialize or create the SQLite database file on the host before mounting:
-
-```bash
-# Touch file if not already existing
-touch dev.db
-
-# Apply database migrations
-npx prisma migrate deploy
-```
-
-### 2. Building the Docker Image
-
-Build the Docker image:
-
-```bash
-docker build -t top-nosh .
-```
-
-To rebuild the image without using cache:
-
-```bash
-docker build --no-cache -t top-nosh .
-```
-
-### 3. Running the Docker Container
-
-Run the container with volume mounts for the SQLite database, `.env`, and
-`app.properties`:
-
-#### Linux / macOS (Bash / Zsh)
-
-```bash
-docker run -d \
-  --name top-nosh \
-  -p 3000:3000 \
-  -v "$(pwd)/dev.db:/app/dev.db" \
-  -v "$(pwd)/.env:/app/.env" \
-  -v "$(pwd)/app.properties:/app/dist/apps/web/browser/assets/app.properties" \
-  top-nosh
-```
-
-#### Windows (PowerShell)
-
-```powershell
-docker run -d `
-  --name top-nosh `
-  -p 3000:3000 `
-  -v "${PWD}/dev.db:/app/dev.db" `
-  -v "${PWD}/.env:/app/.env" `
-  -v "${PWD}/app.properties:/app/dist/apps/web/browser/assets/app.properties" `
-  top-nosh
-```
-
-### 4. Verification
-
-Once the container is running:
-
-- **Web Interface**: Open `http://localhost:3000` in your browser to access the
-  Angular application.
-- **REST API**: Send requests to `http://localhost:3000/api` (e.g. `curl
-  http://localhost:3000/api`).
-- **Configuration Assets**: Verify mounted properties at
-  `http://localhost:3000/assets/app.properties`.
-
-### 5. Managing the Container
-
-- View logs:
-  ```bash
-  docker logs -f top-nosh
-  ```
-- Stop container:
-  ```bash
-  docker stop top-nosh
-  ```
-- Restart container:
-  ```bash
-  docker restart top-nosh
-  ```
-- Remove container:
-  ```bash
-  docker rm -f top-nosh
-  ```
+File uploads are not implemented yet but uploaded files will be stored inside
+the data folder by default in the future.

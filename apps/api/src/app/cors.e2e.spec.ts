@@ -24,11 +24,11 @@ describe('CORS Integration', () => {
     return app;
   };
 
-  describe('Default Origin (when CORS_ORIGIN is not set)', () => {
+  describe('Default Origin (when SERVER_DEVELOPMENT_DOMAIN is not set)', () => {
     let app: INestApplication;
 
     beforeAll(async () => {
-      delete process.env['CORS_ORIGIN'];
+      delete process.env['SERVER_DEVELOPMENT_DOMAIN'];
       app = await createTestApp();
     });
 
@@ -82,7 +82,7 @@ describe('CORS Integration', () => {
     let customApp: INestApplication;
 
     beforeAll(async () => {
-      process.env['CORS_ORIGIN'] = 'https://app.example.com/';
+      process.env['SERVER_DEVELOPMENT_DOMAIN'] = 'https://app.example.com/';
       customApp = await createTestApp();
     });
 

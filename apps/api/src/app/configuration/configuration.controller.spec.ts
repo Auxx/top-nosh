@@ -23,7 +23,7 @@ describe('Configuration Controller', () => {
   });
 
   it('should return dotenv configuration with configured CORS_ORIGIN', () => {
-    process.env['CORS_ORIGIN'] = 'http://localhost:4200/';
+    process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:4200/';
     expect(controller.webProperties()).toBe(
       'PRODUCTION=true\nAPI_URL=http://localhost:4200/\n'
     );

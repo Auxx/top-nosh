@@ -20,3 +20,8 @@ docker push auxx/top-nosh
 
 docker exec -it top-nosh /bin/sh
 ```
+
+```shell
+docker build -t top-nosh .
+docker run --name top-nosh -p "3000:3000" -v "./data:/app/data" -e SERVER_HTTP_DOMAIN="http://localhost:3000/" top-nosh
+```

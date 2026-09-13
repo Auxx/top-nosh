@@ -29,7 +29,7 @@ describe('Configuration Endpoint E2E', () => {
   });
 
   it('should serve /assets/app.properties directly without /api prefix', async () => {
-    process.env['CORS_ORIGIN'] = 'http://localhost:4200/';
+    process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:4200/';
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -41,7 +41,7 @@ describe('Configuration Endpoint E2E', () => {
   });
 
   it('should be publicly accessible without authorization headers', async () => {
-    process.env['CORS_ORIGIN'] = 'https://app.example.com/';
+    process.env['SERVER_HTTP_DOMAIN'] = 'https://app.example.com/';
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -53,7 +53,7 @@ describe('Configuration Endpoint E2E', () => {
   });
 
   it('should handle undefined CORS_ORIGIN gracefully', async () => {
-    delete process.env['CORS_ORIGIN'];
+    delete process.env['SERVER_HTTP_DOMAIN'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())
