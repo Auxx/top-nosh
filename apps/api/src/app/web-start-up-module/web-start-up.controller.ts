@@ -1,7 +1,7 @@
 import { Controller, Get, Header } from '@nestjs/common';
 
 @Controller()
-export class ConfigurationController {
+export class WebStartUpController {
   @Get('assets/app.properties')
   @Header('Content-Type', 'text/plain; charset=utf-8')
   webProperties(): string {

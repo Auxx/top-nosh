@@ -151,7 +151,7 @@ Automated tests will be implemented at two levels:
 ### ✓ Step 1: Implement Configuration controller, module, and unit tests
 The `Configuration` controller is created, registered in `ConfigurationModule` and `AppModule`, generating dotenv configuration with unit tests passing.
 
-- Create `apps/api/src/app/configuration/configuration.controller.ts` defining controller class `Configuration` (and alias `ConfigurationController`).
+- Create `apps/api/src/app/configuration/configuration.controller.ts` defining controller class `Configuration` (and alias `WebStartUpController`).
 - Implement the `webProperties` method decorated with `@Get('assets/app.properties')` and `@Header('Content-Type', 'text/plain; charset=utf-8')`.
 - Read `process.env['CORS_ORIGIN'] ?? ''` and generate the response string with `PRODUCTION=true` and `API_URL=<CORS_ORIGIN>`.
 - Create `apps/api/src/app/configuration/configuration.module.ts` declaring `Configuration` controller.
