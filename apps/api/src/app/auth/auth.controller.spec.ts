@@ -6,6 +6,8 @@ describe('AuthController', () => {
   let controller: AuthController;
   let authService: {
     login: jest.Mock;
+    logout: jest.Mock;
+    refresh: jest.Mock;
     changePassword: jest.Mock;
     onboardingRequired: jest.Mock;
     onboardUser: jest.Mock;
@@ -14,6 +16,8 @@ describe('AuthController', () => {
   beforeEach(async () => {
     authService = {
       login: jest.fn(),
+      logout: jest.fn(),
+      refresh: jest.fn(),
       changePassword: jest.fn(),
       onboardingRequired: jest.fn(),
       onboardUser: jest.fn()
@@ -74,6 +78,7 @@ describe('AuthController', () => {
 
       const expectedResponse = {
         token: 'mock-jwt-token',
+        refreshToken: 'mock-refresh-token',
         forcePasswordChange: true
       };
 
@@ -82,6 +87,71 @@ describe('AuthController', () => {
       const result = await controller.login(loginDto);
 
       expect(authService.login).toHaveBeenCalledWith(loginDto);
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('refresh', () => {
+    it('should delegate refresh to AuthService.refresh and return result', async () => {
+      const refreshTokenDto = {
+        refreshToken: 'valid-refresh-token'
+      };
+
+      const expectedResponse = {
+        token: 'new-mock-token',
+        refreshToken: 'new-mock-refresh-token'
+      };
+
+      authService.refresh.mockResolvedValue(expectedResponse);
+
+      const result = await controller.refresh(refreshTokenDto);
+
+      expect(authService.refresh).toHaveBeenCalledWith('valid-refresh-token');
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('logout', () => {
+    it('should delegate logout to AuthService.logout without refreshToken and return result', async () => {
+      const req = {
+        user: {
+          userId: 'user-123',
+          token: 'token-abc'
+        }
+      };
+
+      const expectedResponse = {
+        message: 'Logged out successfully'
+      };
+
+      authService.logout.mockResolvedValue(expectedResponse);
+
+      const result = await controller.logout(req);
+
+      expect(authService.logout).toHaveBeenCalledWith('user-123', 'token-abc', undefined);
+      expect(result).toEqual(expectedResponse);
+    });
+
+    it('should delegate logout to AuthService.logout with refreshToken and return result', async () => {
+      const req = {
+        user: {
+          userId: 'user-123',
+          token: 'token-abc'
+        }
+      };
+      const logoutDto = {
+        refreshToken: 'refresh-xyz'
+      };
+
+      const expectedResponse = {
+        message: 'Logged out successfully'
+      };
+
+      authService.logout.mockResolvedValue(expectedResponse);
+
+      const result = await controller.logout(req, logoutDto);
+
+      expect(authService.logout).toHaveBeenCalledWith('user-123', 'token-abc', 'refresh-xyz');
       expect(result).toEqual(expectedResponse);
     });
   });

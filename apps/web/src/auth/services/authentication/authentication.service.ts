@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 import { OnboardingRequiredResponse, OnboardUserPayload, OnboardUserResponse } from './authentication.service.types';
 
@@ -9,6 +9,7 @@ export * from './authentication.service.types';
 export interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
+  refreshToken: string | null;
   userId: string | null;
 }
 
@@ -34,6 +35,7 @@ const extractUserIdFromToken = (token: string | null): string | null => {
 const guestAuthState = (): AuthState => ({
   isAuthenticated: false,
   token: null,
+  refreshToken: null,
   userId: null
 });
 
@@ -53,6 +55,7 @@ export class AuthenticationService {
 
       if (typeof parsed?.isAuthenticated === 'boolean') {
         const token = typeof parsed.token === 'string' ? parsed.token : null;
+        const refreshToken = typeof parsed.refreshToken === 'string' ? parsed.refreshToken : null;
         const userId = typeof parsed.userId === 'string'
           ? parsed.userId
           : extractUserIdFromToken(token);
@@ -60,6 +63,7 @@ export class AuthenticationService {
         return {
           isAuthenticated: parsed.isAuthenticated,
           token,
+          refreshToken,
           userId
         };
       }
@@ -105,7 +109,7 @@ export class AuthenticationService {
 
   readonly login = (email: string, password: string): Observable<{ forcePasswordChange: boolean; }> =>
     this.http
-      .post<{ token: string; forcePasswordChange: boolean; }>(
+      .post<{ token: string; refreshToken?: string; forcePasswordChange: boolean; }>(
         '/auth/login',
         { email, password },
         { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
@@ -115,10 +119,29 @@ export class AuthenticationService {
           this.updateState({
             isAuthenticated: true,
             token: response.token,
+            refreshToken: typeof response.refreshToken === 'string' ? response.refreshToken : null,
             userId: extractUserIdFromToken(response.token)
           });
 
           return { forcePasswordChange: response.forcePasswordChange };
+        })
+      );
+
+  readonly refreshToken = (): Observable<{ token: string; refreshToken: string; }> =>
+    this.http
+      .post<{ token: string; refreshToken: string; }>(
+        '/auth/refresh',
+        { refreshToken: this.state$.value.refreshToken },
+        { context: new HttpContext().set(HTTP_AUTH_ENABLED, false) }
+      )
+      .pipe(
+        tap(response => {
+          this.updateState({
+            isAuthenticated: true,
+            token: response.token,
+            refreshToken: response.refreshToken,
+            userId: extractUserIdFromToken(response.token)
+          });
         })
       );
 

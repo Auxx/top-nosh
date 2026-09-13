@@ -33,6 +33,7 @@ describe('AuthenticationService', () => {
   it('should have methods declared as arrow function properties', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'state')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'login')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'refreshToken')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'changePassword')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'logout')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'onboardingRequired')).toBe(true);
@@ -44,6 +45,7 @@ describe('AuthenticationService', () => {
       expect(state).toEqual({
         isAuthenticated: false,
         token: null,
+        refreshToken: null,
         userId: null
       });
       done();
@@ -56,6 +58,7 @@ describe('AuthenticationService', () => {
     const savedState: AuthState = {
       isAuthenticated: true,
       token: mockToken,
+      refreshToken: 'mock-refresh-token',
       userId: 'user-123'
     };
     localStorage.setItem(authStorageKey, JSON.stringify(savedState));
@@ -95,6 +98,7 @@ describe('AuthenticationService', () => {
       expect(state).toEqual({
         isAuthenticated: false,
         token: null,
+        refreshToken: null,
         userId: null
       });
       done();
@@ -104,6 +108,7 @@ describe('AuthenticationService', () => {
   it('should send POST request to /auth/login, update state with userId from token, and save to localStorage on successful login', done => {
     const testEmail = 'user@example.com';
     const testPassword = 'password123';
+    const testRefreshToken = 'mock-refresh-token-123';
     const payload = btoa(JSON.stringify({ sub: 'user-123', email: testEmail }));
     const mockToken = `header.${payload}.signature`;
 
@@ -118,12 +123,14 @@ describe('AuthenticationService', () => {
         expect(states[states.length - 1]).toEqual({
           isAuthenticated: true,
           token: mockToken,
+          refreshToken: testRefreshToken,
           userId: 'user-123'
         });
         const stored = JSON.parse(localStorage.getItem(authStorageKey) || '{}');
         expect(stored).toEqual({
           isAuthenticated: true,
           token: mockToken,
+          refreshToken: testRefreshToken,
           userId: 'user-123'
         });
         done();
@@ -134,7 +141,7 @@ describe('AuthenticationService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ email: testEmail, password: testPassword });
     expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
-    req.flush({ token: mockToken, forcePasswordChange: false });
+    req.flush({ token: mockToken, refreshToken: testRefreshToken, forcePasswordChange: false });
   });
 
   it('should send POST request to /auth/change-password and emit true on success', done => {
@@ -188,6 +195,7 @@ describe('AuthenticationService', () => {
         expect(currentState).toEqual({
           isAuthenticated: false,
           token: null,
+          refreshToken: null,
           userId: null
         });
         done();
@@ -278,6 +286,7 @@ describe('AuthenticationService', () => {
     const savedState: AuthState = {
       isAuthenticated: true,
       token: mockToken,
+      refreshToken: 'mock-refresh-token',
       userId: 'user-123'
     };
     localStorage.setItem(authStorageKey, JSON.stringify(savedState));
@@ -299,12 +308,14 @@ describe('AuthenticationService', () => {
       expect(state).toEqual({
         isAuthenticated: false,
         token: null,
+        refreshToken: null,
         userId: null
       });
       const stored = JSON.parse(localStorage.getItem(authStorageKey) || '{}');
       expect(stored).toEqual({
         isAuthenticated: false,
         token: null,
+        refreshToken: null,
         userId: null
       });
       done();
@@ -327,5 +338,110 @@ describe('AuthenticationService', () => {
 
     const req = httpTesting.expectOne('/auth/login');
     req.flush({ token: mockToken, forcePasswordChange: false });
+  });
+
+  describe('refreshToken', () => {
+    it('should send POST request to /auth/refresh with current refreshToken and HTTP_AUTH_ENABLED false, update state and localStorage', done => {
+      const initialPayload = btoa(JSON.stringify({ sub: 'user-123', email: 'user@example.com' }));
+      const initialToken = `header.${initialPayload}.signature`;
+      const initialRefreshToken = 'initial-refresh-token';
+
+      const savedState: AuthState = {
+        isAuthenticated: true,
+        token: initialToken,
+        refreshToken: initialRefreshToken,
+        userId: 'user-123'
+      };
+      localStorage.setItem(authStorageKey, JSON.stringify(savedState));
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideHttpClient(),
+          provideHttpClientTesting(),
+          AuthenticationService
+        ]
+      });
+      const loggedInService = TestBed.inject(AuthenticationService);
+      httpTesting = TestBed.inject(HttpTestingController);
+
+      const newPayload = btoa(JSON.stringify({ sub: 'user-123', email: 'user@example.com' }));
+      const newToken = `header.${newPayload}.new-signature`;
+      const newRefreshToken = 'new-refresh-token-456';
+
+      loggedInService.refreshToken().subscribe({
+        next: response => {
+          expect(response).toEqual({
+            token: newToken,
+            refreshToken: newRefreshToken
+          });
+
+          loggedInService.state().subscribe(state => {
+            expect(state).toEqual({
+              isAuthenticated: true,
+              token: newToken,
+              refreshToken: newRefreshToken,
+              userId: 'user-123'
+            });
+
+            const stored = JSON.parse(localStorage.getItem(authStorageKey) || '{}');
+            expect(stored).toEqual({
+              isAuthenticated: true,
+              token: newToken,
+              refreshToken: newRefreshToken,
+              userId: 'user-123'
+            });
+            done();
+          });
+        }
+      });
+
+      const req = httpTesting.expectOne('/auth/refresh');
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ refreshToken: initialRefreshToken });
+      expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
+      req.flush({ token: newToken, refreshToken: newRefreshToken });
+    });
+
+    it('should propagate error on refreshToken failure and not update state', done => {
+      const initialPayload = btoa(JSON.stringify({ sub: 'user-123', email: 'user@example.com' }));
+      const initialToken = `header.${initialPayload}.signature`;
+      const initialRefreshToken = 'invalid-refresh-token';
+
+      const savedState: AuthState = {
+        isAuthenticated: true,
+        token: initialToken,
+        refreshToken: initialRefreshToken,
+        userId: 'user-123'
+      };
+      localStorage.setItem(authStorageKey, JSON.stringify(savedState));
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideHttpClient(),
+          provideHttpClientTesting(),
+          AuthenticationService
+        ]
+      });
+      const loggedInService = TestBed.inject(AuthenticationService);
+      httpTesting = TestBed.inject(HttpTestingController);
+
+      loggedInService.refreshToken().subscribe({
+        next: () => {
+          fail('Should not succeed on 403');
+        },
+        error: error => {
+          expect(error.status).toBe(403);
+          loggedInService.state().subscribe(state => {
+            expect(state).toEqual(savedState);
+            done();
+          });
+        }
+      });
+
+      const req = httpTesting.expectOne('/auth/refresh');
+      req.flush({ message: 'Unauthorized' }, { status: 403, statusText: 'Forbidden' });
+    });
   });
 });

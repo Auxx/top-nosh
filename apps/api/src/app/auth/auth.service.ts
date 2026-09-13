@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '@top-nosh/data-access';
+import { PrismaService, TokenType } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
 import { ChangePasswordResponse } from './dto/change-password.dto';
 import { JwtPayload, LoginDto, LoginResponse } from './dto/login.dto';
+import { LogoutResponse } from './dto/logout.dto';
 import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
+import { RefreshTokenResponse } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -79,10 +81,96 @@ export class AuthService {
     };
 
     const token = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '30d' });
+
+    await this.prisma.userToken.create({
+      data: {
+        userId: user.id,
+        token,
+        type: TokenType.AUTHENTICATION
+      }
+    });
+
+    await this.prisma.userToken.create({
+      data: {
+        userId: user.id,
+        token: refreshToken,
+        type: TokenType.REFRESH
+      }
+    });
 
     return {
       token,
+      refreshToken,
       forcePasswordChange: user.forcePasswordChange
+    };
+  }
+
+  async logout(userId: string, token: string, refreshToken?: string): Promise<LogoutResponse> {
+    const tokensToDelete = [ token, ...(refreshToken ? [ refreshToken ] : []) ];
+    await this.prisma.userToken.deleteMany({
+      where: {
+        userId,
+        token: { in: tokensToDelete }
+      }
+    });
+
+    return { message: 'Logged out successfully' };
+  }
+
+  async refresh(refreshToken: string): Promise<RefreshTokenResponse> {
+    let payload: JwtPayload;
+    try {
+      payload = await this.jwtService.verifyAsync<JwtPayload>(refreshToken);
+    } catch {
+      throw new HttpException('Unauthorized', HttpStatus.FORBIDDEN);
+    }
+
+    const tokenRecord = await this.prisma.userToken.findFirst({
+      where: {
+        token: refreshToken,
+        userId: payload.sub,
+        type: TokenType.REFRESH
+      }
+    });
+
+    if (!tokenRecord) {
+      throw new HttpException('Unauthorized', HttpStatus.FORBIDDEN);
+    }
+
+    const newPayload: JwtPayload = {
+      sub: payload.sub,
+      email: payload.email
+    };
+
+    const newAuthToken = this.jwtService.sign(newPayload);
+    const newRefreshToken = this.jwtService.sign(newPayload, { expiresIn: '30d' });
+
+    await this.prisma.$transaction(async tx => {
+      await tx.userToken.delete({
+        where: { id: tokenRecord.id }
+      });
+
+      await tx.userToken.create({
+        data: {
+          userId: payload.sub,
+          token: newAuthToken,
+          type: TokenType.AUTHENTICATION
+        }
+      });
+
+      await tx.userToken.create({
+        data: {
+          userId: payload.sub,
+          token: newRefreshToken,
+          type: TokenType.REFRESH
+        }
+      });
+    });
+
+    return {
+      token: newAuthToken,
+      refreshToken: newRefreshToken
     };
   }
 

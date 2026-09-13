@@ -1,7 +1,7 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@top-nosh/data-access';
+import { PrismaService, TokenType } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
 import { AuthService } from './auth.service';
 
@@ -19,9 +19,17 @@ describe('AuthService', () => {
       create: jest.Mock;
       update: jest.Mock;
     };
+    userToken: {
+      create: jest.Mock;
+      delete: jest.Mock;
+      deleteMany: jest.Mock;
+      findFirst: jest.Mock;
+    };
+    $transaction: jest.Mock;
   };
   let jwtService: {
     sign: jest.Mock;
+    verifyAsync: jest.Mock;
   };
 
   const mockUser = {
@@ -43,11 +51,19 @@ describe('AuthService', () => {
         findUnique: jest.fn(),
         create: jest.fn(),
         update: jest.fn()
-      }
+      },
+      userToken: {
+        create: jest.fn(),
+        delete: jest.fn(),
+        deleteMany: jest.fn(),
+        findFirst: jest.fn()
+      },
+      $transaction: jest.fn().mockImplementation(cb => cb(prismaService))
     };
 
     jwtService = {
-      sign: jest.fn().mockReturnValue('mocked.jwt.token')
+      sign: jest.fn().mockReturnValue('mocked.jwt.token'),
+      verifyAsync: jest.fn()
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -170,21 +186,54 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should return JWT token and forcePasswordChange when credentials are valid', async () => {
+    it('should return auth token, refresh token and forcePasswordChange when credentials are valid', async () => {
       prismaService.user.findUnique.mockResolvedValue(mockUser);
       (argon2.verify as jest.Mock).mockResolvedValue(true);
+      jwtService.sign
+        .mockReturnValueOnce('mocked.jwt.token')
+        .mockReturnValueOnce('mocked.refresh.token');
+      prismaService.userToken.create.mockResolvedValue({
+        id: 'token-id',
+        userId: mockUser.id,
+        token: 'mocked.jwt.token',
+        type: TokenType.AUTHENTICATION,
+        createdAt: new Date()
+      });
 
       const result = await service.login({
         email: 'aux@hexmode.org',
         password: 'Pass1234!!!!'
       });
 
-      expect(jwtService.sign).toHaveBeenCalledWith({
+      expect(jwtService.sign).toHaveBeenNthCalledWith(1, {
         sub: mockUser.id,
         email: mockUser.email
       });
+      expect(jwtService.sign).toHaveBeenNthCalledWith(
+        2,
+        {
+          sub: mockUser.id,
+          email: mockUser.email
+        },
+        { expiresIn: '30d' }
+      );
+      expect(prismaService.userToken.create).toHaveBeenNthCalledWith(1, {
+        data: {
+          userId: mockUser.id,
+          token: 'mocked.jwt.token',
+          type: TokenType.AUTHENTICATION
+        }
+      });
+      expect(prismaService.userToken.create).toHaveBeenNthCalledWith(2, {
+        data: {
+          userId: mockUser.id,
+          token: 'mocked.refresh.token',
+          type: TokenType.REFRESH
+        }
+      });
       expect(result).toEqual({
         token: 'mocked.jwt.token',
+        refreshToken: 'mocked.refresh.token',
         forcePasswordChange: true
       });
     });
@@ -198,6 +247,120 @@ describe('AuthService', () => {
           password: 'Pass1234!!!!'
         })
       ).rejects.toThrow(UnauthorizedException);
+      expect(prismaService.userToken.create).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('should delete the user token matching userId and token when no refreshToken is provided', async () => {
+      prismaService.userToken.deleteMany.mockResolvedValue({ count: 1 });
+
+      const result = await service.logout('user-123', 'some-token');
+
+      expect(prismaService.userToken.deleteMany).toHaveBeenCalledWith({
+        where: {
+          userId: 'user-123',
+          token: { in: [ 'some-token' ] }
+        }
+      });
+      expect(result).toEqual({ message: 'Logged out successfully' });
+    });
+
+    it('should delete both tokens matching userId and tokens when refreshToken is provided', async () => {
+      prismaService.userToken.deleteMany.mockResolvedValue({ count: 2 });
+
+      const result = await service.logout('user-123', 'some-token', 'some-refresh-token');
+
+      expect(prismaService.userToken.deleteMany).toHaveBeenCalledWith({
+        where: {
+          userId: 'user-123',
+          token: { in: [ 'some-token', 'some-refresh-token' ] }
+        }
+      });
+      expect(result).toEqual({ message: 'Logged out successfully' });
+    });
+  });
+
+  describe('refresh', () => {
+    const validRefreshToken = 'valid.refresh.token';
+    const refreshPayload = {
+      sub: 'user-123',
+      email: 'aux@hexmode.org'
+    };
+
+    it('should rotate tokens and return new token pair when refresh token is valid', async () => {
+      jwtService.verifyAsync.mockResolvedValue(refreshPayload);
+      prismaService.userToken.findFirst.mockResolvedValue({
+        id: 'token-uuid-1',
+        token: validRefreshToken,
+        userId: 'user-123',
+        type: TokenType.REFRESH
+      });
+      jwtService.sign
+        .mockReturnValueOnce('new.auth.token')
+        .mockReturnValueOnce('new.refresh.token');
+
+      const result = await service.refresh(validRefreshToken);
+
+      expect(jwtService.verifyAsync).toHaveBeenCalledWith(validRefreshToken);
+      expect(prismaService.userToken.findFirst).toHaveBeenCalledWith({
+        where: {
+          token: validRefreshToken,
+          userId: 'user-123',
+          type: TokenType.REFRESH
+        }
+      });
+      expect(prismaService.$transaction).toHaveBeenCalled();
+      expect(prismaService.userToken.delete).toHaveBeenCalledWith({
+        where: { id: 'token-uuid-1' }
+      });
+      expect(prismaService.userToken.create).toHaveBeenNthCalledWith(1, {
+        data: {
+          userId: 'user-123',
+          token: 'new.auth.token',
+          type: TokenType.AUTHENTICATION
+        }
+      });
+      expect(prismaService.userToken.create).toHaveBeenNthCalledWith(2, {
+        data: {
+          userId: 'user-123',
+          token: 'new.refresh.token',
+          type: TokenType.REFRESH
+        }
+      });
+      expect(result).toEqual({
+        token: 'new.auth.token',
+        refreshToken: 'new.refresh.token'
+      });
+    });
+
+    it('should throw 403 Forbidden when refresh token signature is invalid or expired', async () => {
+      jwtService.verifyAsync.mockRejectedValue(new Error('Token expired'));
+
+      await expect(service.refresh('invalid.token')).rejects.toThrow(HttpException);
+      await expect(service.refresh('invalid.token')).rejects.toMatchObject({
+        status: HttpStatus.FORBIDDEN
+      });
+      expect(prismaService.userToken.findFirst).not.toHaveBeenCalled();
+    });
+
+    it('should throw 403 Forbidden when refresh token is revoked or not found in database', async () => {
+      jwtService.verifyAsync.mockResolvedValue(refreshPayload);
+      prismaService.userToken.findFirst.mockResolvedValue(null);
+
+      await expect(service.refresh('revoked.token')).rejects.toThrow(HttpException);
+      await expect(service.refresh('revoked.token')).rejects.toMatchObject({
+        status: HttpStatus.FORBIDDEN
+      });
+      expect(prismaService.userToken.findFirst).toHaveBeenCalledWith({
+        where: {
+          token: 'revoked.token',
+          userId: 'user-123',
+          type: TokenType.REFRESH
+        }
+      });
+      expect(prismaService.userToken.delete).not.toHaveBeenCalled();
+      expect(prismaService.userToken.create).not.toHaveBeenCalled();
     });
   });
 
