@@ -5,7 +5,7 @@ export class ConfigurationController {
   @Get('assets/app.properties')
   @Header('Content-Type', 'text/plain; charset=utf-8')
   webProperties(): string {
-    const apiUrl = process.env['CORS_ORIGIN'] ?? '';
+    const apiUrl = process.env['SERVER_HTTP_DOMAIN'] ?? '';
     return `PRODUCTION=true\nAPI_URL=${apiUrl}\n`;
   }
 }
