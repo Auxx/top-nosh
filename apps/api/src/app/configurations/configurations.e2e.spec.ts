@@ -1,12 +1,14 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService, TokenType } from '@top-nosh/data-access';
 import request from 'supertest';
 import { AppModule } from '../app.module';
 
 describe('Configurations E2E', () => {
   let app: INestApplication;
   let jwtService: JwtService;
+  let prisma: PrismaService;
   let authToken: string;
 
   const originalEnv = process.env;
@@ -25,14 +27,44 @@ describe('Configurations E2E', () => {
     await app.init();
 
     jwtService = moduleRef.get<JwtService>(JwtService);
+    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     authToken = jwtService.sign({
       sub: 'test-user-id',
       email: 'test@example.com'
     });
+
+    await prisma.user.upsert({
+      where: { id: 'test-user-id' },
+      create: {
+        id: 'test-user-id',
+        email: 'test@example.com',
+        fullName: 'Test User',
+        passwordHash: 'dummy'
+      },
+      update: {}
+    });
+
+    await prisma.userToken.upsert({
+      where: { token: authToken },
+      create: {
+        token: authToken,
+        userId: 'test-user-id',
+        type: TokenType.AUTHENTICATION
+      },
+      update: {}
+    });
   });
 
   afterAll(async () => {
+    if (prisma) {
+      await prisma.userToken.deleteMany({
+        where: { userId: 'test-user-id' }
+      });
+      await prisma.user.deleteMany({
+        where: { id: 'test-user-id' }
+      });
+    }
     await app.close();
     process.env = originalEnv;
   });
