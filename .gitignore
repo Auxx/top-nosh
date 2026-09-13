@@ -52,3 +52,4 @@ dev.db
 prod.db
 app.properties
 junie.properties
+/storage
