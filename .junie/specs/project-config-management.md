@@ -11,7 +11,7 @@ management together with required tables and migrations to support its
 functionality.
 
 - The service should be available to all parts of `api` project.
-- Configuration should be stored as key value pairs.
+- Configuration should be stored as key value pairs in the database.
 - Each value is a string field without length limitation - the values will be
   validated by other parts of the application and might contain long JSON data.
 - Each value can be `null`.
@@ -41,6 +41,9 @@ functionality.
   `group`.
 - Keys with `null` values should be removed from key lists.
 - Add JSDoc documentation to all methods.
+- The following keys should NEVER be updated, throw an error on an attempt:
+  - `prisma.database.url`
+  - `server.http.port`
 
 ## Configuration Management Controller requirements
 
