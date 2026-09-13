@@ -6,6 +6,10 @@
 - [x] Dashboard page
 - [x] Implement shopping list
 
+```shell
+prisma generate
+```
+
 ## Docker
 
 ### Build, tag, and push image

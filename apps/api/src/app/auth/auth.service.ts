@@ -4,6 +4,7 @@ import { PrismaService } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
 import { ChangePasswordResponse } from './dto/change-password.dto';
 import { JwtPayload, LoginDto, LoginResponse } from './dto/login.dto';
+import { LogoutResponse } from './dto/logout.dto';
 import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
 
 @Injectable()
@@ -80,10 +81,28 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload);
 
+    await this.prisma.userToken.create({
+      data: {
+        userId: user.id,
+        token
+      }
+    });
+
     return {
       token,
       forcePasswordChange: user.forcePasswordChange
     };
+  }
+
+  async logout(userId: string, token: string): Promise<LogoutResponse> {
+    await this.prisma.userToken.deleteMany({
+      where: {
+        userId,
+        token
+      }
+    });
+
+    return { message: 'Logged out successfully' };
   }
 
   async changePassword(userId: string, newPassword: string): Promise<ChangePasswordResponse> {

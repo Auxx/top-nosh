@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } fro
 import { AuthService } from './auth.service';
 import { ChangePasswordDto, ChangePasswordResponse } from './dto/change-password.dto';
 import { LoginDto, LoginResponse } from './dto/login.dto';
+import { LogoutResponse } from './dto/logout.dto';
 import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -23,6 +24,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto): Promise<LoginResponse> {
     return this.authService.login(loginDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(
+    @Req() req: { user: { userId: string; token: string; }; }
+  ): Promise<LogoutResponse> {
+    return this.authService.logout(req.user.userId, req.user.token);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -19,6 +19,11 @@ describe('AuthService', () => {
       create: jest.Mock;
       update: jest.Mock;
     };
+    userToken: {
+      create: jest.Mock;
+      deleteMany: jest.Mock;
+      findFirst: jest.Mock;
+    };
   };
   let jwtService: {
     sign: jest.Mock;
@@ -43,6 +48,11 @@ describe('AuthService', () => {
         findUnique: jest.fn(),
         create: jest.fn(),
         update: jest.fn()
+      },
+      userToken: {
+        create: jest.fn(),
+        deleteMany: jest.fn(),
+        findFirst: jest.fn()
       }
     };
 
@@ -173,6 +183,12 @@ describe('AuthService', () => {
     it('should return JWT token and forcePasswordChange when credentials are valid', async () => {
       prismaService.user.findUnique.mockResolvedValue(mockUser);
       (argon2.verify as jest.Mock).mockResolvedValue(true);
+      prismaService.userToken.create.mockResolvedValue({
+        id: 'token-id',
+        userId: mockUser.id,
+        token: 'mocked.jwt.token',
+        createdAt: new Date()
+      });
 
       const result = await service.login({
         email: 'aux@hexmode.org',
@@ -182,6 +198,12 @@ describe('AuthService', () => {
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: mockUser.id,
         email: mockUser.email
+      });
+      expect(prismaService.userToken.create).toHaveBeenCalledWith({
+        data: {
+          userId: mockUser.id,
+          token: 'mocked.jwt.token'
+        }
       });
       expect(result).toEqual({
         token: 'mocked.jwt.token',
@@ -198,6 +220,23 @@ describe('AuthService', () => {
           password: 'Pass1234!!!!'
         })
       ).rejects.toThrow(UnauthorizedException);
+      expect(prismaService.userToken.create).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('should delete the user token matching userId and token', async () => {
+      prismaService.userToken.deleteMany.mockResolvedValue({ count: 1 });
+
+      const result = await service.logout('user-123', 'some-token');
+
+      expect(prismaService.userToken.deleteMany).toHaveBeenCalledWith({
+        where: {
+          userId: 'user-123',
+          token: 'some-token'
+        }
+      });
+      expect(result).toEqual({ message: 'Logged out successfully' });
     });
   });
 

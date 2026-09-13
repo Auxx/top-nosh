@@ -6,6 +6,7 @@ describe('AuthController', () => {
   let controller: AuthController;
   let authService: {
     login: jest.Mock;
+    logout: jest.Mock;
     changePassword: jest.Mock;
     onboardingRequired: jest.Mock;
     onboardUser: jest.Mock;
@@ -14,6 +15,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     authService = {
       login: jest.fn(),
+      logout: jest.fn(),
       changePassword: jest.fn(),
       onboardingRequired: jest.fn(),
       onboardUser: jest.fn()
@@ -82,6 +84,28 @@ describe('AuthController', () => {
       const result = await controller.login(loginDto);
 
       expect(authService.login).toHaveBeenCalledWith(loginDto);
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('logout', () => {
+    it('should delegate logout to AuthService.logout and return result', async () => {
+      const req = {
+        user: {
+          userId: 'user-123',
+          token: 'token-abc'
+        }
+      };
+
+      const expectedResponse = {
+        message: 'Logged out successfully'
+      };
+
+      authService.logout.mockResolvedValue(expectedResponse);
+
+      const result = await controller.logout(req);
+
+      expect(authService.logout).toHaveBeenCalledWith('user-123', 'token-abc');
       expect(result).toEqual(expectedResponse);
     });
   });
