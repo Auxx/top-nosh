@@ -161,10 +161,31 @@ model StorageOption {
   externalUrl String    @map("external_url")
   username    String?
   password    String?
+  files       File[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
 
   @@index([deletedAt])
   @@map("storage_options")
+}
+
+model File {
+  id                String        @id @default(uuid())
+  originalFileName  String        @map("original_file_name")
+  fileSize          Int           @map("file_size")
+  mimeType          String        @map("mime_type")
+  generatedFileName String        @map("generated_file_name")
+  storageId         String        @map("storage_id")
+  locationPath      String        @map("location_path")
+  state             String        @default("staging")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  deletedAt         DateTime?     @map("deleted_at")
+  storage           StorageOption @relation(fields: [storageId], references: [id])
+
+  @@index([storageId])
+  @@index([deletedAt])
+  @@index([state])
+  @@map("files")
 }
