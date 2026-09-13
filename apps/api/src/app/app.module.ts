@@ -6,6 +6,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { ConfigurationsModule } from './configurations/configurations.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { SharingModule } from './sharing/sharing.module';
@@ -35,6 +36,7 @@ function getStaticRootPath(): string {
       exclude: [ '/api{/*path}' ]
     }),
     PrismaModule,
+    ConfigurationsModule,
     AuthModule,
     WebStartUpModule,
     DashboardModule,
