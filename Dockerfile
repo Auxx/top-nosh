@@ -23,6 +23,8 @@ WORKDIR /app
 
 RUN apk add --no-cache python3 make g++
 
+RUN mkdir ./data
+
 COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma7.config.ts ./
@@ -35,8 +37,13 @@ RUN npx -y prisma@7.10.0 generate
 
 COPY --from=builder /app/dist ./dist
 
-ENV PORT=3000
 ENV NODE_ENV=production
+ENV SERVER_HTTP_PORT=3000
+ENV SERVER_DEVELOPMENT_MODE=false
+ENV PRISMA_DATABASE_URL=file:/app/data/top-nosh.db
+
+RUN ls -lA /app
+RUN ls -lA /app/data
 
 EXPOSE 3000
 
