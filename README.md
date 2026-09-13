@@ -48,9 +48,8 @@ Adjust the domain name accordingly.
 
 `SECURITY_JWT_EXPIRES_IN` specifies how fast authentication tokens should
 expire. It is recommended to set this value as low as possible to improve the
-security of public instances. Top Nosh does not support automatic token refresh
-yet, so the recommended value is 24 hours (`24h`). Once token refresh is
-implemented, the recommended value will be 15 minutes (`15m`).
+security of public instances. Top Nosh does support automatic token refresh, so
+the recommended value is 15 minutes (`15m`).
 
 Other settings can be changed through the UI, but they can be set through
 environment variables too. UI will tell you which settings can be changed

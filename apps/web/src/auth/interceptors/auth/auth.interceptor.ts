@@ -5,6 +5,7 @@ import { catchError, finalize, map, Observable, share, switchMap, take, throwErr
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { HTTP_AUTH_ENABLED } from './auth.interceptor.types';
 
+// TODO Refactor to use const instead of let
 let refreshObservable$: Observable<string> | null = null;
 
 export const resetAuthInterceptorState = () => {
