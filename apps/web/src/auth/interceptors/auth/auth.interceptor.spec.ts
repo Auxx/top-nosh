@@ -1,26 +1,29 @@
-import { HttpClient, HttpContext, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { authInterceptor } from './auth.interceptor';
+import { authInterceptor, resetAuthInterceptorState } from './auth.interceptor';
 import { HTTP_AUTH_ENABLED } from './auth.interceptor.types';
 
 describe('authInterceptor', () => {
   let httpClient: HttpClient;
   let httpTesting: HttpTestingController;
   let routerMock: { navigate: jest.Mock; };
-  let authServiceMock: { state: jest.Mock; logout: jest.Mock; };
+  let authServiceMock: { state: jest.Mock; logout: jest.Mock; refreshToken: jest.Mock; };
 
   beforeEach(() => {
+    resetAuthInterceptorState();
+
     routerMock = {
       navigate: jest.fn().mockResolvedValue(true)
     };
 
     authServiceMock = {
       state: jest.fn(),
-      logout: jest.fn()
+      logout: jest.fn(),
+      refreshToken: jest.fn()
     };
 
     TestBed.configureTestingModule({
@@ -38,6 +41,7 @@ describe('authInterceptor', () => {
 
   afterEach(() => {
     httpTesting.verify();
+    resetAuthInterceptorState();
   });
 
   it('should pass request unmodified when HTTP_AUTH_ENABLED is false', done => {
@@ -123,5 +127,103 @@ describe('authInterceptor', () => {
 
     const req = httpTesting.expectOne('/api/protected');
     req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+  });
+
+  it('should refresh token and replay request when receiving a 401 and refreshToken exists', done => {
+    authServiceMock.state.mockReturnValue(
+      of({ isAuthenticated: true, token: 'old-token', refreshToken: 'valid-refresh-token' })
+    );
+    authServiceMock.refreshToken.mockReturnValue(
+      of({ token: 'new-token', refreshToken: 'new-refresh-token' })
+    );
+
+    httpClient.get('/api/protected').subscribe(response => {
+      expect(response).toEqual({ data: 'refreshed-secret' });
+      done();
+    });
+
+    const initialReq = httpTesting.expectOne('/api/protected');
+    expect(initialReq.request.headers.get('Authorization')).toBe('Bearer old-token');
+    initialReq.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+
+    expect(authServiceMock.refreshToken).toHaveBeenCalledTimes(1);
+
+    const retryReq = httpTesting.expectOne('/api/protected');
+    expect(retryReq.request.headers.get('Authorization')).toBe('Bearer new-token');
+    retryReq.flush({ data: 'refreshed-secret' });
+  });
+
+  it('should queue concurrent 401 requests, call refreshToken only once, and replay all requests with new token', done => {
+    const refreshSubject = new Subject<{ token: string; refreshToken: string; }>();
+    authServiceMock.state.mockReturnValue(
+      of({ isAuthenticated: true, token: 'old-token', refreshToken: 'old-refresh-token' })
+    );
+    authServiceMock.refreshToken.mockReturnValue(refreshSubject.asObservable());
+
+    let req1Response: unknown = null;
+    let req2Response: unknown = null;
+
+    httpClient.get('/api/req1').subscribe(res => {
+      req1Response = res;
+    });
+
+    httpClient.get('/api/req2').subscribe(res => {
+      req2Response = res;
+    });
+
+    const req1 = httpTesting.expectOne('/api/req1');
+    const req2 = httpTesting.expectOne('/api/req2');
+
+    expect(req1.request.headers.get('Authorization')).toBe('Bearer old-token');
+    expect(req2.request.headers.get('Authorization')).toBe('Bearer old-token');
+
+    // Both return 401
+    req1.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+    req2.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+
+    // refreshToken should be called only once
+    expect(authServiceMock.refreshToken).toHaveBeenCalledTimes(1);
+
+    // Refresh completes
+    refreshSubject.next({ token: 'new-token', refreshToken: 'new-refresh-token' });
+    refreshSubject.complete();
+
+    // Both should be retried with new token
+    const retryReq1 = httpTesting.expectOne('/api/req1');
+    const retryReq2 = httpTesting.expectOne('/api/req2');
+
+    expect(retryReq1.request.headers.get('Authorization')).toBe('Bearer new-token');
+    expect(retryReq2.request.headers.get('Authorization')).toBe('Bearer new-token');
+
+    retryReq1.flush({ result: 1 });
+    retryReq2.flush({ result: 2 });
+
+    expect(req1Response).toEqual({ result: 1 });
+    expect(req2Response).toEqual({ result: 2 });
+    done();
+  });
+
+  it('should logout and redirect when refreshToken call fails', done => {
+    authServiceMock.state.mockReturnValue(
+      of({ isAuthenticated: true, token: 'old-token', refreshToken: 'invalid-refresh-token' })
+    );
+    authServiceMock.refreshToken.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ status: 403, statusText: 'Forbidden' }))
+    );
+
+    httpClient.get('/api/protected').subscribe({
+      next: () => {
+        done.fail('Expected error, but succeeded');
+      },
+      error: error => {
+        expect(authServiceMock.logout).toHaveBeenCalledTimes(1);
+        expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
+        expect(error.status).toBe(403);
+        done();
+      }
+    });
+
+    const initialReq = httpTesting.expectOne('/api/protected');
+    initialReq.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
   });
 });

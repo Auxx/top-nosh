@@ -36,5 +36,5 @@ refresh token sent to the user during the login process.
   - If the token refresh call fails with any error, proceed with the existing
     logout process.
   - If the token refresh call is successful, update the authentication and
-    refresh token in the local storage and re-try the original request with new
-    a authentication token.
+    refresh tokens in the local storage and re-try the original request with a
+    new authentication token.

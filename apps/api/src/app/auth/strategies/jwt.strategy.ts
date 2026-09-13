@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { PrismaService } from '@top-nosh/data-access';
+import { PrismaService, TokenType } from '@top-nosh/data-access';
 import type { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from '../dto/login.dto';
@@ -25,7 +25,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const tokenRecord = await this.prisma.userToken.findFirst({
       where: {
         token,
-        userId: payload.sub
+        userId: payload.sub,
+        type: TokenType.AUTHENTICATION
       }
     });
 

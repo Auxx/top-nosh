@@ -1,6 +1,6 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@top-nosh/data-access';
+import { PrismaService, TokenType } from '@top-nosh/data-access';
 import type { Request } from 'express';
 import { JwtPayload } from '../dto/login.dto';
 import { JwtStrategy } from './jwt.strategy';
@@ -59,7 +59,8 @@ describe('JwtStrategy', () => {
     expect(prismaService.userToken.findFirst).toHaveBeenCalledWith({
       where: {
         token: 'valid-token-123',
-        userId: 'user-123'
+        userId: 'user-123',
+        type: TokenType.AUTHENTICATION
       }
     });
     expect(result).toEqual({
@@ -95,7 +96,29 @@ describe('JwtStrategy', () => {
     expect(prismaService.userToken.findFirst).toHaveBeenCalledWith({
       where: {
         token: 'revoked-token',
-        userId: 'user-123'
+        userId: 'user-123',
+        type: TokenType.AUTHENTICATION
+      }
+    });
+  });
+
+  it('should throw UnauthorizedException when token type is not AUTHENTICATION', async () => {
+    const mockRequest = {
+      headers: {
+        authorization: 'Bearer refresh-token'
+      }
+    } as unknown as Request;
+
+    prismaService.userToken.findFirst.mockResolvedValue(null);
+
+    await expect(strategy.validate(mockRequest, payload)).rejects.toThrow(
+      new UnauthorizedException('Authentication token is invalid or has been revoked')
+    );
+    expect(prismaService.userToken.findFirst).toHaveBeenCalledWith({
+      where: {
+        token: 'refresh-token',
+        userId: 'user-123',
+        type: TokenType.AUTHENTICATION
       }
     });
   });

@@ -12,6 +12,7 @@ export class LoginDto {
 
 export interface LoginResponse {
   token: string;
+  refreshToken: string;
   forcePasswordChange: boolean;
 }
 

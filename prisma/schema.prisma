@@ -24,12 +24,18 @@ model User {
   @@map("users")
 }
 
+enum TokenType {
+  AUTHENTICATION
+  REFRESH
+}
+
 model UserToken {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  token     String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) @map("created_at")
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  token     String    @unique
+  type      TokenType @default(AUTHENTICATION)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
 
   @@index([userId])
   @@map("user_tokens")
