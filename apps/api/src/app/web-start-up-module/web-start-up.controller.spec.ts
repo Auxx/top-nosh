@@ -1,17 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigurationController } from './configuration.controller';
+import { WebStartUpController } from './web-start-up.controller';
 
 describe('Configuration Controller', () => {
-  let controller: ConfigurationController;
+  let controller: WebStartUpController;
   const originalEnv = process.env;
 
   beforeEach(async () => {
     process.env = { ...originalEnv };
+    process.env['SERVER_HTTP_DOMAIN'] = '';
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ ConfigurationController ]
+      controllers: [ WebStartUpController ]
     }).compile();
 
-    controller = module.get<ConfigurationController>(ConfigurationController);
+    controller = module.get<WebStartUpController>(WebStartUpController);
   });
 
   afterAll(() => {
