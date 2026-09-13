@@ -2,6 +2,17 @@
 
 A self-hosted recipe library management system with shopping lists.
 
+## Project status
+
+- Authorisation works.
+- Basic onboarding works.
+- Recipe management works.
+- User management works.
+- Shopping Lists management works but requires UI improvements, especially for
+  mobile devices.
+- File upload is not implemented yet.
+- OICD is not implemented yet.
+
 ## Installation
 
 **Top Nosh** is only distributed as a Docker container. You will need to create
