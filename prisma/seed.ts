@@ -5,7 +5,7 @@ import * as argon2 from 'argon2';
 import * as path from 'path';
 
 function getDatabaseUrl(): string {
-  const envUrl = process.env['DATABASE_URL'] || 'file:./dev.db';
+  const envUrl = process.env['PRISMA_DATABASE_URL'] || 'file:./data/top-nosh.db';
   if (envUrl.startsWith('file:')) {
     const rawPath = envUrl.slice('file:'.length);
     if (!path.isAbsolute(rawPath)) {
