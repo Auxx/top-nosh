@@ -57,6 +57,8 @@ model Recipe {
   servings    Int
   source      String?
   isShared    Boolean       @default(false) @map("is_shared")
+  galleryId   String?       @map("gallery_id")
+  gallery     Gallery?      @relation(fields: [galleryId], references: [id])
   stages      RecipeStage[]
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
@@ -65,6 +67,7 @@ model Recipe {
   @@index([cuisine])
   @@index([category])
   @@index([cuisine, category])
+  @@index([galleryId])
   @@index([deletedAt])
   @@map("recipes")
 }
@@ -196,6 +199,7 @@ model Gallery {
   id        String         @id @default(uuid())
   name      String
   images    GalleryImage[]
+  recipes   Recipe[]
   createdAt DateTime       @default(now()) @map("created_at")
   updatedAt DateTime       @updatedAt @map("updated_at")
   deletedAt DateTime?      @map("deleted_at")

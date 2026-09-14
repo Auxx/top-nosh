@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
+import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -68,6 +69,7 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     servings: [ recipe?.servings ?? null, [ Validators.required, Validators.min(1) ] ],
     source: [ recipe?.source ?? '' ],
     isShared: [ recipe?.isShared ?? false ],
+    galleryId: [ recipe?.galleryId ?? null ],
     stages: fb.array<FormGroup>((recipe?.stages || []).map(stage => createStageGroup(fb, stage)))
   });
 }
@@ -92,7 +94,8 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
     WhenError,
     TranslocoDirective,
     RemarkComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    GalleryManagerComponent
   ],
   templateUrl: './recipe-form.component.html',
   styleUrl: './recipe-form.component.scss',
@@ -267,5 +270,9 @@ export class RecipeFormComponent implements OnInit {
     if (url && typeof navigator !== 'undefined' && navigator.clipboard) {
       await navigator.clipboard.writeText(url);
     }
+  };
+
+  readonly onGalleryIdChange = (newGalleryId: string): void => {
+    this.form().controls['galleryId']?.setValue(newGalleryId);
   };
 }

@@ -49,11 +49,20 @@ export class GalleriesService {
       throw new NotFoundException(`Gallery not found: ${id}`);
     }
 
+    if (dto.images && dto.images.length > 0) {
+      await this.prisma.$transaction(
+        dto.images.map(image =>
+          this.prisma.galleryImage.updateMany({
+            where: { id: image.id, galleryId: id, deletedAt: null },
+            data: { order: image.order }
+          })
+        )
+      );
+    }
+
     const updated = await this.prisma.gallery.update({
       where: { id },
-      data: {
-        name: dto.name.trim()
-      }
+      data: dto.name !== undefined ? { name: dto.name.trim() } : {}
     });
 
     return {

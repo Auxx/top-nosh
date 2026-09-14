@@ -132,6 +132,44 @@ describe('GalleriesService', () => {
         service.updateGallery('non-existent', { name: 'Name' })
       ).rejects.toThrow(NotFoundException);
     });
+
+    it('should update image order using $transaction when images are provided', async () => {
+      const existing = { id: 'gallery-1', name: 'Old', deletedAt: null };
+      const updated = {
+        id: 'gallery-1',
+        name: 'Old',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      prisma.gallery.findFirst.mockResolvedValue(existing);
+      prisma.gallery.update.mockResolvedValue(updated);
+      prisma.$transaction.mockResolvedValue([ { count: 1 }, { count: 1 } ]);
+
+      const result = await service.updateGallery('gallery-1', {
+        images: [
+          { id: 'img-1', order: 1 },
+          { id: 'img-2', order: 0 }
+        ]
+      });
+
+      expect(prisma.gallery.findFirst).toHaveBeenCalledWith({
+        where: { id: 'gallery-1', deletedAt: null }
+      });
+      expect(prisma.$transaction).toHaveBeenCalled();
+      expect(prisma.galleryImage.updateMany).toHaveBeenCalledWith({
+        where: { id: 'img-1', galleryId: 'gallery-1', deletedAt: null },
+        data: { order: 1 }
+      });
+      expect(prisma.galleryImage.updateMany).toHaveBeenCalledWith({
+        where: { id: 'img-2', galleryId: 'gallery-1', deletedAt: null },
+        data: { order: 0 }
+      });
+      expect(prisma.gallery.update).toHaveBeenCalledWith({
+        where: { id: 'gallery-1' },
+        data: {}
+      });
+      expect(result.id).toBe('gallery-1');
+    });
   });
 
   describe('getGallery', () => {

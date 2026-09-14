@@ -84,6 +84,27 @@ describe('GalleriesController', () => {
       expect(galleriesService.updateGallery).toHaveBeenCalledWith('gallery-1', dto);
       expect(result).toEqual(expected);
     });
+
+    it('should delegate to GalleriesService.updateGallery with image reordering', async () => {
+      const dto: UpdateGalleryDto = {
+        images: [
+          { id: 'img-1', order: 1 },
+          { id: 'img-2', order: 0 }
+        ]
+      };
+      const expected = {
+        id: 'gallery-1',
+        name: 'Desserts',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      galleriesService.updateGallery.mockResolvedValue(expected);
+
+      const result = await controller.updateGallery('gallery-1', dto);
+
+      expect(galleriesService.updateGallery).toHaveBeenCalledWith('gallery-1', dto);
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('deleteGallery', () => {

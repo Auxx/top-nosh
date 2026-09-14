@@ -1,0 +1,111 @@
+<ng-container *transloco="let t; prefix: 'web.GalleryManagerComponent'">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>{{ t('title') }}</mat-card-title>
+      <mat-card-subtitle>{{ t('subtitle') }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div
+        class="gallery-dropzone"
+        [class.is-dragging]="isDragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="fileInput.click()"
+        (keydown.enter)="fileInput.click()"
+        (keydown.space)="fileInput.click()"
+        role="button"
+        tabindex="0"
+      >
+        <input
+          #fileInput
+          type="file"
+          class="file-input-hidden"
+          accept="image/*"
+          multiple
+          (change)="onFileSelected($event)"
+        />
+
+        <mat-icon class="dropzone-icon">cloud_upload</mat-icon>
+        <div class="dropzone-text">
+          <span>{{ t('dropzonePrompt') }}</span>
+          <button
+            type="button"
+            mat-button
+            color="primary"
+            (click)="$event.stopPropagation(); fileInput.click()"
+          >
+            {{ t('browseFiles') }}
+          </button>
+        </div>
+      </div>
+
+      @if (isUploading()) {
+        <div class="upload-progress">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          <span class="upload-progress-text">{{ t('uploading') }}</span>
+        </div>
+      }
+
+      @if (isLoading()) {
+        <div class="gallery-loading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>{{ t('loadingGallery') }}</span>
+        </div>
+      }
+
+      @if (images().length > 0) {
+        <div
+          class="gallery-grid"
+          cdkDropList
+          cdkDropListOrientation="mixed"
+          (cdkDropListDropped)="onDropImage($event)"
+        >
+          @for (image of images(); track image.id) {
+            <div
+              class="gallery-item-card"
+              cdkDrag
+              (click)="onImageClick(image)"
+              (keydown.enter)="onImageClick(image)"
+              (keydown.space)="onImageClick(image)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="t('openImageAriaLabel')"
+            >
+              <img
+                [src]="image.thumbnail.externalUrl"
+                alt="Recipe image"
+                class="gallery-item-img"
+                loading="lazy"
+              />
+
+              <div class="gallery-item-actions">
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="drag-handle-button"
+                  cdkDragHandle
+                  (click)="$event.stopPropagation()"
+                  [attr.aria-label]="t('dragHandleAriaLabel')"
+                >
+                  <mat-icon>drag_indicator</mat-icon>
+                </button>
+
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="delete-image-button"
+                  (click)="onDeleteImage(image.id, $event)"
+                  [attr.aria-label]="t('deleteImageAriaLabel')"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</ng-container>

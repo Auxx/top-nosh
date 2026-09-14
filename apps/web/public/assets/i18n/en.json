@@ -332,6 +332,24 @@
       "editUserAriaLabel": "Edit user",
       "noUsers": "No users found",
       "paginatorAriaLabel": "Select users page"
+    },
+    "GalleryManagerComponent": {
+      "title": "Recipe Gallery",
+      "subtitle": "Upload and manage photos for this recipe",
+      "dropzonePrompt": "Drag and drop images here or",
+      "browseFiles": "Browse files",
+      "uploading": "Uploading...",
+      "deleteImageAriaLabel": "Delete image",
+      "dragHandleAriaLabel": "Drag to reorder image",
+      "openImageAriaLabel": "View full-size image in new tab",
+      "invalidFileType": "Only image files (JPEG, PNG, WebP, etc.) are supported.",
+      "uploadSuccess": "Image uploaded successfully",
+      "uploadError": "Failed to upload image. Please try again.",
+      "deleteSuccess": "Image deleted successfully",
+      "deleteError": "Failed to delete image. Please try again.",
+      "reorderError": "Failed to save image order. Please try again.",
+      "loadingGallery": "Loading gallery...",
+      "emptyGallery": "No images uploaded yet."
     }
   }
 }

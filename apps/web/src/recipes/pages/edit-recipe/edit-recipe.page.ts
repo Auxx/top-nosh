@@ -139,6 +139,7 @@ export class EditRecipePage {
       servings: Number(formValue.servings),
       source: (formValue.source || '').trim() || undefined,
       isShared: formValue.isShared ?? false,
+      galleryId: formValue.galleryId || undefined,
       stages: rawStages.map((stage, stageIdx) => ({
         id: stage.id || undefined,
         name: (stage.name || '').trim(),

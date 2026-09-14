@@ -99,6 +99,37 @@ describe('RecipeFormComponent', () => {
     expect(formWithSource.controls['isShared'].value).toBe(true);
   });
 
+  it('should initialize galleryId control and populate it from recipe if provided', () => {
+    const fb = new FormBuilder();
+    const emptyForm = createRecipeForm(fb);
+    expect(emptyForm.controls['galleryId'].value).toBeNull();
+
+    const formWithGallery = createRecipeForm(fb, {
+      id: '1',
+      name: 'Pasta',
+      cuisine: 'Italian',
+      category: 'Main',
+      description: 'Desc',
+      servings: 2,
+      isShared: true,
+      galleryId: 'gal-456',
+      stages: [],
+      createdAt: '',
+      updatedAt: ''
+    });
+    expect(formWithGallery.controls['galleryId'].value).toBe('gal-456');
+  });
+
+  it('should update galleryId control when onGalleryIdChange is called', () => {
+    recipeFormComponent.onGalleryIdChange('gal-new-789');
+    expect(hostComponent.form().controls['galleryId'].value).toBe('gal-new-789');
+  });
+
+  it('should render app-gallery-manager in the template', () => {
+    const galleryManagerEl = fixture.nativeElement.querySelector('app-gallery-manager');
+    expect(galleryManagerEl).toBeTruthy();
+  });
+
   it('should filter cuisines suggestions based on input', () => {
     expect(recipeFormComponent.filteredCuisines()).toEqual([ 'Italian', 'Mexican', 'Japanese' ]);
 
