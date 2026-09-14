@@ -373,6 +373,121 @@ describe('FileManagementService', () => {
     });
   });
 
+  describe('stageBuffer', () => {
+    const testBuffer = Buffer.from('test buffer content');
+
+    it('should stage an in-memory buffer, write it to .staging via putBuffer, and create file record', async () => {
+      configurationsService.get.mockResolvedValue('storage-uuid-default');
+      prismaService.storageOption.findFirst.mockResolvedValue({
+        id: 'storage-uuid-default',
+        name: 'Local Storage',
+        type: 'local',
+        url: '/app/data/storage',
+        externalUrl: 'http://localhost:3000/storage',
+        deletedAt: null
+      });
+      localFileSystemService.putBuffer.mockResolvedValue(true);
+
+      const createdDbFile = {
+        id: 'file-uuid-buffer',
+        originalFileName: 'image.avif',
+        fileSize: testBuffer.length,
+        mimeType: 'image/avif',
+        generatedFileName: 'generated-uuid-1.avif',
+        storageId: 'storage-uuid-default',
+        locationPath: '.staging/generated-uuid-1.avif',
+        state: fileStates.staging,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null
+      };
+      prismaService.file.create.mockResolvedValue(createdDbFile);
+
+      const result = await service.stageBuffer(testBuffer, 'image.avif', 'image/avif');
+
+      expect(result).toEqual(createdDbFile);
+      expect(configurationsService.get).toHaveBeenCalledWith(FILE_MANAGEMENT_CONFIG_KEYS.DEFAULT_STORAGE);
+      expect(prismaService.storageOption.findFirst).toHaveBeenCalledWith({
+        where: { id: 'storage-uuid-default', deletedAt: null }
+      });
+      expect(localFileSystemService.putBuffer).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'storage-uuid-default' }),
+        testBuffer,
+        expect.stringMatching(/^\.staging\/[a-f0-9-]+\.avif$/)
+      );
+      expect(prismaService.file.create).toHaveBeenCalledWith({
+        data: {
+          originalFileName: 'image.avif',
+          fileSize: testBuffer.length,
+          mimeType: 'image/avif',
+          generatedFileName: expect.stringMatching(/^[a-f0-9-]+\.avif$/),
+          storageId: 'storage-uuid-default',
+          locationPath: expect.stringMatching(/^\.staging\/[a-f0-9-]+\.avif$/),
+          state: fileStates.staging
+        }
+      });
+    });
+
+    it('should generate a filename with .bin extension if original file has no extension', async () => {
+      configurationsService.get.mockResolvedValue('storage-uuid-default');
+      prismaService.storageOption.findFirst.mockResolvedValue({
+        id: 'storage-uuid-default',
+        deletedAt: null
+      });
+      localFileSystemService.putBuffer.mockResolvedValue(true);
+      prismaService.file.create.mockImplementation(
+        ({ data }: { data: { originalFileName: string; generatedFileName: string; }; }) => Promise.resolve(data)
+      );
+
+      await service.stageBuffer(testBuffer, 'noextension', 'application/octet-stream');
+
+      expect(prismaService.file.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          generatedFileName: expect.stringMatching(/^[a-f0-9-]+\.bin$/),
+          locationPath: expect.stringMatching(/^\.staging\/[a-f0-9-]+\.bin$/)
+        })
+      });
+    });
+
+    it('should throw an error if default storage is not configured', async () => {
+      configurationsService.get.mockResolvedValue(null);
+
+      await expect(service.stageBuffer(testBuffer, 'image.avif', 'image/avif')).rejects.toThrow(
+        'Default storage is not configured'
+      );
+      expect(localFileSystemService.putBuffer).not.toHaveBeenCalled();
+      expect(prismaService.file.create).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error if default storage option is missing or soft deleted', async () => {
+      configurationsService.get.mockResolvedValue('storage-uuid-missing');
+      prismaService.storageOption.findFirst.mockResolvedValue(null);
+
+      await expect(service.stageBuffer(testBuffer, 'image.avif', 'image/avif')).rejects.toThrow(
+        'Default storage option not found or inaccessible: storage-uuid-missing'
+      );
+      expect(localFileSystemService.putBuffer).not.toHaveBeenCalled();
+      expect(prismaService.file.create).not.toHaveBeenCalled();
+    });
+
+    it('should clean up staging file and rethrow if database insertion fails', async () => {
+      configurationsService.get.mockResolvedValue('storage-uuid-default');
+      const storageOption = { id: 'storage-uuid-default', deletedAt: null };
+      prismaService.storageOption.findFirst.mockResolvedValue(storageOption);
+      localFileSystemService.putBuffer.mockResolvedValue(true);
+      prismaService.file.create.mockRejectedValue(new Error('Database insertion failed'));
+      localFileSystemService.delete.mockResolvedValue(true);
+
+      await expect(service.stageBuffer(testBuffer, 'image.avif', 'image/avif')).rejects.toThrow(
+        'Database insertion failed'
+      );
+      expect(localFileSystemService.delete).toHaveBeenCalledWith(
+        storageOption,
+        expect.stringMatching(/^\.staging\/[a-f0-9-]+\.avif$/)
+      );
+    });
+  });
+
   describe('deploy', () => {
     const stagedFileRecord = {
       id: 'file-uuid-1',

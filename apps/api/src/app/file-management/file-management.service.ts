@@ -77,6 +77,51 @@ export class FileManagementService implements OnModuleInit {
   }
 
   /**
+   * Stages an in-memory buffer by writing it to the .staging directory on default storage and tracking it in the database.
+   *
+   * @param buffer In-memory file content buffer.
+   * @param originalFileName Original file name to derive extension and store metadata.
+   * @param mimeType MIME type of the file.
+   * @returns Newly created File entity in staging state.
+   */
+  async stageBuffer(
+    buffer: Buffer,
+    originalFileName: string,
+    mimeType: string
+  ): Promise<File> {
+    const defaultStorage = await this.getStorageOptionByKey(
+      FILE_MANAGEMENT_CONFIG_KEYS.DEFAULT_STORAGE,
+      'Default'
+    );
+    const extension = path.extname(originalFileName) || '.bin';
+    const generatedFileName = `${randomUUID()}${extension}`;
+    const stagingPath = `${stagingDirectory}/${generatedFileName}`;
+
+    await this.localFileSystemService.putBuffer(defaultStorage, buffer, stagingPath);
+
+    try {
+      return await this.prisma.file.create({
+        data: {
+          originalFileName,
+          fileSize: buffer.length,
+          mimeType,
+          generatedFileName,
+          storageId: defaultStorage.id,
+          locationPath: stagingPath,
+          state: fileStates.staging
+        }
+      });
+    } catch (error) {
+      try {
+        await this.localFileSystemService.delete(defaultStorage, stagingPath);
+      } catch {
+        // Cleanup error ignored to propagate root cause
+      }
+      throw error;
+    }
+  }
+
+  /**
    * Deploys a staged file to active storage and updates the database record.
    *
    * @param fileId Unique identifier of the file to deploy.

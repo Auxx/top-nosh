@@ -183,9 +183,42 @@ model File {
   updatedAt         DateTime      @updatedAt @map("updated_at")
   deletedAt         DateTime?     @map("deleted_at")
   storage           StorageOption @relation(fields: [storageId], references: [id])
+  galleryImagesFullSize  GalleryImage[] @relation("GalleryImageFullSize")
+  galleryImagesThumbnail GalleryImage[] @relation("GalleryImageThumbnail")
 
   @@index([storageId])
   @@index([deletedAt])
   @@index([state])
   @@map("files")
+}
+
+model Gallery {
+  id        String         @id @default(uuid())
+  name      String
+  images    GalleryImage[]
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  deletedAt DateTime?      @map("deleted_at")
+
+  @@index([deletedAt])
+  @@map("galleries")
+}
+
+model GalleryImage {
+  id              String    @id @default(uuid())
+  galleryId       String    @map("gallery_id")
+  fullSizeFileId  String    @map("full_size_file_id")
+  thumbnailFileId String    @map("thumbnail_file_id")
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  gallery       Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  fullSizeFile  File    @relation("GalleryImageFullSize", fields: [fullSizeFileId], references: [id])
+  thumbnailFile File    @relation("GalleryImageThumbnail", fields: [thumbnailFileId], references: [id])
+
+  @@index([galleryId])
+  @@index([deletedAt])
+  @@map("gallery_images")
 }
