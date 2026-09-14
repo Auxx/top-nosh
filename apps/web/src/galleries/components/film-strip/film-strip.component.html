@@ -1,0 +1,25 @@
+@if (isLoading()) {
+  <div class="film-strip-loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else if (images().length > 0) {
+  <div class="film-strip-container" role="region" aria-label="Recipe image gallery">
+    <div class="film-strip-scroll">
+      @for (image of images(); track image.id; let i = $index) {
+        <button
+          type="button"
+          class="film-strip-thumbnail-button"
+          (click)="onOpenImage(image)"
+          [attr.aria-label]="'View photo ' + (i + 1)"
+        >
+          <img
+            [src]="image.thumbnail.externalUrl"
+            [alt]="'Recipe photo ' + (i + 1)"
+            class="film-strip-thumbnail-img"
+            loading="lazy"
+          />
+        </button>
+      }
+    </div>
+  </div>
+}

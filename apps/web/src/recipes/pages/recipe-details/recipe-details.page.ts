@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { ConfirmationDialog, DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
+import { FilmStripComponent } from '../../../galleries/components/film-strip/film-strip.component';
 import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
 import { GlanceComponent } from '../../components/glance/glance.component';
@@ -47,6 +48,7 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     RemarkComponent,
     GlanceComponent,
     CookingModeComponent,
+    FilmStripComponent,
     TranslocoDirective
   ],
   templateUrl: './recipe-details.page.html',

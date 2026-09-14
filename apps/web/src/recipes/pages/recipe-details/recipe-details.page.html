@@ -51,6 +51,10 @@
       </button>
     </ui-page-header>
 
+    @if (currentRecipe.galleryId) {
+      <app-film-strip [galleryId]="currentRecipe.galleryId" />
+    }
+
     <div class="meta">
       @if (currentRecipe.description) {
         <div class="recipe-description" data-testid="recipe-description">
