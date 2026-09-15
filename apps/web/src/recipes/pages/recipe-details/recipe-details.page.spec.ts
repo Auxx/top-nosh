@@ -2,8 +2,11 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
+import { FilmStripComponent } from '../../../galleries/components/film-strip/film-strip.component';
+import { GalleryManagerService } from '../../../galleries/services/gallery-manager/gallery-manager.service';
 import {
   ShoppingListManagementService
 } from '../../../shopping-lists/services/shopping-list-management/shopping-list-management.service';
@@ -24,6 +27,9 @@ describe('RecipeDetailsPage', () => {
   let mockWakeLockService: {
     acquire: jest.Mock;
     release: jest.Mock;
+  };
+  let mockGalleryService: {
+    getGallery: jest.Mock;
   };
   let dialogMock: {
     open: jest.Mock;
@@ -100,6 +106,10 @@ describe('RecipeDetailsPage', () => {
       release: jest.fn().mockResolvedValue(true)
     };
 
+    mockGalleryService = {
+      getGallery: jest.fn().mockReturnValue(of({ id: 'test-gal', images: [] }))
+    };
+
     dialogMock = {
       open: jest.fn().mockReturnValue({
         afterClosed: jest.fn().mockReturnValue(of(true))
@@ -136,6 +146,7 @@ describe('RecipeDetailsPage', () => {
         { provide: RecipeManagementService, useValue: mockRecipeService },
         { provide: WakeLockService, useValue: mockWakeLockService },
         { provide: BreakpointObserver, useValue: mockBreakpointObserver },
+        { provide: GalleryManagerService, useValue: mockGalleryService },
         { provide: MatDialog, useValue: dialogMock },
         { provide: ShoppingListManagementService, useValue: mockShoppingListService },
         { provide: MatSnackBar, useValue: snackBarMock }
@@ -377,6 +388,62 @@ describe('RecipeDetailsPage', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to release wake lock:', expect.any(Error));
       consoleErrorSpy.mockRestore();
+    });
+  });
+
+  describe('film strip gallery integration', () => {
+    it('should render FilmStripComponent with correct galleryId between page header and meta when recipe has galleryId', () => {
+      const recipeWithGallery: RecipeDetails = {
+        ...mockRecipeDetails,
+        galleryId: 'gallery-test-123'
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithGallery));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const filmStripDebugEl = fixture.debugElement.query(By.directive(FilmStripComponent));
+      expect(filmStripDebugEl).toBeTruthy();
+      expect(filmStripDebugEl.componentInstance.galleryId()).toBe('gallery-test-123');
+
+      const filmStripEl = fixture.nativeElement.querySelector('app-film-strip');
+      expect(filmStripEl).toBeTruthy();
+
+      const pageHeader = fixture.nativeElement.querySelector('ui-page-header');
+      const meta = fixture.nativeElement.querySelector('.meta');
+      expect(pageHeader.nextElementSibling).toBe(filmStripEl);
+      expect(filmStripEl.nextElementSibling).toBe(meta);
+    });
+
+    it('should not render FilmStripComponent when recipe does not have galleryId', () => {
+      const recipeWithoutGallery: RecipeDetails = {
+        ...mockRecipeDetails,
+        galleryId: undefined
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithoutGallery));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const filmStripDebugEl = fixture.debugElement.query(By.directive(FilmStripComponent));
+      expect(filmStripDebugEl).toBeFalsy();
+
+      const filmStripEl = fixture.nativeElement.querySelector('app-film-strip');
+      expect(filmStripEl).toBeFalsy();
+    });
+
+    it('should not render FilmStripComponent when recipe galleryId is null', () => {
+      const recipeWithNullGallery: RecipeDetails = {
+        ...mockRecipeDetails,
+        galleryId: null
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithNullGallery));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const filmStripDebugEl = fixture.debugElement.query(By.directive(FilmStripComponent));
+      expect(filmStripDebugEl).toBeFalsy();
+
+      const filmStripEl = fixture.nativeElement.querySelector('app-film-strip');
+      expect(filmStripEl).toBeFalsy();
     });
   });
 });

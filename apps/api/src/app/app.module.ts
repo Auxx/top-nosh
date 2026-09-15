@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigurationsModule } from './configurations/configurations.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { FileManagementModule } from './file-management/file-management.module';
+import { GalleriesModule } from './galleries/galleries.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { SharingModule } from './sharing/sharing.module';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
@@ -21,11 +23,15 @@ function getStaticRootPath(): string {
     join(process.cwd(), 'dist', 'apps', 'web', 'browser'),
     join(process.cwd(), '..', '..', 'dist', 'apps', 'web', 'browser')
   ];
+
+  console.log('CWD', process.cwd());
+
   for (const candidate of candidates) {
     if (existsSync(candidate)) {
       return candidate;
     }
   }
+
   return join(__dirname, '..', 'web', 'browser');
 }
 
@@ -40,6 +46,8 @@ function getStaticRootPath(): string {
     AuthModule,
     WebStartUpModule,
     DashboardModule,
+    FileManagementModule,
+    GalleriesModule,
     RecipesModule,
     SharingModule,
     ShoppingListsModule,

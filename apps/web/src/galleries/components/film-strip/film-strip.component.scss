@@ -1,0 +1,66 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.film-strip-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.film-strip-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.film-strip-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 8px 0;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.2));
+    border-radius: 3px;
+  }
+}
+
+.film-strip-thumbnail-button {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: scale(.97);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #6750a4);
+    outline-offset: 2px;
+  }
+}
+
+.film-strip-thumbnail-img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}

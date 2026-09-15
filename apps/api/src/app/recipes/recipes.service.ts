@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '@top-nosh/data-access';
+import { GalleriesService } from '../galleries/galleries.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { RecipeQueryDto } from './dto/recipe-query.dto';
 import {
@@ -16,7 +17,10 @@ const PAGE_SIZE = 50;
 
 @Injectable()
 export class RecipesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly galleriesService: GalleriesService
+  ) {}
 
   async getCuisinesAndCategories(): Promise<CuisineCategoryTreeItem[]> {
     const pairs = await this.prisma.recipe.findMany({
@@ -107,6 +111,7 @@ export class RecipesService {
         servings: dto.servings,
         source: dto.source,
         isShared: dto.isShared ?? false,
+        galleryId: dto.galleryId ?? null,
         stages: {
           create: dto.stages.map((stage, stageIdx) => ({
             name: stage.name,
@@ -164,7 +169,8 @@ export class RecipesService {
           description: dto.description,
           servings: dto.servings,
           source: dto.source,
-          ...(dto.isShared !== undefined ? { isShared: dto.isShared } : {})
+          ...(dto.isShared !== undefined ? { isShared: dto.isShared } : {}),
+          ...(dto.galleryId !== undefined ? { galleryId: dto.galleryId } : {})
         }
       });
 
@@ -339,6 +345,10 @@ export class RecipesService {
       where: { id },
       data: { deletedAt: new Date() }
     });
+
+    if (existing.galleryId) {
+      await this.galleriesService.deleteGallery(existing.galleryId);
+    }
 
     return { message: 'Recipe deleted successfully' };
   }

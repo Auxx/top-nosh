@@ -31,5 +31,6 @@ export interface UpdateRecipeDto {
   servings: number;
   source?: string;
   isShared?: boolean;
+  galleryId?: string | null;
   stages: UpdateRecipeStageDto[];
 }

@@ -35,6 +35,7 @@ export interface RecipeDetails {
   servings: number;
   source?: string | null;
   isShared: boolean;
+  galleryId?: string | null;
   stages: RecipeStageDetails[];
   createdAt: string;
   updatedAt: string;

@@ -2,10 +2,14 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { IngredientUnit } from '@prisma/client';
 import { PrismaService } from '@top-nosh/data-access';
+import { GalleriesService } from '../galleries/galleries.service';
 import { RecipesService } from './recipes.service';
 
 describe('RecipesService', () => {
   let service: RecipesService;
+  let galleriesService: {
+    deleteGallery: jest.Mock;
+  };
   let prismaService: {
     recipe: {
       findMany: jest.Mock;
@@ -59,12 +63,20 @@ describe('RecipesService', () => {
       $transaction: jest.fn().mockImplementation(cb => cb(prismaService))
     };
 
+    galleriesService = {
+      deleteGallery: jest.fn()
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RecipesService,
         {
           provide: PrismaService,
           useValue: prismaService
+        },
+        {
+          provide: GalleriesService,
+          useValue: galleriesService
         }
       ]
     }).compile();
@@ -298,6 +310,30 @@ describe('RecipesService', () => {
       });
       expect(result).toEqual({ id: 'created-id-units' });
     });
+
+    it('should create recipe with galleryId when provided', async () => {
+      prismaService.recipe.create.mockResolvedValue({ id: 'created-id-gallery' });
+
+      const dto = {
+        name: 'Gallery Recipe',
+        cuisine: 'French',
+        category: 'Dessert',
+        description: 'With images',
+        servings: 2,
+        galleryId: 'gallery-uuid-1',
+        stages: []
+      };
+
+      const result = await service.createRecipe(dto);
+
+      expect(prismaService.recipe.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          name: 'Gallery Recipe',
+          galleryId: 'gallery-uuid-1'
+        })
+      });
+      expect(result).toEqual({ id: 'created-id-gallery' });
+    });
   });
 
   describe('updateRecipe', () => {
@@ -447,6 +483,52 @@ describe('RecipesService', () => {
       // New stage created
       expect(prismaService.recipeStage.create).toHaveBeenCalled();
     });
+
+    it('should update galleryId when provided in updateDto', async () => {
+      prismaService.recipe.findFirst
+        .mockResolvedValueOnce({ id: 'recipe-1', stages: [] })
+        .mockResolvedValueOnce({ id: 'recipe-1', stages: [] });
+
+      await service.updateRecipe('recipe-1', {
+        name: 'Updated Name',
+        cuisine: 'Italian',
+        category: 'Main',
+        description: 'New Desc',
+        servings: 2,
+        galleryId: 'new-gallery-id',
+        stages: []
+      });
+
+      expect(prismaService.recipe.update).toHaveBeenCalledWith({
+        where: { id: 'recipe-1' },
+        data: expect.objectContaining({
+          galleryId: 'new-gallery-id'
+        })
+      });
+    });
+
+    it('should clear galleryId when null is provided in updateDto', async () => {
+      prismaService.recipe.findFirst
+        .mockResolvedValueOnce({ id: 'recipe-1', stages: [] })
+        .mockResolvedValueOnce({ id: 'recipe-1', stages: [] });
+
+      await service.updateRecipe('recipe-1', {
+        name: 'Updated Name',
+        cuisine: 'Italian',
+        category: 'Main',
+        description: 'New Desc',
+        servings: 2,
+        galleryId: null,
+        stages: []
+      });
+
+      expect(prismaService.recipe.update).toHaveBeenCalledWith({
+        where: { id: 'recipe-1' },
+        data: expect.objectContaining({
+          galleryId: null
+        })
+      });
+    });
   });
 
   describe('deleteRecipe', () => {
@@ -459,6 +541,38 @@ describe('RecipesService', () => {
         where: { id: 'recipe-1' },
         data: { deletedAt: expect.any(Date) }
       });
+      expect(result).toEqual({ message: 'Recipe deleted successfully' });
+    });
+
+    it('should invoke galleriesService.deleteGallery when recipe has galleryId', async () => {
+      prismaService.recipe.findFirst.mockResolvedValue({
+        id: 'recipe-1',
+        galleryId: 'gallery-123'
+      });
+      galleriesService.deleteGallery.mockResolvedValue({
+        success: true,
+        message: 'Deleted'
+      });
+
+      const result = await service.deleteRecipe('recipe-1');
+
+      expect(prismaService.recipe.update).toHaveBeenCalledWith({
+        where: { id: 'recipe-1' },
+        data: { deletedAt: expect.any(Date) }
+      });
+      expect(galleriesService.deleteGallery).toHaveBeenCalledWith('gallery-123');
+      expect(result).toEqual({ message: 'Recipe deleted successfully' });
+    });
+
+    it('should not invoke galleriesService.deleteGallery when recipe has no galleryId', async () => {
+      prismaService.recipe.findFirst.mockResolvedValue({
+        id: 'recipe-1',
+        galleryId: null
+      });
+
+      const result = await service.deleteRecipe('recipe-1');
+
+      expect(galleriesService.deleteGallery).not.toHaveBeenCalled();
       expect(result).toEqual({ message: 'Recipe deleted successfully' });
     });
 

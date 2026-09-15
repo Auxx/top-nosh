@@ -70,6 +70,7 @@ export class CreateRecipePage {
       servings: Number(formValue.servings),
       source: (formValue.source || '').trim() || undefined,
       isShared: formValue.isShared ?? false,
+      galleryId: formValue.galleryId || undefined,
       stages: rawStages.map((stage, stageIdx) => ({
         name: (stage.name || '').trim(),
         order: stageIdx,

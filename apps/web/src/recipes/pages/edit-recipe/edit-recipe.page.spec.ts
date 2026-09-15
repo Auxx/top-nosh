@@ -52,6 +52,7 @@ describe('EditRecipePage', () => {
     servings: 4,
     source: 'https://example.com/bolognese',
     isShared: false,
+    galleryId: 'gal-555',
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
     stages: [
@@ -147,6 +148,7 @@ describe('EditRecipePage', () => {
     expect(component.recipeForm.controls['category'].value).toBe('Pasta');
     expect(component.recipeForm.controls['description'].value).toBe('Classic meat sauce pasta');
     expect(component.recipeForm.controls['servings'].value).toBe(4);
+    expect(component.recipeForm.controls['galleryId'].value).toBe('gal-555');
 
     const stagesArray = component.recipeForm.controls['stages'];
     expect(stagesArray.length).toBe(1);
@@ -200,6 +202,7 @@ describe('EditRecipePage', () => {
       servings: 6,
       source: 'https://example.com/bolognese',
       isShared: false,
+      galleryId: 'gal-555',
       stages: [
         {
           id: 'stage-1',
@@ -244,6 +247,17 @@ describe('EditRecipePage', () => {
     expect(recipeServiceMock.updateRecipe).toHaveBeenCalledWith(
       'recipe-123',
       expect.objectContaining({ isShared: true })
+    );
+  });
+
+  it('should include updated galleryId in update payload when modified', () => {
+    component.recipeForm.controls['galleryId'].setValue('gal-updated-999');
+
+    component.onSubmit();
+
+    expect(recipeServiceMock.updateRecipe).toHaveBeenCalledWith(
+      'recipe-123',
+      expect.objectContaining({ galleryId: 'gal-updated-999' })
     );
   });
 

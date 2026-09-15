@@ -104,4 +104,21 @@ describe('CreateRecipePage', () => {
     component.onSubmit();
     expect(recipeServiceMock.createRecipe).not.toHaveBeenCalled();
   });
+
+  it('should include galleryId in create payload when galleryId control has value', () => {
+    component.recipeForm.controls.name.setValue('Lasagna');
+    component.recipeForm.controls.servings.setValue(4);
+    component.recipeForm.controls.cuisine.setValue('Italian');
+    component.recipeForm.controls.category.setValue('Pasta');
+    component.recipeForm.controls.galleryId.setValue('gal-999');
+
+    component.onSubmit();
+
+    expect(recipeServiceMock.createRecipe).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Lasagna',
+        galleryId: 'gal-999'
+      })
+    );
+  });
 });

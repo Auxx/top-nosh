@@ -91,6 +91,10 @@ export class CreateRecipeDto {
   @IsOptional()
   isShared?: boolean;
 
+  @IsString()
+  @IsOptional()
+  galleryId?: string | null;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateRecipeStageDto)

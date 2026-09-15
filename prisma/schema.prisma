@@ -57,6 +57,8 @@ model Recipe {
   servings    Int
   source      String?
   isShared    Boolean       @default(false) @map("is_shared")
+  galleryId   String?       @map("gallery_id")
+  gallery     Gallery?      @relation(fields: [galleryId], references: [id])
   stages      RecipeStage[]
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
@@ -65,6 +67,7 @@ model Recipe {
   @@index([cuisine])
   @@index([category])
   @@index([cuisine, category])
+  @@index([galleryId])
   @@index([deletedAt])
   @@map("recipes")
 }
@@ -150,4 +153,76 @@ model Configuration {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("configurations")
+}
+
+model StorageOption {
+  id          String    @id @default(uuid())
+  name        String
+  description String    @default("")
+  type        String    @default("local")
+  url         String
+  externalUrl String    @map("external_url")
+  username    String?
+  password    String?
+  files       File[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([deletedAt])
+  @@map("storage_options")
+}
+
+model File {
+  id                String        @id @default(uuid())
+  originalFileName  String        @map("original_file_name")
+  fileSize          Int           @map("file_size")
+  mimeType          String        @map("mime_type")
+  generatedFileName String        @map("generated_file_name")
+  storageId         String        @map("storage_id")
+  locationPath      String        @map("location_path")
+  state             String        @default("staging")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  deletedAt         DateTime?     @map("deleted_at")
+  storage           StorageOption @relation(fields: [storageId], references: [id])
+  galleryImagesFullSize  GalleryImage[] @relation("GalleryImageFullSize")
+  galleryImagesThumbnail GalleryImage[] @relation("GalleryImageThumbnail")
+
+  @@index([storageId])
+  @@index([deletedAt])
+  @@index([state])
+  @@map("files")
+}
+
+model Gallery {
+  id        String         @id @default(uuid())
+  name      String
+  images    GalleryImage[]
+  recipes   Recipe[]
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  deletedAt DateTime?      @map("deleted_at")
+
+  @@index([deletedAt])
+  @@map("galleries")
+}
+
+model GalleryImage {
+  id              String    @id @default(uuid())
+  galleryId       String    @map("gallery_id")
+  fullSizeFileId  String    @map("full_size_file_id")
+  thumbnailFileId String    @map("thumbnail_file_id")
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  gallery       Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  fullSizeFile  File    @relation("GalleryImageFullSize", fields: [fullSizeFileId], references: [id])
+  thumbnailFile File    @relation("GalleryImageThumbnail", fields: [thumbnailFileId], references: [id])
+
+  @@index([galleryId])
+  @@index([deletedAt])
+  @@map("gallery_images")
 }
