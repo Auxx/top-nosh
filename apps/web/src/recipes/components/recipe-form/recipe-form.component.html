@@ -109,10 +109,8 @@
     </mat-card>
 
     <!-- Gallery Manager Card -->
-    <app-gallery-manager
-      [galleryId]="formGroup.controls['galleryId']?.value || undefined"
-      (galleryIdChange)="onGalleryIdChange($event)"
-    />
+    <app-gallery-manager [galleryId]="formGroup.controls['galleryId']?.value || undefined"
+                         (galleryIdChange)="onGalleryIdChange($event)"/>
 
     <!-- Share Recipe Card -->
     @if (recipeId()) {

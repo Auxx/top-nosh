@@ -262,17 +262,17 @@ export class RecipeFormComponent implements OnInit {
       event.previousIndex,
       event.currentIndex
     );
+
     this.getIngredientsArray(stageIndex).updateValueAndValidity();
   };
 
   readonly copyShareLink = async (): Promise<void> => {
     const url = this.shareUrl();
+
     if (url && typeof navigator !== 'undefined' && navigator.clipboard) {
       await navigator.clipboard.writeText(url);
     }
   };
 
-  readonly onGalleryIdChange = (newGalleryId: string): void => {
-    this.form().controls['galleryId']?.setValue(newGalleryId);
-  };
+  readonly onGalleryIdChange = (newGalleryId: string) => this.form().controls['galleryId']?.setValue(newGalleryId);
 }
