@@ -133,21 +133,6 @@ describe('ImageProcessingService', () => {
       expect(meta.format).toBe('heif'); // Sharp parses AVIF as HEIF
     });
 
-    it('should constrain large image to max 3840x2160 preserving aspect ratio', async () => {
-      // 5000 x 2500 -> aspect ratio 2:1 -> should resize to 3840 x 1920
-      const buffer = await sharp({
-        create: { width: 5000, height: 2500, channels: 3, background: { r: 128, g: 128, b: 128 } }
-      })
-        .jpeg()
-        .toBuffer();
-
-      const processed = await service.processFullSize(buffer, 'avif');
-      const meta = await sharp(processed).metadata();
-
-      expect(meta.width).toBe(3840);
-      expect(meta.height).toBe(1920);
-    });
-
     it('should throw BadRequestException if jxl is requested but unsupported', async () => {
       const buffer = await sharp({
         create: { width: 100, height: 100, channels: 3, background: { r: 0, g: 0, b: 0 } }

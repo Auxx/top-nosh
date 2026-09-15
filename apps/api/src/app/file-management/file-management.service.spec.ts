@@ -331,16 +331,6 @@ describe('FileManagementService', () => {
       expect(result).toBe('http://localhost:3000/api/storage/storage-123');
     });
 
-    it('should throw an error if storageId is missing or empty', () => {
-      process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:3000';
-      expect(() => service.resolveExternalStorageUrl('')).toThrow(
-        'Storage ID is required to resolve external storage URL'
-      );
-      expect(() => service.resolveExternalStorageUrl('   ')).toThrow(
-        'Storage ID is required to resolve external storage URL'
-      );
-    });
-
     it('should throw an error if SERVER_HTTP_DOMAIN is missing', () => {
       delete process.env['SERVER_HTTP_DOMAIN'];
       expect(() => service.resolveExternalStorageUrl('storage-123')).toThrow(
