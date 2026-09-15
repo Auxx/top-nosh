@@ -23,11 +23,15 @@ function getStaticRootPath(): string {
     join(process.cwd(), 'dist', 'apps', 'web', 'browser'),
     join(process.cwd(), '..', '..', 'dist', 'apps', 'web', 'browser')
   ];
+
+  console.log('CWD', process.cwd());
+
   for (const candidate of candidates) {
     if (existsSync(candidate)) {
       return candidate;
     }
   }
+
   return join(__dirname, '..', 'web', 'browser');
 }
 

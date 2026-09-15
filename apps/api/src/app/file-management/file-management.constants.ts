@@ -10,7 +10,7 @@ export const DEFAULT_LOCAL_STORAGE_CONFIG = {
   DESCRIPTION: '',
   TYPE: 'local',
   FALLBACK_PATH: '/app/data/storage',
-  STORAGE_URL_PATH: '/storage'
+  STORAGE_URL_PATH: '/api/storage'
 } as const;
 
 export const fileStates = {

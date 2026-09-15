@@ -233,35 +233,43 @@ export class FileManagementService implements OnModuleInit {
   }
 
   private async initializeDefaultStorage(): Promise<void> {
-    const count = await this.prisma.storageOption.count();
+    await this.prisma.$transaction(async tx => {
+      const count = await tx.storageOption.count();
 
-    if (count > 0) {
-      return;
-    }
-
-    const url = this.resolveLocalStoragePath();
-    const externalUrl = this.resolveExternalStorageUrl();
-
-    const storageOption = await this.prisma.storageOption.create({
-      data: {
-        name: DEFAULT_LOCAL_STORAGE_CONFIG.NAME,
-        description: DEFAULT_LOCAL_STORAGE_CONFIG.DESCRIPTION,
-        type: DEFAULT_LOCAL_STORAGE_CONFIG.TYPE,
-        url,
-        externalUrl,
-        username: null,
-        password: null
+      if (count > 0) {
+        return;
       }
-    });
 
-    await this.configurationsService.set(
-      FILE_MANAGEMENT_CONFIG_KEYS.ACTIVE_STORAGE,
-      storageOption.id
-    );
-    await this.configurationsService.set(
-      FILE_MANAGEMENT_CONFIG_KEYS.DEFAULT_STORAGE,
-      storageOption.id
-    );
+      const url = this.resolveLocalStoragePath();
+
+      const storageOption = await tx.storageOption.create({
+        data: {
+          name: DEFAULT_LOCAL_STORAGE_CONFIG.NAME,
+          description: DEFAULT_LOCAL_STORAGE_CONFIG.DESCRIPTION,
+          type: DEFAULT_LOCAL_STORAGE_CONFIG.TYPE,
+          url,
+          externalUrl: '',
+          username: null,
+          password: null
+        }
+      });
+
+      const externalUrl = this.resolveExternalStorageUrl(storageOption.id);
+
+      await tx.storageOption.update({
+        where: { id: storageOption.id },
+        data: { externalUrl }
+      });
+
+      await this.configurationsService.set(
+        FILE_MANAGEMENT_CONFIG_KEYS.ACTIVE_STORAGE,
+        storageOption.id
+      );
+      await this.configurationsService.set(
+        FILE_MANAGEMENT_CONFIG_KEYS.DEFAULT_STORAGE,
+        storageOption.id
+      );
+    });
   }
 
   private resolveLocalStoragePath(): string {
@@ -269,7 +277,13 @@ export class FileManagementService implements OnModuleInit {
     return path || DEFAULT_LOCAL_STORAGE_CONFIG.FALLBACK_PATH;
   }
 
-  private resolveExternalStorageUrl(): string {
+  /**
+   * Resolves the fully qualified external storage URL for a given storage ID.
+   *
+   * @param storageId Unique identifier of the storage option.
+   * @returns Fully qualified external URL endpoint.
+   */
+  resolveExternalStorageUrl(storageId: string): string {
     const domain = process.env['SERVER_HTTP_DOMAIN']?.trim();
 
     if (!domain) {
@@ -277,7 +291,7 @@ export class FileManagementService implements OnModuleInit {
     }
 
     const trimmedDomain = domain.replace(/\/+$/, '');
-    const fullUrl = `${trimmedDomain}${DEFAULT_LOCAL_STORAGE_CONFIG.STORAGE_URL_PATH}`;
+    const fullUrl = `${trimmedDomain}${DEFAULT_LOCAL_STORAGE_CONFIG.STORAGE_URL_PATH}/${storageId.trim()}`;
 
     try {
       new URL(fullUrl);

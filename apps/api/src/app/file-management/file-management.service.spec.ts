@@ -12,6 +12,7 @@ import { StorageProviderRegistry } from './storage-provider.registry';
 jest.mock('node:fs/promises');
 
 interface MockPrismaService {
+  readonly $transaction: jest.Mock;
   readonly storageOption: {
     readonly count: jest.Mock;
     readonly create: jest.Mock;
@@ -70,6 +71,7 @@ describe('FileManagementService', () => {
     process.env = { ...originalEnv };
 
     prismaService = {
+      $transaction: jest.fn().mockImplementation(cb => cb(prismaService)),
       storageOption: {
         count: jest.fn(),
         create: jest.fn(),
@@ -145,16 +147,21 @@ describe('FileManagementService', () => {
         description: DEFAULT_LOCAL_STORAGE_CONFIG.DESCRIPTION,
         type: DEFAULT_LOCAL_STORAGE_CONFIG.TYPE,
         url: '/custom/storage/path',
-        externalUrl: 'http://localhost:3000/storage',
+        externalUrl: '',
         username: null,
         password: null,
         createdAt: new Date(),
         updatedAt: new Date(),
         deletedAt: null
       });
+      prismaService.storageOption.update.mockResolvedValue({
+        id: 'storage-uuid-1',
+        externalUrl: 'http://localhost:3000/api/storage/storage-uuid-1'
+      });
 
       await service.onModuleInit();
 
+      expect(prismaService.$transaction).toHaveBeenCalledTimes(1);
       expect(prismaService.storageOption.count).toHaveBeenCalledTimes(1);
       expect(prismaService.storageOption.create).toHaveBeenCalledWith({
         data: {
@@ -162,9 +169,15 @@ describe('FileManagementService', () => {
           description: '',
           type: 'local',
           url: '/custom/storage/path',
-          externalUrl: 'http://localhost:3000/storage',
+          externalUrl: '',
           username: null,
           password: null
+        }
+      });
+      expect(prismaService.storageOption.update).toHaveBeenCalledWith({
+        where: { id: 'storage-uuid-1' },
+        data: {
+          externalUrl: 'http://localhost:3000/api/storage/storage-uuid-1'
         }
       });
       expect(configurationsService.set).toHaveBeenCalledTimes(2);
@@ -186,13 +199,24 @@ describe('FileManagementService', () => {
       prismaService.storageOption.create.mockResolvedValue({
         id: 'storage-uuid-fallback'
       });
+      prismaService.storageOption.update.mockResolvedValue({
+        id: 'storage-uuid-fallback',
+        externalUrl: 'http://localhost:3000/api/storage/storage-uuid-fallback'
+      });
 
       await service.onModuleInit();
 
       expect(prismaService.storageOption.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
-          url: '/app/data/storage'
+          url: '/app/data/storage',
+          externalUrl: ''
         })
+      });
+      expect(prismaService.storageOption.update).toHaveBeenCalledWith({
+        where: { id: 'storage-uuid-fallback' },
+        data: {
+          externalUrl: 'http://localhost:3000/api/storage/storage-uuid-fallback'
+        }
       });
     });
 
@@ -204,13 +228,23 @@ describe('FileManagementService', () => {
       prismaService.storageOption.create.mockResolvedValue({
         id: 'storage-uuid-slash'
       });
+      prismaService.storageOption.update.mockResolvedValue({
+        id: 'storage-uuid-slash',
+        externalUrl: 'http://localhost:3000/api/storage/storage-uuid-slash'
+      });
 
       await service.onModuleInit();
 
       expect(prismaService.storageOption.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
-          externalUrl: 'http://localhost:3000/storage'
+          externalUrl: ''
         })
+      });
+      expect(prismaService.storageOption.update).toHaveBeenCalledWith({
+        where: { id: 'storage-uuid-slash' },
+        data: {
+          externalUrl: 'http://localhost:3000/api/storage/storage-uuid-slash'
+        }
       });
     });
 
@@ -219,42 +253,106 @@ describe('FileManagementService', () => {
 
       await service.onModuleInit();
 
+      expect(prismaService.$transaction).toHaveBeenCalledTimes(1);
       expect(prismaService.storageOption.count).toHaveBeenCalledTimes(1);
       expect(prismaService.storageOption.create).not.toHaveBeenCalled();
+      expect(prismaService.storageOption.update).not.toHaveBeenCalled();
       expect(configurationsService.set).not.toHaveBeenCalled();
     });
 
-    it('should throw an error if SERVER_HTTP_DOMAIN is undefined', async () => {
+    it('should throw an error if SERVER_HTTP_DOMAIN is undefined and roll back', async () => {
       prismaService.storageOption.count.mockResolvedValue(0);
+      prismaService.storageOption.create.mockResolvedValue({
+        id: 'storage-uuid-err'
+      });
       delete process.env['SERVER_HTTP_DOMAIN'];
 
       await expect(service.onModuleInit()).rejects.toThrow(
         'SERVER_HTTP_DOMAIN environment variable is required to initialize default storage option'
       );
-      expect(prismaService.storageOption.create).not.toHaveBeenCalled();
+      expect(prismaService.storageOption.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ externalUrl: '' })
+        })
+      );
+      expect(prismaService.storageOption.update).not.toHaveBeenCalled();
       expect(configurationsService.set).not.toHaveBeenCalled();
     });
 
-    it('should throw an error if SERVER_HTTP_DOMAIN is an empty string or whitespace', async () => {
+    it('should throw an error if SERVER_HTTP_DOMAIN is an empty string or whitespace and roll back', async () => {
       prismaService.storageOption.count.mockResolvedValue(0);
+      prismaService.storageOption.create.mockResolvedValue({
+        id: 'storage-uuid-whitespace'
+      });
       process.env['SERVER_HTTP_DOMAIN'] = '   ';
 
       await expect(service.onModuleInit()).rejects.toThrow(
         'SERVER_HTTP_DOMAIN environment variable is required to initialize default storage option'
       );
-      expect(prismaService.storageOption.create).not.toHaveBeenCalled();
+      expect(prismaService.storageOption.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ externalUrl: '' })
+        })
+      );
+      expect(prismaService.storageOption.update).not.toHaveBeenCalled();
       expect(configurationsService.set).not.toHaveBeenCalled();
     });
 
-    it('should throw an error if SERVER_HTTP_DOMAIN is not a valid URL', async () => {
+    it('should throw an error if SERVER_HTTP_DOMAIN is not a valid URL and roll back', async () => {
       prismaService.storageOption.count.mockResolvedValue(0);
+      prismaService.storageOption.create.mockResolvedValue({
+        id: 'storage-uuid-invalid'
+      });
       process.env['SERVER_HTTP_DOMAIN'] = 'invalid-domain-url';
 
       await expect(service.onModuleInit()).rejects.toThrow(
         'Invalid SERVER_HTTP_DOMAIN URL: invalid-domain-url'
       );
-      expect(prismaService.storageOption.create).not.toHaveBeenCalled();
+      expect(prismaService.storageOption.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ externalUrl: '' })
+        })
+      );
+      expect(prismaService.storageOption.update).not.toHaveBeenCalled();
       expect(configurationsService.set).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resolveExternalStorageUrl', () => {
+    it('should generate URL with SERVER_HTTP_DOMAIN and storage ID', () => {
+      process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:3000';
+      const result = service.resolveExternalStorageUrl('storage-123');
+      expect(result).toBe('http://localhost:3000/api/storage/storage-123');
+    });
+
+    it('should normalize trailing slashes in SERVER_HTTP_DOMAIN', () => {
+      process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:3000///';
+      const result = service.resolveExternalStorageUrl('storage-123');
+      expect(result).toBe('http://localhost:3000/api/storage/storage-123');
+    });
+
+    it('should throw an error if storageId is missing or empty', () => {
+      process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:3000';
+      expect(() => service.resolveExternalStorageUrl('')).toThrow(
+        'Storage ID is required to resolve external storage URL'
+      );
+      expect(() => service.resolveExternalStorageUrl('   ')).toThrow(
+        'Storage ID is required to resolve external storage URL'
+      );
+    });
+
+    it('should throw an error if SERVER_HTTP_DOMAIN is missing', () => {
+      delete process.env['SERVER_HTTP_DOMAIN'];
+      expect(() => service.resolveExternalStorageUrl('storage-123')).toThrow(
+        'SERVER_HTTP_DOMAIN environment variable is required to initialize default storage option'
+      );
+    });
+
+    it('should throw an error if SERVER_HTTP_DOMAIN is invalid', () => {
+      process.env['SERVER_HTTP_DOMAIN'] = 'not-a-valid-url';
+      expect(() => service.resolveExternalStorageUrl('storage-123')).toThrow(
+        'Invalid SERVER_HTTP_DOMAIN URL: not-a-valid-url'
+      );
     });
   });
 
