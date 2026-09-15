@@ -41,7 +41,9 @@ export class AuthController {
   async oidcCallback(
     @Res() res: Response,
     @Query('code') code?: string,
-    @Query('state') state?: string
+    @Query('state') state?: string,
+    @Query('iss') iss?: string,
+    @Query('scope') scope?: string
   ): Promise<void> {
     const frontendUrl = this.getFrontendUrl();
     if (!this.openIdService.isEnabled()) {
@@ -53,7 +55,7 @@ export class AuthController {
       );
     }
     try {
-      const profile = await this.openIdService.exchangeCode(code, state);
+      const profile = await this.openIdService.exchangeCode(code, state, iss, scope);
       const loginResponse = await this.authService.handleOidcLogin(profile);
       const params = new URLSearchParams({
         token: loginResponse.token,

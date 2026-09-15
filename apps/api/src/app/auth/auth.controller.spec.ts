@@ -285,7 +285,7 @@ describe('AuthController', () => {
 
       await controller.oidcCallback(response, 'code-123', 'state-456');
 
-      expect(openIdService.exchangeCode).toHaveBeenCalledWith('code-123', 'state-456');
+      expect(openIdService.exchangeCode).toHaveBeenCalledWith('code-123', 'state-456', undefined, undefined);
       expect(authService.handleOidcLogin).toHaveBeenCalledWith(profile);
       expect(mockRes.redirect).toHaveBeenCalledTimes(1);
       const redirectUrl = new URL(mockRes.redirect.mock.calls[0][0]);
@@ -293,6 +293,38 @@ describe('AuthController', () => {
       expect(redirectUrl.searchParams.get('token')).toBe('mock-jwt-token');
       expect(redirectUrl.searchParams.get('refreshToken')).toBe('mock-refresh-token');
       expect(redirectUrl.searchParams.get('forcePasswordChange')).toBeNull();
+    });
+
+    it('should forward iss and scope parameters to exchangeCode when provided', async () => {
+      openIdService.isEnabled.mockReturnValue(true);
+      const profile = {
+        openId: 'oidc-sub-123',
+        email: 'user@example.com',
+        fullName: 'Jane Doe'
+      };
+      openIdService.exchangeCode.mockResolvedValue(profile);
+      const loginResponse = {
+        token: 'mock-jwt-token',
+        refreshToken: 'mock-refresh-token',
+        forcePasswordChange: false
+      };
+      authService.handleOidcLogin.mockResolvedValue(loginResponse);
+
+      await controller.oidcCallback(
+        response,
+        'code-123',
+        'state-456',
+        'https://idp.example.com',
+        'openid email'
+      );
+
+      expect(openIdService.exchangeCode).toHaveBeenCalledWith(
+        'code-123',
+        'state-456',
+        'https://idp.example.com',
+        'openid email'
+      );
+      expect(mockRes.redirect).toHaveBeenCalledTimes(1);
     });
 
     it('should include forcePasswordChange in redirect URL if true', async () => {

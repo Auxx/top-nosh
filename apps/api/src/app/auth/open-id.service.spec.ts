@@ -315,6 +315,79 @@ describe('OpenIdService', () => {
       );
     });
 
+    it('should append iss and scope query parameters to currentUrl when provided as positional arguments', async () => {
+      await service.getAuthorizationUrl();
+
+      const mockTokens = {
+        claims: jest.fn().mockReturnValue({
+          sub: 'oidc-user-123',
+          email: 'user@example.com',
+          name: 'Jane Doe'
+        })
+      };
+      (client.authorizationCodeGrant as jest.Mock).mockResolvedValue(mockTokens);
+
+      await service.exchangeCode(
+        'auth-code-123',
+        'state-123',
+        'https://idp.example.com',
+        'openid email'
+      );
+
+      const passedUrl = (client.authorizationCodeGrant as jest.Mock).mock.calls[0][1] as URL;
+      expect(passedUrl.searchParams.get('code')).toBe('auth-code-123');
+      expect(passedUrl.searchParams.get('state')).toBe('state-123');
+      expect(passedUrl.searchParams.get('iss')).toBe('https://idp.example.com');
+      expect(passedUrl.searchParams.get('scope')).toBe('openid email');
+    });
+
+    it('should append iss and scope query parameters to currentUrl when provided in params object', async () => {
+      await service.getAuthorizationUrl();
+
+      const mockTokens = {
+        claims: jest.fn().mockReturnValue({
+          sub: 'oidc-user-123',
+          email: 'user@example.com',
+          name: 'Jane Doe'
+        })
+      };
+      (client.authorizationCodeGrant as jest.Mock).mockResolvedValue(mockTokens);
+
+      await service.exchangeCode({
+        code: 'auth-code-123',
+        state: 'state-123',
+        iss: 'https://idp.example.com',
+        scope: 'openid email'
+      });
+
+      const passedUrl = (client.authorizationCodeGrant as jest.Mock).mock.calls[0][1] as URL;
+      expect(passedUrl.searchParams.get('code')).toBe('auth-code-123');
+      expect(passedUrl.searchParams.get('state')).toBe('state-123');
+      expect(passedUrl.searchParams.get('iss')).toBe('https://idp.example.com');
+      expect(passedUrl.searchParams.get('scope')).toBe('openid email');
+    });
+
+    it('should not append iss or scope to currentUrl when they are omitted', async () => {
+      await service.getAuthorizationUrl();
+
+      const mockTokens = {
+        claims: jest.fn().mockReturnValue({
+          sub: 'oidc-user-123',
+          email: 'user@example.com',
+          name: 'Jane Doe'
+        })
+      };
+      (client.authorizationCodeGrant as jest.Mock).mockResolvedValue(mockTokens);
+
+      await service.exchangeCode('auth-code-123', 'state-123');
+
+      const passedUrl = (client.authorizationCodeGrant as jest.Mock).mock.calls[0][1] as URL;
+      expect(passedUrl.searchParams.get('code')).toBe('auth-code-123');
+      expect(passedUrl.searchParams.get('state')).toBe('state-123');
+      expect(passedUrl.searchParams.has('iss')).toBe(false);
+      expect(passedUrl.searchParams.has('scope')).toBe(false);
+    });
+
     it('should consume state so it cannot be reused', async () => {
       await service.getAuthorizationUrl();
 

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import * as client from 'openid-client';
 import { ConfigurationsService } from '../configurations/configurations.service';
-import { OidcLoginUrlResponse, OidcUserProfile } from './dto/oidc.dto';
+import { OidcCallbackParams, OidcLoginUrlResponse, OidcUserProfile } from './dto/oidc.dto';
 
 interface StateCacheEntry {
   readonly codeVerifier: string;
@@ -96,8 +96,10 @@ export class OpenIdService implements OnModuleInit {
   }
 
   async exchangeCode(
-    codeOrParams: string | { code: string; state: string; },
-    maybeState?: string
+    codeOrParams: string | OidcCallbackParams,
+    maybeState?: string,
+    maybeIss?: string,
+    maybeScope?: string
   ): Promise<OidcUserProfile> {
     if (!this.isEnabled() || !this.oidcConfig || !this.callbackUrl) {
       throw new NotFoundException('OpenID Connect is not enabled');
@@ -105,6 +107,8 @@ export class OpenIdService implements OnModuleInit {
 
     const code = typeof codeOrParams === 'string' ? codeOrParams : codeOrParams?.code;
     const state = typeof codeOrParams === 'string' ? maybeState : codeOrParams?.state;
+    const iss = typeof codeOrParams === 'string' ? maybeIss : codeOrParams?.iss;
+    const scope = typeof codeOrParams === 'string' ? maybeScope : codeOrParams?.scope;
 
     if (!code || !state) {
       throw new BadRequestException('Missing code or state in callback request');
@@ -126,6 +130,12 @@ export class OpenIdService implements OnModuleInit {
     const currentUrl = new URL(this.callbackUrl);
     currentUrl.searchParams.set('code', code);
     currentUrl.searchParams.set('state', state);
+    if (iss) {
+      currentUrl.searchParams.set('iss', iss);
+    }
+    if (scope) {
+      currentUrl.searchParams.set('scope', scope);
+    }
 
     let tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers;
     try {
