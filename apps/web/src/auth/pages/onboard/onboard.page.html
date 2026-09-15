@@ -67,6 +67,14 @@
         {{ t('submit') }}
       }
     </button>
+    @if (oidcEnabled()) {
+      <button matButton
+              type="button"
+              [disabled]="loading"
+              (click)="onOidcRegister()">
+        {{ t('oidcRegister') }}
+      </button>
+    }
   </mat-card-actions>
 
 </ng-container>

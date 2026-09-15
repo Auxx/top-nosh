@@ -16,6 +16,13 @@
     }
   },
   "web": {
+    "AuthCallbackPage": {
+      "title": "Authentication",
+      "loadingSubtitle": "Completing login, please wait...",
+      "errorSubtitle": "Authentication failed",
+      "invalidCallback": "Invalid authentication callback state",
+      "backToLogin": "BACK TO LOGIN"
+    },
     "LoginPage": {
       "title": "Welcome!",
       "description": "Please log in to continue.",
@@ -27,8 +34,10 @@
       "passwordPlaceholder": "Password",
       "passwordRequired": "Password is required",
       "login": "LOG IN",
+      "oidcLogin": "OpenID Connect Login",
       "loading": "Logging in...",
-      "loginFailed": "Login failed. Please check your credentials."
+      "loginFailed": "Login failed. Please check your credentials.",
+      "oidcFailed": "OpenID Connect login failed. Please try again."
     },
     "OnboardPage": {
       "title": "Welcome to Top Nosh!",
@@ -45,9 +54,11 @@
       "passwordRequired": "Password is required",
       "passwordMinLength": "Password must be at least 12 characters long",
       "submit": "CREATE ACCOUNT",
+      "oidcRegister": "Register With OpenID Connect",
       "loading": "Processing...",
       "success": "User onboarded successfully",
-      "failure": "Onboarding failed. Please try again."
+      "failure": "Onboarding failed. Please try again.",
+      "oidcFailed": "OpenID Connect registration failed. Please try again."
     },
     "PasswordChangePage": {
       "title": "Change Password",

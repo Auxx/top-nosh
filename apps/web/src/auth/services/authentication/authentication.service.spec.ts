@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { HTTP_BASE_URL_ENABLED } from '../../../system/interceptors/base-url/base-url.interceptor.types';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 import { AuthenticationService, AuthState, authStorageKey } from './authentication.service';
 
@@ -38,6 +39,8 @@ describe('AuthenticationService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'logout')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'onboardingRequired')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'onboardUser')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'getOidcLoginUrl')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'updateTokens')).toBe(true);
   });
 
   it('should initialize with default unauthenticated state when localStorage is empty', done => {
@@ -442,6 +445,73 @@ describe('AuthenticationService', () => {
 
       const req = httpTesting.expectOne('/auth/refresh');
       req.flush({ message: 'Unauthorized' }, { status: 403, statusText: 'Forbidden' });
+    });
+  });
+
+  describe('getOidcLoginUrl', () => {
+    it('should send GET request to /oidc/login with HTTP_AUTH_ENABLED false and HTTP_BASE_URL_ENABLED true', done => {
+      const mockResponse = { authorizationUrl: 'https://idp.example.com/oauth/authorize?client_id=123' };
+
+      service.getOidcLoginUrl().subscribe({
+        next: response => {
+          expect(response).toEqual(mockResponse);
+          done();
+        }
+      });
+
+      const req = httpTesting.expectOne('/oidc/login');
+      expect(req.request.method).toBe('GET');
+      expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
+      expect(req.request.context.get(HTTP_BASE_URL_ENABLED)).toBe(true);
+      req.flush(mockResponse);
+    });
+  });
+
+  describe('updateTokens', () => {
+    it('should update state with decoded userId, persist to localStorage, and emit on state()', done => {
+      const payload = btoa(JSON.stringify({ sub: 'oidc-user-456', email: 'oidc@example.com' }));
+      const mockToken = `header.${payload}.signature`;
+      const mockRefreshToken = 'oidc-refresh-token-789';
+
+      const states: AuthState[] = [];
+      service.state().subscribe(s => {
+        states.push(s);
+      });
+
+      service.updateTokens(mockToken, mockRefreshToken);
+
+      expect(states[states.length - 1]).toEqual({
+        isAuthenticated: true,
+        token: mockToken,
+        refreshToken: mockRefreshToken,
+        userId: 'oidc-user-456'
+      });
+
+      const stored = JSON.parse(localStorage.getItem(authStorageKey) || '{}');
+      expect(stored).toEqual({
+        isAuthenticated: true,
+        token: mockToken,
+        refreshToken: mockRefreshToken,
+        userId: 'oidc-user-456'
+      });
+
+      done();
+    });
+
+    it('should handle token without sub claim gracefully', done => {
+      const payload = btoa(JSON.stringify({ email: 'nosub@example.com' }));
+      const mockToken = `header.${payload}.signature`;
+      const mockRefreshToken = 'oidc-refresh-token-999';
+
+      service.updateTokens(mockToken, mockRefreshToken);
+
+      service.state().subscribe(state => {
+        expect(state.isAuthenticated).toBe(true);
+        expect(state.token).toBe(mockToken);
+        expect(state.refreshToken).toBe(mockRefreshToken);
+        expect(state.userId).toBeNull();
+        done();
+      });
     });
   });
 });

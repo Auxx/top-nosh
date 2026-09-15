@@ -49,6 +49,14 @@
             [disabled]="form.invalid || loading">
       {{ loading ? t('loading') : t('login') }}
     </button>
+    @if (oidcEnabled()) {
+      <button matButton
+              type="button"
+              [disabled]="loading"
+              (click)="onOidcLogin()">
+        {{ t('oidcLogin') }}
+      </button>
+    }
   </mat-card-actions>
 
 </ng-container>

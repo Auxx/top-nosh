@@ -37,7 +37,7 @@ describe('Configuration Endpoint E2E', () => {
       .expect(200);
 
     expect(response.headers['content-type']).toContain('text/plain');
-    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=http://localhost:4200/\n');
+    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=http://localhost:4200/\nSECURITY_OIDC_ENABLED=false\n');
   });
 
   it('should be publicly accessible without authorization headers', async () => {
@@ -49,7 +49,7 @@ describe('Configuration Endpoint E2E', () => {
       .expect(200);
 
     expect(response.status).toBe(200);
-    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=https://app.example.com/\n');
+    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=https://app.example.com/\nSECURITY_OIDC_ENABLED=false\n');
   });
 
   it('should handle undefined CORS_ORIGIN gracefully', async () => {
@@ -61,7 +61,7 @@ describe('Configuration Endpoint E2E', () => {
       .expect(200);
 
     expect(response.headers['content-type']).toContain('text/plain');
-    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=\n');
+    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=\nSECURITY_OIDC_ENABLED=false\n');
   });
 
   it('should return 404 for /api/assets/app.properties due to prefix exclusion', async () => {

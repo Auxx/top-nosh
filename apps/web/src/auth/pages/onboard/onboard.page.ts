@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { WhenError } from '@top-nosh/ui';
+import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -46,6 +47,10 @@ export class OnboardPage {
 
   private readonly failureMessage = translateSignal('web.OnboardPage.failure');
 
+  private readonly oidcFailedMessage = translateSignal('web.OnboardPage.oidcFailed');
+
+  readonly oidcEnabled = signal<boolean>(environment().oidcEnabled);
+
   readonly form = this.fb.nonNullable.group({
     fullName: [ '', [ Validators.required ] ],
     email: [ '', [ Validators.required, Validators.email ] ],
@@ -78,5 +83,32 @@ export class OnboardPage {
         this.snackBarRef = this.snackBar.open(errorMessage, this.okMessage());
       }
     });
+  };
+
+  readonly onOidcRegister = (): void => {
+    if (this.isLoading()) {
+      return;
+    }
+
+    if (this.snackBarRef) {
+      this.snackBarRef.dismiss();
+      this.snackBarRef = null;
+    }
+
+    this.isLoading.set(true);
+
+    this.authService.getOidcLoginUrl().subscribe({
+      next: ({ authorizationUrl }) => {
+        this.redirectTo(authorizationUrl);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.snackBarRef = this.snackBar.open(this.oidcFailedMessage(), this.okMessage());
+      }
+    });
+  };
+
+  readonly redirectTo = (url: string): void => {
+    window.location.href = url;
   };
 }
