@@ -1,18 +1,28 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService, TokenType } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
 import { ChangePasswordResponse } from './dto/change-password.dto';
 import { JwtPayload, LoginDto, LoginResponse } from './dto/login.dto';
 import { LogoutResponse } from './dto/logout.dto';
+import { OidcUserProfile } from './dto/oidc.dto';
 import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
 import { RefreshTokenResponse } from './dto/refresh-token.dto';
+import { OpenIdService } from './open-id.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly openIdService: OpenIdService
   ) {}
 
   async onboardingRequired(): Promise<OnboardingRequiredResponse> {
@@ -47,7 +57,7 @@ export class AuthService {
       where: { email }
     });
 
-    if (!user) {
+    if (!user || !user.passwordHash) {
       return null;
     }
 
@@ -75,6 +85,47 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    return this.createAuthTokens(user);
+  }
+
+  async handleOidcLogin(profile: OidcUserProfile): Promise<LoginResponse> {
+    let user = await this.prisma.user.findUnique({
+      where: { openId: profile.openId }
+    });
+
+    if (!user) {
+      const existingByEmail = await this.prisma.user.findUnique({
+        where: { email: profile.email }
+      });
+
+      if (existingByEmail) {
+        if (this.openIdService.isLinkByEmailEnabled()) {
+          user = await this.prisma.user.update({
+            where: { id: existingByEmail.id },
+            data: { openId: profile.openId }
+          });
+        } else {
+          throw new ConflictException('An account with this email already exists. Account linking is disabled.');
+        }
+      } else {
+        user = await this.prisma.user.create({
+          data: {
+            fullName: profile.fullName,
+            email: profile.email,
+            openId: profile.openId,
+            passwordHash: null,
+            forcePasswordChange: false
+          }
+        });
+      }
+    }
+
+    return this.createAuthTokens(user);
+  }
+
+  private async createAuthTokens(
+    user: { id: string; email: string; forcePasswordChange: boolean; }
+  ): Promise<LoginResponse> {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email

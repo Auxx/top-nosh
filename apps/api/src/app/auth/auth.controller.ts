@@ -1,15 +1,55 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Post,
+  Query,
+  Req,
+  UseGuards
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto, ChangePasswordResponse } from './dto/change-password.dto';
 import { LoginDto, LoginResponse } from './dto/login.dto';
 import { LogoutDto, LogoutResponse } from './dto/logout.dto';
+import { OidcLoginUrlResponse } from './dto/oidc.dto';
 import { OnboardingRequiredResponse, OnboardUserDto, OnboardUserResponse } from './dto/onboarding.dto';
 import { RefreshTokenDto, RefreshTokenResponse } from './dto/refresh-token.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { OpenIdService } from './open-id.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly openIdService: OpenIdService
+  ) {}
+
+  @Get('oidc/login')
+  async oidcLogin(): Promise<OidcLoginUrlResponse> {
+    if (!this.openIdService.isEnabled()) {
+      throw new NotFoundException('OpenID Connect is not enabled');
+    }
+    return this.openIdService.getAuthorizationUrl();
+  }
+
+  @Get('oidc/callback')
+  async oidcCallback(
+    @Query('code') code?: string,
+    @Query('state') state?: string
+  ): Promise<LoginResponse> {
+    if (!this.openIdService.isEnabled()) {
+      throw new NotFoundException('OpenID Connect is not enabled');
+    }
+    if (!code || !state) {
+      throw new BadRequestException('Missing code or state in callback request');
+    }
+    const profile = await this.openIdService.exchangeCode(code, state);
+    return this.authService.handleOidcLogin(profile);
+  }
 
   @Get('onboarding-required')
   async onboardingRequired(): Promise<OnboardingRequiredResponse> {

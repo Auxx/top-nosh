@@ -3,14 +3,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from '@top-nosh/data-access';
 import type { StringValue } from 'ms';
+import { ConfigurationsModule } from '../configurations/configurations.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { OpenIdService } from './open-id.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     PrismaModule,
+    ConfigurationsModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env['SECURITY_JWT_SECRET'] || 'top-nosh-secret-key-change-in-production',
@@ -20,7 +23,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     })
   ],
   controllers: [ AuthController ],
-  providers: [ AuthService, JwtStrategy, JwtAuthGuard ],
-  exports: [ AuthService, JwtAuthGuard, PassportModule, JwtModule ]
+  providers: [ AuthService, JwtStrategy, JwtAuthGuard, OpenIdService ],
+  exports: [ AuthService, JwtAuthGuard, PassportModule, JwtModule, OpenIdService ]
 })
 export class AuthModule {}

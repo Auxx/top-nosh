@@ -1,6 +1,8 @@
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { OpenIdService } from './open-id.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -11,6 +13,12 @@ describe('AuthController', () => {
     changePassword: jest.Mock;
     onboardingRequired: jest.Mock;
     onboardUser: jest.Mock;
+    handleOidcLogin: jest.Mock;
+  };
+  let openIdService: {
+    isEnabled: jest.Mock;
+    getAuthorizationUrl: jest.Mock;
+    exchangeCode: jest.Mock;
   };
 
   beforeEach(async () => {
@@ -20,7 +28,14 @@ describe('AuthController', () => {
       refresh: jest.fn(),
       changePassword: jest.fn(),
       onboardingRequired: jest.fn(),
-      onboardUser: jest.fn()
+      onboardUser: jest.fn(),
+      handleOidcLogin: jest.fn()
+    };
+
+    openIdService = {
+      isEnabled: jest.fn(),
+      getAuthorizationUrl: jest.fn(),
+      exchangeCode: jest.fn()
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +44,10 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: authService
+        },
+        {
+          provide: OpenIdService,
+          useValue: openIdService
         }
       ]
     }).compile();
@@ -177,6 +196,79 @@ describe('AuthController', () => {
       const result = await controller.changePassword(req, changePasswordDto);
 
       expect(authService.changePassword).toHaveBeenCalledWith('user-123', 'NewPassword123!');
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('oidcLogin', () => {
+    it('should throw NotFoundException when OpenID Connect is disabled', async () => {
+      openIdService.isEnabled.mockReturnValue(false);
+
+      await expect(controller.oidcLogin()).rejects.toThrow(NotFoundException);
+      expect(openIdService.getAuthorizationUrl).not.toHaveBeenCalled();
+    });
+
+    it('should return authorizationUrl when OpenID Connect is enabled', async () => {
+      openIdService.isEnabled.mockReturnValue(true);
+      const expectedResponse = {
+        authorizationUrl: 'https://idp.example.com/auth?client_id=123'
+      };
+      openIdService.getAuthorizationUrl.mockResolvedValue(expectedResponse);
+
+      const result = await controller.oidcLogin();
+
+      expect(openIdService.getAuthorizationUrl).toHaveBeenCalled();
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('oidcCallback', () => {
+    it('should throw NotFoundException when OpenID Connect is disabled', async () => {
+      openIdService.isEnabled.mockReturnValue(false);
+
+      await expect(controller.oidcCallback('code-123', 'state-456')).rejects.toThrow(
+        NotFoundException
+      );
+      expect(openIdService.exchangeCode).not.toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException when code is missing', async () => {
+      openIdService.isEnabled.mockReturnValue(true);
+
+      await expect(controller.oidcCallback('', 'state-456')).rejects.toThrow(
+        BadRequestException
+      );
+      expect(openIdService.exchangeCode).not.toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException when state is missing', async () => {
+      openIdService.isEnabled.mockReturnValue(true);
+
+      await expect(controller.oidcCallback('code-123', '')).rejects.toThrow(
+        BadRequestException
+      );
+      expect(openIdService.exchangeCode).not.toHaveBeenCalled();
+    });
+
+    it('should exchange code and handle OIDC login returning LoginResponse', async () => {
+      openIdService.isEnabled.mockReturnValue(true);
+      const profile = {
+        openId: 'oidc-sub-123',
+        email: 'user@example.com',
+        fullName: 'Jane Doe'
+      };
+      openIdService.exchangeCode.mockResolvedValue(profile);
+      const expectedResponse = {
+        token: 'mock-jwt-token',
+        refreshToken: 'mock-refresh-token',
+        forcePasswordChange: false
+      };
+      authService.handleOidcLogin.mockResolvedValue(expectedResponse);
+
+      const result = await controller.oidcCallback('code-123', 'state-456');
+
+      expect(openIdService.exchangeCode).toHaveBeenCalledWith('code-123', 'state-456');
+      expect(authService.handleOidcLogin).toHaveBeenCalledWith(profile);
       expect(result).toEqual(expectedResponse);
     });
   });
