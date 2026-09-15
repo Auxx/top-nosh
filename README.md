@@ -63,8 +63,3 @@ first time. You will be welcomed with a simple onboarding process.
 ## IOCD support
 
 IOCD support is not implemented yet but is planned in the near future.
-
-## File uploads
-
-File uploads are not implemented yet but uploaded files will be stored inside
-the data folder by default in the future.
