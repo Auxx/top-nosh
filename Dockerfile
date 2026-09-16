@@ -13,7 +13,7 @@ RUN npm ci
 
 COPY . .
 
-RUN npx prisma@7.10.0 generate
+RUN npx -y prisma@7.10.0 generate
 RUN npx nx run-many --target=build --projects=api,web --configuration=production
 
 # Stage 2: Production Runtime
@@ -42,9 +42,6 @@ ENV SERVER_HTTP_PORT=3000
 ENV SERVER_DEVELOPMENT_MODE=false
 ENV PRISMA_DATABASE_URL=file:/app/data/top-nosh.db
 ENV FILEMANAGEMENT_STORAGE_LOCAL=/app/data/storage
-
-RUN ls -lA /app
-RUN ls -lA /app/data
 
 EXPOSE 3000
 
