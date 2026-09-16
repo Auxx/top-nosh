@@ -5,13 +5,13 @@ A self-hosted recipe library management system with shopping lists.
 ## Project status
 
 - Authorisation works.
+- OIDC is supported.
 - Basic onboarding works.
 - Recipe management works.
 - User management works.
 - Shopping Lists management works but requires UI improvements, especially for
   mobile devices.
 - File upload is not implemented yet.
-- OICD is not implemented yet.
 
 ## Installation
 
@@ -30,7 +30,7 @@ services:
     environment:
       SERVER_HTTP_DOMAIN: "http://your-domain:3000/"
       SECURITY_JWT_SECRET: "your-secret-key-make-it-a-random-long-string"
-      SECURITY_JWT_EXPIRES_IN: "24h"
+      SECURITY_JWT_EXPIRES_IN: "15m"
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -58,8 +58,22 @@ through environment variables and which variable names should be used.
 ## First login
 
 You will be able to create an account once you start and visit Top Nosh for the
-first time. You will be welcomed with a simple onboarding process.
+first time. You will be welcomed with a simple onboarding process. If you plan
+to use OIDC, enable OIDC before going through the onboarding process. It can be
+set up later as well.
 
-## IOCD support
+## OIDC support
 
-IOCD support is not implemented yet but is planned in the near future.
+OIDC support can be enabled by setting up some additional environment variables:
+
+- `SECURITY_OIDC_ISSUER_URL` - link to your OIDC provider. Also known as the
+  issuer URL.
+- `SECURITY_OIDC_CLIENT_ID` - client ID you've assigned to your Top Nosh
+  instance.
+- `SECURITY_OIDC_CLIENT_SECRET` - client secret.
+- `SECURITY_OIDC_CALLBACK_URL` - set this to `SERVER_HTTP_DOMAIN` plus
+  `/api/auth/oidc/callback`. For example,
+  `http://localhost:3000/api/auth/oidc/callback`.
+- `SECURITY_OIDC_LINK_BY_EMAIL` - when set to `true`,enables linking existing
+  users to OIDC users with the same email. It is advised to disable this feature
+  for security reasons.
