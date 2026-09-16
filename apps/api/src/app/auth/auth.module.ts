@@ -7,7 +7,6 @@ import { ConfigurationsModule } from '../configurations/configurations.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { OidcController } from './oidc.controller';
 import { OpenIdService } from './open-id.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
@@ -23,7 +22,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       }
     })
   ],
-  controllers: [ AuthController, OidcController ],
+  controllers: [ AuthController ],
   providers: [ AuthService, JwtStrategy, JwtAuthGuard, OpenIdService ],
   exports: [ AuthService, JwtAuthGuard, PassportModule, JwtModule, OpenIdService ]
 })

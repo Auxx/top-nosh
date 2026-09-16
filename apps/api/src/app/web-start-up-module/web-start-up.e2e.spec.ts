@@ -30,6 +30,7 @@ describe('Configuration Endpoint E2E', () => {
 
   it('should serve /assets/app.properties directly without /api prefix', async () => {
     process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:4200/';
+    delete process.env['SECURITY_OIDC_ISSUER_URL'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -42,6 +43,7 @@ describe('Configuration Endpoint E2E', () => {
 
   it('should be publicly accessible without authorization headers', async () => {
     process.env['SERVER_HTTP_DOMAIN'] = 'https://app.example.com/';
+    delete process.env['SECURITY_OIDC_ISSUER_URL'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -54,6 +56,7 @@ describe('Configuration Endpoint E2E', () => {
 
   it('should handle undefined CORS_ORIGIN gracefully', async () => {
     delete process.env['SERVER_HTTP_DOMAIN'];
+    delete process.env['SECURITY_OIDC_ISSUER_URL'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())

@@ -95,7 +95,7 @@ export class AuthenticationService {
 
   readonly getOidcLoginUrl = (): Observable<{ authorizationUrl: string; }> =>
     this.http.get<{ authorizationUrl: string; }>(
-      '/oidc/login',
+      '/auth/oidc/login',
       {
         context: new HttpContext()
           .set(HTTP_AUTH_ENABLED, false)

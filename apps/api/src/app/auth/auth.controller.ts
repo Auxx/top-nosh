@@ -31,6 +31,7 @@ export class AuthController {
 
   @Get('oidc/login')
   async oidcLogin(): Promise<OidcLoginUrlResponse> {
+    console.log('/api/auth/oidc/login');
     if (!this.openIdService.isEnabled()) {
       throw new NotFoundException('OpenID Connect is not enabled');
     }
@@ -45,6 +46,7 @@ export class AuthController {
     @Query('iss') iss?: string,
     @Query('scope') scope?: string
   ): Promise<void> {
+    console.log('/api/auth/oidc/callback');
     const frontendUrl = this.getFrontendUrl();
     if (!this.openIdService.isEnabled()) {
       return res.redirect(`${frontendUrl}/auth/callback?error=${encodeURIComponent('OpenID Connect is not enabled')}`);

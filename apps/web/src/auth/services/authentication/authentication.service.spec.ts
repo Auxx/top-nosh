@@ -459,7 +459,7 @@ describe('AuthenticationService', () => {
         }
       });
 
-      const req = httpTesting.expectOne('/oidc/login');
+      const req = httpTesting.expectOne('/auth/oidc/login');
       expect(req.request.method).toBe('GET');
       expect(req.request.context.get(HTTP_AUTH_ENABLED)).toBe(false);
       expect(req.request.context.get(HTTP_BASE_URL_ENABLED)).toBe(true);

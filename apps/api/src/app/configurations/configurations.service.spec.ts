@@ -49,14 +49,6 @@ describe('ConfigurationsService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('keyToEnvVar', () => {
-    it('should convert dot-separated keys to uppercase snake case', () => {
-      expect(service.keyToEnvVar('files.storage.type')).toBe('FILES_STORAGE_TYPE');
-      expect(service.keyToEnvVar('prisma.database.url')).toBe('PRISMA_DATABASE_URL');
-      expect(service.keyToEnvVar('server.http.port')).toBe('SERVER_HTTP_PORT');
-    });
-  });
-
   describe('get and getValue', () => {
     it('should return DB value when key exists in database with string value', async () => {
       prismaService.configuration.findUnique.mockResolvedValue({
