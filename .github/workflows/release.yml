@@ -28,9 +28,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: auxx/top-nosh:latest,auxx/top-nosh:${{ github.ref_name }}
 
-      - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v5
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: Auxx/top-nosh
+#      - name: Docker Hub Description
+#        uses: peter-evans/dockerhub-description@v5
+#        with:
+#          username: ${{ vars.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#          repository: auxx/top-nosh
