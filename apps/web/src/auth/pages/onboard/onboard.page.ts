@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +36,8 @@ export class OnboardPage {
   private readonly snackBar = inject(MatSnackBar);
 
   private readonly router = inject(Router);
+
+  private readonly document = inject(DOCUMENT);
 
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
@@ -98,9 +100,7 @@ export class OnboardPage {
     this.isLoading.set(true);
 
     this.authService.getOidcLoginUrl().subscribe({
-      next: ({ authorizationUrl }) => {
-        this.redirectTo(authorizationUrl);
-      },
+      next: ({ authorizationUrl }) => this.redirectTo(authorizationUrl),
       error: () => {
         this.isLoading.set(false);
         this.snackBarRef = this.snackBar.open(this.oidcFailedMessage(), this.okMessage());
@@ -108,7 +108,5 @@ export class OnboardPage {
     });
   };
 
-  readonly redirectTo = (url: string): void => {
-    window.location.href = url;
-  };
+  readonly redirectTo = (url: string) => this.document.location.href = url;
 }
