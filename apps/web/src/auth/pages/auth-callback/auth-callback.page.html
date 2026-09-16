@@ -1,0 +1,28 @@
+<ng-container *transloco="let t; prefix: 'web.AuthCallbackPage'">
+
+  <mat-card-header>
+    <mat-card-title>{{ t('title') }}</mat-card-title>
+    <mat-card-subtitle>{{ errorMessage() ? t('errorSubtitle') : t('loadingSubtitle') }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (errorMessage(); as error) {
+      <div class="error-message" role="alert">
+        {{ error }}
+      </div>
+    } @else {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+  </mat-card-content>
+
+  @if (errorMessage()) {
+    <mat-card-actions>
+      <button matButton type="button" (click)="onBackToLogin()">
+        {{ t('backToLogin') }}
+      </button>
+    </mat-card-actions>
+  }
+
+</ng-container>

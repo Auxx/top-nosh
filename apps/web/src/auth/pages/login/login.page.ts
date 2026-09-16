@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { WhenError } from '@top-nosh/ui';
+import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -36,6 +37,8 @@ export class LoginPage {
 
   private readonly router = inject(Router);
 
+  private readonly document = inject(DOCUMENT);
+
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   readonly isLoading = signal<boolean>(false);
@@ -43,6 +46,10 @@ export class LoginPage {
   private readonly okMessage = translateSignal('ui.System.ok');
 
   private readonly loginFailedMessage = translateSignal('web.LoginPage.loginFailed');
+
+  private readonly oidcFailedMessage = translateSignal('web.LoginPage.oidcFailed');
+
+  readonly oidcEnabled = signal<boolean>(environment().oidcEnabled);
 
   readonly form = this.fb.nonNullable.group({
     email: [ '', [ Validators.required, Validators.email ] ],
@@ -79,4 +86,25 @@ export class LoginPage {
       }
     });
   };
+
+  readonly onOidcLogin = (): void => {
+    if (this.isLoading()) {
+      return;
+    }
+
+    this.snackBarRef?.dismiss();
+    this.snackBarRef = null;
+
+    this.isLoading.set(true);
+
+    this.authService.getOidcLoginUrl().subscribe({
+      next: ({ authorizationUrl }) => this.redirectTo(authorizationUrl),
+      error: () => {
+        this.isLoading.set(false);
+        this.snackBarRef = this.snackBar.open(this.oidcFailedMessage(), this.okMessage());
+      }
+    });
+  };
+
+  readonly redirectTo = (url: string) => this.document.location.href = url;
 }

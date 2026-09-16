@@ -30,6 +30,7 @@ describe('Configuration Endpoint E2E', () => {
 
   it('should serve /assets/app.properties directly without /api prefix', async () => {
     process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:4200/';
+    delete process.env['SECURITY_OIDC_ISSUER_URL'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -37,11 +38,12 @@ describe('Configuration Endpoint E2E', () => {
       .expect(200);
 
     expect(response.headers['content-type']).toContain('text/plain');
-    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=http://localhost:4200/\n');
+    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=http://localhost:4200/\nSECURITY_OIDC_ENABLED=false\n');
   });
 
   it('should be publicly accessible without authorization headers', async () => {
     process.env['SERVER_HTTP_DOMAIN'] = 'https://app.example.com/';
+    delete process.env['SECURITY_OIDC_ISSUER_URL'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -49,11 +51,12 @@ describe('Configuration Endpoint E2E', () => {
       .expect(200);
 
     expect(response.status).toBe(200);
-    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=https://app.example.com/\n');
+    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=https://app.example.com/\nSECURITY_OIDC_ENABLED=false\n');
   });
 
   it('should handle undefined CORS_ORIGIN gracefully', async () => {
     delete process.env['SERVER_HTTP_DOMAIN'];
+    delete process.env['SECURITY_OIDC_ISSUER_URL'];
     app = await createApp();
 
     const response = await request(app.getHttpServer())
@@ -61,7 +64,7 @@ describe('Configuration Endpoint E2E', () => {
       .expect(200);
 
     expect(response.headers['content-type']).toContain('text/plain');
-    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=\n');
+    expect(response.text).toBe('PRODUCTION=true\nAPI_URL=\nSECURITY_OIDC_ENABLED=false\n');
   });
 
   it('should return 404 for /api/assets/app.properties due to prefix exclusion', async () => {

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { WhenError } from '@top-nosh/ui';
+import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -36,6 +37,8 @@ export class OnboardPage {
 
   private readonly router = inject(Router);
 
+  private readonly document = inject(DOCUMENT);
+
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   readonly isLoading = signal<boolean>(false);
@@ -45,6 +48,10 @@ export class OnboardPage {
   private readonly successMessage = translateSignal('web.OnboardPage.success');
 
   private readonly failureMessage = translateSignal('web.OnboardPage.failure');
+
+  private readonly oidcFailedMessage = translateSignal('web.OnboardPage.oidcFailed');
+
+  readonly oidcEnabled = signal<boolean>(environment().oidcEnabled);
 
   readonly form = this.fb.nonNullable.group({
     fullName: [ '', [ Validators.required ] ],
@@ -79,4 +86,27 @@ export class OnboardPage {
       }
     });
   };
+
+  readonly onOidcRegister = (): void => {
+    if (this.isLoading()) {
+      return;
+    }
+
+    if (this.snackBarRef) {
+      this.snackBarRef.dismiss();
+      this.snackBarRef = null;
+    }
+
+    this.isLoading.set(true);
+
+    this.authService.getOidcLoginUrl().subscribe({
+      next: ({ authorizationUrl }) => this.redirectTo(authorizationUrl),
+      error: () => {
+        this.isLoading.set(false);
+        this.snackBarRef = this.snackBar.open(this.oidcFailedMessage(), this.okMessage());
+      }
+    });
+  };
+
+  readonly redirectTo = (url: string) => this.document.location.href = url;
 }

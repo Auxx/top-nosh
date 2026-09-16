@@ -5,6 +5,7 @@ module.exports = {
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
   },
+  transformIgnorePatterns: ['node_modules/(?!(openid-client|oauth4webapi|jose|change-case)/)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api'
 };

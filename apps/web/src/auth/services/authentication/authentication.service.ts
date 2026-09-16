@@ -1,6 +1,7 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { HTTP_BASE_URL_ENABLED } from '../../../system/interceptors/base-url/base-url.interceptor.types';
 import { HTTP_AUTH_ENABLED } from '../../interceptors/auth/auth.interceptor.types';
 import { OnboardingRequiredResponse, OnboardUserPayload, OnboardUserResponse } from './authentication.service.types';
 
@@ -90,6 +91,26 @@ export class AuthenticationService {
   private readonly state$ = new BehaviorSubject<AuthState>(this.loadStateFromStorage());
 
   readonly state = (): Observable<AuthState> => this.state$.asObservable();
+  readonly authState$ = this.state$.asObservable();
+
+  readonly getOidcLoginUrl = (): Observable<{ authorizationUrl: string; }> =>
+    this.http.get<{ authorizationUrl: string; }>(
+      '/auth/oidc/login',
+      {
+        context: new HttpContext()
+          .set(HTTP_AUTH_ENABLED, false)
+          .set(HTTP_BASE_URL_ENABLED, true)
+      }
+    );
+
+  readonly updateTokens = (token: string, refreshToken: string): void => {
+    this.updateState({
+      isAuthenticated: true,
+      token,
+      refreshToken: refreshToken || null,
+      userId: extractUserIdFromToken(token)
+    });
+  };
 
   readonly onboardingRequired = (): Observable<boolean> =>
     this.http

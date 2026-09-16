@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService, TokenType } from '@top-nosh/data-access';
 import * as argon2 from 'argon2';
 import { AuthService } from './auth.service';
+import { OpenIdService } from './open-id.service';
 
 jest.mock('argon2', () => ({
   verify: jest.fn(),
@@ -30,6 +31,9 @@ describe('AuthService', () => {
   let jwtService: {
     sign: jest.Mock;
     verifyAsync: jest.Mock;
+  };
+  let openIdService: {
+    isLinkByEmailEnabled: jest.Mock;
   };
 
   const mockUser = {
@@ -66,6 +70,10 @@ describe('AuthService', () => {
       verifyAsync: jest.fn()
     };
 
+    openIdService = {
+      isLinkByEmailEnabled: jest.fn().mockReturnValue(false)
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -76,6 +84,10 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: jwtService
+        },
+        {
+          provide: OpenIdService,
+          useValue: openIdService
         }
       ]
     }).compile();
@@ -182,6 +194,18 @@ describe('AuthService', () => {
       const result = await service.validateUser('aux@hexmode.org', 'WrongPassword');
 
       expect(result).toBeNull();
+    });
+
+    it('should return null if user has null passwordHash', async () => {
+      prismaService.user.findUnique.mockResolvedValue({
+        ...mockUser,
+        passwordHash: null
+      });
+
+      const result = await service.validateUser('aux@hexmode.org', 'Pass1234!!!!');
+
+      expect(result).toBeNull();
+      expect(argon2.verify).not.toHaveBeenCalled();
     });
   });
 
@@ -401,6 +425,123 @@ describe('AuthService', () => {
       });
       expect(result).toEqual({
         message: 'Password changed successfully'
+      });
+    });
+  });
+
+  describe('handleOidcLogin', () => {
+    const oidcProfile = {
+      openId: 'oidc-sub-123',
+      email: 'oidcuser@example.com',
+      fullName: 'OIDC User'
+    };
+
+    it('should issue tokens for existing user with matching openId', async () => {
+      const existingUser = {
+        id: 'existing-oidc-user',
+        email: oidcProfile.email,
+        openId: oidcProfile.openId,
+        fullName: oidcProfile.fullName,
+        passwordHash: null,
+        forcePasswordChange: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      prismaService.user.findUnique.mockResolvedValueOnce(existingUser);
+      jwtService.sign
+        .mockReturnValueOnce('mocked.jwt.token')
+        .mockReturnValueOnce('mocked.refresh.token');
+
+      const result = await service.handleOidcLogin(oidcProfile);
+
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { openId: oidcProfile.openId }
+      });
+      expect(prismaService.userToken.create).toHaveBeenCalledTimes(2);
+      expect(result).toEqual({
+        token: 'mocked.jwt.token',
+        refreshToken: 'mocked.refresh.token',
+        forcePasswordChange: false
+      });
+    });
+
+    it('should link openId to existing user when openId not found, email matches, and linkByEmail is true', async () => {
+      prismaService.user.findUnique
+        .mockResolvedValueOnce(null) // by openId
+        .mockResolvedValueOnce(mockUser); // by email
+      openIdService.isLinkByEmailEnabled.mockReturnValue(true);
+      const updatedUser = { ...mockUser, openId: oidcProfile.openId };
+      prismaService.user.update.mockResolvedValue(updatedUser);
+      jwtService.sign
+        .mockReturnValueOnce('mocked.jwt.token')
+        .mockReturnValueOnce('mocked.refresh.token');
+
+      const result = await service.handleOidcLogin(oidcProfile);
+
+      expect(prismaService.user.findUnique).toHaveBeenNthCalledWith(1, {
+        where: { openId: oidcProfile.openId }
+      });
+      expect(prismaService.user.findUnique).toHaveBeenNthCalledWith(2, {
+        where: { email: oidcProfile.email }
+      });
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { id: mockUser.id },
+        data: { openId: oidcProfile.openId }
+      });
+      expect(result).toEqual({
+        token: 'mocked.jwt.token',
+        refreshToken: 'mocked.refresh.token',
+        forcePasswordChange: mockUser.forcePasswordChange
+      });
+    });
+
+    it('should throw ConflictException when openId not found, email matches, but linkByEmail is false', async () => {
+      prismaService.user.findUnique
+        .mockResolvedValueOnce(null) // by openId
+        .mockResolvedValueOnce(mockUser); // by email
+      openIdService.isLinkByEmailEnabled.mockReturnValue(false);
+
+      await expect(service.handleOidcLogin(oidcProfile)).rejects.toThrow(ConflictException);
+      expect(prismaService.user.update).not.toHaveBeenCalled();
+      expect(prismaService.user.create).not.toHaveBeenCalled();
+      expect(prismaService.userToken.create).not.toHaveBeenCalled();
+    });
+
+    it('should auto-provision new user when openId and email do not exist', async () => {
+      prismaService.user.findUnique
+        .mockResolvedValueOnce(null) // by openId
+        .mockResolvedValueOnce(null); // by email
+      const newUser = {
+        id: 'new-provisioned-id',
+        fullName: oidcProfile.fullName,
+        email: oidcProfile.email,
+        openId: oidcProfile.openId,
+        passwordHash: null,
+        forcePasswordChange: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      prismaService.user.create.mockResolvedValue(newUser);
+      jwtService.sign
+        .mockReturnValueOnce('mocked.jwt.token')
+        .mockReturnValueOnce('mocked.refresh.token');
+
+      const result = await service.handleOidcLogin(oidcProfile);
+
+      expect(prismaService.user.create).toHaveBeenCalledWith({
+        data: {
+          fullName: oidcProfile.fullName,
+          email: oidcProfile.email,
+          openId: oidcProfile.openId,
+          passwordHash: null,
+          forcePasswordChange: false
+        }
+      });
+      expect(prismaService.userToken.create).toHaveBeenCalledTimes(2);
+      expect(result).toEqual({
+        token: 'mocked.jwt.token',
+        refreshToken: 'mocked.refresh.token',
+        forcePasswordChange: false
       });
     });
   });

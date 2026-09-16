@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Configuration } from '@prisma/client';
 import { PrismaService } from '@top-nosh/data-access';
+import { constantCase } from 'change-case';
 import { configurationKeyRegex, configurationSegmentRegex, protectedKeys } from './configurations.constants';
 
 /**
@@ -10,16 +11,6 @@ import { configurationKeyRegex, configurationSegmentRegex, protectedKeys } from 
 @Injectable()
 export class ConfigurationsService {
   constructor(private readonly prisma: PrismaService) {}
-
-  /**
-   * Converts a dot-separated configuration key to its corresponding UPPER_SNAKE_CASE environment variable name.
-   *
-   * @param key - The dot-separated configuration key (e.g., `files.storage.type`).
-   * @returns The uppercase snake-case environment variable name (e.g., `FILES_STORAGE_TYPE`).
-   */
-  keyToEnvVar(key: string): string {
-    return key.replace(/\./g, '_').toUpperCase();
-  }
 
   /**
    * Retrieves the value of a configuration key.
@@ -352,7 +343,8 @@ export class ConfigurationsService {
    * Resolves the environment variable fallback for a key.
    */
   private getEnvFallback(key: string): string | null {
-    const envKey = this.keyToEnvVar(key);
+    const envKey = constantCase(key);
+
     const envValue = process.env[envKey];
     if (envValue !== undefined) {
       return envValue;

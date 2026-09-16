@@ -15,8 +15,9 @@ model User {
   id                  String      @id @default(uuid())
   fullName            String      @map("full_name")
   email               String      @unique
-  passwordHash        String      @map("password_hash")
+  passwordHash        String?     @map("password_hash")
   forcePasswordChange Boolean     @default(false) @map("force_password_change")
+  openId              String?     @unique @map("open_id")
   tokens              UserToken[]
   createdAt           DateTime    @default(now()) @map("created_at")
   updatedAt           DateTime    @updatedAt @map("updated_at")
