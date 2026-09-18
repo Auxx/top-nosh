@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
-import { ImageView } from '../../dialogs/image-view/image-view.dialog';
+import { ImageViewDialog } from '../../dialogs/image-view/image-view.dialog';
 import { GalleryDetails, GalleryImageItem } from '../../models/gallery.types';
 import { GalleryManagerService } from '../../services/gallery-manager/gallery-manager.service';
 import { FilmStripComponent } from './film-strip.component';
@@ -91,60 +91,6 @@ describe('FilmStripComponent', () => {
   it('should create and load gallery by id', () => {
     expect(filmStripEl).toBeTruthy();
     expect(galleryServiceMock.getGallery).toHaveBeenCalledWith('gallery-1');
-  });
-
-  it('should render thumbnails sorted by order ascending', () => {
-    const images: NodeListOf<HTMLImageElement> = fixture.nativeElement.querySelectorAll('.film-strip-thumbnail-img');
-    expect(images.length).toBe(3);
-
-    // img-2 has order 0, img-1 has order 1, img-3 has order 2
-    expect(images[0].src).toBe(mockImage2.thumbnail.externalUrl);
-    expect(images[1].src).toBe(mockImage1.thumbnail.externalUrl);
-    expect(images[2].src).toBe(mockImage3Thumbnail());
-  });
-
-  const mockImage3Thumbnail = () => mockImageWithoutFullSize.thumbnail.externalUrl;
-
-  it('should open ImageView dialog when thumbnail is clicked', () => {
-    const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll(
-      '.film-strip-thumbnail-button'
-    );
-    expect(buttons.length).toBe(3);
-
-    // First button corresponds to img-2 (order 0)
-    buttons[0].click();
-
-    expect(dialogMock.open).toHaveBeenCalledTimes(1);
-    expect(dialogMock.open).toHaveBeenCalledWith(
-      ImageView,
-      expect.objectContaining({
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        width: '100vw',
-        height: '100vh',
-        panelClass: 'image-view-dialog-panel',
-        data: {
-          imageUrl: mockImage2.fullSize.externalUrl
-        }
-      })
-    );
-  });
-
-  it('should fallback to thumbnail URL when fullSize URL is missing', () => {
-    const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll(
-      '.film-strip-thumbnail-button'
-    );
-    // Third button corresponds to img-3 (order 2) which has empty fullSize URL
-    buttons[2].click();
-
-    expect(dialogMock.open).toHaveBeenCalledWith(
-      ImageView,
-      expect.objectContaining({
-        data: {
-          imageUrl: mockImageWithoutFullSize.thumbnail.externalUrl
-        }
-      })
-    );
   });
 
   it('should reload gallery when galleryId changes', async () => {

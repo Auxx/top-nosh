@@ -8,6 +8,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
+import { InfoCardComponent } from '@top-nosh/ui';
 import { forkJoin } from 'rxjs';
 import { GalleryImageItem } from '../../models/gallery.types';
 import { GalleryManagerService } from '../../services/gallery-manager/gallery-manager.service';
@@ -24,7 +25,8 @@ import { GalleryManagerService } from '../../services/gallery-manager/gallery-ma
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    TranslocoDirective
+    TranslocoDirective,
+    InfoCardComponent
   ],
   templateUrl: './gallery-manager.component.html',
   styleUrl: './gallery-manager.component.scss',
@@ -77,17 +79,21 @@ export class GalleryManagerComponent {
     if (!force && this.loadedGalleryId === id) {
       return;
     }
+
     this.loadedGalleryId = id;
     this.isLoading.set(true);
-    this.galleryService.getGallery(id).subscribe({
-      next: details => {
-        this.images.set(details.images || []);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-      }
-    });
+
+    this.galleryService
+      .getGallery(id)
+      .subscribe({
+        next: details => {
+          this.images.set(details.images || []);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        }
+      });
   };
 
   readonly onDragOver = (event: DragEvent): void => {
@@ -105,7 +111,9 @@ export class GalleryManagerComponent {
   readonly onDrop = (event: DragEvent): void => {
     event.preventDefault();
     event.stopPropagation();
+
     this.isDragging.set(false);
+
     if (event.dataTransfer?.files) {
       this.handleFiles(Array.from(event.dataTransfer.files));
     }
@@ -113,6 +121,7 @@ export class GalleryManagerComponent {
 
   readonly onFileSelected = (event: Event): void => {
     const input = event.target as HTMLInputElement;
+
     if (input.files) {
       this.handleFiles(Array.from(input.files));
       input.value = '';
@@ -148,37 +157,43 @@ export class GalleryManagerComponent {
       this.uploadFiles(currentId, validFiles);
     } else {
       this.isUploading.set(true);
-      this.galleryService.createGallery({ name: `Recipe Gallery ${Date.now()}` }).subscribe({
-        next: newGallery => {
-          this.loadedGalleryId = newGallery.id;
-          this.galleryIdChange.emit(newGallery.id);
-          this.uploadFiles(newGallery.id, validFiles);
-        },
-        error: () => {
-          this.isUploading.set(false);
-          this.snackBar.open(this.uploadErrorMessage(), 'OK');
-        }
-      });
+
+      this.galleryService
+        .createGallery({ name: `Recipe Gallery ${Date.now()}` })
+        .subscribe({
+          next: newGallery => {
+            this.loadedGalleryId = newGallery.id;
+            this.galleryIdChange.emit(newGallery.id);
+            this.uploadFiles(newGallery.id, validFiles);
+          },
+          error: () => {
+            this.isUploading.set(false);
+            this.snackBar.open(this.uploadErrorMessage(), 'OK');
+          }
+        });
     }
   };
 
   readonly uploadFiles = (targetGalleryId: string, files: File[]): void => {
     this.isUploading.set(true);
+
     const uploadObservables = files.map(file => this.galleryService.uploadImage(targetGalleryId, file));
-    forkJoin(uploadObservables).subscribe({
-      next: uploadedImages => {
-        this.images.update(current => [ ...current, ...uploadedImages ]);
-        this.isUploading.set(false);
-        this.snackBar.open(this.uploadSuccessMessage(), undefined, { duration: 3000 });
-      },
-      error: () => {
-        this.isUploading.set(false);
-        this.snackBar.open(this.uploadErrorMessage(), 'OK');
-        this.galleryService.getGallery(targetGalleryId).subscribe({
-          next: details => this.images.set(details.images || [])
-        });
-      }
-    });
+
+    forkJoin(uploadObservables)
+      .subscribe({
+        next: uploadedImages => {
+          this.images.update(current => [ ...current, ...uploadedImages ]);
+          this.isUploading.set(false);
+          this.snackBar.open(this.uploadSuccessMessage(), undefined, { duration: 3000 });
+        },
+        error: () => {
+          this.isUploading.set(false);
+          this.snackBar.open(this.uploadErrorMessage(), 'OK');
+          this.galleryService.getGallery(targetGalleryId).subscribe({
+            next: details => this.images.set(details.images || [])
+          });
+        }
+      });
   };
 
   readonly onDropImage = (event: CdkDragDrop<GalleryImageItem[]>): void => {
@@ -223,15 +238,16 @@ export class GalleryManagerComponent {
       return;
     }
 
-    this.galleryService.deleteImages(currentId, [ imageId ]).subscribe({
-      next: () => {
-        this.images.update(current => current.filter(img => img.id !== imageId));
-        this.snackBar.open(this.deleteSuccessMessage(), undefined, { duration: 3000 });
-      },
-      error: () => {
-        this.snackBar.open(this.deleteErrorMessage(), 'OK');
-      }
-    });
+    this.galleryService
+      .deleteImages(currentId, [ imageId ]).subscribe({
+        next: () => {
+          this.images.update(current => current.filter(img => img.id !== imageId));
+          this.snackBar.open(this.deleteSuccessMessage(), undefined, { duration: 3000 });
+        },
+        error: () => {
+          this.snackBar.open(this.deleteErrorMessage(), 'OK');
+        }
+      });
   };
 
   readonly onImageClick = (image: GalleryImageItem): void => {

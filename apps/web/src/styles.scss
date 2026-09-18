@@ -357,3 +357,11 @@ mat-form-field {
 .mat-mdc-form-field-textarea-control.no-resize {
   resize: none;
 }
+
+.image-view-dialog {
+  .mdc-dialog--open {
+    .mat-mdc-dialog-surface {
+      border-radius: 0;
+    }
+  }
+}

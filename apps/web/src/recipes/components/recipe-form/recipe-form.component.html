@@ -386,10 +386,11 @@
         </div>
 
       } @else {
-        <div class="empty-stages-card">
-          <mat-icon class="empty-icon">layers_clear</mat-icon>
-          <p>{{ t('emptyStages') }}</p>
-        </div>
+        <ui-info-card icon="layers_clear">
+          <section>
+            {{ t('emptyStages') }}
+          </section>
+        </ui-info-card>
       }
     </div>
   </div>

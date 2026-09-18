@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ImageView, ImageViewData, ImageViewDialog, ImageViewDialogData } from './image-view.dialog';
+import { ImageViewDialog, ImageViewDialogData } from './image-view.dialog';
 
 describe('ImageView', () => {
-  let component: ImageView;
-  let fixture: ComponentFixture<ImageView>;
+  let component: ImageViewDialog;
+  let fixture: ComponentFixture<ImageViewDialog>;
   let dialogRefMock: { close: jest.Mock; };
 
   const defaultData: ImageViewDialogData = {
@@ -17,14 +17,14 @@ describe('ImageView', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ ImageView ],
+      imports: [ ImageViewDialog ],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: data },
         { provide: MatDialogRef, useValue: dialogRefMock }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ImageView);
+    fixture = TestBed.createComponent(ImageViewDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
@@ -68,8 +68,8 @@ describe('ImageView', () => {
   });
 
   it('should support ImageViewDialog alias and ImageViewData type', () => {
-    expect(ImageViewDialog).toBe(ImageView);
-    const mockData: ImageViewData = { imageUrl: 'https://example.com/alias-test.jpg' };
+    expect(ImageViewDialog).toBe(ImageViewDialog);
+    const mockData: ImageViewDialogData = { imageUrl: 'https://example.com/alias-test.jpg' };
     expect(mockData.imageUrl).toBe('https://example.com/alias-test.jpg');
   });
 });

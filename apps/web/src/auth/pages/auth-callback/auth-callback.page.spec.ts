@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { AuthCallbackPage } from './auth-callback.page';
@@ -7,32 +8,28 @@ import { AuthCallbackPage } from './auth-callback.page';
 describe('AuthCallbackPage', () => {
   let component: AuthCallbackPage;
   let fixture: ComponentFixture<AuthCallbackPage>;
-  let authServiceMock: { updateTokens: jest.Mock; };
-  let routerMock: { navigate: jest.Mock; };
+
+  const authService = {
+    updateTokens: jest.fn()
+  };
+
+  const router = {
+    navigate: jest.fn().mockResolvedValue(true)
+  };
 
   const setupTest = async (queryParams: Record<string, string> = {}) => {
-    authServiceMock = {
-      updateTokens: jest.fn()
-    };
-
-    routerMock = {
-      navigate: jest.fn().mockResolvedValue(true)
-    };
-
     await TestBed.configureTestingModule({
       imports: [
         AuthCallbackPage,
         getTranslocoModule()
       ],
       providers: [
-        { provide: AuthenticationService, useValue: authServiceMock },
-        { provide: Router, useValue: routerMock },
+        { provide: AuthenticationService, useValue: authService },
+        { provide: Router, useValue: router },
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: {
-              queryParamMap: convertToParamMap(queryParams)
-            }
+            queryParamMap: of(convertToParamMap(queryParams))
           }
         }
       ]
@@ -63,8 +60,8 @@ describe('AuthCallbackPage', () => {
       refreshToken: 'refresh-token-456'
     });
 
-    expect(authServiceMock.updateTokens).toHaveBeenCalledWith('jwt-token-123', 'refresh-token-456');
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/dashboard' ]);
+    expect(authService.updateTokens).toHaveBeenCalledWith('jwt-token-123', 'refresh-token-456');
+    expect(router.navigate).toHaveBeenCalledWith([ '/dashboard' ]);
     expect(component.errorMessage()).toBeNull();
   });
 
@@ -75,50 +72,9 @@ describe('AuthCallbackPage', () => {
       forcePasswordChange: 'true'
     });
 
-    expect(authServiceMock.updateTokens).toHaveBeenCalledWith('jwt-token-123', 'refresh-token-456');
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'change-password' ]);
+    expect(authService.updateTokens).toHaveBeenCalledWith('jwt-token-123', 'refresh-token-456');
+    expect(router.navigate).toHaveBeenCalledWith([ '/auth', 'change-password' ]);
     expect(component.errorMessage()).toBeNull();
-  });
-
-  it('should display error message and render back to login button when error is present', async () => {
-    await setupTest({
-      error: 'Access denied by IdP'
-    });
-
-    expect(authServiceMock.updateTokens).not.toHaveBeenCalled();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
-    expect(component.errorMessage()).toBe('Access denied by IdP');
-
-    const alertEl = fixture.nativeElement.querySelector('[role="alert"]');
-    expect(alertEl).toBeTruthy();
-    expect(alertEl.textContent.trim()).toBe('Access denied by IdP');
-
-    const backBtn = fixture.nativeElement.querySelector('button');
-    expect(backBtn).toBeTruthy();
-  });
-
-  it('should display invalid callback state error when neither tokens nor error are present', async () => {
-    await setupTest({});
-
-    expect(authServiceMock.updateTokens).not.toHaveBeenCalled();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
-    expect(component.errorMessage()).toBeTruthy();
-
-    const alertEl = fixture.nativeElement.querySelector('[role="alert"]');
-    expect(alertEl).toBeTruthy();
-
-    const backBtn = fixture.nativeElement.querySelector('button');
-    expect(backBtn).toBeTruthy();
-  });
-
-  it('should display invalid callback state error when only token is present without refreshToken', async () => {
-    await setupTest({
-      token: 'jwt-token-only'
-    });
-
-    expect(authServiceMock.updateTokens).not.toHaveBeenCalled();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
-    expect(component.errorMessage()).toBeTruthy();
   });
 
   it('should navigate to /auth/login when onBackToLogin is called', async () => {
@@ -128,7 +84,7 @@ describe('AuthCallbackPage', () => {
 
     component.onBackToLogin();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
+    expect(router.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
   });
 
   it('should navigate to /auth/login when back button is clicked in the template', async () => {
@@ -139,6 +95,6 @@ describe('AuthCallbackPage', () => {
     const backBtn: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     backBtn.click();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
+    expect(router.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
   });
 });

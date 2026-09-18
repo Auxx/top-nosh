@@ -151,29 +151,6 @@ mat-panel-description {
   }
 }
 
-.empty-stages-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 1.5rem;
-  border: 2px dashed var(--mat-sys-outline-variant, #ddd);
-  border-radius: 12px;
-  background-color: var(--mat-sys-surface-container-lowest, #fafafa);
-  color: var(--mat-sys-on-surface-variant, #888);
-
-  .empty-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    margin: 0;
-  }
-}
-
 .empty-sub-list {
   padding: 1rem;
   text-align: center;

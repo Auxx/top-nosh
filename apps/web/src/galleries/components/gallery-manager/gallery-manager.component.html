@@ -6,46 +6,8 @@
     </mat-card-header>
 
     <mat-card-content>
-      <div class="gallery-dropzone"
-           [class.is-dragging]="isDragging()"
-           (dragover)="onDragOver($event)"
-           (dragleave)="onDragLeave($event)"
-           (drop)="onDrop($event)"
-           (click)="fileInput.click()"
-           (keydown.enter)="fileInput.click()"
-           (keydown.space)="fileInput.click()"
-           role="button"
-           tabindex="0">
-
-        <input #fileInput
-               type="file"
-               class="file-input-hidden"
-               accept="image/*"
-               multiple
-               (change)="onFileSelected($event)"/>
-
-        <mat-icon class="dropzone-icon">cloud_upload</mat-icon>
-
-        <div class="dropzone-text">
-          <span>{{ t('dropzonePrompt') }}</span>
-          <button type="button"
-                  mat-button
-                  color="primary"
-                  (click)="$event.stopPropagation(); fileInput.click()">
-            {{ t('browseFiles') }}
-          </button>
-        </div>
-      </div>
-
-      @if (isUploading()) {
-        <div class="upload-progress">
-          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          <span class="upload-progress-text">{{ t('uploading') }}</span>
-        </div>
-      }
-
       @if (isLoading()) {
-        <div class="gallery-loading">
+        <div class="gallery-info">
           <mat-spinner diameter="36"></mat-spinner>
           <span>{{ t('loadingGallery') }}</span>
         </div>
@@ -93,7 +55,47 @@
             </div>
           }
         </div>
+      } @else {
+        <div class="gallery-info">
+          <span>{{ t('emptyGallery') }}</span>
+        </div>
+      }
+
+      @if (isUploading()) {
+        <div>{{ t('uploading') }}</div>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       }
     </mat-card-content>
   </mat-card>
+
+  <ui-info-card icon="cloud_upload"
+                [dragAndDrop]="true"
+                [isDragging]="isDragging()"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+                (click)="fileInput.click()"
+                (keydown.enter)="fileInput.click()"
+                (keydown.space)="fileInput.click()"
+                role="button"
+                tabindex="0">
+
+    <aside>
+      <input #fileInput
+             type="file"
+             accept="image/*"
+             multiple
+             (change)="onFileSelected($event)"/>
+    </aside>
+
+    <section>
+      <span>{{ t('dropzonePrompt') }}</span>
+
+      <button type="button"
+              matButton
+              (click)="$event.stopPropagation(); fileInput.click()">
+        {{ t('browseFiles') }}
+      </button>
+    </section>
+  </ui-info-card>
 </ng-container>

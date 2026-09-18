@@ -7,17 +7,17 @@ sessionId: session-260914-172354-1q02
 ### Overview & Goals
 The objective of this task is to display recipe image galleries in the `RecipeDetailsPage` as specified in `.junie/v0.0.7/specs/image-gallery-management-step-3.md`.
 The implementation consists of:
-1. Creating a full-screen `ImageView` dialog in the `galleries` feature of the `web` project to inspect full-resolution images with `object-fit: contain`.
-2. Creating a `FilmStripComponent` in the `galleries` feature that accepts a required gallery ID, fetches gallery images using `GalleryManagerService`, renders thumbnails in a scrollable horizontal strip, and opens the `ImageView` dialog when a thumbnail is clicked.
+1. Creating a full-screen `ImageViewDialog` dialog in the `galleries` feature of the `web` project to inspect full-resolution images with `object-fit: contain`.
+2. Creating a `FilmStripComponent` in the `galleries` feature that accepts a required gallery ID, fetches gallery images using `GalleryManagerService`, renders thumbnails in a scrollable horizontal strip, and opens the `ImageViewDialog` dialog when a thumbnail is clicked.
 3. Integrating `FilmStripComponent` into `RecipeDetailsPage` placed between the Page Header and the Recipe Meta section when the recipe has a linked gallery.
 
 ### Scope
 - **In Scope**:
-  - `ImageView` dialog component and data interface in `apps/web/src/galleries/dialogs/image-view/`.
+  - `ImageViewDialog` dialog component and data interface in `apps/web/src/galleries/dialogs/image-view/`.
   - `FilmStripComponent` in `apps/web/src/galleries/components/film-strip/`.
   - Integration of `FilmStripComponent` into `apps/web/src/recipes/pages/recipe-details/recipe-details.page.ts` & `.html`.
   - Adherence to Material Design 3 guidelines and project TypeScript conventions (e.g. `readonly` arrow function methods).
-  - Comprehensive unit test coverage for `ImageView`, `FilmStripComponent`, and `RecipeDetailsPage` integration.
+  - Comprehensive unit test coverage for `ImageViewDialog`, `FilmStripComponent`, and `RecipeDetailsPage` integration.
 - **Out of Scope**:
   - Backend API changes (the gallery CRUD and image retrieval APIs are already implemented).
   - Modifying recipe edit / create forms (gallery upload/reorder was handled in Step 2).
@@ -29,8 +29,8 @@ The implementation consists of:
 - **As a user**, I want to easily close the full-screen photo view via a close button, Escape key, or backdrop click and return directly to the recipe details.
 
 ### Functional Requirements
-1. **`ImageView` Dialog**:
-   - Component name: `ImageView` (with alias `ImageViewDialog`).
+1. **`ImageViewDialog` Dialog**:
+   - Component name: `ImageViewDialog` (with alias `ImageViewDialog`).
    - Location: `apps/web/src/galleries/dialogs/image-view/`.
    - Accepts image URL via `MAT_DIALOG_DATA` (`ImageViewDialogData`).
    - Displays the image inside a container configured with `object-fit: contain`.
@@ -43,7 +43,7 @@ The implementation consists of:
    - Uses `GalleryManagerService.getGallery(id)` to load gallery details and image items.
    - Sorts images by `order` ascending.
    - Renders thumbnails (`image.thumbnail.externalUrl`) in a scrollable horizontal layout.
-   - When the user clicks a thumbnail, opens `ImageView` dialog passing the full-size image URL (`image.fullSize.externalUrl`).
+   - When the user clicks a thumbnail, opens `ImageViewDialog` dialog passing the full-size image URL (`image.fullSize.externalUrl`).
    - Gracefully handles empty galleries and loading states.
 3. **`RecipeDetailsPage` Integration**:
    - Location: `apps/web/src/recipes/pages/recipe-details/`.
@@ -66,7 +66,7 @@ The implementation consists of:
 ### Key Decisions
 1. **Dialog Dimensions & Styling**:
    - Use `MatDialog.open(ImageView, { maxWidth: '100vw', maxHeight: '100vh', width: '100vw', height: '100vh', panelClass: 'image-view-dialog-panel' })`.
-   - In `ImageView`, render a full-viewport container with dark backdrop (`rgba(0, 0, 0, 0.9)`), an `<img>` with `object-fit: contain`, and an overlaid close icon button.
+   - In `ImageViewDialog`, render a full-viewport container with dark backdrop (`rgba(0, 0, 0, 0.9)`), an `<img>` with `object-fit: contain`, and an overlaid close icon button.
    - *Rationale*: Fulfills the requirement that the dialog fills the entire screen and renders the image with `object-fit: contain`.
 2. **Horizontal Filmstrip Layout**:
    - In `FilmStripComponent`, use a flex row with `overflow-x: auto`, `scroll-behavior: smooth`, and touch scrolling support.
@@ -139,14 +139,14 @@ export class FilmStripComponent {
 Automated testing via Jest using the existing Nx test runner (`npx nx test web`). All newly created components and modified pages will have dedicated unit tests verifying DOM rendering, input handling, service integration, and dialog interactions.
 
 ### Key Scenarios
-1. **`ImageView` Dialog**:
+1. **`ImageViewDialog` Dialog**:
    - Renders the image with `src` bound to `data.imageUrl`.
    - Applies `object-fit: contain` styling to the image.
    - Clicking the close button invokes `dialogRef.close()`.
 2. **`FilmStripComponent`**:
    - Calls `GalleryManagerService.getGallery(id)` with the required `galleryId` input value.
    - Populates `images` signal and renders thumbnails sorted by `order`.
-   - Clicking a thumbnail opens `MatDialog` with `ImageView` component and passes the full-size image URL in dialog data.
+   - Clicking a thumbnail opens `MatDialog` with `ImageViewDialog` component and passes the full-size image URL in dialog data.
    - Handles empty images list gracefully without errors.
 3. **`RecipeDetailsPage` Integration**:
    - When recipe has `galleryId: 'gallery-123'`, `<app-film-strip>` is rendered and passed `galleryId="gallery-123"`.
@@ -161,9 +161,9 @@ Automated testing via Jest using the existing Nx test runner (`npx nx test web`)
 # Delivery Steps
 
 ### ✓ Step 1: Implement ImageView full-screen dialog in galleries feature
-The full-screen `ImageView` dialog is available in the galleries feature to display an image with `object-fit: contain` and close controls.
+The full-screen `ImageViewDialog` dialog is available in the galleries feature to display an image with `object-fit: contain` and close controls.
 
-- Create `apps/web/src/galleries/dialogs/image-view/image-view.dialog.ts` declaring `ImageView` (and alias `ImageViewDialog`) standalone component with `ChangeDetectionStrategy.OnPush`.
+- Create `apps/web/src/galleries/dialogs/image-view/image-view.dialog.ts` declaring `ImageViewDialog` (and alias `ImageViewDialog`) standalone component with `ChangeDetectionStrategy.OnPush`.
 - Define `ImageViewDialogData` (and alias `ImageViewData`) interface with `imageUrl: string`.
 - Inject `MAT_DIALOG_DATA` and `MatDialogRef<ImageView>` as `readonly` properties.
 - In `image-view.dialog.html`, render a container with an `<img>` tag binding `[src]="data.imageUrl"` and an accessible close button (`matIconButton` with `mat-icon` and `mat-dialog-close`).
@@ -171,17 +171,17 @@ The full-screen `ImageView` dialog is available in the galleries feature to disp
 - Implement comprehensive unit tests in `apps/web/src/galleries/dialogs/image-view/image-view.dialog.spec.ts` testing image rendering, close button interaction, and dialog data injection.
 
 ### ✓ Step 2: Implement FilmStripComponent in galleries feature
-The `FilmStripComponent` retrieves gallery images by ID and renders a horizontal scrollable strip of thumbnails that open the full-screen `ImageView` dialog on click.
+The `FilmStripComponent` retrieves gallery images by ID and renders a horizontal scrollable strip of thumbnails that open the full-screen `ImageViewDialog` dialog on click.
 
 - Create `apps/web/src/galleries/components/film-strip/film-strip.component.ts` as a standalone Angular component with `ChangeDetectionStrategy.OnPush`.
 - Declare required signal input `readonly galleryId = input.required<string>()`.
 - Declare reactive signal state `readonly images = signal<GalleryImageItem[]>([])` and `readonly isLoading = signal<boolean>(false)`.
 - Inject `GalleryManagerService` and `MatDialog`.
 - Implement `loadGallery(id: string)` to fetch gallery data via `galleryService.getGallery(id)`, sorting images by `order` ascending. Use an `effect` reacting to `galleryId()` changes.
-- Implement `readonly onOpenImage = (image: GalleryImageItem): void` opening `ImageView` with full-screen dimensions (`maxWidth: '100vw'`, `maxHeight: '100vh'`, `width: '100vw'`, `height: '100vh'`) passing `image.fullSize.externalUrl || image.thumbnail.externalUrl`.
+- Implement `readonly onOpenImage = (image: GalleryImageItem): void` opening `ImageViewDialog` with full-screen dimensions (`maxWidth: '100vw'`, `maxHeight: '100vh'`, `width: '100vw'`, `height: '100vh'`) passing `image.fullSize.externalUrl || image.thumbnail.externalUrl`.
 - In `film-strip.component.html`, render a scrollable horizontal container displaying image thumbnails as keyboard-accessible items with proper alt text and click handlers when images exist.
 - In `film-strip.component.scss`, style the film strip with `display: flex`, `flex-direction: row`, `overflow-x: auto`, and Material Design 3 tokens.
-- Implement comprehensive unit tests in `apps/web/src/galleries/components/film-strip/film-strip.component.spec.ts` covering loading state, thumbnail rendering, image sorting, and opening `ImageView` on click.
+- Implement comprehensive unit tests in `apps/web/src/galleries/components/film-strip/film-strip.component.spec.ts` covering loading state, thumbnail rendering, image sorting, and opening `ImageViewDialog` on click.
 
 ### ✓ Step 3: Integrate FilmStripComponent into RecipeDetailsPage
 `RecipeDetailsPage` displays the film strip of recipe images between the page header and the metadata section when a gallery is linked.
