@@ -1,85 +1,50 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-x-large);
 }
 
 mat-card {
-  gap: var(--dim-large, 16px);
+  gap: var(--dim-large);
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dim-large);
+  }
 }
 
 .file-input-hidden {
   display: none;
 }
 
-.gallery-dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1.5rem;
-  border: 2px dashed var(--mat-sys-outline-variant, #ccc);
-  border-radius: var(--mat-sys-corner-medium, 12px);
-  background-color: var(--mat-sys-surface-container-lowest, #fafafa);
-  color: var(--mat-sys-on-surface-variant, #666);
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-  outline: none;
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--mat-sys-primary, #6200ee);
-    background-color: var(--mat-sys-surface-container-low, #f4f4f4);
-  }
-
-  &.is-dragging {
-    border-color: var(--mat-sys-primary, #6200ee);
-    background-color: var(--mat-sys-primary-container, #e8def8);
-    color: var(--mat-sys-on-primary-container, #21005d);
-  }
-
-  .dropzone-icon {
-    font-size: 40px;
-    width: 40px;
-    height: 40px;
-    margin-bottom: 0.5rem;
-    color: inherit;
-  }
-
-  .dropzone-text {
+ui-info-card {
+  section {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    font-size: 0.95rem;
+    gap: var(--dim-medium);
+
+    @media (max-width: 599.98px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
   }
 }
 
-.upload-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-
-  .upload-progress-text {
-    font-size: 0.85rem;
-    color: var(--mat-sys-on-surface-variant, #666);
-  }
-}
-
-.gallery-loading {
+.gallery-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
   justify-content: center;
-  color: var(--mat-sys-on-surface-variant, #666);
+  gap: var(--dim-large);
+  padding: var(--dim-x-large) 0;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: var(--dim-large, 16px);
-  margin-top: 1.5rem;
+  gap: var(--dim-large);
 }
 
 .gallery-item-card {
