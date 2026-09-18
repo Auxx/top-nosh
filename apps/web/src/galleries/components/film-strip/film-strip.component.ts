@@ -2,7 +2,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ImageView } from '../../dialogs/image-view/image-view.dialog';
+import { ImageViewDialog } from '../../dialogs/image-view/image-view.dialog';
 import { GalleryImageItem } from '../../models/gallery.types';
 import { GalleryManagerService } from '../../services/gallery-manager/gallery-manager.service';
 
@@ -58,7 +58,7 @@ export class FilmStripComponent {
   };
 
   readonly onOpenImage = (image: GalleryImageItem) =>
-    this.dialog.open(ImageView, {
+    this.dialog.open(ImageViewDialog, {
       maxWidth: '100%',
       maxHeight: '100%',
       width: '100%',

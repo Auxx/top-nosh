@@ -14,7 +14,8 @@ describe('InfoCardComponent', () => {
 
     fixture = TestBed.createComponent(InfoCardComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.componentRef.setInput('icon', 'test-icon');
+    fixture.detectChanges();
   });
 
   it('should create', () => {

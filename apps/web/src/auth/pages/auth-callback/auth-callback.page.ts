@@ -33,7 +33,8 @@ export class AuthCallbackPage {
   readonly errorMessage = signal<string | null>(null);
 
   constructor() {
-    this.route.queryParamMap
+    this.route
+      .queryParamMap
       .pipe(takeUntilDestroyed())
       .subscribe(params => {
         const error = params.get('error');

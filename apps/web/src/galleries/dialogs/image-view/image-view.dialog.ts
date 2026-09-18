@@ -18,6 +18,6 @@ export interface ImageViewDialogData {
   styleUrl: './image-view.dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImageView {
+export class ImageViewDialog {
   readonly data: ImageViewDialogData = inject(MAT_DIALOG_DATA);
 }

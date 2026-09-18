@@ -10,8 +10,8 @@ The purpose of this work is to display uploaded images in recipes. Use
 
 ## ImageView Dialog requirements
 
-- Create a new dialog component called `ImageView` in `galleries` feature of
-  `web` project.
+- Create a new dialog component called `ImageViewDialog` in `galleries` feature
+  of `web` project.
 - Image URL should be passed to the dialog using DialogData.
 - The dialog should fill the entire screen.
 - It should display the image inside with `object-fit` set to `contain`.
