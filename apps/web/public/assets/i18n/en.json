@@ -34,7 +34,7 @@
       "passwordPlaceholder": "Password",
       "passwordRequired": "Password is required",
       "login": "LOG IN",
-      "oidcLogin": "OpenID Connect Login",
+      "oidcLogin": "OPENID CONNECT",
       "loading": "Logging in...",
       "loginFailed": "Login failed. Please check your credentials.",
       "oidcFailed": "OpenID Connect login failed. Please try again."

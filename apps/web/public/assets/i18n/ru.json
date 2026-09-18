@@ -34,7 +34,7 @@
       "passwordPlaceholder": "Пароль",
       "passwordRequired": "Необходимо указать пароль",
       "login": "ВОЙТИ",
-      "oidcLogin": "Войти через OpenID Connect",
+      "oidcLogin": "OPENID CONNECT",
       "loading": "Вход в систему...",
       "loginFailed": "Не удалось войти. Пожалуйста, проверьте учетные данные.",
       "oidcFailed": "Не удалось войти через OpenID Connect. Пожалуйста, попробуйте еще раз."

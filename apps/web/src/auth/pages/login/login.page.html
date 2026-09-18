@@ -49,6 +49,7 @@
             [disabled]="form.invalid || loading">
       {{ loading ? t('loading') : t('login') }}
     </button>
+
     @if (oidcEnabled()) {
       <button matButton
               type="button"

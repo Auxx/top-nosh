@@ -61,10 +61,7 @@ export class LoginPage {
       return;
     }
 
-    this.snackBarRef?.dismiss();
-    this.snackBarRef = null;
-
-    this.isLoading.set(true);
+    this.resetState();
 
     const { email, password } = this.form.getRawValue();
 
@@ -92,10 +89,7 @@ export class LoginPage {
       return;
     }
 
-    this.snackBarRef?.dismiss();
-    this.snackBarRef = null;
-
-    this.isLoading.set(true);
+    this.resetState();
 
     this.authService.getOidcLoginUrl().subscribe({
       next: ({ authorizationUrl }) => this.redirectTo(authorizationUrl),
@@ -107,4 +101,10 @@ export class LoginPage {
   };
 
   readonly redirectTo = (url: string) => this.document.location.href = url;
+
+  private readonly resetState = () => {
+    this.snackBarRef?.dismiss();
+    this.snackBarRef = null;
+    this.isLoading.set(true);
+  };
 }
