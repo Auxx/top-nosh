@@ -8,6 +8,7 @@ export * from './content/pipes/unit/unit.pipe';
 export * from './control/directives/when-error/when-error.directive';
 export * from './dialogs/dialogs/confirmation/confirmation.dialog';
 export * from './dialogs/dialogs/markdown-preview/markdown-preview.dialog';
+export * from './layouts/components/info-card/info-card.component';
 export * from './layouts/components/page-header/page-header.component';
 export * from './layouts/components/section-header/section-header.component';
 export * from './navigation/components/menu-bar/menu-bar.component';
