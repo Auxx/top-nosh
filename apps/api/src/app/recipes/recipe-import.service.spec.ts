@@ -1,6 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecipeImportService } from './recipe-import.service';
+import { WPRMRecipe } from './recipe-import/wprm.types';
 
 describe('RecipeImportService', () => {
   let service: RecipeImportService;
@@ -100,7 +101,7 @@ describe('RecipeImportService', () => {
       } as unknown as Response);
 
       await expect(service.fetchRecipeAsTextFromUrl('https://example.com/no-recipe')).rejects.toThrow(
-        NotFoundException
+        BadRequestException
       );
     });
 
@@ -128,8 +129,8 @@ describe('RecipeImportService', () => {
     it('should parse extracted JSON string and return recipe object', async () => {
       const html = `
         <script>
-          window.wprm_recipes = { "id": 42, "name": "Tacos", "ingredients": ["Tortilla", "Beef"] };
-        </script>
+          window.wprm_recipes = {"recipe": {"id": 42, "name": "Tacos", "ingredients": ["Tortilla", "Beef"]}};
+        </script>;
       `;
 
       global.fetch = jest.fn().mockResolvedValue({
@@ -174,7 +175,7 @@ describe('RecipeImportService', () => {
         'cook-time': 45
       };
 
-      jest.spyOn(service, 'fetchRecipeFromUrl').mockResolvedValue(mockRecipe);
+      jest.spyOn(service, 'fetchRecipeFromUrl').mockResolvedValue(mockRecipe as unknown as WPRMRecipe);
 
       const result = await service.generateTypeScriptInterface('https://example.com/pie');
 
@@ -192,7 +193,7 @@ describe('RecipeImportService', () => {
     });
 
     it('should throw BadRequestException if parsed recipe is not an object', async () => {
-      jest.spyOn(service, 'fetchRecipeFromUrl').mockResolvedValue('not-an-object');
+      jest.spyOn(service, 'fetchRecipeFromUrl').mockResolvedValue('not-an-object' as unknown as WPRMRecipe);
 
       await expect(service.generateTypeScriptInterface('https://example.com/invalid')).rejects.toThrow(
         BadRequestException

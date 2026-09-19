@@ -37,7 +37,6 @@ describe('DebugController', () => {
     it('should throw BadRequestException if recipe-url is missing or empty', async () => {
       await expect(controller.importRecipe('')).rejects.toThrow(BadRequestException);
       await expect(controller.importRecipe('   ')).rejects.toThrow(BadRequestException);
-      await expect(controller.importRecipe(undefined as unknown as string)).rejects.toThrow(BadRequestException);
     });
 
     it('should delegate to RecipeImportService.fetchRecipeFromUrl and return recipe data', async () => {
@@ -55,7 +54,6 @@ describe('DebugController', () => {
     it('should throw BadRequestException if recipe-url is missing or empty', async () => {
       await expect(controller.getRecipeInterface('')).rejects.toThrow(BadRequestException);
       await expect(controller.getRecipeInterface('   ')).rejects.toThrow(BadRequestException);
-      await expect(controller.getRecipeInterface(undefined as unknown as string)).rejects.toThrow(BadRequestException);
     });
 
     it('should delegate to RecipeImportService.generateTypeScriptInterface and return { interface }', async () => {

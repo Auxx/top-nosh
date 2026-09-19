@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-
-const wprmRecipePattern = /window\.wprm_recipes(?:\s*\[[^\]]+\])?\s*=\s*/g;
+import { WPRMRecipe, wprmRecipePattern } from './recipe-import/wprm.types';
 
 @Injectable()
 export class RecipeImportService {
@@ -19,13 +18,23 @@ export class RecipeImportService {
     }
   }
 
-  // Required by specification until incoming recipe data structure is analyzed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async fetchRecipeFromUrl(url: string): Promise<any> {
+  async fetchRecipeFromUrl(url: string): Promise<WPRMRecipe> {
     const jsonText = await this.fetchRecipeAsTextFromUrl(url);
 
     try {
-      return JSON.parse(jsonText);
+      const json = JSON.parse(jsonText);
+
+      if (!(json instanceof Object)) {
+        throw new BadRequestException(`Recipe is malformed - not a hash map`);
+      }
+
+      const values = Object.values(json);
+
+      if (values.length !== 1) {
+        throw new BadRequestException(`Recipe is malformed - wrong hash map keys`);
+      }
+
+      return values[0] as WPRMRecipe;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Malformed JSON';
       throw new BadRequestException(`Failed to parse extracted recipe JSON: ${message}`);
