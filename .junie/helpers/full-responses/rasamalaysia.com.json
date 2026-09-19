@@ -1,0 +1,483 @@
+{
+  "metadata": {
+    "type": "food",
+    "name": "Sesame Chicken",
+    "slug": "wprm-sesame-chicken",
+    "image_url": "https://rasamalaysia.com/wp-content/uploads/2016/01/sesame-chicken-thumb.jpg",
+    "rating": {
+      "count": 311,
+      "total": 1438,
+      "average": 4.63,
+      "type": {
+        "comment": 60,
+        "no_comment": 0,
+        "user": 251
+      },
+      "user": 0
+    },
+    "ingredients": [
+      {
+        "uid": 0,
+        "amount": "8",
+        "unit": "oz. (230g)",
+        "name": "boneless and skinless chicken breast",
+        "notes": "cut into strips",
+        "unit_id": 55062,
+        "id": 19737,
+        "conversion_item_snapshot": {
+          "amount": "8",
+          "unit": "oz. (230g)",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "8",
+            "unit": "oz. (230g)",
+            "unitParsed": "oz. (230g)",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 1,
+        "amount": "",
+        "unit": "",
+        "name": "oil",
+        "notes": "for deep-frying",
+        "id": 19101,
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 2,
+        "amount": "2",
+        "unit": "tablespoons",
+        "name": "oil",
+        "notes": "",
+        "unit_id": 50945,
+        "id": 19101,
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "tablespoons",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 3,
+        "amount": "1",
+        "unit": "clove",
+        "name": "garlic",
+        "notes": "minced",
+        "unit_id": 50928,
+        "id": 17799,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "clove",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "clove",
+            "unitParsed": "clove",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 4,
+        "amount": "",
+        "unit": "",
+        "name": "white sesame seeds",
+        "notes": "for garnishing",
+        "id": 19237,
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 6,
+        "amount": "1/2",
+        "unit": "cup",
+        "name": "all-purpose flour",
+        "notes": "sifted",
+        "unit_id": 50915,
+        "id": 19099,
+        "conversion_item_snapshot": {
+          "amount": "1/2",
+          "unit": "cup",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/2",
+            "unit": "cup",
+            "unitParsed": "cup",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 7,
+        "amount": "1/4",
+        "unit": "cup",
+        "name": "cornstarch",
+        "notes": "",
+        "unit_id": 50915,
+        "id": 19284,
+        "conversion_item_snapshot": {
+          "amount": "1/4",
+          "unit": "cup",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/4",
+            "unit": "cup",
+            "unitParsed": "cup",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 8,
+        "amount": "1/2",
+        "unit": "teaspoon",
+        "name": "baking powder",
+        "notes": "",
+        "unit_id": 50929,
+        "id": 19229,
+        "conversion_item_snapshot": {
+          "amount": "1/2",
+          "unit": "teaspoon",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/2",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 9,
+        "amount": "1",
+        "unit": "",
+        "name": "egg white",
+        "notes": "",
+        "id": 19283,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 10,
+        "amount": "1/3",
+        "unit": "cup",
+        "name": "cold water",
+        "notes": "",
+        "unit_id": 50915,
+        "id": 20236,
+        "conversion_item_snapshot": {
+          "amount": "1/3",
+          "unit": "cup",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/3",
+            "unit": "cup",
+            "unitParsed": "cup",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 11,
+        "amount": "1",
+        "unit": "tablespoon",
+        "name": "oil",
+        "notes": "",
+        "unit_id": 50921,
+        "id": 19101,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "tablespoon",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "tablespoon",
+            "unitParsed": "tablespoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 12,
+        "amount": "1",
+        "unit": "pinch",
+        "name": "salt",
+        "notes": "",
+        "unit_id": 50969,
+        "id": 17733,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "pinch",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "pinch",
+            "unitParsed": "pinch",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 14,
+        "amount": "2",
+        "unit": "tablespoons",
+        "name": "soy sauce",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "nofollow"
+        },
+        "unit_id": 50945,
+        "id": 19066,
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "tablespoons",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 15,
+        "amount": "1",
+        "unit": "tablespoon",
+        "name": "Chinese rice vinegar ",
+        "notes": "or apple cider vinegar",
+        "link": {
+          "url": "",
+          "nofollow": "nofollow"
+        },
+        "unit_id": 50921,
+        "id": 19553,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "tablespoon",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "tablespoon",
+            "unitParsed": "tablespoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 16,
+        "amount": "4",
+        "unit": "tablespoons",
+        "name": "sugar",
+        "notes": "",
+        "unit_id": 50945,
+        "id": 19096,
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "tablespoons",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 17,
+        "amount": "2",
+        "unit": "teaspoons",
+        "name": "cornstarch",
+        "notes": "",
+        "unit_id": 51005,
+        "id": 19284,
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "teaspoons",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 18,
+        "amount": "1/3",
+        "unit": "cup",
+        "name": "water",
+        "notes": "",
+        "unit_id": 50915,
+        "id": 19089,
+        "conversion_item_snapshot": {
+          "amount": "1/3",
+          "unit": "cup",
+          "timestamp": 1789766139000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/3",
+            "unit": "cup",
+            "unitParsed": "cup",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      }
+    ],
+    "originalServings": "4",
+    "originalServingsParsed": 4,
+    "currentServings": "4",
+    "currentServingsParsed": 4,
+    "currentServingsFormatted": "4",
+    "currentServingsMultiplier": 1,
+    "originalSystem": 1,
+    "currentSystem": 1,
+    "favorite": false,
+    "unitSystems": [
+      1
+    ],
+    "originalAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "currentAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    }
+  },
+  "instructions": [
+    {
+      "name": "Instructions",
+      "steps": [
+        "Mix all the ingredients in the Sauce until well combined. Set aside.",
+        "Mix all the ingredients for the Frying Batter in a bowl until well combined. Stir a few times to ensure there are no lumps and the batter is smooth. Add the chicken to the batter and stir to coat it evenly.",
+        "Heat 2 to 3 inches (5 to 7.5 cm) of oil in a wok or stockpot to 350°F (175°C) for deep-frying. Gently drop the chicken into the hot oil and immediately loosen them with a spatula to prevent the pieces from clumping together.",
+        "Deep-fry the chicken until golden brown. Remove the chicken from the oil using a strainer or slotted spoon, allowing the excess oil to drain by placing the chicken on a dish lined with paper towels. Discard the oil.",
+        "Heat 2 tablespoons of oil in a wok or skillet over high heat. Add the garlic and stir-fry until fragrant, then pour in the sauce.",
+        "As soon as the sauce thickens, add the fried chicken to the wok or skillet. Stir continuously until the chicken is evenly coated with the sauce. Dish out, garnish with white sesame, and serve immediately with steamed rice."
+      ]
+    }
+  ]
+}
