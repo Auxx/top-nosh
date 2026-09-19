@@ -1,0 +1,437 @@
+{
+  "metadata": {
+    "type": "food",
+    "name": "One Pan Greek Chicken",
+    "slug": "wprm-one-pan-greek-chicken",
+    "image_url": "https://rasamalaysia.com/wp-content/uploads/2024/03/one-pan-greek-chicken-thumb.jpg",
+    "rating": {
+      "count": 3,
+      "total": 15,
+      "average": 5,
+      "type": {
+        "comment": 3,
+        "no_comment": 0,
+        "user": 0
+      },
+      "user": 0
+    },
+    "ingredients": [
+      {
+        "uid": 0,
+        "amount": "3",
+        "unit": "tablespoons",
+        "name": "olive oil",
+        "notes": "",
+        "converted": {
+          "2": {
+            "amount": "3",
+            "unit": "tablespoons",
+            "unit_id": 50945
+          }
+        },
+        "unit_id": 50945,
+        "id": 17798,
+        "conversion_item_snapshot": {
+          "amount": "3",
+          "unit": "tablespoons",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "3",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "3",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 1,
+        "amount": "1",
+        "unit": "",
+        "name": "lemon",
+        "notes": "squeeze out the juice ",
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": ""
+          }
+        },
+        "id": 19247,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 2,
+        "amount": "3",
+        "unit": "cloves",
+        "name": "garlic",
+        "notes": "minced ",
+        "converted": {
+          "2": {
+            "amount": "3",
+            "unit": "cloves",
+            "unit_id": 51002
+          }
+        },
+        "unit_id": 51002,
+        "id": 17799,
+        "conversion_item_snapshot": {
+          "amount": "3",
+          "unit": "cloves",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "3",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "3",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 3,
+        "amount": "1",
+        "unit": "teaspoon",
+        "name": "dried oregano",
+        "notes": "",
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unit_id": 50929
+          }
+        },
+        "unit_id": 50929,
+        "id": 20813,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "teaspoon",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 4,
+        "amount": "1",
+        "unit": "pound ",
+        "name": "chicken thighs, skin-on, boneless ",
+        "notes": "",
+        "converted": {
+          "2": {
+            "amount": "500",
+            "unit": "g",
+            "unit_id": 50916
+          }
+        },
+        "unit_id": 51212,
+        "id": 41349,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "pound ",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "pound ",
+            "unitParsed": "pound ",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "500",
+            "unit": "g",
+            "unitParsed": "g",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 5,
+        "amount": "1/2",
+        "unit": "teaspoon",
+        "name": "salt ",
+        "notes": "",
+        "converted": {
+          "2": {
+            "amount": "1/2",
+            "unit": "teaspoon",
+            "unit_id": 50929
+          }
+        },
+        "unit_id": 50929,
+        "id": 17733,
+        "conversion_item_snapshot": {
+          "amount": "1/2",
+          "unit": "teaspoon",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/2",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1/2",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 6,
+        "amount": "1/4",
+        "unit": "teaspoon",
+        "name": "ground black pepper",
+        "notes": "",
+        "converted": {
+          "2": {
+            "amount": "1/4",
+            "unit": "teaspoon",
+            "unit_id": 50929
+          }
+        },
+        "unit_id": 50929,
+        "id": 17734,
+        "conversion_item_snapshot": {
+          "amount": "1/4",
+          "unit": "teaspoon",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/4",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1/4",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 7,
+        "amount": "1/2",
+        "unit": "pound",
+        "name": "asparagus",
+        "notes": "trim the tough stems ",
+        "converted": {
+          "2": {
+            "amount": "250",
+            "unit": "g",
+            "unit_id": 50916
+          }
+        },
+        "unit_id": 51212,
+        "id": 21293,
+        "conversion_item_snapshot": {
+          "amount": "1/2",
+          "unit": "pound",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/2",
+            "unit": "pound",
+            "unitParsed": "pound",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "250",
+            "unit": "g",
+            "unitParsed": "g",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 8,
+        "amount": "1",
+        "unit": "",
+        "name": "zucchini",
+        "notes": "sliced into half-moons ",
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": ""
+          }
+        },
+        "id": 17739,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 9,
+        "amount": "1",
+        "unit": "",
+        "name": "lemon",
+        "notes": "thinly sliced ",
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": ""
+          }
+        },
+        "id": 19247,
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "",
+          "timestamp": 1789835206000
+        },
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      }
+    ],
+    "originalServings": "4",
+    "originalServingsParsed": 4,
+    "currentServings": "4",
+    "currentServingsParsed": 4,
+    "currentServingsFormatted": "4",
+    "currentServingsMultiplier": 1,
+    "originalSystem": 1,
+    "currentSystem": 1,
+    "favorite": false,
+    "unitSystems": [
+      1,
+      2
+    ],
+    "originalAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "currentAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    }
+  },
+  "instructions": [
+    {
+      "name": "Instructions",
+      "steps": [
+        "Whisk together 2 tablespoons of olive oil, lemon juice, garlic, and dried oregano in a large mixing bowl. Add the chicken thighs to the marinade, cover with plastic wrap, and refrigerate for 15 minutes. Preheat the oven to 425°F (218°C).",
+        "Heat a large ovenproof skillet with 1 tablespoon of olive oil over medium-high heat. Season both sides of the marinated chicken thighs with salt and ground black pepper. Add the chicken thighs to the skillet and sear both sides for about 10 minutes, until golden brown and the skin is crispy. Flip the chicken thighs and let them cook skin side up.",
+        "Add the asparagus, zucchini, and lemon slices to the skillet.",
+        "Transfer the skillet to the oven and bake for 15 minutes, or until the chicken is cooked through and the vegetables are tender. Serve immediately."
+      ]
+    }
+  ]
+}

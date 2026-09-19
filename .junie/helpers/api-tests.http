@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:5998/api/debug/recipe/import?recipe-url=https%3A%2F%2Fthestayathomechef.com%2Fsheet-pan-sausage-and-veggies%2F
+GET http://localhost:5998/api/debug/recipe/import?recipe-url=https%3A%2F%2Fthecozycook.com%2Fhomemade-ramen%2F
 
 ###
 

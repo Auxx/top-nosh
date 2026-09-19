@@ -1,0 +1,966 @@
+{
+  "metadata": {
+    "type": "food",
+    "name": "Homemade Ramen",
+    "slug": "wprm-homemade-ramen",
+    "image_url": "https://thecozycook.com/wp-content/uploads/2023/02/Homemade-Ramen-Recipe-f8.jpg",
+    "rating": {
+      "count": 131,
+      "total": 652,
+      "average": 4.98,
+      "type": {
+        "comment": 131,
+        "no_comment": 0,
+        "user": 0
+      },
+      "user": 0
+    },
+    "ingredients": [
+      {
+        "uid": 1,
+        "amount": "2",
+        "unit": "tablespoons",
+        "name": "olive oil",
+        "notes": "divided",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unit_id": 12930
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "tablespoons",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12930,
+        "id": 3645,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 2,
+        "amount": "2",
+        "unit": "tablespoons",
+        "name": "butter",
+        "notes": "divided",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unit_id": 12930
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "tablespoons",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12930,
+        "id": 3648,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 3,
+        "amount": "8",
+        "unit": "oz.",
+        "name": "mushrooms",
+        "notes": "I used sliced baby bella",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "8",
+            "unit": "oz.",
+            "unit_id": 12936
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "8",
+          "unit": "oz.",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12936,
+        "id": 12682,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "8",
+            "unit": "oz.",
+            "unitParsed": "oz.",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "8",
+            "unit": "oz.",
+            "unitParsed": "oz.",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 4,
+        "amount": "1",
+        "unit": "",
+        "name": "large boneless/skinless chicken breast",
+        "notes": "about ¾ lb.",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "",
+          "timestamp": 1773943276000
+        },
+        "id": 6666,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 5,
+        "amount": "",
+        "unit": "",
+        "name": "Salt/Pepper",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1773943276000
+        },
+        "id": 3681,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 7,
+        "amount": "½",
+        "unit": "cup",
+        "name": "dry white wine",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "120",
+            "unit": "g",
+            "unit_id": 12941
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "½",
+          "unit": "cup",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12934,
+        "id": 3745,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "½",
+            "unit": "cup",
+            "unitParsed": "cup",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "120",
+            "unit": "g",
+            "unitParsed": "g",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 25,
+        "amount": "1",
+        "unit": "tablespoon ",
+        "name": "butter",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "tablespoon ",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12932,
+        "id": 3648,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "tablespoon ",
+            "unitParsed": "tablespoon ",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 8,
+        "amount": "3",
+        "unit": "cloves",
+        "name": "garlic",
+        "notes": "minced",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "3",
+            "unit": "cloves",
+            "unit_id": 12931
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "3",
+          "unit": "cloves",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12931,
+        "id": 3669,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "3",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "3",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 9,
+        "amount": "6",
+        "unit": "cups",
+        "name": "low sodium chicken broth",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1.42",
+            "unit": "kg",
+            "unit_id": 12997
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "6",
+          "unit": "cups",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12935,
+        "id": 6642,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "6",
+            "unit": "cups",
+            "unitParsed": "cups",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1.42",
+            "unit": "kg",
+            "unitParsed": "kg",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 10,
+        "amount": "2",
+        "unit": "tablespoons",
+        "name": "low sodium soy sauce",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unit_id": 12930
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "tablespoons",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12930,
+        "id": 6582,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "tablespoons",
+            "unitParsed": "tablespoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 11,
+        "amount": "2",
+        "unit": "teaspoons",
+        "name": "hot sauce",
+        "notes": "I use Frank’s hot sauce",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unit_id": 12937
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "teaspoons",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12937,
+        "id": 7796,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 12,
+        "amount": "2",
+        "unit": "teaspoons",
+        "name": "honey",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unit_id": 12937
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "teaspoons",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12937,
+        "id": 4038,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 13,
+        "amount": "¾",
+        "unit": "teaspoon",
+        "name": "toasted sesame seed oil",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "0.75",
+            "unit": "teaspoon",
+            "unit_id": 12938
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "¾",
+          "unit": "teaspoon",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12938,
+        "id": 13478,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "¾",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "0.75",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 14,
+        "amount": "2",
+        "unit": "",
+        "name": "(3 oz.) packets instant Ramen noodles",
+        "notes": "don’t use flavor packet",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "",
+          "timestamp": 1773943276000
+        },
+        "id": 13482,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "",
+            "unitParsed": ""
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 15,
+        "amount": "6",
+        "unit": "leaves",
+        "name": "Bok Choy",
+        "notes": "roughly chopped",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "6",
+            "unit": "leaves",
+            "unit_id": 13480
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "6",
+          "unit": "leaves",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 13480,
+        "id": 4704,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "6",
+            "unit": "leaves",
+            "unitParsed": "leaves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "6",
+            "unit": "leaves",
+            "unitParsed": "leaves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 17,
+        "amount": "¾",
+        "unit": "teaspoon",
+        "name": "<strong>EACH: </strong>onion powder, mustard powder",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "0.75",
+            "unit": "teaspoon",
+            "unit_id": 12938
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "¾",
+          "unit": "teaspoon",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12938,
+        "id": 13114,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "¾",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "0.75",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 18,
+        "amount": "¼",
+        "unit": "teaspoon",
+        "name": "ground ginger",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "0.25",
+            "unit": "teaspoon",
+            "unit_id": 12938
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "¼",
+          "unit": "teaspoon",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12938,
+        "id": 6930,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "¼",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "0.25",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 19,
+        "amount": "1/8",
+        "unit": "teaspoon",
+        "name": "white pepper",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "0.13",
+            "unit": "teaspoon",
+            "unit_id": 12938
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1/8",
+          "unit": "teaspoon",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12938,
+        "id": 6708,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/8",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "0.13",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 20,
+        "amount": "1",
+        "unit": "pinch",
+        "name": "red pepper flakes",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "pinch",
+            "unit_id": 12947
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "pinch",
+          "timestamp": 1773943276000
+        },
+        "unit_id": 12947,
+        "id": 4054,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "pinch",
+            "unitParsed": "pinch",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "pinch",
+            "unitParsed": "pinch",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 22,
+        "amount": "",
+        "unit": "",
+        "name": "Green Onions",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1773943276000
+        },
+        "id": 3670,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 23,
+        "amount": "",
+        "unit": "",
+        "name": "Roughly chopped honey roasted peanuts",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1773943276000
+        },
+        "id": 13276,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 24,
+        "amount": "",
+        "unit": "",
+        "name": "Soft boiled eggs",
+        "notes": "see notes",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1773943276000
+        },
+        "id": 13481,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      }
+    ],
+    "originalServings": "4",
+    "originalServingsParsed": 4,
+    "currentServings": "4",
+    "currentServingsParsed": 4,
+    "currentServingsFormatted": "4",
+    "currentServingsMultiplier": 1,
+    "originalSystem": 1,
+    "currentSystem": 1,
+    "favorite": false,
+    "unitSystems": [
+      1,
+      2
+    ],
+    "originalAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "currentAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "collection": {
+      "servingsUnit": "people",
+      "servingsUnitRaw": "people",
+      "originalServings": "4",
+      "originalServingsParsed": 4,
+      "type": "recipe",
+      "recipeId": 49533,
+      "name": "Homemade Ramen",
+      "image": "https://thecozycook.com/wp-content/uploads/2023/02/Homemade-Ramen-Recipe-f8-500x500.jpg",
+      "servings": 4,
+      "parent_id": "49528",
+      "parent_url": "https://thecozycook.com/homemade-ramen/",
+      "cachedAt": 1789856988,
+      "modifiedAt": 1773928894
+    }
+  },
+  "instructions": [
+    {
+      "name": "Instructions",
+      "steps": [
+        "Heat 1 tablespoon olive oil and 1 tablespoon of butter in a large soup pot over medium-high heat. Add the mushrooms. Sauté until golden, about 4 minutes. Remove and set aside so that they retain the color, flavor, and texture.",
+        "Slice the chicken in half lengthwise to create 2 thinner slices. Cover with saran wrap and use the textured side of a meat mallet to pound it to ½ inch thick.",
+        "Pat the chicken dry and season each side with salt and pepper.",
+        "Heat remaining olive oil and butter in a large soup pot over medium-high heat. Sear the chicken in batches for 4-5 minutes per side, until a golden crust has developed. Set aside turn the heat off. Let the chicken rest for 10 minutes, then cut into strips of desired size.",
+        "Add the wine and set the heat to medium. Use a silicone spatula to “clean” the bottom and sides of the skillet. Let the wine bubble gently and reduce by half, 4-5 minutes.",
+        "Add the butter and garlic and cook for 2 minutes.",
+        "Add the chicken broth, soy sauce, hot sauce, honey, sesame oil, and soup seasonings. Bring to a gentle boil and let the broth reduce and concentrate for 10 minutes while you soft boil eggs for serving (see notes for instructions).",
+        "Bring the soup to a more rapid boil, add the Ramen, and cook for 1 minute. Reduce to a gentle simmer and add the Bok Choy along with the cooked mushrooms and chicken. Simmer until the noodles are done, about 3 minutes.",
+        "Transfer to serving bowls and top with green onions, roughly chopped peanuts, and a soft-boiled egg."
+      ]
+    }
+  ]
+}
