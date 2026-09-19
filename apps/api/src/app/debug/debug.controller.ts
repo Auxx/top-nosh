@@ -1,4 +1,5 @@
 import { BadRequestException, Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ImportedRecipeResponse } from '../recipes/dto/recipe-response.dto';
 import { RecipeImportService } from '../recipes/recipe-import.service';
 import { RecipeImportResponse } from '../recipes/recipe-import/wprm.types';
 import { DevelopmentModeGuard } from './guards/development-mode.guard';
@@ -10,7 +11,7 @@ export class DebugController {
 
   @Get('recipe/import')
   async importRecipe(@Query('recipe-url') recipeUrl: string): Promise<RecipeImportResponse> {
-    if (recipeUrl.trim() === '') {
+    if (!recipeUrl || recipeUrl.trim() === '') {
       throw new BadRequestException('Query parameter "recipe-url" is required');
     }
 
@@ -19,5 +20,14 @@ export class DebugController {
     const instructions = this.recipeImportService.extractCookingInstructions(html);
 
     return { metadata, instructions };
+  }
+
+  @Get('recipe/parse')
+  async parseRecipe(@Query('recipe-url') recipeUrl: string): Promise<ImportedRecipeResponse> {
+    if (!recipeUrl || recipeUrl.trim() === '') {
+      throw new BadRequestException('Query parameter "recipe-url" is required');
+    }
+
+    return await this.recipeImportService.fetchRecipe(recipeUrl);
   }
 }

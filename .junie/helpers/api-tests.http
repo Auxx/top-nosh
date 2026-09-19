@@ -1,0 +1,9 @@
+###
+
+GET http://localhost:5998/api/debug/recipe/import?recipe-url=https%3A%2F%2Fthestayathomechef.com%2Fsheet-pan-sausage-and-veggies%2F
+
+###
+
+GET http://localhost:5998/api/debug/recipe/parse?recipe-url=https%3A%2F%2Fthestayathomechef.com%2Fsheet-pan-sausage-and-veggies%2F
+
+###

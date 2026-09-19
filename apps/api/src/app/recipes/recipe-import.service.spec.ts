@@ -317,4 +317,166 @@ describe('RecipeImportService', () => {
       ]);
     });
   });
+
+  describe('fetchRecipe', () => {
+    const mockHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <script>
+          window.wprm_recipes = {
+            "123": {
+              "id": 123,
+              "name": "Classic Lasagna",
+              "originalServings": "4"
+            }
+          };
+        </script>
+      </head>
+      <body>
+        <div class="wprm-recipe-instructions-container">
+          <h3>Instructions</h3>
+          <div class="wprm-recipe-instruction-group">
+            <h4 class="wprm-recipe-instruction-group-name">Preparation</h4>
+            <ul>
+              <li>Preheat oven to 375°F.</li>
+              <li>Boil lasagna noodles until al dente.</li>
+            </ul>
+          </div>
+          <div class="wprm-recipe-instruction-group">
+            <h4 class="wprm-recipe-instruction-group-name">Baking</h4>
+            <ul>
+              <li>Layer pasta, ricotta, and meat sauce.</li>
+              <li>Bake for 45 minutes until bubbly.</li>
+            </ul>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    it('should orchestrate HTML retrieval, metadata, and instructions into ImportedRecipeResponse', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: jest.fn().mockResolvedValue(mockHtml)
+      } as unknown as Response);
+
+      const url = 'https://example.com/recipes/lasagna';
+      const result = await service.fetchRecipe(url);
+
+      expect(result).toEqual({
+        name: 'Classic Lasagna',
+        cuisine: null,
+        category: null,
+        description: null,
+        servings: 4,
+        source: url,
+        stages: [
+          {
+            name: 'Preparation',
+            steps: [
+              { name: 'Preheat oven to 375°F.', description: null },
+              { name: 'Boil lasagna noodles until al dente.', description: null }
+            ]
+          },
+          {
+            name: 'Baking',
+            steps: [
+              { name: 'Layer pasta, ricotta, and meat sauce.', description: null },
+              { name: 'Bake for 45 minutes until bubbly.', description: null }
+            ]
+          }
+        ]
+      });
+    });
+
+    it('should default name to empty string when name is missing or non-string', async () => {
+      const htmlWithoutName = `
+        <script>
+          window.wprm_recipes = {
+            "1": { "id": 1, "originalServings": "2" }
+          };
+        </script>
+      `;
+
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: jest.fn().mockResolvedValue(htmlWithoutName)
+      } as unknown as Response);
+
+      const result = await service.fetchRecipe('https://example.com/noname');
+      expect(result.name).toBe('');
+      expect(result.servings).toBe(2);
+      expect(result.stages).toEqual([]);
+    });
+
+    it('should default servings to 1 when originalServings is missing, invalid, zero, or negative', async () => {
+      const cases = [
+        '{"id": 1, "name": "Test Recipe"}', // missing
+        '{"id": 1, "name": "Test Recipe", "originalServings": "0"}',
+        '{"id": 1, "name": "Test Recipe", "originalServings": "-3"}',
+        '{"id": 1, "name": "Test Recipe", "originalServings": "abc"}',
+        '{"id": 1, "name": "Test Recipe", "originalServings": ""}',
+        '{"id": 1, "name": "Test Recipe", "originalServings": null}'
+      ];
+
+      for (const recipeJson of cases) {
+        const html = `
+          <script>
+            window.wprm_recipes = {
+              "1": ${recipeJson}
+            };
+          </script>
+        `;
+
+        global.fetch = jest.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          text: jest.fn().mockResolvedValue(html)
+        } as unknown as Response);
+
+        const result = await service.fetchRecipe('https://example.com/test');
+        expect(result.servings).toBe(1);
+      }
+    });
+
+    it('should map instruction group with missing/empty name to null stage name', async () => {
+      const html = `
+        <script>
+          window.wprm_recipes = { "1": { "id": 1, "name": "Simple Tea", "originalServings": "1" } };
+        </script>
+        <div class="wprm-recipe-instructions-container">
+          <div class="wprm-recipe-instruction-group">
+            <ul>
+              <li>Boil water.</li>
+              <li>Steep tea bag for 3 minutes.</li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: jest.fn().mockResolvedValue(html)
+      } as unknown as Response);
+
+      const result = await service.fetchRecipe('https://example.com/tea');
+      expect(result.stages).toEqual([
+        {
+          name: null,
+          steps: [
+            { name: 'Boil water.', description: null },
+            { name: 'Steep tea bag for 3 minutes.', description: null }
+          ]
+        }
+      ]);
+    });
+
+    it('should propagate errors when HTML retrieval fails', async () => {
+      await expect(service.fetchRecipe('')).rejects.toThrow(BadRequestException);
+    });
+  });
 });

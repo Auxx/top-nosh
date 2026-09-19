@@ -1,9 +1,18 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import * as cheerio from 'cheerio';
+import { ImportedRecipeResponse, ImportedRecipeStage } from './dto/recipe-response.dto';
 import { RecipeInstructionGroup, WPRMRecipe, wprmRecipePattern } from './recipe-import/wprm.types';
 
 @Injectable()
 export class RecipeImportService {
+  async fetchRecipe(url: string): Promise<ImportedRecipeResponse> {
+    const html = await this.fetchRecipeHtmlFromUrl(url);
+    const metadata = this.extractRecipeMetadata(html);
+    const instructions = this.extractCookingInstructions(html);
+
+    return this.mapToImportedRecipeResponse(metadata, instructions, url);
+  }
+
   async fetchRecipeHtmlFromUrl(url: string): Promise<string> {
     if (url.trim().length === 0) {
       throw new BadRequestException('Recipe URL is required');
@@ -77,6 +86,41 @@ export class RecipeImportService {
     });
 
     return groups;
+  }
+
+  private mapToImportedRecipeResponse(
+    metadata: WPRMRecipe,
+    instructions: RecipeInstructionGroup[],
+    sourceUrl: string
+  ): ImportedRecipeResponse {
+    const name = typeof metadata?.name === 'string' ? metadata.name.trim() : '';
+
+    const parsedServings = Number.parseInt(String(metadata?.originalServings), 10);
+    const servings = Number.isInteger(parsedServings) && parsedServings > 0 ? parsedServings : 1;
+
+    const stages: ImportedRecipeStage[] = Array.isArray(instructions)
+      ? instructions.map(group => ({
+        name: typeof group?.name === 'string' && group.name.trim().length > 0 ? group.name.trim() : null,
+        steps: Array.isArray(group?.steps)
+          ? group.steps
+            .filter((step): step is string => typeof step === 'string' && step.trim().length > 0)
+            .map(step => ({
+              name: step.trim(),
+              description: null
+            }))
+          : []
+      }))
+      : [];
+
+    return {
+      name,
+      cuisine: null,
+      category: null,
+      description: null,
+      servings,
+      source: sourceUrl,
+      stages
+    };
   }
 
   private extractWprmJson(html: string): string {
