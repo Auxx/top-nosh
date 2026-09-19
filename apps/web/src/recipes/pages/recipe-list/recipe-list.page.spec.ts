@@ -7,6 +7,7 @@ import { ConfirmationDialog, PageHeaderComponent } from '@top-nosh/ui';
 import { MockComponents } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
+import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
 import {
   CuisinesCategoriesResponse,
   PaginatedRecipeResponse,
@@ -113,6 +114,7 @@ describe('RecipeListPage', () => {
     await TestBed.configureTestingModule({
       imports: [
         RecipeListPage,
+        RecipeTableViewComponent,
         MockComponents(PageHeaderComponent),
         getTranslocoModule()
       ],

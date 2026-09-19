@@ -11,11 +11,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { ConfirmationDialog, PageHeaderComponent, StripMarkdownPipe, TruncatePipe } from '@top-nosh/ui';
+import { ConfirmationDialog, PageHeaderComponent } from '@top-nosh/ui';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
+import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
 import { RecipeListItem } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -25,18 +25,15 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     CommonModule,
     AsyncPipe,
     ReactiveFormsModule,
-    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatTableModule,
+    RecipeTableViewComponent,
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
     PageHeaderComponent,
-    StripMarkdownPipe,
-    TruncatePipe,
     TranslocoDirective
   ],
   templateUrl: './recipe-list.page.html',
