@@ -73,8 +73,9 @@ export class RecipeImportService {
 
     container.find('div.wprm-recipe-instruction-group').each((_, groupEl) => {
       const $group = $(groupEl);
-      const groupHeading = $group.find('h4').first().text().trim();
-      const groupName = groupHeading || defaultGroupName;
+      const groupH4 = $group.find('h4').first().text().trim();
+      const groupH5 = $group.find('h5').first().text().trim();
+      const groupName = groupH4 || groupH5 || defaultGroupName;
 
       const steps = $group
         .find('li')
