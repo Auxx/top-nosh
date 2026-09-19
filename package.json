@@ -9,7 +9,8 @@
     "lint": "nx run-many --all --target=lint --no-tui",
     "test": "nx run-many --all --target=test --no-tui",
     "serve:api": "nx run api:serve:development",
-    "serve:web": "set PORT=5999 && nx run web:serve:development"
+    "serve:web": "set PORT=5999 && nx run web:serve:development",
+    "samples:recipe-import": "node .junie/helpers/recipe-import/get-recipe-samples.js"
   },
   "private": true,
   "dependencies": {

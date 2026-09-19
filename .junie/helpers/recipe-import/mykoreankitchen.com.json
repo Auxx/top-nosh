@@ -1,0 +1,362 @@
+{
+  "type": "food",
+  "name": "Tteokbokki (Spicy Rice Cakes)",
+  "slug": "wprm-tteokbokki-spicy-rice-cakes",
+  "image_url": "https://mykoreankitchen.com/wp-content/uploads/2017/11/1.-Tteokbokki.jpg",
+  "rating": {
+    "count": 82,
+    "total": 410,
+    "average": 5,
+    "type": {
+      "comment": 82,
+      "no_comment": 0,
+      "user": 0
+    },
+    "user": 0
+  },
+  "ingredients": [
+    {
+      "uid": 1,
+      "amount": "350",
+      "unit": "g",
+      "name": "Korean rice cakes",
+      "notes": "(12 ounces), separated",
+      "conversion_item_snapshot": {
+        "amount": "350",
+        "unit": "g",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7199,
+      "id": 2286,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "350",
+          "unit": "g",
+          "unitParsed": "g",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 2,
+      "amount": "150",
+      "unit": "g",
+      "name": "Korean fish cakes",
+      "notes": "(5.3 ounces), rinsed over hot water &amp; cut into bite size pieces",
+      "conversion_item_snapshot": {
+        "amount": "150",
+        "unit": "g",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7199,
+      "id": 2374,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "150",
+          "unit": "g",
+          "unitParsed": "g",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 3,
+      "amount": "2",
+      "unit": "cups",
+      "name": "Korean soup stock",
+      "notes": "(dried kelp and dried anchovy stock)",
+      "conversion_item_snapshot": {
+        "amount": "2",
+        "unit": "cups",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7200,
+      "id": 2689,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "2",
+          "unit": "cups",
+          "unitParsed": "cups",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 4,
+      "amount": "60",
+      "unit": "g",
+      "name": "onion",
+      "notes": "(2 ounces), thinly sliced",
+      "conversion_item_snapshot": {
+        "amount": "60",
+        "unit": "g",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7199,
+      "id": 1052,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "60",
+          "unit": "g",
+          "unitParsed": "g",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 6,
+      "amount": "3",
+      "unit": "Tbsp",
+      "name": "gochujang",
+      "notes": "(Korean chili paste)",
+      "conversion_item_snapshot": {
+        "amount": "3",
+        "unit": "Tbsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7184,
+      "id": 1029,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "3",
+          "unit": "Tbsp",
+          "unitParsed": "Tbsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 7,
+      "amount": "1 1/2",
+      "unit": "Tbsp",
+      "name": "raw sugar",
+      "notes": "",
+      "conversion_item_snapshot": {
+        "amount": "1 1/2",
+        "unit": "Tbsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7184,
+      "id": 1169,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1 1/2",
+          "unit": "Tbsp",
+          "unitParsed": "Tbsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 8,
+      "amount": "1",
+      "unit": "Tbsp",
+      "name": "soy sauce",
+      "notes": "",
+      "conversion_item_snapshot": {
+        "amount": "1",
+        "unit": "Tbsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7184,
+      "id": 1008,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1",
+          "unit": "Tbsp",
+          "unitParsed": "Tbsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 9,
+      "amount": "1",
+      "unit": "tsp",
+      "name": "minced garlic",
+      "notes": "",
+      "conversion_item_snapshot": {
+        "amount": "1",
+        "unit": "tsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7185,
+      "id": 1010,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1",
+          "unit": "tsp",
+          "unitParsed": "tsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 10,
+      "amount": "1",
+      "unit": "tsp",
+      "name": "gochugaru",
+      "notes": "(Korean chili flakes)",
+      "conversion_item_snapshot": {
+        "amount": "1",
+        "unit": "tsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7185,
+      "id": 1158,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1",
+          "unit": "tsp",
+          "unitParsed": "tsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 12,
+      "amount": "1",
+      "unit": "tsp",
+      "name": "toasted sesame seeds",
+      "notes": "",
+      "conversion_item_snapshot": {
+        "amount": "1",
+        "unit": "tsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7185,
+      "id": 1005,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1",
+          "unit": "tsp",
+          "unitParsed": "tsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 13,
+      "amount": "1",
+      "unit": "tsp",
+      "name": "sesame oil",
+      "notes": "",
+      "conversion_item_snapshot": {
+        "amount": "1",
+        "unit": "tsp",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7185,
+      "id": 1011,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1",
+          "unit": "tsp",
+          "unitParsed": "tsp",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    },
+    {
+      "uid": 14,
+      "amount": "1",
+      "unit": "stalk",
+      "name": "green onion",
+      "notes": ", finely chopped",
+      "conversion_item_snapshot": {
+        "amount": "1",
+        "unit": "stalk",
+        "timestamp": 1784174486000
+      },
+      "unit_id": 7252,
+      "id": 1150,
+      "type": "ingredient",
+      "unit_systems": {
+        "unit-system-1": {
+          "amount": "1",
+          "unit": "stalk",
+          "unitParsed": "stalk",
+          "unit_connector": "",
+          "unit_connector_spacing": "space-both",
+          "unit_connector_pluralizes_ingredient": true
+        }
+      }
+    }
+  ],
+  "originalServings": "2",
+  "originalServingsParsed": 2,
+  "currentServings": "2",
+  "currentServingsParsed": 2,
+  "currentServingsFormatted": "2",
+  "currentServingsMultiplier": 1,
+  "originalSystem": 1,
+  "currentSystem": 1,
+  "favorite": false,
+  "unitSystems": [
+    1
+  ],
+  "originalAdvancedServings": {
+    "shape": "round",
+    "unit": "inch",
+    "diameter": 0,
+    "width": 0,
+    "length": 0,
+    "height": 0
+  },
+  "currentAdvancedServings": {
+    "shape": "round",
+    "unit": "inch",
+    "diameter": 0,
+    "width": 0,
+    "length": 0,
+    "height": 0
+  },
+  "collection": {
+    "servingsUnit": "",
+    "servingsUnitRaw": "",
+    "originalServings": "2",
+    "originalServingsParsed": 2,
+    "type": "recipe",
+    "recipeId": 16175,
+    "name": "Tteokbokki (Spicy Rice Cakes)",
+    "image": "https://mykoreankitchen.com/wp-content/uploads/2017/11/1.-Tteokbokki-500x500.jpg",
+    "servings": 2,
+    "parent_id": "16049",
+    "parent_url": "https://mykoreankitchen.com/tteokbokki-spicy-rice-cakes/",
+    "cachedAt": 1789752448,
+    "modifiedAt": 1784210486
+  }
+}
