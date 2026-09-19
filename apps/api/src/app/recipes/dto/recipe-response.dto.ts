@@ -28,3 +28,23 @@ export type RecipeStageWithRelations = RecipeStage & {
 export type RecipeWithDetails = Recipe & {
   stages: RecipeStageWithRelations[];
 };
+
+export interface ImportedRecipeResponse {
+  name: string;
+  cuisine: string | null;
+  category: string | null;
+  description: string | null;
+  servings: number;
+  source: string | null;
+  stages: ImportedRecipeStage[];
+}
+
+export interface ImportedRecipeStage {
+  name: string | null;
+  steps: ImportedRecipeStageStep[];
+}
+
+export interface ImportedRecipeStageStep {
+  name: string;
+  description: string | null;
+}
