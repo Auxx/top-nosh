@@ -93,3 +93,13 @@ export interface WPRMRecipeUnitSystem {
   unit_connector_spacing: string;
   unit_connector_pluralizes_ingredient: boolean;
 }
+
+export interface RecipeInstructionGroup {
+  name: string;
+  steps: string[];
+}
+
+export interface RecipeImportResponse {
+  metadata: WPRMRecipe;
+  instructions: RecipeInstructionGroup[];
+}

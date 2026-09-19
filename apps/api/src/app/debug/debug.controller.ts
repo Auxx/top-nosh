@@ -1,5 +1,6 @@
 import { BadRequestException, Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { RecipeImportService } from '../recipes/recipe-import.service';
+import { RecipeImportResponse } from '../recipes/recipe-import/wprm.types';
 import { DevelopmentModeGuard } from './guards/development-mode.guard';
 
 @Controller('debug')
@@ -8,24 +9,15 @@ export class DebugController {
   constructor(private readonly recipeImportService: RecipeImportService) {}
 
   @Get('recipe/import')
-  // Required by specification until incoming recipe data structure is analyzed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async importRecipe(@Query('recipe-url') recipeUrl: string): Promise<any> {
+  async importRecipe(@Query('recipe-url') recipeUrl: string): Promise<RecipeImportResponse> {
     if (recipeUrl.trim() === '') {
       throw new BadRequestException('Query parameter "recipe-url" is required');
     }
 
-    return this.recipeImportService.fetchRecipeFromUrl(recipeUrl);
-  }
+    const html = await this.recipeImportService.fetchRecipeHtmlFromUrl(recipeUrl);
+    const metadata = this.recipeImportService.extractRecipeMetadata(html);
+    const instructions = this.recipeImportService.extractCookingInstructions(html);
 
-  @Get('recipe/interface')
-  async getRecipeInterface(@Query('recipe-url') recipeUrl: string): Promise<{ interface: string; }> {
-    if (recipeUrl.trim() === '') {
-      throw new BadRequestException('Query parameter "recipe-url" is required');
-    }
-
-    const interfaceDefinition = await this.recipeImportService.generateTypeScriptInterface(recipeUrl);
-
-    return { interface: interfaceDefinition };
+    return { metadata, instructions };
   }
 }

@@ -1,19 +1,22 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecipeImportService } from '../recipes/recipe-import.service';
+import { RecipeInstructionGroup, WPRMRecipe } from '../recipes/recipe-import/wprm.types';
 import { DebugController } from './debug.controller';
 
 describe('DebugController', () => {
   let controller: DebugController;
   let recipeImportService: {
-    fetchRecipeFromUrl: jest.Mock;
-    generateTypeScriptInterface: jest.Mock;
+    fetchRecipeHtmlFromUrl: jest.Mock;
+    extractRecipeMetadata: jest.Mock;
+    extractCookingInstructions: jest.Mock;
   };
 
   beforeEach(async () => {
     recipeImportService = {
-      fetchRecipeFromUrl: jest.fn(),
-      generateTypeScriptInterface: jest.fn()
+      fetchRecipeHtmlFromUrl: jest.fn(),
+      extractRecipeMetadata: jest.fn(),
+      extractCookingInstructions: jest.fn()
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -39,31 +42,29 @@ describe('DebugController', () => {
       await expect(controller.importRecipe('   ')).rejects.toThrow(BadRequestException);
     });
 
-    it('should delegate to RecipeImportService.fetchRecipeFromUrl and return recipe data', async () => {
-      const mockRecipe = { id: 101, name: 'Spaghetti Bolognese' };
-      recipeImportService.fetchRecipeFromUrl.mockResolvedValue(mockRecipe);
+    it('should fetch HTML, extract metadata and cooking instructions, and return both', async () => {
+      const mockHtml = '<html><body>Mock Recipe HTML</body></html>';
+      const mockMetadata = { id: 101, name: 'Spaghetti Bolognese' } as unknown as WPRMRecipe;
+      const mockInstructions: RecipeInstructionGroup[] = [
+        {
+          name: 'Instructions',
+          steps: [ 'Boil pasta', 'Add sauce' ]
+        }
+      ];
+
+      recipeImportService.fetchRecipeHtmlFromUrl.mockResolvedValue(mockHtml);
+      recipeImportService.extractRecipeMetadata.mockReturnValue(mockMetadata);
+      recipeImportService.extractCookingInstructions.mockReturnValue(mockInstructions);
 
       const result = await controller.importRecipe('https://example.com/recipe');
 
-      expect(recipeImportService.fetchRecipeFromUrl).toHaveBeenCalledWith('https://example.com/recipe');
-      expect(result).toEqual(mockRecipe);
-    });
-  });
-
-  describe('getRecipeInterface', () => {
-    it('should throw BadRequestException if recipe-url is missing or empty', async () => {
-      await expect(controller.getRecipeInterface('')).rejects.toThrow(BadRequestException);
-      await expect(controller.getRecipeInterface('   ')).rejects.toThrow(BadRequestException);
-    });
-
-    it('should delegate to RecipeImportService.generateTypeScriptInterface and return { interface }', async () => {
-      const mockInterface = 'export interface Recipe {\n  id: number;\n}';
-      recipeImportService.generateTypeScriptInterface.mockResolvedValue(mockInterface);
-
-      const result = await controller.getRecipeInterface('https://example.com/recipe');
-
-      expect(recipeImportService.generateTypeScriptInterface).toHaveBeenCalledWith('https://example.com/recipe');
-      expect(result).toEqual({ interface: mockInterface });
+      expect(recipeImportService.fetchRecipeHtmlFromUrl).toHaveBeenCalledWith('https://example.com/recipe');
+      expect(recipeImportService.extractRecipeMetadata).toHaveBeenCalledWith(mockHtml);
+      expect(recipeImportService.extractCookingInstructions).toHaveBeenCalledWith(mockHtml);
+      expect(result).toEqual({
+        metadata: mockMetadata,
+        instructions: mockInstructions
+      });
     });
   });
 });

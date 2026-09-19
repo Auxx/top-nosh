@@ -1,49 +1,82 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { WPRMRecipe, wprmRecipePattern } from './recipe-import/wprm.types';
+import * as cheerio from 'cheerio';
+import { RecipeInstructionGroup, WPRMRecipe, wprmRecipePattern } from './recipe-import/wprm.types';
 
 @Injectable()
 export class RecipeImportService {
-  async fetchRecipeAsTextFromUrl(url: string): Promise<string> {
+  async fetchRecipeHtmlFromUrl(url: string): Promise<string> {
+    if (url.trim().length === 0) {
+      throw new BadRequestException('Recipe URL is required');
+    }
+
+    let response: Response;
+
     try {
-      const response = await fetch(url.trim());
-
-      if (!response.ok) {
-        throw new BadRequestException(`Failed to fetch recipe from URL: HTTP ${response.status}`);
-      }
-
-      return this.extractWprmJson(await response.text());
+      response = await fetch(url.trim());
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Network error';
       throw new BadRequestException(`Failed to fetch recipe from URL: ${message}`);
     }
+
+    if (!response.ok) {
+      throw new BadRequestException(`Failed to fetch recipe from URL: HTTP ${response.status}`);
+    }
+
+    return await response.text();
   }
 
-  async fetchRecipeFromUrl(url: string): Promise<WPRMRecipe> {
-    const jsonText = await this.fetchRecipeAsTextFromUrl(url);
+  extractRecipeMetadata(html: string): WPRMRecipe {
+    const jsonText = this.extractWprmJson(html);
 
     try {
       const json = JSON.parse(jsonText);
 
       if (!(json instanceof Object)) {
-        throw new BadRequestException(`Recipe is malformed - not a hash map`);
+        throw new BadRequestException('Recipe is malformed - not a hash map');
       }
 
       const values = Object.values(json);
 
       if (values.length !== 1) {
-        throw new BadRequestException(`Recipe is malformed - wrong hash map keys`);
+        throw new BadRequestException('Recipe is malformed - wrong hash map keys');
       }
 
       return values[0] as WPRMRecipe;
     } catch (error: unknown) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
       const message = error instanceof Error ? error.message : 'Malformed JSON';
       throw new BadRequestException(`Failed to parse extracted recipe JSON: ${message}`);
     }
   }
 
-  async generateTypeScriptInterface(url: string): Promise<string> {
-    const recipeData = await this.fetchRecipeFromUrl(url);
-    return this.buildTypeScriptInterface(recipeData, 'Recipe');
+  extractCookingInstructions(html: string): RecipeInstructionGroup[] {
+    const $ = cheerio.load(html);
+    const container = $('div.wprm-recipe-instructions-container');
+
+    if (container.length === 0) {
+      return [];
+    }
+
+    const defaultGroupName = container.find('h3').first().text().trim();
+    const groups: RecipeInstructionGroup[] = [];
+
+    container.find('div.wprm-recipe-instruction-group').each((_, groupEl) => {
+      const $group = $(groupEl);
+      const groupHeading = $group.find('h4').first().text().trim();
+      const groupName = groupHeading || defaultGroupName;
+
+      const steps = $group
+        .find('li')
+        .map((_, li) => $(li).text().trim())
+        .get()
+        .filter((step: string) => step.length > 0);
+
+      groups.push({ name: groupName, steps });
+    });
+
+    return groups;
   }
 
   private extractWprmJson(html: string): string {
@@ -123,113 +156,5 @@ export class RecipeImportService {
     }
 
     return null;
-  }
-
-  private buildTypeScriptInterface(data: unknown, interfaceName = 'Recipe'): string {
-    if (typeof data !== 'object' || data === null || Array.isArray(data)) {
-      throw new BadRequestException('Recipe data must be an object to generate a TypeScript interface');
-    }
-
-    const lines: string[] = [];
-
-    lines.push(`export interface ${interfaceName} {`);
-
-    const entries = Object.entries(data);
-
-    for (const [ key, value ] of entries) {
-      const formattedKey = this.formatPropertyKey(key);
-      const typeStr = this.inferType(value, 1);
-      lines.push(`  ${formattedKey}: ${typeStr};`);
-    }
-
-    lines.push('}');
-
-    return lines.join('\n');
-  }
-
-  private formatPropertyKey(key: string): string {
-    if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key)) {
-      return key;
-    }
-
-    return `'${key.replace(/'/g, '\\\'')}'`;
-  }
-
-  private inferType(value: unknown, indentLevel: number): string {
-    if (value === null) {
-      return 'null';
-    }
-
-    if (value === undefined) {
-      return 'undefined';
-    }
-
-    if (typeof value === 'string') {
-      return 'string';
-    }
-
-    if (typeof value === 'number') {
-      return 'number';
-    }
-
-    if (typeof value === 'boolean') {
-      return 'boolean';
-    }
-
-    if (Array.isArray(value)) {
-      if (value.length === 0) {
-        return 'unknown[]';
-      }
-
-      const itemTypes = new Set<string>();
-      let hasObjectItem = false;
-      let firstObjectItem: Record<string, unknown> | null = null;
-
-      for (const item of value) {
-        if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
-          hasObjectItem = true;
-          if (!firstObjectItem) {
-            firstObjectItem = item as Record<string, unknown>;
-          }
-        } else {
-          itemTypes.add(this.inferType(item, indentLevel));
-        }
-      }
-
-      if (hasObjectItem && firstObjectItem) {
-        const objectType = this.inferType(firstObjectItem, indentLevel);
-        return `${objectType}[]`;
-      }
-
-      if (itemTypes.size === 1) {
-        return `${Array.from(itemTypes)[0]}[]`;
-      }
-
-      if (itemTypes.size > 1) {
-        return `(${Array.from(itemTypes).join(' | ')})[]`;
-      }
-
-      return 'unknown[]';
-    }
-
-    if (typeof value === 'object') {
-      const entries = Object.entries(value);
-      if (entries.length === 0) {
-        return 'Record<string, unknown>';
-      }
-
-      const innerIndent = '  '.repeat(indentLevel + 1);
-      const closeIndent = '  '.repeat(indentLevel);
-
-      const propLines = entries.map(([ k, v ]) => {
-        const propKey = this.formatPropertyKey(k);
-        const propType = this.inferType(v, indentLevel + 1);
-        return `${innerIndent}${propKey}: ${propType};`;
-      });
-
-      return `{\n${propLines.join('\n')}\n${closeIndent}}`;
-    }
-
-    return 'unknown';
   }
 }
