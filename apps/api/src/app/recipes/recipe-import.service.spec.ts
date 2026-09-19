@@ -375,6 +375,7 @@ describe('RecipeImportService', () => {
         stages: [
           {
             name: 'Preparation',
+            ingredients: [],
             steps: [
               { name: 'Preheat oven to 375°F.', description: null },
               { name: 'Boil lasagna noodles until al dente.', description: null }
@@ -382,6 +383,7 @@ describe('RecipeImportService', () => {
           },
           {
             name: 'Baking',
+            ingredients: [],
             steps: [
               { name: 'Layer pasta, ricotta, and meat sauce.', description: null },
               { name: 'Bake for 45 minutes until bubbly.', description: null }
@@ -467,6 +469,7 @@ describe('RecipeImportService', () => {
       expect(result.stages).toEqual([
         {
           name: null,
+          ingredients: [],
           steps: [
             { name: 'Boil water.', description: null },
             { name: 'Steep tea bag for 3 minutes.', description: null }

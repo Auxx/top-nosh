@@ -90,6 +90,7 @@ describe('DebugController', () => {
         stages: [
           {
             name: 'Main',
+            ingredients: [],
             steps: [ { name: 'Bake at 350', description: null } ]
           }
         ]

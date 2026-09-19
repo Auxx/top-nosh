@@ -102,6 +102,7 @@ export class RecipeImportService {
     const stages: ImportedRecipeStage[] = Array.isArray(instructions)
       ? instructions.map(group => ({
         name: typeof group?.name === 'string' && group.name.trim().length > 0 ? group.name.trim() : null,
+        ingredients: [],
         steps: Array.isArray(group?.steps)
           ? group.steps
             .filter((step): step is string => typeof step === 'string' && step.trim().length > 0)
