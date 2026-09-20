@@ -189,6 +189,19 @@
       "success": "Recipe created successfully!",
       "failure": "Failed to create recipe. Please check your input and try again."
     },
+    "ImportRecipePage": {
+      "title": "Import New Recipe",
+      "description": "Review and adjust recipe imported from {{ url }}",
+      "loading": "Importing recipe details...",
+      "errorTitle": "Recipe Import Failed",
+      "errorDescription": "Failed to import recipe from the provided URL. Please verify the URL and try again.",
+      "goBack": "Go Back",
+      "cancel": "Cancel",
+      "creating": "Creating Recipe...",
+      "submit": "CREATE RECIPE",
+      "success": "Recipe created successfully!",
+      "failure": "Failed to create recipe. Please check your input and try again."
+    },
     "EditRecipePage": {
       "loading": "Loading recipe details...",
       "notFoundTitle": "Recipe Not Found",

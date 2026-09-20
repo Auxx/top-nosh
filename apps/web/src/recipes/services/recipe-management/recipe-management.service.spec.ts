@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CreateRecipeDto } from '../../models/create-recipe.types';
+import { ImportedRecipeResponse } from '../../models/imported-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import {
   CuisinesCategoriesResponse,
@@ -86,6 +87,7 @@ describe('RecipeManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'updateRecipe')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'deleteRecipe')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'getRecipeById')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'importRecipe')).toBe(true);
   });
 
   it('should return default filters with page 1 and ensure immutability', () => {
@@ -561,5 +563,50 @@ describe('RecipeManagementService', () => {
     const req = httpTesting.expectOne('/recipes/non-existent-id');
     expect(req.request.method).toBe('GET');
     req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+  });
+
+  describe('importRecipe', () => {
+    const testUrl = 'https://example.com/recipes/pasta';
+    const mockImportedRecipe: ImportedRecipeResponse = {
+      name: 'Pasta Bolognese',
+      cuisine: 'Italian',
+      category: 'Main Courses',
+      description: 'Delicious pasta dish',
+      servings: 4,
+      source: testUrl,
+      stages: [],
+      galleryId: null
+    };
+
+    it('should send GET request to /recipes/import with recipe-url query parameter', done => {
+      service.importRecipe(testUrl).subscribe(response => {
+        expect(response).toEqual(mockImportedRecipe);
+        done();
+      });
+
+      const req = httpTesting.expectOne(request =>
+        request.url === '/recipes/import' && request.params.get('recipe-url') === testUrl
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockImportedRecipe);
+    });
+
+    it('should propagate error when importRecipe fails', done => {
+      service.importRecipe(testUrl).subscribe({
+        next: () => {
+          fail('Should have failed');
+        },
+        error: error => {
+          expect(error.status).toBe(400);
+          done();
+        }
+      });
+
+      const req = httpTesting.expectOne(request =>
+        request.url === '/recipes/import' && request.params.get('recipe-url') === testUrl
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
+    });
   });
 });

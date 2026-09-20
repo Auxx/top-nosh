@@ -1,10 +1,8 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
-import { CreateRecipeDto } from '../../models/create-recipe.types';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { CreateRecipePage } from './create-recipe.page';

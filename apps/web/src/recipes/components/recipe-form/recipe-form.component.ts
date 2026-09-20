@@ -2,7 +2,7 @@ import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } fro
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,62 +17,8 @@ import { InfoCardComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui'
 import { RemarkComponent } from 'ngx-remark';
 import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
-import { RecipeDetails } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
-
-export function createStepGroup(
-  fb: FormBuilder,
-  step?: { id?: string; name?: string; description?: string; }
-): FormGroup {
-  return fb.group({
-    id: [ step?.id ?? null ],
-    name: [ step?.name ?? '', [ Validators.required ] ],
-    description: [ step?.description ?? '' ]
-  });
-}
-
-export function createIngredientGroup(
-  fb: FormBuilder,
-  ingredient?: { id?: string; name?: string; quantity?: number | null; unit?: IngredientUnit; }
-): FormGroup {
-  return fb.group({
-    id: [ ingredient?.id ?? null ],
-    name: [ ingredient?.name ?? '', [ Validators.required ] ],
-    quantity: [ ingredient?.quantity ?? null, [ Validators.required, Validators.min(0) ] ],
-    unit: [ ingredient?.unit ?? 'GRAMS', [ Validators.required ] ]
-  });
-}
-
-export function createStageGroup(
-  fb: FormBuilder,
-  stage?: {
-    id?: string;
-    name?: string;
-    steps?: Array<{ id?: string; name?: string; description?: string; }>;
-    ingredients?: Array<{ id?: string; name?: string; quantity?: number | null; unit?: IngredientUnit; }>;
-  }
-): FormGroup {
-  return fb.group({
-    id: [ stage?.id ?? null ],
-    name: [ stage?.name ?? '', [ Validators.required ] ],
-    steps: fb.array<FormGroup>((stage?.steps || []).map(step => createStepGroup(fb, step))),
-    ingredients: fb.array<FormGroup>((stage?.ingredients || []).map(ing => createIngredientGroup(fb, ing)))
-  });
-}
-
-export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null): FormGroup {
-  return fb.group({
-    name: [ recipe?.name ?? '', [ Validators.required ] ],
-    cuisine: [ recipe?.cuisine ?? '', [ Validators.required ] ],
-    category: [ recipe?.category ?? '', [ Validators.required ] ],
-    description: [ recipe?.description ?? '' ],
-    servings: [ recipe?.servings ?? null, [ Validators.required, Validators.min(1) ] ],
-    source: [ recipe?.source ?? '' ],
-    isShared: [ recipe?.isShared ?? false ],
-    galleryId: [ recipe?.galleryId ?? null ],
-    stages: fb.array<FormGroup>((recipe?.stages || []).map(stage => createStageGroup(fb, stage)))
-  });
-}
+import { createIngredientGroup, createStageGroup, createStepGroup } from './recipe-form.helpers';
 
 @Component({
   selector: 'app-recipe-form',
@@ -103,8 +49,6 @@ export function createRecipeForm(fb: FormBuilder, recipe?: RecipeDetails | null)
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeFormComponent implements OnInit {
-  private readonly fb = inject(FormBuilder);
-
   private readonly recipeService = inject(RecipeManagementService);
 
   private readonly destroyRef = inject(DestroyRef);
@@ -203,16 +147,15 @@ export class RecipeFormComponent implements OnInit {
     }
   }
 
-  readonly createStepGroup = (name = '', description = ''): FormGroup =>
-    createStepGroup(this.fb, { name, description });
+  readonly createStepGroup = (name = '', description = ''): FormGroup => createStepGroup({ name, description });
 
   readonly createIngredientGroup = (
     name = '',
     quantity: number | null = null,
     unit: IngredientUnit = 'GRAMS'
-  ): FormGroup => createIngredientGroup(this.fb, { name, quantity, unit });
+  ): FormGroup => createIngredientGroup({ name, quantity, unit });
 
-  readonly createStageGroup = (name = ''): FormGroup => createStageGroup(this.fb, { name });
+  readonly createStageGroup = (name = ''): FormGroup => createStageGroup({ name });
 
   readonly getStagesArray = (): FormArray => this.form().controls['stages'] as FormArray;
 

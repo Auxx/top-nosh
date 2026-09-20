@@ -1,14 +1,14 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MarkdownPreviewDialog } from '@top-nosh/ui';
 import { BehaviorSubject } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
-import { createRecipeForm, RecipeFormComponent } from './recipe-form.component';
+import { RecipeFormComponent } from './recipe-form.component';
+import { createRecipeForm } from './recipe-form.helpers';
 
 @Component({
   standalone: true,
@@ -16,8 +16,7 @@ import { createRecipeForm, RecipeFormComponent } from './recipe-form.component';
   template: `<app-recipe-form [form]="form()" [recipeId]="recipeId()" [isSubmitting]="false" />`
 })
 class TestHostComponent {
-  private readonly fb = new FormBuilder();
-  readonly form = signal<FormGroup>(createRecipeForm(this.fb));
+  readonly form = signal<FormGroup>(createRecipeForm());
   readonly recipeId = signal<string | undefined>(undefined);
 }
 
@@ -78,11 +77,10 @@ describe('RecipeFormComponent', () => {
   });
 
   it('should initialize source control and populate it from recipe if provided', () => {
-    const fb = new FormBuilder();
-    const emptyForm = createRecipeForm(fb);
+    const emptyForm = createRecipeForm();
     expect(emptyForm.controls['source'].value).toBe('');
 
-    const formWithSource = createRecipeForm(fb, {
+    const formWithSource = createRecipeForm({
       id: '1',
       name: 'Pasta',
       cuisine: 'Italian',
@@ -100,11 +98,10 @@ describe('RecipeFormComponent', () => {
   });
 
   it('should initialize galleryId control and populate it from recipe if provided', () => {
-    const fb = new FormBuilder();
-    const emptyForm = createRecipeForm(fb);
+    const emptyForm = createRecipeForm();
     expect(emptyForm.controls['galleryId'].value).toBeNull();
 
-    const formWithGallery = createRecipeForm(fb, {
+    const formWithGallery = createRecipeForm({
       id: '1',
       name: 'Pasta',
       cuisine: 'Italian',

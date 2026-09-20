@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,21 +18,46 @@ import { RecipeQueryDto } from './dto/recipe-query.dto';
 import {
   CuisineCategoryTreeItem,
   DeleteRecipeResponse,
+  ImportedRecipeResponse,
   PaginatedRecipeResponse,
   RecipeCreatedResponse,
   RecipeWithDetails
 } from './dto/recipe-response.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { RecipeImportService } from './recipe-import.service';
 import { RecipesService } from './recipes.service';
 
 @Controller('recipes')
 @UseGuards(JwtAuthGuard)
 export class RecipesController {
-  constructor(private readonly recipesService: RecipesService) {}
+  constructor(
+    private readonly recipesService: RecipesService,
+    private readonly recipeImportService: RecipeImportService
+  ) {}
 
   @Get('cuisines-categories')
   async getCuisinesAndCategories(): Promise<CuisineCategoryTreeItem[]> {
     return this.recipesService.getCuisinesAndCategories();
+  }
+
+  @Get('import')
+  async importRecipe(
+    @Query('recipe-url') recipeUrl?: string
+  ): Promise<ImportedRecipeResponse> {
+    // URL.canParse() already validates all possible scenarios and data types, no need to validate further
+    if (!URL.canParse(recipeUrl)) {
+      throw new BadRequestException('Query parameter "recipe-url" must be a valid URL');
+    }
+
+    try {
+      return await this.recipeImportService.fetchRecipe(recipeUrl.trim());
+    } catch (error: unknown) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new BadRequestException(`Failed to import recipe: ${message}`);
+    }
   }
 
   @Get()

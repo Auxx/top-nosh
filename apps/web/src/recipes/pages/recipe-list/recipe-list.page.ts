@@ -164,7 +164,7 @@ export class RecipeListPage {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result?: boolean | string) => {
         if (typeof result === 'string') {
-          // TODO We have a valid URL here, navigate to Import Recipe Page
+          this.router.navigate([ '/recipes/import', result ]).then();
         }
       });
   };
