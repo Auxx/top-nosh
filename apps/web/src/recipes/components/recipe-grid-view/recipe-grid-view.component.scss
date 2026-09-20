@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--dim-large);
+
+  mat-card {
+    mat-card-header {
+      margin-bottom: var(--dim-medium);
+      display: flow-root;
+
+      mat-card-title {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    mat-card-content {
+      margin-top: var(--dim-medium);
+      flex: 1;
+    }
+
+    [mat-card-image], .image-placeholder {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+    }
+
+    .image-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--mat-sys-surface-container-highest);
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
+
+  @media (max-width: 799.98px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 499.98px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}

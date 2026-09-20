@@ -1,15 +1,7 @@
 <ng-container *transloco="let t; prefix: 'web.RecipeListPage'">
   <div class="recipe-grid">
     @for (recipe of recipes(); track recipe.id) {
-      <mat-card class="recipe-card">
-        @if (recipe.thumbnail) {
-          <img mat-card-image [src]="recipe.thumbnail" [alt]="recipe.name" />
-        } @else {
-          <div class="thumbnail-placeholder">
-            <mat-icon>photo</mat-icon>
-          </div>
-        }
-
+      <mat-card>
         <mat-card-header>
           <mat-card-title>
             <a [routerLink]="['/recipes', recipe.id]" class="label">
@@ -19,22 +11,30 @@
           <mat-card-subtitle>{{ recipe.cuisine }}</mat-card-subtitle>
         </mat-card-header>
 
+        @if (recipe.thumbnail) {
+          <img mat-card-image [src]="recipe.thumbnail" [alt]="recipe.name" />
+        } @else {
+          <div class="image-placeholder">
+            <mat-icon>photo</mat-icon>
+          </div>
+        }
+
         <mat-card-content>
           {{ recipe.description | stripMarkdown | truncate: 100 }}
         </mat-card-content>
 
         <mat-card-actions>
-          <button mat-icon-button
+          <button matButton
                   [attr.aria-label]="t('editRecipeAriaLabel')"
                   (click)="onEditRecipe(recipe)">
-            <mat-icon>edit</mat-icon>
+            {{ t('edit') }}
           </button>
 
-          <button mat-icon-button
+          <button matButton
                   [attr.aria-label]="t('deleteRecipeAriaLabel')"
                   class="warn"
                   (click)="onDeleteRecipe(recipe)">
-            <mat-icon>delete</mat-icon>
+            {{ t('delete') }}
           </button>
         </mat-card-actions>
       </mat-card>

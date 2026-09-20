@@ -70,7 +70,7 @@ describe('RecipeGridViewComponent', () => {
 
   it('should render a photo icon placeholder when thumbnail is null', () => {
     const cards = fixture.nativeElement.querySelectorAll('mat-card');
-    const placeholderIcon = cards[1].querySelector('.thumbnail-placeholder mat-icon');
+    const placeholderIcon = cards[1].querySelector('.image-placeholder mat-icon');
 
     expect(placeholderIcon).toBeTruthy();
     expect(placeholderIcon.textContent.trim()).toBe('photo');

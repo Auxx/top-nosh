@@ -254,7 +254,9 @@
       "viewModeGrid": "Сетка",
       "paginatorAriaLabel": "Выбрать страницу рецептов",
       "deleteConfirmTitle": "Удалить рецепт",
-      "deleteConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?"
+      "deleteConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?",
+      "edit": "РЕДАКТИРОВАТЬ",
+      "delete": "УДАЛИТЬ"
     },
     "AddToShoppingListDirective": {
       "success": "Добавлено в список покупок",
