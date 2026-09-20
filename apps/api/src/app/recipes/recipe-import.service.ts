@@ -1,7 +1,13 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { IngredientUnit } from '@prisma/client';
 import * as cheerio from 'cheerio';
-import { ImportedRecipeResponse, ImportedRecipeStage } from './dto/recipe-response.dto';
-import { RecipeInstructionGroup, WPRMRecipe, wprmRecipePattern } from './recipe-import/wprm.types';
+import { ImportedRecipeIngredient, ImportedRecipeResponse, ImportedRecipeStage } from './dto/recipe-response.dto';
+import {
+  RecipeInstructionGroup,
+  WPRMRecipe,
+  WPRMRecipeIngredient,
+  wprmRecipePattern
+} from './recipe-import/wprm.types';
 
 @Injectable()
 export class RecipeImportService {
@@ -89,6 +95,265 @@ export class RecipeImportService {
     return groups;
   }
 
+  extractIngredients(metadata: WPRMRecipe, recipe: ImportedRecipeResponse): void {
+    if (!recipe.stages || recipe.stages.length === 0) {
+      recipe.stages = [
+        {
+          name: null,
+          steps: [],
+          ingredients: []
+        }
+      ];
+    }
+
+    const firstStage = recipe.stages[0];
+    if (!firstStage.ingredients) {
+      firstStage.ingredients = [];
+    }
+
+    if (!metadata || !Array.isArray(metadata.ingredients)) {
+      return;
+    }
+
+    for (const ingredient of metadata.ingredients) {
+      if (ingredient) {
+        firstStage.ingredients.push(this.parseWprmIngredient(ingredient));
+      }
+    }
+  }
+
+  private parseWprmIngredient(ingredient: WPRMRecipeIngredient): ImportedRecipeIngredient {
+    const name = typeof ingredient?.name === 'string' ? ingredient.name.trim() : '';
+    const { quantity, unit } = this.resolveUnitAndQuantity(ingredient);
+
+    return {
+      name,
+      quantity,
+      unit
+    };
+  }
+
+  private resolveUnitAndQuantity(
+    ingredient: WPRMRecipeIngredient
+  ): { quantity: number; unit: IngredientUnit; } {
+    if (ingredient?.converted && typeof ingredient.converted === 'object') {
+      for (const conversion of Object.values(ingredient.converted)) {
+        if (conversion && typeof conversion.unit === 'string' && this.isDirectUnit(conversion.unit)) {
+          const parsedAmount = this.parseAmount(conversion.amount);
+          return this.convertUnit(conversion.unit, parsedAmount);
+        }
+      }
+    }
+
+    const rawUnit = typeof ingredient?.unit === 'string' ? ingredient.unit : '';
+    const paren = this.extractParenthesizedUnit(rawUnit);
+    if (paren) {
+      return this.convertUnit(paren.unit, paren.amount);
+    }
+
+    const baseAmount = this.parseAmount(ingredient?.amount);
+    return this.convertUnit(rawUnit, baseAmount);
+  }
+
+  private extractParenthesizedUnit(rawUnit: string): { amount: number; unit: string; } | null {
+    const match = rawUnit.match(/\(([^)]+)\)/);
+    if (!match) {
+      return null;
+    }
+
+    const inside = match[1].trim();
+    const parenMatch = inside.match(/^([0-9\s./¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞-]+)\s*(.*)$/);
+    if (!parenMatch) {
+      return null;
+    }
+
+    const amountStr = parenMatch[1].trim();
+    const unitStr = parenMatch[2].trim();
+
+    if (!unitStr || !this.isKnownUnit(unitStr)) {
+      return null;
+    }
+
+    const parsedAmount = this.parseAmount(amountStr);
+    if (parsedAmount <= 0) {
+      return null;
+    }
+
+    return { amount: parsedAmount, unit: unitStr };
+  }
+
+  private isKnownUnit(rawUnit: string): boolean {
+    const normalized = typeof rawUnit === 'string' ? rawUnit.trim().toLowerCase() : '';
+    return (
+      this.isDirectUnit(normalized)
+      || normalized === 'cup'
+      || normalized === 'cups'
+      || normalized === 'pound'
+      || normalized === 'pounds'
+      || normalized === 'lb'
+      || normalized === 'lbs'
+      || normalized === 'lbs.'
+      || normalized === 'oz'
+      || normalized === 'oz.'
+      || normalized === 'ounce'
+      || normalized === 'ounces'
+    );
+  }
+
+  private isDirectUnit(rawUnit: string): boolean {
+    const normalized = typeof rawUnit === 'string' ? rawUnit.trim().toLowerCase() : '';
+    return (
+      normalized === 'g'
+      || normalized === 'gram'
+      || normalized === 'grams'
+      || normalized === 'ml'
+      || normalized === 'tbsp'
+      || normalized === 'tbsp.'
+      || normalized === 'tablespoon'
+      || normalized === 'tablespoons'
+      || normalized === 'tsp'
+      || normalized === 'tsp.'
+      || normalized === 'teaspoon'
+      || normalized === 'teaspoons'
+    );
+  }
+
+  private convertUnit(
+    rawUnit: string,
+    rawQuantity: number
+  ): { quantity: number; unit: IngredientUnit; } {
+    const normalized = typeof rawUnit === 'string' ? rawUnit.trim().toLowerCase() : '';
+
+    let unit: IngredientUnit = IngredientUnit.ITEM_COUNT;
+    let factor = 1;
+
+    switch (normalized) {
+      case 'g':
+      case 'gram':
+      case 'grams':
+      case 'ml':
+        unit = IngredientUnit.GRAMS;
+        factor = 1;
+        break;
+      case 'tbsp':
+      case 'tbsp.':
+      case 'tablespoon':
+      case 'tablespoons':
+        unit = IngredientUnit.TBSP;
+        factor = 1;
+        break;
+      case 'tsp':
+      case 'tsp.':
+      case 'teaspoon':
+      case 'teaspoons':
+        unit = IngredientUnit.TSP;
+        factor = 1;
+        break;
+      case 'cup':
+      case 'cups':
+        unit = IngredientUnit.GRAMS;
+        factor = 237;
+        break;
+      case 'pound':
+      case 'pounds':
+      case 'lb':
+      case 'lbs':
+      case 'lbs.':
+        unit = IngredientUnit.GRAMS;
+        factor = 454;
+        break;
+      case 'oz':
+      case 'oz.':
+      case 'ounce':
+      case 'ounces':
+        unit = IngredientUnit.GRAMS;
+        factor = 28.35;
+        break;
+      default:
+        unit = IngredientUnit.ITEM_COUNT;
+        factor = 1;
+        break;
+    }
+
+    const quantity = Math.round(rawQuantity * factor * 100) / 100;
+    return { quantity, unit };
+  }
+
+  private parseAmount(amountStr: string | null | undefined): number {
+    if (typeof amountStr !== 'string') {
+      return 0;
+    }
+
+    const trimmed = amountStr.trim();
+    if (!trimmed) {
+      return 0;
+    }
+
+    const vulgarFractions: Record<string, string> = {
+      '¼': ' 1/4',
+      '½': ' 1/2',
+      '¾': ' 3/4',
+      '⅐': ' 1/7',
+      '⅑': ' 1/9',
+      '⅒': ' 1/10',
+      '⅓': ' 1/3',
+      '⅔': ' 2/3',
+      '⅕': ' 1/5',
+      '⅖': ' 2/5',
+      '⅗': ' 3/5',
+      '⅘': ' 4/5',
+      '⅙': ' 1/6',
+      '⅚': ' 5/6',
+      '⅛': ' 1/8',
+      '⅜': ' 3/8',
+      '⅝': ' 5/8',
+      '⅞': ' 7/8'
+    };
+
+    let normalized = trimmed;
+    for (const [ vulgar, replacement ] of Object.entries(vulgarFractions)) {
+      normalized = normalized.replace(new RegExp(vulgar, 'g'), replacement);
+    }
+    normalized = normalized.trim();
+
+    if (normalized.includes('-')) {
+      const parts = normalized.split('-');
+      normalized = parts[0].trim();
+    }
+
+    const tokens = normalized.split(/\s+/).filter(t => t.length > 0);
+    if (tokens.length === 0) {
+      return 0;
+    }
+
+    let total = 0;
+    let parsedAny = false;
+
+    for (const token of tokens) {
+      if (token.includes('/')) {
+        const [ numStr, denStr ] = token.split('/');
+        const num = Number.parseFloat(numStr);
+        const den = Number.parseFloat(denStr);
+        if (!Number.isNaN(num) && !Number.isNaN(den) && den !== 0) {
+          total += num / den;
+          parsedAny = true;
+        }
+      } else {
+        const val = Number.parseFloat(token);
+        if (!Number.isNaN(val)) {
+          total += val;
+          parsedAny = true;
+        }
+      }
+    }
+
+    if (!parsedAny || Number.isNaN(total)) {
+      return 0;
+    }
+
+    return total;
+  }
+
   private mapToImportedRecipeResponse(
     metadata: WPRMRecipe,
     instructions: RecipeInstructionGroup[],
@@ -114,7 +379,7 @@ export class RecipeImportService {
       }))
       : [];
 
-    return {
+    const recipe: ImportedRecipeResponse = {
       name,
       cuisine: null,
       category: null,
@@ -123,6 +388,10 @@ export class RecipeImportService {
       source: sourceUrl,
       stages
     };
+
+    this.extractIngredients(metadata, recipe);
+
+    return recipe;
   }
 
   private extractWprmJson(html: string): string {
