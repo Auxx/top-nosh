@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,8 +17,9 @@ import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { ConfirmationDialog, PageHeaderComponent } from '@top-nosh/ui';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
 import { ImportRecipeDialogComponent } from '../../components/import-recipe-dialog/import-recipe-dialog.component';
+import { RecipeGridViewComponent } from '../../components/recipe-grid-view/recipe-grid-view.component';
 import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
-import { RecipeListItem } from '../../models/recipe-list.types';
+import { RecipeListItem, RecipeListViewMode } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
 @Component({
@@ -30,7 +32,9 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatButtonToggleModule,
     RecipeTableViewComponent,
+    RecipeGridViewComponent,
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
@@ -105,6 +109,12 @@ export class RecipeListPage {
       ? [ 'name', 'actions' ]
       : [ 'name', 'description', 'cuisine', 'category', 'actions' ]
   );
+
+  readonly viewMode = signal<RecipeListViewMode>('table');
+
+  readonly setViewMode = (mode: RecipeListViewMode): void => {
+    this.viewMode.set(mode);
+  };
 
   constructor() {
     this.searchSubject

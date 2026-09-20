@@ -15,7 +15,7 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      servings: 4
+      thumbnail: null
     },
     {
       id: '2',
@@ -23,7 +23,7 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      servings: 2
+      thumbnail: null
     }
   ];
 
@@ -88,7 +88,7 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
-      servings: 2
+      thumbnail: null
     };
 
     fixture.componentRef.setInput('recipes', [ markdownRecipe ]);
@@ -107,7 +107,7 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: `**${longText}**`,
-      servings: 2
+      thumbnail: null
     };
 
     fixture.componentRef.setInput('recipes', [ longRecipe ]);

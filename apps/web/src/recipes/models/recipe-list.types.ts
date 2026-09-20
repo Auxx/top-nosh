@@ -25,13 +25,10 @@ export interface RecipeListItem {
   cuisine: string;
   category: string;
   description: string;
-  servings: number;
-  source?: string | null;
-  prepTime?: number;
-  cookTime?: number;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
+  thumbnail: string | null;
 }
+
+export type RecipeListViewMode = 'table' | 'grid';
 
 export interface PaginatedRecipeResponse {
   data: RecipeListItem[];

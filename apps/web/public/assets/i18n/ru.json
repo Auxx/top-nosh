@@ -249,6 +249,9 @@
       "editRecipeAriaLabel": "Редактировать рецепт",
       "deleteRecipeAriaLabel": "Удалить рецепт",
       "noRecipes": "Рецепты не найдены",
+      "viewModeAriaLabel": "Переключить вид рецептов",
+      "viewModeTable": "Таблица",
+      "viewModeGrid": "Сетка",
       "paginatorAriaLabel": "Выбрать страницу рецептов",
       "deleteConfirmTitle": "Удалить рецепт",
       "deleteConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?"

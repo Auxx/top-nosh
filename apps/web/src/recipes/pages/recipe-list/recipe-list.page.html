@@ -83,12 +83,34 @@
 
   <div class="layout-gap"></div>
 
-  <!-- Table Card -->
+  <!-- View Mode Toggle -->
+  <mat-button-toggle-group [value]="viewMode()"
+                           (change)="setViewMode($event.value)"
+                           [attr.aria-label]="t('viewModeAriaLabel')"
+                           data-testid="view-mode-toggle-group">
+    <mat-button-toggle value="table" data-testid="table-view-toggle">
+      <span>{{ t('viewModeTable') }}</span>
+    </mat-button-toggle>
+
+    <mat-button-toggle value="grid" data-testid="grid-view-toggle">
+      <span>{{ t('viewModeGrid') }}</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="layout-gap"></div>
+
+  <!-- Table / Grid -->
   @if (recipes$ | async; as recipesData) {
-    <app-recipe-table-view [recipes]="recipesData.data"
-                           [columns]="columns"
-                           (edit)="onEditRecipe($event)"
-                           (delete)="onDeleteRecipe($event)" />
+    @if (viewMode() === 'table') {
+      <app-recipe-table-view [recipes]="recipesData.data"
+                             [columns]="columns"
+                             (edit)="onEditRecipe($event)"
+                             (delete)="onDeleteRecipe($event)" />
+    } @else {
+      <app-recipe-grid-view [recipes]="recipesData.data"
+                            (edit)="onEditRecipe($event)"
+                            (delete)="onDeleteRecipe($event)" />
+    }
 
     <!-- Paginator -->
     <mat-paginator [length]="recipesData.total"

@@ -7,6 +7,7 @@ import { MockComponents } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { ImportRecipeDialogComponent } from '../../components/import-recipe-dialog/import-recipe-dialog.component';
+import { RecipeGridViewComponent } from '../../components/recipe-grid-view/recipe-grid-view.component';
 import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
 import {
   CuisinesCategoriesResponse,
@@ -56,7 +57,7 @@ describe('RecipeListPage', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      servings: 4
+      thumbnail: null
     },
     {
       id: '2',
@@ -64,7 +65,7 @@ describe('RecipeListPage', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      servings: 2
+      thumbnail: null
     }
   ];
 
@@ -115,6 +116,7 @@ describe('RecipeListPage', () => {
       imports: [
         RecipeListPage,
         RecipeTableViewComponent,
+        RecipeGridViewComponent,
         MockComponents(PageHeaderComponent),
         getTranslocoModule()
       ],
@@ -263,7 +265,7 @@ describe('RecipeListPage', () => {
     expect(dialogMock.open).toHaveBeenCalledWith(ImportRecipeDialogComponent);
     expect(router.navigate).toHaveBeenCalledWith([
       '/recipes/import',
-      encodeURIComponent('https://example.com/recipe')
+      'https://example.com/recipe'
     ]);
   });
 
@@ -336,7 +338,7 @@ describe('RecipeListPage', () => {
             cuisine: 'Italian',
             category: 'Pasta',
             description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
-            servings: 2
+            thumbnail: null
           }
         ],
         total: 1,
@@ -360,7 +362,7 @@ describe('RecipeListPage', () => {
             cuisine: 'Italian',
             category: 'Pasta',
             description: `**${longText}**`,
-            servings: 2
+            thumbnail: null
           }
         ],
         total: 1,

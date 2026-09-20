@@ -9,6 +9,7 @@ describe('RecipesService', () => {
   let service: RecipesService;
   let galleriesService: {
     deleteGallery: jest.Mock;
+    buildExternalUrl: jest.Mock;
   };
   let prismaService: {
     recipe: {
@@ -64,7 +65,8 @@ describe('RecipesService', () => {
     };
 
     galleriesService = {
-      deleteGallery: jest.fn()
+      deleteGallery: jest.fn(),
+      buildExternalUrl: jest.fn((externalUrl: string, locationPath: string) => `${externalUrl}/${locationPath}`)
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -117,7 +119,14 @@ describe('RecipesService', () => {
   describe('getRecipes', () => {
     it('should return paginated recipes with metadata', async () => {
       const mockRecipes = [
-        { id: '1', name: 'Pasta', cuisine: 'Italian', category: 'Main' }
+        {
+          id: '1',
+          name: 'Pasta',
+          cuisine: 'Italian',
+          category: 'Main',
+          description: 'Tasty pasta',
+          gallery: null
+        }
       ];
       prismaService.recipe.count.mockResolvedValue(105);
       prismaService.recipe.findMany.mockResolvedValue(mockRecipes);
@@ -131,14 +140,69 @@ describe('RecipesService', () => {
         where: { deletedAt: null },
         skip: 50,
         take: 50,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        include: {
+          gallery: {
+            include: {
+              images: {
+                where: { deletedAt: null },
+                orderBy: { order: 'asc' },
+                take: 1,
+                include: {
+                  thumbnailFile: { include: { storage: true } }
+                }
+              }
+            }
+          }
+        }
       });
       expect(result).toEqual({
-        data: mockRecipes,
+        data: [
+          {
+            id: '1',
+            name: 'Pasta',
+            cuisine: 'Italian',
+            category: 'Main',
+            description: 'Tasty pasta',
+            thumbnail: null
+          }
+        ],
         total: 105,
         page: 2,
         totalPages: 3
       });
+    });
+
+    it('should return the first gallery image as the thumbnail URL', async () => {
+      const mockRecipes = [
+        {
+          id: '1',
+          name: 'Pasta',
+          cuisine: 'Italian',
+          category: 'Main',
+          description: 'Tasty pasta',
+          gallery: {
+            images: [
+              {
+                thumbnailFile: {
+                  storage: { externalUrl: 'https://cdn.example.com' },
+                  locationPath: 'thumbnails/pasta.jpg'
+                }
+              }
+            ]
+          }
+        }
+      ];
+      prismaService.recipe.count.mockResolvedValue(1);
+      prismaService.recipe.findMany.mockResolvedValue(mockRecipes);
+
+      const result = await service.getRecipes({ page: 1 });
+
+      expect(galleriesService.buildExternalUrl).toHaveBeenCalledWith(
+        'https://cdn.example.com',
+        'thumbnails/pasta.jpg'
+      );
+      expect(result.data[0].thumbnail).toBe('https://cdn.example.com/thumbnails/pasta.jpg');
     });
 
     it('should filter by search term, cuisine, and category', async () => {
