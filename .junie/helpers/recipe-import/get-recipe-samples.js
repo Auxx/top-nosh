@@ -3,8 +3,11 @@ const path = require('node:path');
 
 const sampleUrls = [
   'https://rasamalaysia.com/sesame-chicken/',
+  // 'https://rasamalaysia.com/one-pan-greek-chicken/',
   'https://thestayathomechef.com/sheet-pan-sausage-and-veggies/',
-  'https://mykoreankitchen.com/tteokbokki-spicy-rice-cakes/'
+  'https://mykoreankitchen.com/tteokbokki-spicy-rice-cakes/',
+  'https://thecozycook.com/homemade-ramen/',
+  'https://www.theflavorbender.com/easy-homemade-chicken-ramen/'
 ];
 
 const apiBaseUrl = process.env.API_BASE_URL
