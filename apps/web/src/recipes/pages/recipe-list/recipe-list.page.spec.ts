@@ -16,7 +16,7 @@ import {
   RecipeListItem
 } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
-import { RecipeListPage } from './recipe-list.page';
+import { RecipeListPage, recipeListViewModeStorageKey } from './recipe-list.page';
 
 describe('RecipeListPage', () => {
   let component: RecipeListPage;
@@ -374,6 +374,44 @@ describe('RecipeListPage', () => {
       const descriptionCell = fixture.nativeElement.querySelector('.item-description-medium');
       expect(descriptionCell).toBeTruthy();
       expect(descriptionCell.textContent.trim()).toBe('A'.repeat(100) + '...');
+    });
+  });
+
+  describe('view mode persistence', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    afterEach(() => {
+      localStorage.clear();
+    });
+
+    const recreateComponent = (): void => {
+      fixture = TestBed.createComponent(RecipeListPage);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    };
+
+    it('should default to table view when localStorage has no stored value', () => {
+      recreateComponent();
+      expect(component.viewMode()).toBe('table');
+    });
+
+    it('should load a previously stored grid view mode on construction', () => {
+      localStorage.setItem(recipeListViewModeStorageKey, 'grid');
+      recreateComponent();
+      expect(component.viewMode()).toBe('grid');
+    });
+
+    it('should fall back to table view when stored value is invalid', () => {
+      localStorage.setItem(recipeListViewModeStorageKey, 'bogus');
+      recreateComponent();
+      expect(component.viewMode()).toBe('table');
+    });
+
+    it('should persist view mode changes to localStorage', () => {
+      component.setViewMode('grid');
+      expect(localStorage.getItem(recipeListViewModeStorageKey)).toBe('grid');
     });
   });
 });

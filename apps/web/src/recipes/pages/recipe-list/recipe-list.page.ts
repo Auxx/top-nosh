@@ -22,6 +22,11 @@ import { RecipeTableViewComponent } from '../../components/recipe-table-view/rec
 import { RecipeListItem, RecipeListViewMode } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
+export const recipeListViewModeStorageKey = 'recipe_list_view_mode';
+
+const isRecipeListViewMode = (value: string | null): value is RecipeListViewMode =>
+  value === 'table' || value === 'grid';
+
 @Component({
   selector: 'app-recipe-list',
   imports: [
@@ -112,11 +117,31 @@ export class RecipeListPage {
 
   readonly viewMode = signal<RecipeListViewMode>('table');
 
+  private readonly loadViewModeFromStorage = (): RecipeListViewMode => {
+    try {
+      const stored = localStorage.getItem(recipeListViewModeStorageKey);
+      return isRecipeListViewMode(stored) ? stored : 'table';
+    } catch {
+      return 'table';
+    }
+  };
+
+  private readonly saveViewModeToStorage = (mode: RecipeListViewMode): void => {
+    try {
+      localStorage.setItem(recipeListViewModeStorageKey, mode);
+    } catch {
+      // Ignore storage errors (e.g. quota exceeded / security restrictions)
+    }
+  };
+
   readonly setViewMode = (mode: RecipeListViewMode): void => {
     this.viewMode.set(mode);
+    this.saveViewModeToStorage(mode);
   };
 
   constructor() {
+    this.viewMode.set(this.loadViewModeFromStorage());
+
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(search => this.recipeService.setSearch(search || undefined));
