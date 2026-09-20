@@ -1,0 +1,1007 @@
+{
+  "metadata": {
+    "type": "food",
+    "name": "Easy Homemade Chicken Ramen",
+    "slug": "wprm-easy-homemade-chicken-ramen",
+    "image_url": "https://www.theflavorbender.com/wp-content/uploads/2019/01/Easy-Chicken-Ramen-Featured.jpg",
+    "rating": {
+      "count": 151,
+      "total": 746,
+      "average": 4.95,
+      "type": {
+        "comment": 123,
+        "no_comment": 0,
+        "user": 28
+      },
+      "user": 0
+    },
+    "ingredients": [
+      {
+        "uid": 2,
+        "amount": "30",
+        "unit": "mL",
+        "name": "mirin",
+        "notes": "[adjustable]2[/adjustable] tbsp",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "30",
+          "unit": "mL",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31774,
+        "id": 10396,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "30",
+            "unit": "mL",
+            "unitParsed": "mL",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 3,
+        "amount": "15",
+        "unit": "mL",
+        "name": "dark soy sauce (or mushroom dark soy sauce)",
+        "notes": "[adjustable]1[/adjustable] tbsp, <u>If you don&#39;t have this, you can substitute with light soy sauce but adjust for salt. </u>",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "15",
+          "unit": "mL",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31774,
+        "id": 24005,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "15",
+            "unit": "mL",
+            "unitParsed": "mL",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 4,
+        "amount": "15",
+        "unit": "mL",
+        "name": "light soy sauce",
+        "notes": "[adjustable]1[/adjustable] tbsp",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "15",
+          "unit": "mL",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31774,
+        "id": 16002,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "15",
+            "unit": "mL",
+            "unitParsed": "mL",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 5,
+        "amount": "¼",
+        "unit": "tsp",
+        "name": "cayenne pepper",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "¼",
+          "unit": "tsp",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31750,
+        "id": 7338,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "¼",
+            "unit": "tsp",
+            "unitParsed": "tsp",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 6,
+        "amount": "2",
+        "unit": "cloves",
+        "name": "garlic ",
+        "notes": "chopped finely",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "cloves",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31755,
+        "id": 9836,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 7,
+        "amount": "4",
+        "unit": "pieces",
+        "name": "chicken thighs",
+        "notes": "boneless, skin off or on",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "pieces",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 32126,
+        "id": 20414,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "pieces",
+            "unitParsed": "pieces",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 9,
+        "amount": "2",
+        "unit": "tsp",
+        "name": "brown sugar",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "tsp",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31750,
+        "id": 9073,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "tsp",
+            "unitParsed": "tsp",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 10,
+        "amount": "30",
+        "unit": "mL",
+        "name": "dark soy sauce (or mushroom dark soy sauce)",
+        "notes": "[adjustable]2[/adjustable] tbsp. or [adjustable]1[/adjustable] tbsp light soy sauce + [adjustable]1[/adjustable] tbsp water",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "30",
+          "unit": "mL",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31774,
+        "id": 24005,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "30",
+            "unit": "mL",
+            "unitParsed": "mL",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 12,
+        "amount": "4 - 5",
+        "unit": "cups",
+        "name": "good quality chicken stock",
+        "notes": "[adjustable]1000[/adjustable] - [adjustable]1180[/adjustable] mL. No sodium or low sodium",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "4 - 5",
+          "unit": "cups",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31758,
+        "id": 20378,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4 - 5",
+            "unit": "cups",
+            "unitParsed": "cups",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 13,
+        "amount": "4",
+        "unit": "",
+        "name": "spring onions / scallions",
+        "notes": "trimmed and cut into 3 inch pieces, or just in half",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 31946,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 14,
+        "amount": "5",
+        "unit": "cloves",
+        "name": "garlic",
+        "notes": "whole cloves are fine",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "5",
+          "unit": "cloves",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31755,
+        "id": 9836,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "5",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 15,
+        "amount": "2",
+        "unit": "inch",
+        "name": "piece of ginger",
+        "notes": "sliced",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "inch",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31756,
+        "id": 9767,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "inch",
+            "unitParsed": "inch",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 16,
+        "amount": "4",
+        "unit": "",
+        "name": "fresh red chili",
+        "notes": "or [adjustable]1[/adjustable] tbsp dried chili flakes (crushed red pepper). <u>Omit this if you don&#39;t prefer spicy food.</u>",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 31558,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 17,
+        "amount": "60",
+        "unit": "mL",
+        "name": "light soy sauce",
+        "notes": "[adjustable]¼[/adjustable] cup",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "60",
+          "unit": "mL",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31774,
+        "id": 16002,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "60",
+            "unit": "mL",
+            "unitParsed": "mL",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 18,
+        "amount": "60",
+        "unit": "mL",
+        "name": "mirin",
+        "notes": "[adjustable]¼[/adjustable] cup",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "60",
+          "unit": "mL",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31774,
+        "id": 10396,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "60",
+            "unit": "mL",
+            "unitParsed": "mL",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 19,
+        "amount": "8",
+        "unit": "ounces",
+        "name": "fresh shiitake mushrooms",
+        "notes": "stems trimmed and sliced, or cut in half",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "8",
+          "unit": "ounces",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31764,
+        "id": 32431,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "8",
+            "unit": "ounces",
+            "unitParsed": "ounces",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 33,
+        "amount": "6",
+        "unit": "pieces",
+        "name": "dried shiitake mushrooms",
+        "notes": "optional. See recipe notes below.",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "conversion_item_snapshot": {
+          "amount": "6",
+          "unit": "pieces",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 32126,
+        "id": 32432,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "6",
+            "unit": "pieces",
+            "unitParsed": "pieces",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 20,
+        "amount": "4",
+        "unit": "portions",
+        "name": "dried ramen noodles",
+        "notes": "or about [adjustable]340[/adjustable] g dry ramen (or [adjustable]4[/adjustable] portions of fresh ramen noodles)",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "portions",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 32583,
+        "id": 23928,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "portions",
+            "unitParsed": "portions",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 22,
+        "amount": "4",
+        "unit": "",
+        "name": "large eggs",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 10192,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 24,
+        "amount": "1",
+        "unit": "",
+        "name": "large bunch of yu choy OR spinach",
+        "notes": "or any Asian greens",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 32434,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 25,
+        "amount": "",
+        "unit": "",
+        "name": "Soy sauce",
+        "notes": "to taste",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 7672,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 26,
+        "amount": "",
+        "unit": "",
+        "name": "Sesame oil",
+        "notes": "a drizzle",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 12816,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 27,
+        "amount": "2 - 3",
+        "unit": "cloves",
+        "name": "garlic",
+        "notes": "finely sliced, to taste",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2 - 3",
+          "unit": "cloves",
+          "timestamp": 1781535119000
+        },
+        "unit_id": 31755,
+        "id": 9836,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2 - 3",
+            "unit": "cloves",
+            "unitParsed": "cloves",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 29,
+        "amount": "4",
+        "unit": "",
+        "name": "spring onions / scallions",
+        "notes": "finely sliced",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "4",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 31946,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "4",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 30,
+        "amount": "",
+        "unit": "",
+        "name": "Sliced radishes or bean sprouts",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 23886,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 31,
+        "amount": "",
+        "unit": "",
+        "name": "Ramen eggs",
+        "notes": "marinated or plain",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 23887,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      },
+      {
+        "uid": 32,
+        "amount": "",
+        "unit": "",
+        "name": "Chili garlic oil",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "",
+            "unit": ""
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "",
+          "unit": "",
+          "timestamp": 1781535119000
+        },
+        "id": 23888,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "",
+            "unit": "",
+            "unitParsed": ""
+          }
+        }
+      }
+    ],
+    "originalServings": "4",
+    "originalServingsParsed": 4,
+    "currentServings": "4",
+    "currentServingsParsed": 4,
+    "currentServingsFormatted": "4",
+    "currentServingsMultiplier": 1,
+    "originalSystem": 1,
+    "currentSystem": 1,
+    "favorite": false,
+    "unitSystems": [
+      1
+    ],
+    "originalAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "currentAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "collection": {
+      "servingsUnit": "servings",
+      "servingsUnitRaw": "servings",
+      "originalServings": "4",
+      "originalServingsParsed": 4,
+      "type": "recipe",
+      "recipeId": 25934,
+      "name": "Easy Homemade Chicken Ramen",
+      "image": "https://www.theflavorbender.com/wp-content/uploads/2019/01/Easy-Chicken-Ramen-Featured-312x312.jpg",
+      "servings": 4,
+      "parent_id": "25902",
+      "parent_url": "https://www.theflavorbender.com/easy-homemade-chicken-ramen/",
+      "cachedAt": 1789695999,
+      "modifiedAt": 1785857150
+    }
+  },
+  "instructions": [
+    {
+      "name": "Caramelized soy chicken",
+      "steps": [
+        "Place all the ingredients for the chicken marinade in a bowl. Mix well to coat the chicken. If time permits, allow the chicken to marinate for at least 1 hour.30 mL mirin, 15 mL dark soy sauce (or mushroom dark soy sauce), 15 mL light soy sauce, ¼ tsp cayenne pepper, 2 cloves garlic , 4 pieces chicken thighs",
+        "Preheat the oven to 425°F / 218°C, and place an oven rack in the top third of your oven. Line a baking sheet with parchment paper.",
+        "Place the chicken pieces on the baking sheet, skin side down (or smooth side down), evenly spaced apart. Then place the baking sheet in the preheated oven (upper third).",
+        "Let the chicken roast for 15 minutes. While the chicken is cooking, mix the brown sugar and dark soy sauce for the glaze, and start making the ramen. (Please note that the cook time for the chicken will vary depending on the size and thickness of the chicken thigh pieces you are using. )2 tsp brown sugar, 30 mL dark soy sauce (or mushroom dark soy sauce)",
+        "After 15 minutes, flip the chicken pieces over and spoon the glaze over them. Let the chicken cook for a further 10 – 15 minutes. Then remove from the oven and let them cool down.",
+        "Slice the chicken and set aside."
+      ]
+    },
+    {
+      "name": "Ramen",
+      "steps": [
+        "While the caramelized soy chicken is cooking in the oven, make the ramen base.",
+        "Place two saucepans on the stove.",
+        "As an optional step, you can chop the garlic and ginger. Or you can add them whole or sliced, and strain the ramen stock to remove the large pieces of garlic and ginger later.",
+        "In one saucepan (Pot 1), place the stock, ginger, garlic, spring onions, chili (if using), soy sauce, and mirin. Stir and cover the pot. Let it come to a boil at medium high – high heat. Then lower the heat to medium and let it simmer for 20 – 25 minutes. Taste the base and add more salt if needed. 4 – 5 cups good quality chicken stock, 4 spring onions / scallions, 5 cloves garlic, 2 inch piece of ginger, 4 fresh red chili, 60 mL light soy sauce, 60 mL mirin",
+        "To add more flavor to the stock base, you can also add dried shiitake mushrooms to the broth. The dried mushroom will reconstitute as the stock heats up and add a lot of umami flavor to the broth. 6 pieces dried shiitake mushrooms",
+        "While Pot 1 is simmering, add water to the second pot (Pot 2), and bring it to a boil. Add the dried noodles to the boiling water and cook according to package directions. I prefer to cook the noodles for ONE MINUTE LESS than what's recommended on the package, since the noodles will continue to cook for a bit longer when served with hot broth. The straight ramen noodles I use here take 3  minutes to cook. Drain the noodles and divide into 4 bowls and set aside. 4 portions dried ramen noodles",
+        "When the ramen base in Pot 1 has cooked for about 20 – 25 minutes, strain to remove the garlic, ginger, chili, and spring onions (or only the spring onions and chili). If you added dried mushrooms, remove these. Slice these mushrooms and set aside.",
+        "Add the strained stock back into the pot and add the mushrooms (fresh and reconstituted dried mushrooms) , and let it cook for a further 5 minutes until the fresh mushrooms have softened. The ramen base is now ready. 8 ounces fresh shiitake mushrooms"
+      ]
+    },
+    {
+      "name": "Ramen egg or unseasoned soft boiled egg",
+      "steps": [
+        "Make ramen eggs the day before, according to this recipe. OR make regular soft boiled eggs to top your ramen bowl. (Ramen eggs need at least 2 hours to marinate.)4 large eggs",
+        "To make regular soft boiled eggs – bring a pot of water to a boil. Lower 4 large eggs carefully into the water and cook the eggs for 6 – 6 ½ minutes.",
+        "Immediately place the eggs in cool running water or an ice bath for a few minutes. Peel and set aside until ready to serve. This can be done BEFORE you cook the ramen as well."
+      ]
+    },
+    {
+      "name": "Steamed greens",
+      "steps": [
+        "Wash the greens and cut them in half, or into sections if necessary, to separate thick stems from the leaves. 1 large bunch of yu choy OR spinach",
+        "Place the greens in a bowl and drizzle a little soy sauce and sesame oil (and garlic) on top. Toss to combine.Soy sauce, Sesame oil, 2 – 3 cloves garlic",
+        "Cover and microwave in 1 minute increments until the greens have softened, but not too wilted.",
+        "Alternatively, you can heat a non-stick pan with a little oil, and pan fry the greens with soy sauce and garlic for about 2 – 4 minutes. You can also blanche the greens in the ramen broth for about 1 minute. Remove the greens and then drizzle soy sauce, sesame oil, garlic, and toss to mix."
+      ]
+    },
+    {
+      "name": "To serve",
+      "steps": [
+        "Evenly divide the hot stock between the four bowls with ramen noodles.",
+        "Top with the steamed greens, sliced soy chicken, ramen eggs, spring onions, radishes, and other toppings you like.4 spring onions / scallions, Sliced radishes or bean sprouts, Ramen eggs, Chili garlic oil"
+      ]
+    }
+  ]
+}

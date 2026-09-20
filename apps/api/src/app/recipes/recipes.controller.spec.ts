@@ -1,4 +1,7 @@
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ImportedRecipeResponse } from './dto/recipe-response.dto';
+import { RecipeImportService } from './recipe-import.service';
 import { RecipesController } from './recipes.controller';
 import { RecipesService } from './recipes.service';
 
@@ -12,6 +15,9 @@ describe('RecipesController', () => {
     updateRecipe: jest.Mock;
     deleteRecipe: jest.Mock;
   };
+  let recipeImportService: {
+    fetchRecipe: jest.Mock;
+  };
 
   beforeEach(async () => {
     recipesService = {
@@ -22,6 +28,9 @@ describe('RecipesController', () => {
       updateRecipe: jest.fn(),
       deleteRecipe: jest.fn()
     };
+    recipeImportService = {
+      fetchRecipe: jest.fn()
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ RecipesController ],
@@ -29,6 +38,10 @@ describe('RecipesController', () => {
         {
           provide: RecipesService,
           useValue: recipesService
+        },
+        {
+          provide: RecipeImportService,
+          useValue: recipeImportService
         }
       ]
     }).compile();
@@ -49,6 +62,55 @@ describe('RecipesController', () => {
 
       expect(recipesService.getCuisinesAndCategories).toHaveBeenCalled();
       expect(result).toEqual(mockResult);
+    });
+  });
+
+  describe('importRecipe', () => {
+    const validUrl = 'https://example.com/recipes/pasta';
+    const mockImportedRecipe: ImportedRecipeResponse = {
+      name: 'Pasta Bolognese',
+      cuisine: 'Italian',
+      category: 'Main Courses',
+      description: 'Delicious pasta dish',
+      servings: 4,
+      source: validUrl,
+      stages: [],
+      galleryId: null
+    };
+
+    it('should throw BadRequestException if recipe-url is missing or empty', async () => {
+      await expect(controller.importRecipe()).rejects.toThrow(BadRequestException);
+      await expect(controller.importRecipe('')).rejects.toThrow(BadRequestException);
+      await expect(controller.importRecipe('   ')).rejects.toThrow(BadRequestException);
+      expect(recipeImportService.fetchRecipe).not.toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException if recipe-url is not a valid URL', async () => {
+      await expect(controller.importRecipe('not-a-valid-url')).rejects.toThrow(BadRequestException);
+      expect(recipeImportService.fetchRecipe).not.toHaveBeenCalled();
+    });
+
+    it('should delegate to RecipeImportService.fetchRecipe when given a valid URL and return result', async () => {
+      recipeImportService.fetchRecipe.mockResolvedValue(mockImportedRecipe);
+
+      const result = await controller.importRecipe(validUrl);
+
+      expect(recipeImportService.fetchRecipe).toHaveBeenCalledWith(validUrl);
+      expect(result).toEqual(mockImportedRecipe);
+    });
+
+    it('should rethrow BadRequestException if RecipeImportService throws BadRequestException', async () => {
+      recipeImportService.fetchRecipe.mockRejectedValue(new BadRequestException('Scraper error'));
+
+      await expect(controller.importRecipe(validUrl)).rejects.toThrow(BadRequestException);
+      await expect(controller.importRecipe(validUrl)).rejects.toThrow('Scraper error');
+    });
+
+    it('should wrap other errors into BadRequestException if RecipeImportService throws an error', async () => {
+      recipeImportService.fetchRecipe.mockRejectedValue(new Error('Network failure'));
+
+      await expect(controller.importRecipe(validUrl)).rejects.toThrow(BadRequestException);
+      await expect(controller.importRecipe(validUrl)).rejects.toThrow('Failed to import recipe: Network failure');
     });
   });
 

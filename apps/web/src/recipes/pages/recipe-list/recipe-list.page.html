@@ -12,6 +12,11 @@
       <mat-icon>add</mat-icon>
       <span>{{ t('createRecipe') }}</span>
     </button>
+
+    <button matButton (click)="onImportRecipe()">
+      <mat-icon>cloud_download</mat-icon>
+      <span>{{ t('importRecipe') }}</span>
+    </button>
   </ui-page-header>
 
   <!-- Filters Card -->

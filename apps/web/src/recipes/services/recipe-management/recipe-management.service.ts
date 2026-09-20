@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { CreateRecipeDto, RecipeCreatedResponse } from '../../models/create-recipe.types';
+import { ImportedRecipeResponse } from '../../models/imported-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import {
   CuisinesCategoriesResponse,
@@ -144,4 +145,9 @@ export class RecipeManagementService {
       );
 
   readonly getRecipeById = (id: string): Observable<RecipeDetails> => this.http.get<RecipeDetails>(`/recipes/${id}`);
+
+  readonly importRecipe = (recipeUrl: string): Observable<ImportedRecipeResponse> =>
+    this.http.get<ImportedRecipeResponse>('/recipes/import', {
+      params: new HttpParams().set('recipe-url', recipeUrl)
+    });
 }

@@ -1,4 +1,4 @@
-import { CookingStep, Ingredient, Recipe, RecipeStage } from '@prisma/client';
+import { CookingStep, Ingredient, IngredientUnit, Recipe, RecipeStage } from '@prisma/client';
 
 export interface CuisineCategoryTreeItem {
   cuisine: string;
@@ -28,3 +28,31 @@ export type RecipeStageWithRelations = RecipeStage & {
 export type RecipeWithDetails = Recipe & {
   stages: RecipeStageWithRelations[];
 };
+
+export interface ImportedRecipeResponse {
+  name: string;
+  cuisine: string | null;
+  category: string | null;
+  description: string | null;
+  servings: number;
+  source: string | null;
+  stages: ImportedRecipeStage[];
+  galleryId: string | null;
+}
+
+export interface ImportedRecipeStage {
+  name: string | null;
+  steps: ImportedRecipeStageStep[];
+  ingredients: ImportedRecipeIngredient[];
+}
+
+export interface ImportedRecipeStageStep {
+  name: string;
+  description: string | null;
+}
+
+export interface ImportedRecipeIngredient {
+  name: string;
+  quantity: number;
+  unit: IngredientUnit;
+}

@@ -189,6 +189,19 @@
       "success": "Recipe created successfully!",
       "failure": "Failed to create recipe. Please check your input and try again."
     },
+    "ImportRecipePage": {
+      "title": "Import New Recipe",
+      "description": "Review and adjust recipe imported from {{ url }}",
+      "loading": "Importing recipe details...",
+      "errorTitle": "Recipe Import Failed",
+      "errorDescription": "Failed to import recipe from the provided URL. Please verify the URL and try again.",
+      "goBack": "Go Back",
+      "cancel": "Cancel",
+      "creating": "Creating Recipe...",
+      "submit": "CREATE RECIPE",
+      "success": "Recipe created successfully!",
+      "failure": "Failed to create recipe. Please check your input and try again."
+    },
     "EditRecipePage": {
       "loading": "Loading recipe details...",
       "notFoundTitle": "Recipe Not Found",
@@ -221,6 +234,7 @@
       "title": "Recipes",
       "description": "Explore and manage your collection of delicious recipes.",
       "createRecipe": "Create Recipe",
+      "importRecipe": "Import Recipe",
       "search": "Search",
       "searchPlaceholder": "Search recipes...",
       "cuisine": "Cuisine",
@@ -361,6 +375,15 @@
       "reorderError": "Failed to save image order. Please try again.",
       "loadingGallery": "Loading gallery...",
       "emptyGallery": "No images uploaded yet."
+    },
+    "ImportRecipeDialogComponent": {
+      "title": "Import recipe",
+      "cancel": "Cancel",
+      "import": "Import",
+      "url": "URL",
+      "urlPlaceholder": "https://example.com/recipe-name",
+      "urlRequired": "URL is required",
+      "urlIsInvalid": "Please enter a valid URL"
     }
   }
 }

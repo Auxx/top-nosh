@@ -4,7 +4,7 @@ import { PrismaService } from '@top-nosh/data-access';
 import { Readable } from 'stream';
 import { ConfigurationsService } from '../configurations/configurations.service';
 import { FileManagementService } from '../file-management/file-management.service';
-import { GalleriesService } from './galleries.service';
+import { GalleriesService, GalleryUploadFile } from './galleries.service';
 import { ImageProcessingService } from './image-processing.service';
 
 describe('GalleriesService', () => {
@@ -329,6 +329,56 @@ describe('GalleriesService', () => {
 
       expect(fileManagementService.delete).toHaveBeenCalledWith('staged-full-1');
       expect(fileManagementService.delete).toHaveBeenCalledWith('staged-thumb-1');
+    });
+
+    it('should accept a plain GalleryUploadFile object without Multer properties', async () => {
+      const decoupledFile: GalleryUploadFile = {
+        buffer: Buffer.from('decoupled-image-data'),
+        mimetype: 'image/jpeg',
+        size: 20
+      };
+
+      prisma.gallery.findFirst.mockResolvedValue({ id: 'gallery-1', deletedAt: null });
+      imageProcessingService.processImage.mockResolvedValue({
+        fullSize: Buffer.from('full-buffer'),
+        thumbnail: Buffer.from('thumb-buffer'),
+        format: 'avif',
+        mimeType: 'image/avif',
+        extension: '.avif'
+      });
+
+      fileManagementService.stageBuffer
+        .mockResolvedValueOnce({ id: 'staged-full' })
+        .mockResolvedValueOnce({ id: 'staged-thumb' });
+
+      fileManagementService.deploy
+        .mockResolvedValueOnce({ id: 'staged-full' })
+        .mockResolvedValueOnce({ id: 'staged-thumb' });
+
+      prisma.galleryImage.findFirst.mockResolvedValue(null);
+      prisma.galleryImage.create.mockResolvedValue({
+        id: 'img-decoupled',
+        order: 0,
+        createdAt: new Date(),
+        fullSizeFileId: 'staged-full',
+        thumbnailFileId: 'staged-thumb',
+        fullSizeFile: {
+          locationPath: 'path/full.avif',
+          storage: { externalUrl: 'https://cdn.com/' }
+        },
+        thumbnailFile: {
+          locationPath: 'path/thumb.avif',
+          storage: { externalUrl: 'https://cdn.com/' }
+        }
+      });
+
+      const result = await service.uploadImage('gallery-1', decoupledFile);
+
+      expect(result.id).toBe('img-decoupled');
+      expect(imageProcessingService.processImage).toHaveBeenCalledWith(
+        decoupledFile.buffer,
+        decoupledFile.mimetype
+      );
     });
   });
 

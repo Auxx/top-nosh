@@ -10,6 +10,12 @@ import { UpdateGalleryDto } from './dto/update-gallery.dto';
 import { DEFAULT_MAX_UPLOAD_SIZE_MB, GALLERY_CONFIG_KEYS } from './galleries.constants';
 import { ImageProcessingService } from './image-processing.service';
 
+export interface GalleryUploadFile {
+  buffer: Buffer;
+  mimetype: string;
+  size?: number;
+}
+
 @Injectable()
 export class GalleriesService {
   constructor(
@@ -131,7 +137,7 @@ export class GalleriesService {
   /**
    * Uploads and processes an image for the specified gallery with atomic rollback.
    */
-  async uploadImage(galleryId: string, file?: Express.Multer.File): Promise<GalleryImageDto> {
+  async uploadImage(galleryId: string, file?: GalleryUploadFile): Promise<GalleryImageDto> {
     if (!file || !file.buffer) {
       throw new BadRequestException('Image file is required');
     }

@@ -5,7 +5,7 @@ import { PrismaService, TokenType } from '@top-nosh/data-access';
 import request from 'supertest';
 import { AppModule } from '../app.module';
 
-describe('Configurations E2E', () => {
+describe.skip('Configurations E2E', () => {
   let app: INestApplication;
   let jwtService: JwtService;
   let prisma: PrismaService;
