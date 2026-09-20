@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { IngredientUnit } from '@prisma/client';
 import * as cheerio from 'cheerio';
+import { GalleriesService } from '../galleries/galleries.service';
 import { ImportedRecipeIngredient, ImportedRecipeResponse, ImportedRecipeStage } from './dto/recipe-response.dto';
 import {
   RecipeInstructionGroup,
@@ -11,12 +12,64 @@ import {
 
 @Injectable()
 export class RecipeImportService {
+  constructor(private readonly galleriesService: GalleriesService) {}
+
+  async fetchRecipeImage(imageUrl: string): Promise<string | null> {
+    if (!this.isValidUrl(imageUrl)) {
+      return null;
+    }
+
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        return null;
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const rawContentType = response.headers?.get ? response.headers.get('content-type') : null;
+      const parsedMimetype = rawContentType ? rawContentType.split(';')[0].trim() : '';
+      const mimetype = parsedMimetype || 'image/jpeg';
+
+      const gallery = await this.galleriesService.createGallery({
+        name: imageUrl
+      });
+
+      await this.galleriesService.uploadImage(gallery.id, {
+        buffer,
+        mimetype,
+        size: buffer.length
+      });
+
+      return gallery.id;
+    } catch {
+      return null;
+    }
+  }
+
+  private isValidUrl(url?: unknown): boolean {
+    if (typeof url !== 'string' || url.trim().length === 0) {
+      return false;
+    }
+    try {
+      const parsed = new URL(url.trim());
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
   async fetchRecipe(url: string): Promise<ImportedRecipeResponse> {
     const html = await this.fetchRecipeHtmlFromUrl(url);
     const metadata = this.extractRecipeMetadata(html);
     const instructions = this.extractCookingInstructions(html);
 
-    return this.mapToImportedRecipeResponse(metadata, instructions, url);
+    let galleryId: string | null = null;
+    if (this.isValidUrl(metadata?.image_url)) {
+      galleryId = await this.fetchRecipeImage(metadata.image_url);
+    }
+
+    return this.mapToImportedRecipeResponse(metadata, instructions, url, galleryId);
   }
 
   async fetchRecipeHtmlFromUrl(url: string): Promise<string> {
@@ -357,7 +410,8 @@ export class RecipeImportService {
   private mapToImportedRecipeResponse(
     metadata: WPRMRecipe,
     instructions: RecipeInstructionGroup[],
-    sourceUrl: string
+    sourceUrl: string,
+    galleryId: string | null = null
   ): ImportedRecipeResponse {
     const name = typeof metadata?.name === 'string' ? metadata.name.trim() : '';
 
@@ -386,7 +440,8 @@ export class RecipeImportService {
       description: null,
       servings,
       source: sourceUrl,
-      stages
+      stages,
+      galleryId
     };
 
     this.extractIngredients(metadata, recipe);

@@ -37,6 +37,7 @@ export interface ImportedRecipeResponse {
   servings: number;
   source: string | null;
   stages: ImportedRecipeStage[];
+  galleryId: string | null;
 }
 
 export interface ImportedRecipeStage {

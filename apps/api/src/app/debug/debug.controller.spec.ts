@@ -93,7 +93,8 @@ describe('DebugController', () => {
             ingredients: [],
             steps: [ { name: 'Bake at 350', description: null } ]
           }
-        ]
+        ],
+        galleryId: null
       };
 
       recipeImportService.fetchRecipe.mockResolvedValue(mockResponse);

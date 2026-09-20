@@ -1,17 +1,33 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { IngredientUnit } from '@prisma/client';
+import { GalleriesService } from '../galleries/galleries.service';
 import { ImportedRecipeResponse } from './dto/recipe-response.dto';
 import { RecipeImportService } from './recipe-import.service';
 import { WPRMRecipe, WPRMRecipeIngredient } from './recipe-import/wprm.types';
 
 describe('RecipeImportService', () => {
   let service: RecipeImportService;
+  let galleriesService: {
+    createGallery: jest.Mock;
+    uploadImage: jest.Mock;
+  };
   const originalFetch = global.fetch;
 
   beforeEach(async () => {
+    galleriesService = {
+      createGallery: jest.fn(),
+      uploadImage: jest.fn()
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ RecipeImportService ]
+      providers: [
+        RecipeImportService,
+        {
+          provide: GalleriesService,
+          useValue: galleriesService
+        }
+      ]
     }).compile();
 
     service = module.get<RecipeImportService>(RecipeImportService);
@@ -392,7 +408,8 @@ describe('RecipeImportService', () => {
               { name: 'Bake for 45 minutes until bubbly.', description: null }
             ]
           }
-        ]
+        ],
+        galleryId: null
       });
     });
 
@@ -490,6 +507,248 @@ describe('RecipeImportService', () => {
     it('should propagate errors when HTML retrieval fails', async () => {
       await expect(service.fetchRecipe('')).rejects.toThrow(BadRequestException);
     });
+
+    it('should call fetchRecipeImage and populate galleryId when image_url is a valid URL', async () => {
+      const htmlWithImage = `
+        <script>
+          window.wprm_recipes = {
+            "1": {
+              "id": 1,
+              "name": "Pizza Margherita",
+              "image_url": "https://example.com/pizza.jpg"
+            }
+          };
+        </script>
+      `;
+
+      const mockBytes = new Uint8Array([ 1, 2, 3 ]);
+      global.fetch = jest.fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          text: jest.fn().mockResolvedValue(htmlWithImage)
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          headers: { get: () => 'image/jpeg' },
+          arrayBuffer: jest.fn().mockResolvedValue(mockBytes.buffer)
+        } as unknown as Response);
+
+      galleriesService.createGallery.mockResolvedValue({ id: 'gallery-pizza' });
+      galleriesService.uploadImage.mockResolvedValue({ id: 'img-pizza' });
+
+      const result = await service.fetchRecipe('https://example.com/pizza');
+
+      expect(result.galleryId).toBe('gallery-pizza');
+      expect(galleriesService.createGallery).toHaveBeenCalledWith({
+        name: 'https://example.com/pizza.jpg'
+      });
+      expect(galleriesService.uploadImage).toHaveBeenCalledWith(
+        'gallery-pizza',
+        expect.objectContaining({
+          mimetype: 'image/jpeg'
+        })
+      );
+    });
+
+    it('should set galleryId to null when image_url is missing, empty, or invalid without calling galleriesService', async () => {
+      const htmlWithoutValidImage = `
+        <script>
+          window.wprm_recipes = {
+            "1": {
+              "id": 1,
+              "name": "Salad",
+              "image_url": "invalid-url"
+            }
+          };
+        </script>
+      `;
+
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: jest.fn().mockResolvedValue(htmlWithoutValidImage)
+      } as unknown as Response);
+
+      const result = await service.fetchRecipe('https://example.com/salad');
+
+      expect(result.galleryId).toBeNull();
+      expect(galleriesService.createGallery).not.toHaveBeenCalled();
+      expect(galleriesService.uploadImage).not.toHaveBeenCalled();
+    });
+
+    it('should gracefully degrade galleryId to null if image download or upload fails', async () => {
+      const htmlWithImage = `
+        <script>
+          window.wprm_recipes = {
+            "1": {
+              "id": 1,
+              "name": "Failing Image Recipe",
+              "image_url": "https://example.com/broken.jpg"
+            }
+          };
+        </script>
+      `;
+
+      global.fetch = jest.fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          text: jest.fn().mockResolvedValue(htmlWithImage)
+        } as unknown as Response)
+        .mockRejectedValueOnce(new Error('Network error downloading image'));
+
+      const result = await service.fetchRecipe('https://example.com/recipe');
+
+      expect(result.name).toBe('Failing Image Recipe');
+      expect(result.galleryId).toBeNull();
+    });
+
+    it('should ignore other image fields in WPRMRecipe (such as thumbnails or collection images)', async () => {
+      const htmlWithOtherImages = `
+        <script>
+          window.wprm_recipes = {
+            "1": {
+              "id": 1,
+              "name": "Ignored Images Recipe",
+              "image": "https://example.com/thumbnail-only.jpg",
+              "collection": {
+                "image": "https://example.com/collection-image.jpg"
+              }
+            }
+          };
+        </script>
+      `;
+
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: jest.fn().mockResolvedValue(htmlWithOtherImages)
+      } as unknown as Response);
+
+      const result = await service.fetchRecipe('https://example.com/recipe');
+
+      expect(result.galleryId).toBeNull();
+      expect(galleriesService.createGallery).not.toHaveBeenCalled();
+      expect(galleriesService.uploadImage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('fetchRecipeImage', () => {
+    it('should return null if url is invalid, empty, or not http/https', async () => {
+      expect(await service.fetchRecipeImage('')).toBeNull();
+      expect(await service.fetchRecipeImage('   ')).toBeNull();
+      expect(await service.fetchRecipeImage('not-a-url')).toBeNull();
+      expect(await service.fetchRecipeImage('ftp://example.com/image.jpg')).toBeNull();
+      expect(await service.fetchRecipeImage('data:image/png;base64,...')).toBeNull();
+      expect(galleriesService.createGallery).not.toHaveBeenCalled();
+      expect(galleriesService.uploadImage).not.toHaveBeenCalled();
+    });
+
+    it('should fetch remote image, create gallery, upload image buffer, and return galleryId', async () => {
+      const mockBytes = new Uint8Array([ 10, 20, 30, 40 ]);
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        headers: {
+          get: jest.fn().mockReturnValue('image/png; charset=utf-8')
+        },
+        arrayBuffer: jest.fn().mockResolvedValue(mockBytes.buffer)
+      } as unknown as Response);
+
+      galleriesService.createGallery.mockResolvedValue({ id: 'gallery-456' });
+      galleriesService.uploadImage.mockResolvedValue({ id: 'img-123' });
+
+      const result = await service.fetchRecipeImage('https://example.com/images/hero.png');
+
+      expect(result).toBe('gallery-456');
+      expect(global.fetch).toHaveBeenCalledWith('https://example.com/images/hero.png');
+      expect(galleriesService.createGallery).toHaveBeenCalledWith({
+        name: 'https://example.com/images/hero.png'
+      });
+      expect(galleriesService.uploadImage).toHaveBeenCalledWith('gallery-456', {
+        buffer: Buffer.from(mockBytes.buffer),
+        mimetype: 'image/png',
+        size: mockBytes.length
+      });
+    });
+
+    it('should default mimetype to image/jpeg if Content-Type header is missing or empty', async () => {
+      const mockBytes = new Uint8Array([ 1, 2, 3 ]);
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        headers: {
+          get: jest.fn().mockReturnValue(null)
+        },
+        arrayBuffer: jest.fn().mockResolvedValue(mockBytes.buffer)
+      } as unknown as Response);
+
+      galleriesService.createGallery.mockResolvedValue({ id: 'gallery-789' });
+      galleriesService.uploadImage.mockResolvedValue({ id: 'img-789' });
+
+      const result = await service.fetchRecipeImage('https://example.com/images/photo');
+
+      expect(result).toBe('gallery-789');
+      expect(galleriesService.uploadImage).toHaveBeenCalledWith('gallery-789', {
+        buffer: Buffer.from(mockBytes.buffer),
+        mimetype: 'image/jpeg',
+        size: mockBytes.length
+      });
+    });
+
+    it('should catch network errors and return null', async () => {
+      global.fetch = jest.fn().mockRejectedValue(new Error('Connection timed out'));
+
+      const result = await service.fetchRecipeImage('https://example.com/images/hero.jpg');
+
+      expect(result).toBeNull();
+      expect(galleriesService.createGallery).not.toHaveBeenCalled();
+    });
+
+    it('should return null if HTTP status is not ok', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 404
+      } as unknown as Response);
+
+      const result = await service.fetchRecipeImage('https://example.com/images/404.jpg');
+
+      expect(result).toBeNull();
+      expect(galleriesService.createGallery).not.toHaveBeenCalled();
+    });
+
+    it('should catch createGallery errors and return null', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        headers: { get: () => 'image/jpeg' },
+        arrayBuffer: jest.fn().mockResolvedValue(Buffer.from('bytes').buffer)
+      } as unknown as Response);
+
+      galleriesService.createGallery.mockRejectedValue(new Error('DB failure'));
+
+      const result = await service.fetchRecipeImage('https://example.com/images/hero.jpg');
+
+      expect(result).toBeNull();
+    });
+
+    it('should catch uploadImage errors and return null', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        headers: { get: () => 'image/jpeg' },
+        arrayBuffer: jest.fn().mockResolvedValue(Buffer.from('bytes').buffer)
+      } as unknown as Response);
+
+      galleriesService.createGallery.mockResolvedValue({ id: 'gallery-err' });
+      galleriesService.uploadImage.mockRejectedValue(new Error('Upload processing failure'));
+
+      const result = await service.fetchRecipeImage('https://example.com/images/hero.jpg');
+
+      expect(result).toBeNull();
+    });
   });
 
   describe('extractIngredients - amount parsing and unit conversions', () => {
@@ -559,7 +818,8 @@ describe('RecipeImportService', () => {
             steps: [],
             ingredients: []
           }
-        ]
+        ],
+        galleryId: null
       };
 
       service.extractIngredients(metadata, recipe);
@@ -791,7 +1051,8 @@ describe('RecipeImportService', () => {
           description: null,
           servings: 1,
           source: null,
-          stages: []
+          stages: [],
+          galleryId: null
         };
 
         service.extractIngredients(metadata, recipe);
@@ -891,7 +1152,8 @@ describe('RecipeImportService', () => {
               steps: [ { name: 'Step 2', description: null } ],
               ingredients: []
             }
-          ]
+          ],
+          galleryId: null
         };
 
         service.extractIngredients(metadata, recipe);
@@ -915,7 +1177,8 @@ describe('RecipeImportService', () => {
           description: null,
           servings: 1,
           source: null,
-          stages: []
+          stages: [],
+          galleryId: null
         };
 
         expect(() => service.extractIngredients(null as unknown as WPRMRecipe, recipe)).not.toThrow();
@@ -967,7 +1230,8 @@ describe('RecipeImportService', () => {
           description: null,
           servings: 1,
           source: null,
-          stages: []
+          stages: [],
+          galleryId: null
         };
 
         service.extractIngredients(metadata, recipe);
@@ -1107,7 +1371,8 @@ describe('RecipeImportService', () => {
           description: null,
           servings: 2,
           source: null,
-          stages: []
+          stages: [],
+          galleryId: null
         };
 
         service.extractIngredients(metadata, recipe);
@@ -1190,7 +1455,8 @@ describe('RecipeImportService', () => {
           description: null,
           servings: 4,
           source: null,
-          stages: []
+          stages: [],
+          galleryId: null
         };
 
         service.extractIngredients(metadata, recipe);
