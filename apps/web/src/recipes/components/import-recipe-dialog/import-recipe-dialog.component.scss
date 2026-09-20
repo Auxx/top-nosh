@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 400px;
+
+  @media (max-width: 599.98px) {
+    width: auto;
+  }
+}
+
+form {
+  margin-top: 4px !important;
+}
+
+mat-form-field {
+  width: 100%;
+}

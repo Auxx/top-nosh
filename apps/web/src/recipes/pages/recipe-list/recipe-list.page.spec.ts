@@ -2,11 +2,11 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { provideRouter, Router } from '@angular/router';
-import { TranslocoTestingModule } from '@jsverse/transloco';
 import { ConfirmationDialog, PageHeaderComponent } from '@top-nosh/ui';
 import { MockComponents } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
+import { ImportRecipeDialogComponent } from '../../components/import-recipe-dialog/import-recipe-dialog.component';
 import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
 import {
   CuisinesCategoriesResponse,
@@ -251,6 +251,31 @@ describe('RecipeListPage', () => {
   it('should navigate to /recipes/new when onCreateRecipe is called', () => {
     component.onCreateRecipe();
     expect(router.navigate).toHaveBeenCalledWith([ '/recipes/new' ]);
+  });
+
+  it('should open ImportRecipeDialogComponent and navigate to /recipes/import/:url on valid result', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of('https://example.com/recipe'))
+    });
+
+    component.onImportRecipe();
+
+    expect(dialogMock.open).toHaveBeenCalledWith(ImportRecipeDialogComponent);
+    expect(router.navigate).toHaveBeenCalledWith([
+      '/recipes/import',
+      encodeURIComponent('https://example.com/recipe')
+    ]);
+  });
+
+  it('should not navigate when ImportRecipeDialogComponent is dismissed without a string', () => {
+    dialogMock.open.mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(false))
+    });
+
+    component.onImportRecipe();
+
+    expect(dialogMock.open).toHaveBeenCalledWith(ImportRecipeDialogComponent);
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 
   it('should navigate to edit recipe page with from=list query param when onEditRecipe is called', () => {

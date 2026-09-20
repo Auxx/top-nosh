@@ -1,0 +1,564 @@
+{
+  "metadata": {
+    "type": "food",
+    "name": "Sheet Pan Sausage and Veggies",
+    "slug": "wprm-sheet-pan-sausage-and-veggies",
+    "image_url": "https://thestayathomechef.com/wp-content/uploads/2026/02/Sheet-Pan-Sausage-and-Veggies-Square.jpg",
+    "rating": {
+      "count": 12,
+      "total": 59,
+      "average": 4.92,
+      "type": {
+        "comment": 12,
+        "no_comment": 0,
+        "user": 0
+      },
+      "user": 0
+    },
+    "ingredients": [
+      {
+        "uid": 0,
+        "amount": "1 1/2",
+        "unit": "pounds",
+        "name": "red baby potatoes",
+        "notes": "or yellow, unpeeled",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "680",
+            "unit": "g",
+            "unit_id": 26076
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1 1/2",
+          "unit": "pounds",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26062,
+        "id": 18717,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1 1/2",
+            "unit": "pounds",
+            "unitParsed": "pounds",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "680",
+            "unit": "g",
+            "unitParsed": "g",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 7,
+        "amount": "14",
+        "unit": "ounces",
+        "name": "smoked sausage",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "397",
+            "unit": "g",
+            "unit_id": 26076
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "14",
+          "unit": "ounces",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26072,
+        "id": 28330,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "14",
+            "unit": "ounces",
+            "unitParsed": "ounces",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "397",
+            "unit": "g",
+            "unitParsed": "g",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 8,
+        "amount": "2",
+        "unit": "medium",
+        "name": "zucchini",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "2",
+            "unit": "medium",
+            "unit_id": 26064
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "2",
+          "unit": "medium",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26064,
+        "id": 13411,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "2",
+            "unit": "medium",
+            "unitParsed": "medium",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "2",
+            "unit": "medium",
+            "unitParsed": "medium",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 12,
+        "amount": "1",
+        "unit": "medium",
+        "name": "red onion",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "medium",
+            "unit_id": 26064
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "medium",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26064,
+        "id": 13438,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "medium",
+            "unitParsed": "medium",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "medium",
+            "unitParsed": "medium",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 13,
+        "amount": "1",
+        "unit": "medium",
+        "name": "red bell pepper",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "medium",
+            "unit_id": 26064
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "medium",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26064,
+        "id": 13611,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "medium",
+            "unitParsed": "medium",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "medium",
+            "unitParsed": "medium",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 1,
+        "amount": "1/4",
+        "unit": "cup",
+        "name": "olive oil",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "60",
+            "unit": "ml",
+            "unit_id": 26075
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1/4",
+          "unit": "cup",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26063,
+        "id": 13400,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/4",
+            "unit": "cup",
+            "unitParsed": "cup",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "60",
+            "unit": "ml",
+            "unitParsed": "ml",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 2,
+        "amount": "1 1/2",
+        "unit": "teaspoons",
+        "name": "salt ",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1 ½",
+            "unit": "teaspoons",
+            "unit_id": 26078
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1 1/2",
+          "unit": "teaspoons",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26078,
+        "id": 13341,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1 1/2",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1 ½",
+            "unit": "teaspoons",
+            "unitParsed": "teaspoons",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 3,
+        "amount": "1",
+        "unit": "teaspoon",
+        "name": "black pepper",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unit_id": 26067
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "teaspoon",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26067,
+        "id": 13419,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 4,
+        "amount": "1",
+        "unit": "teaspoon",
+        "name": "garlic powder",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unit_id": 26067
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "teaspoon",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26067,
+        "id": 13525,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 5,
+        "amount": "1",
+        "unit": "teaspoon",
+        "name": "onion powder",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unit_id": 26067
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1",
+          "unit": "teaspoon",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26067,
+        "id": 13407,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "1",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      },
+      {
+        "uid": 6,
+        "amount": "1/2",
+        "unit": "teaspoon",
+        "name": "paprika",
+        "notes": "",
+        "link": {
+          "url": "",
+          "nofollow": "default"
+        },
+        "converted": {
+          "2": {
+            "amount": "½",
+            "unit": "teaspoon",
+            "unit_id": 26067
+          }
+        },
+        "conversion_item_snapshot": {
+          "amount": "1/2",
+          "unit": "teaspoon",
+          "timestamp": 1768603315000
+        },
+        "unit_id": 26067,
+        "id": 13403,
+        "type": "ingredient",
+        "unit_systems": {
+          "unit-system-1": {
+            "amount": "1/2",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          },
+          "unit-system-2": {
+            "amount": "½",
+            "unit": "teaspoon",
+            "unitParsed": "teaspoon",
+            "unit_connector": "",
+            "unit_connector_spacing": "space-both",
+            "unit_connector_pluralizes_ingredient": true
+          }
+        }
+      }
+    ],
+    "originalServings": "4",
+    "originalServingsParsed": 4,
+    "currentServings": "4",
+    "currentServingsParsed": 4,
+    "currentServingsFormatted": "4",
+    "currentServingsMultiplier": 1,
+    "originalSystem": 1,
+    "currentSystem": 1,
+    "favorite": false,
+    "unitSystems": [
+      1,
+      2
+    ],
+    "originalAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "currentAdvancedServings": {
+      "shape": "round",
+      "unit": "inch",
+      "diameter": 0,
+      "width": 0,
+      "length": 0,
+      "height": 0
+    },
+    "collection": {
+      "servingsUnit": "servings",
+      "servingsUnitRaw": "servings",
+      "originalServings": "4",
+      "originalServingsParsed": 4,
+      "type": "recipe",
+      "recipeId": 102325,
+      "name": "Sheet Pan Sausage and Veggies",
+      "image": "https://thestayathomechef.com/wp-content/uploads/2026/02/Sheet-Pan-Sausage-and-Veggies-Square-300x300.jpg",
+      "servings": 4,
+      "parent_id": "106395",
+      "parent_url": "https://thestayathomechef.com/sheet-pan-sausage-and-veggies/",
+      "cachedAt": 1789777237,
+      "modifiedAt": 1786007987
+    }
+  },
+  "instructions": [
+    {
+      "name": "Instructions",
+      "steps": [
+        "Preheat oven to 400°F (205℃). Line a 13x18-inch baking sheet with foil or parchment paper and lightly grease it with nonstick cooking spray.",
+        "Wash and chop the unpeeled 1 1/2 pounds red baby potatoes into 1/2 inch cubes. Place the potatoes in a large mixing bowl.",
+        "Slice 14 ounces smoked sausage and 2 medium zucchini into 1/2-inch coins. Chop 1 medium red onion and 1 medium red bell pepper into 1-inch chunks. Add them to the bowl with the potatoes.",
+        "In a small bowl, combine 1/4 cup olive oil, 1 1/2 teaspoons salt , 1 teaspoon black pepper, 1 teaspoon garlic powder, 1 teaspoon onion powder, and 1/2 teaspoon paprika. Stir until well mixed.",
+        "Pour the seasoning mixture over the sausage and vegetables. Toss everything together to ensure all pieces are evenly coated.",
+        "Spread the coated sausage and vegetables in a single layer on the prepared baking sheet. Drizzle any remaining oil mixture from the bowl over the top.",
+        "Bake in the preheated oven for 15 minutes, then carefully stir the sausage and vegetables with a large spoon or spatula to ensure even cooking. Continue cooking for an additional 15 minutes, or until the vegetables are browned and fork-tender.",
+        "Remove pan from the oven. Serve hot."
+      ]
+    }
+  ]
+}

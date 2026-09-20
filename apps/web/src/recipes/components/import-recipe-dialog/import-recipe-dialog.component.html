@@ -1,0 +1,33 @@
+<ng-container *transloco="let t; prefix: 'web.ImportRecipeDialogComponent'">
+  <h2 mat-dialog-title>{{ t('title') }}</h2>
+
+  <mat-dialog-content>
+    <form id="import-recipe-form"
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="grid-12-col-8">
+        <mat-label>{{ t('url') }}</mat-label>
+
+        <input matInput [formControl]="url" [placeholder]="t('urlPlaceholder')"/>
+
+        <mat-error *uiWhenError="url; errorCode: 'required'">{{ t('urlRequired') }}</mat-error>
+        <mat-error *uiWhenError="url; errorCode: 'invalidUrl'">{{ t('urlIsInvalid') }}</mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button
+            [mat-dialog-close]="false">
+      {{ t('cancel') }}
+    </button>
+
+    <button mat-button
+            type="submit"
+            form="import-recipe-form"
+            cdkFocusInitial
+            [disabled]="form.invalid">
+      {{ t('import') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

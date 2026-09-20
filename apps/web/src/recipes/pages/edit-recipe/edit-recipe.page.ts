@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,8 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
-import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
+import { RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
+import { createRecipeForm } from '../../components/recipe-form/recipe-form.helpers';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeDetails } from '../../models/recipe-details.types';
 import { UpdateRecipeDto } from '../../models/update-recipe.types';
@@ -34,8 +35,6 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditRecipePage {
-  private readonly fb = inject(FormBuilder);
-
   private readonly recipeService = inject(RecipeManagementService);
 
   private readonly snackBar = inject(MatSnackBar);
@@ -62,7 +61,7 @@ export class EditRecipePage {
 
   readonly recipe = signal<RecipeDetails | null>(null);
 
-  recipeForm: FormGroup = createRecipeForm(this.fb);
+  recipeForm: FormGroup = createRecipeForm();
 
   constructor() {
     // TODO Refactor into input signal
@@ -94,7 +93,7 @@ export class EditRecipePage {
       .subscribe({
         next: recipe => {
           this.recipe.set(recipe);
-          this.recipeForm = createRecipeForm(this.fb, recipe);
+          this.recipeForm = createRecipeForm(recipe);
           this.titleService.setTitle(`Top Nosh - Edit ${recipe.name}`);
           this.isLoading.set(false);
         },

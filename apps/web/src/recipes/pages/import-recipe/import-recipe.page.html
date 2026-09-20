@@ -1,0 +1,71 @@
+<ng-container *transloco="let t; prefix: 'web.ImportRecipePage'">
+  @let loading = isLoading();
+  @let error = hasError();
+  @let submitting = isSubmitting();
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-state" data-testid="loading-spinner">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>{{ t('loading') }}</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (!loading && error) {
+    <mat-card data-testid="error-state">
+      <mat-card-content>
+        <mat-icon>error_outline</mat-icon>
+        <h2>{{ t('errorTitle') }}</h2>
+
+        <p>{{ t('errorDescription') }}</p>
+
+        <button matButton="text"
+                (click)="onCancel()"
+                data-testid="error-back-btn">
+          <mat-icon>arrow_back</mat-icon>
+          {{ t('goBack') }}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Recipe Form Content -->
+  @if (!loading && !error) {
+    <!-- Page Header -->
+    <ui-page-header [showBackButton]="true" (navigatedBack)="onCancel()">
+      <h1>{{ t('title') }}</h1>
+      <div>
+        {{ t('description', { url: url() }) }}
+      </div>
+
+      <button matIconButton
+              form="recipe-form"
+              type="submit"
+              [disabled]="recipeForm.invalid || submitting">
+        <mat-icon>save</mat-icon>
+      </button>
+    </ui-page-header>
+
+    <form [formGroup]="recipeForm"
+          (ngSubmit)="onSubmit()"
+          id="recipe-form"
+          class="recipe-form">
+      <!-- Recipe Form -->
+      <app-recipe-form [form]="recipeForm"
+                       [isSubmitting]="submitting"/>
+
+      <!-- Form Actions Card -->
+      <div class="form-section-actions">
+        <button matButton="text"
+                type="submit"
+                [disabled]="recipeForm.invalid || submitting">
+          @if (!submitting) {
+            <mat-icon>save</mat-icon>
+          }
+          <span>{{ submitting ? t('creating') : t('submit') }}</span>
+        </button>
+      </div>
+    </form>
+  }
+</ng-container>

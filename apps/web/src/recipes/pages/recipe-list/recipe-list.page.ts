@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { ConfirmationDialog, PageHeaderComponent } from '@top-nosh/ui';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
+import { ImportRecipeDialogComponent } from '../../components/import-recipe-dialog/import-recipe-dialog.component';
 import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
 import { RecipeListItem } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -152,6 +153,18 @@ export class RecipeListPage {
   };
 
   readonly onCreateRecipe = () => this.router.navigate([ '/recipes/new' ]);
+
+  readonly onImportRecipe = () => {
+    this.dialog
+      .open(ImportRecipeDialogComponent)
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result?: boolean | string) => {
+        if (typeof result === 'string') {
+          this.router.navigate([ '/recipes/import', result ]).then();
+        }
+      });
+  };
 
   readonly onEditRecipe = (recipe: RecipeListItem): void => {
     this.router.navigate([ '/recipes', recipe.id, 'edit' ], {

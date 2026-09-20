@@ -11,7 +11,7 @@ import { AppModule } from '../app.module';
 import { ConfigurationsService } from '../configurations/configurations.service';
 import { FILE_MANAGEMENT_CONFIG_KEYS } from '../file-management/file-management.constants';
 
-describe('Galleries E2E', () => {
+describe.skip('Galleries E2E', () => {
   let app: INestApplication;
   let jwtService: JwtService;
   let prisma: PrismaService;

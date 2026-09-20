@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,8 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
-import { createRecipeForm, RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
-import { CreateRecipeDto, IngredientUnit } from '../../models/create-recipe.types';
+import { RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
+import { createRecipeForm, formToCreateRecipeDto } from '../../components/recipe-form/recipe-form.helpers';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
 @Component({
@@ -29,8 +29,6 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateRecipePage {
-  private readonly fb = inject(FormBuilder);
-
   private readonly recipeService = inject(RecipeManagementService);
 
   private readonly snackBar = inject(MatSnackBar);
@@ -43,7 +41,7 @@ export class CreateRecipePage {
 
   readonly isSubmitting = signal<boolean>(false);
 
-  readonly recipeForm = createRecipeForm(this.fb);
+  readonly recipeForm = createRecipeForm();
 
   readonly onCancel = () => this.router.navigate([ '/recipes' ]);
 
@@ -55,38 +53,7 @@ export class CreateRecipePage {
     this.snackBar.dismiss();
     this.isSubmitting.set(true);
 
-    const formValue = this.recipeForm.getRawValue();
-    const rawStages = (formValue.stages ?? []) as unknown as Array<{
-      name?: string;
-      steps?: Array<{ name?: string; description?: string; }>;
-      ingredients?: Array<{ name?: string; quantity?: number; unit?: IngredientUnit; }>;
-    }>;
-
-    const payload: CreateRecipeDto = {
-      name: (formValue.name || '').trim(),
-      cuisine: (formValue.cuisine || '').trim(),
-      category: (formValue.category || '').trim(),
-      description: (formValue.description || '').trim(),
-      servings: Number(formValue.servings),
-      source: (formValue.source || '').trim() || undefined,
-      isShared: formValue.isShared ?? false,
-      galleryId: formValue.galleryId || undefined,
-      stages: rawStages.map((stage, stageIdx) => ({
-        name: (stage.name || '').trim(),
-        order: stageIdx,
-        steps: (stage.steps || []).map((step, stepIdx) => ({
-          name: (step.name || '').trim(),
-          description: (step.description || '').trim(),
-          order: stepIdx
-        })),
-        ingredients: (stage.ingredients || []).map((ing, ingIdx) => ({
-          name: (ing.name || '').trim(),
-          quantity: Number(ing.quantity),
-          unit: (ing.unit || 'GRAMS') as IngredientUnit,
-          order: ingIdx
-        }))
-      }))
-    };
+    const payload = formToCreateRecipeDto(this.recipeForm.getRawValue());
 
     this.recipeService
       .createRecipe(payload)
