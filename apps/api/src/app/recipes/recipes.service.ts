@@ -9,6 +9,7 @@ import {
   DeleteRecipeResponse,
   PaginatedRecipeResponse,
   RecipeCreatedResponse,
+  RecipeListItemDto,
   RecipeWithDetails
 } from './dto/recipe-response.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -69,11 +70,43 @@ export class RecipesService {
       where,
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      include: {
+        gallery: {
+          include: {
+            images: {
+              where: { deletedAt: null },
+              orderBy: { order: 'asc' },
+              take: 1,
+              include: {
+                thumbnailFile: { include: { storage: true } }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const items: RecipeListItemDto[] = data.map(recipe => {
+      const firstImage = recipe.gallery?.images[0];
+
+      return {
+        id: recipe.id,
+        name: recipe.name,
+        cuisine: recipe.cuisine,
+        category: recipe.category,
+        description: recipe.description,
+        thumbnail: firstImage
+          ? this.galleriesService.buildExternalUrl(
+            firstImage.thumbnailFile.storage.externalUrl,
+            firstImage.thumbnailFile.locationPath
+          )
+          : null
+      };
     });
 
     return {
-      data,
+      data: items,
       total,
       page,
       totalPages

@@ -7,6 +7,8 @@ import { MockComponents } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { ImportRecipeDialogComponent } from '../../components/import-recipe-dialog/import-recipe-dialog.component';
+import { RecipeGridViewComponent } from '../../components/recipe-grid-view/recipe-grid-view.component';
+import { RecipeTableViewComponent } from '../../components/recipe-table-view/recipe-table-view.component';
 import {
   CuisinesCategoriesResponse,
   PaginatedRecipeResponse,
@@ -14,7 +16,7 @@ import {
   RecipeListItem
 } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
-import { RecipeListPage } from './recipe-list.page';
+import { RecipeListPage, recipeListViewModeStorageKey } from './recipe-list.page';
 
 describe('RecipeListPage', () => {
   let component: RecipeListPage;
@@ -55,7 +57,7 @@ describe('RecipeListPage', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      servings: 4
+      thumbnail: null
     },
     {
       id: '2',
@@ -63,7 +65,7 @@ describe('RecipeListPage', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      servings: 2
+      thumbnail: null
     }
   ];
 
@@ -113,6 +115,8 @@ describe('RecipeListPage', () => {
     await TestBed.configureTestingModule({
       imports: [
         RecipeListPage,
+        RecipeTableViewComponent,
+        RecipeGridViewComponent,
         MockComponents(PageHeaderComponent),
         getTranslocoModule()
       ],
@@ -261,7 +265,7 @@ describe('RecipeListPage', () => {
     expect(dialogMock.open).toHaveBeenCalledWith(ImportRecipeDialogComponent);
     expect(router.navigate).toHaveBeenCalledWith([
       '/recipes/import',
-      encodeURIComponent('https://example.com/recipe')
+      'https://example.com/recipe'
     ]);
   });
 
@@ -334,7 +338,7 @@ describe('RecipeListPage', () => {
             cuisine: 'Italian',
             category: 'Pasta',
             description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
-            servings: 2
+            thumbnail: null
           }
         ],
         total: 1,
@@ -358,7 +362,7 @@ describe('RecipeListPage', () => {
             cuisine: 'Italian',
             category: 'Pasta',
             description: `**${longText}**`,
-            servings: 2
+            thumbnail: null
           }
         ],
         total: 1,
@@ -370,6 +374,44 @@ describe('RecipeListPage', () => {
       const descriptionCell = fixture.nativeElement.querySelector('.item-description-medium');
       expect(descriptionCell).toBeTruthy();
       expect(descriptionCell.textContent.trim()).toBe('A'.repeat(100) + '...');
+    });
+  });
+
+  describe('view mode persistence', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    afterEach(() => {
+      localStorage.clear();
+    });
+
+    const recreateComponent = (): void => {
+      fixture = TestBed.createComponent(RecipeListPage);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    };
+
+    it('should default to table view when localStorage has no stored value', () => {
+      recreateComponent();
+      expect(component.viewMode()).toBe('table');
+    });
+
+    it('should load a previously stored grid view mode on construction', () => {
+      localStorage.setItem(recipeListViewModeStorageKey, 'grid');
+      recreateComponent();
+      expect(component.viewMode()).toBe('grid');
+    });
+
+    it('should fall back to table view when stored value is invalid', () => {
+      localStorage.setItem(recipeListViewModeStorageKey, 'bogus');
+      recreateComponent();
+      expect(component.viewMode()).toBe('table');
+    });
+
+    it('should persist view mode changes to localStorage', () => {
+      component.setViewMode('grid');
+      expect(localStorage.getItem(recipeListViewModeStorageKey)).toBe('grid');
     });
   });
 });

@@ -83,75 +83,34 @@
 
   <div class="layout-gap"></div>
 
-  <!-- Table Card -->
+  <!-- View Mode Toggle -->
+  <mat-button-toggle-group [value]="viewMode()"
+                           (change)="setViewMode($event.value)"
+                           [attr.aria-label]="t('viewModeAriaLabel')"
+                           data-testid="view-mode-toggle-group">
+    <mat-button-toggle value="table" data-testid="table-view-toggle">
+      <span>{{ t('viewModeTable') }}</span>
+    </mat-button-toggle>
+
+    <mat-button-toggle value="grid" data-testid="grid-view-toggle">
+      <span>{{ t('viewModeGrid') }}</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="layout-gap"></div>
+
+  <!-- Table / Grid -->
   @if (recipes$ | async; as recipesData) {
-    <table mat-table [dataSource]="recipesData.data" class="item-list-table">
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>{{ t('columnName') }}</th>
-        <td mat-cell *matCellDef="let recipe">
-          <a [routerLink]="['/recipes', recipe.id]" class="label">
-            {{ recipe.name }}
-          </a>
-        </td>
-      </ng-container>
-
-      <!-- Description Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>{{ t('columnDescription') }}</th>
-        <td mat-cell *matCellDef="let recipe" class="item-description-medium">
-          {{ recipe.description | stripMarkdown | truncate: 100 }}
-        </td>
-      </ng-container>
-
-      <!-- Cuisine Column -->
-      <ng-container matColumnDef="cuisine">
-        <th mat-header-cell *matHeaderCellDef>{{ t('columnCuisine') }}</th>
-        <td mat-cell *matCellDef="let recipe">
-          {{ recipe.cuisine }}
-        </td>
-      </ng-container>
-
-      <!-- Category Column -->
-      <ng-container matColumnDef="category">
-        <th mat-header-cell *matHeaderCellDef>{{ t('columnCategory') }}</th>
-        <td mat-cell *matCellDef="let recipe">
-          {{ recipe.category }}
-        </td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="actions">{{ t('columnActions') }}</th>
-        <td mat-cell *matCellDef="let recipe" class="actions">
-          <button mat-icon-button
-                  [attr.aria-label]="t('editRecipeAriaLabel')"
-                  (click)="onEditRecipe(recipe)">
-            <mat-icon>edit</mat-icon>
-          </button>
-
-          <button matIconButton
-                  [attr.aria-label]="t('deleteRecipeAriaLabel')"
-                  class="warn"
-                  (click)="onDeleteRecipe(recipe)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columns"></tr>
-      <tr mat-row *matRowDef="let row; columns: columns"></tr>
-
-      <!-- No Data Row -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell empty-table-cell" [attr.colspan]="columns.length">
-          <div class="empty-state">
-            <mat-icon class="empty-icon">menu_book</mat-icon>
-            <p>{{ t('noRecipes') }}</p>
-          </div>
-        </td>
-      </tr>
-    </table>
+    @if (viewMode() === 'table') {
+      <app-recipe-table-view [recipes]="recipesData.data"
+                             [columns]="columns"
+                             (edit)="onEditRecipe($event)"
+                             (delete)="onDeleteRecipe($event)" />
+    } @else {
+      <app-recipe-grid-view [recipes]="recipesData.data"
+                            (edit)="onEditRecipe($event)"
+                            (delete)="onDeleteRecipe($event)" />
+    }
 
     <!-- Paginator -->
     <mat-paginator [length]="recipesData.total"

@@ -1,0 +1,48 @@
+<ng-container *transloco="let t; prefix: 'web.RecipeListPage'">
+  <div class="recipe-grid">
+    @for (recipe of recipes(); track recipe.id) {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <a [routerLink]="['/recipes', recipe.id]" class="label">
+              {{ recipe.name }}
+            </a>
+          </mat-card-title>
+          <mat-card-subtitle>{{ recipe.cuisine }}</mat-card-subtitle>
+        </mat-card-header>
+
+        @if (recipe.thumbnail) {
+          <img mat-card-image [src]="recipe.thumbnail" [alt]="recipe.name" />
+        } @else {
+          <div class="image-placeholder">
+            <mat-icon>photo</mat-icon>
+          </div>
+        }
+
+        <mat-card-content>
+          {{ recipe.description | stripMarkdown | truncate: 100 }}
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button matButton
+                  [attr.aria-label]="t('editRecipeAriaLabel')"
+                  (click)="onEditRecipe(recipe)">
+            {{ t('edit') }}
+          </button>
+
+          <button matButton
+                  [attr.aria-label]="t('deleteRecipeAriaLabel')"
+                  class="warn"
+                  (click)="onDeleteRecipe(recipe)">
+            {{ t('delete') }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">menu_book</mat-icon>
+        <p>{{ t('noRecipes') }}</p>
+      </div>
+    }
+  </div>
+</ng-container>

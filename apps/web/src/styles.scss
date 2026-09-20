@@ -321,6 +321,14 @@ ol.steps-list {
   }
 }
 
+.mat-mdc-button:not(:disabled) {
+  &.warn {
+    @include mat.button-overrides((
+            text-label-text-color: var(--mat-sys-error),
+    ));
+  }
+}
+
 mat-form-field {
   &.mat-form-field-appearance-outline {
     @include mat.form-field-overrides((

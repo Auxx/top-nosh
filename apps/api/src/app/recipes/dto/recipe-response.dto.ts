@@ -5,8 +5,17 @@ export interface CuisineCategoryTreeItem {
   categories: string[];
 }
 
+export interface RecipeListItemDto {
+  id: string;
+  name: string;
+  cuisine: string;
+  category: string;
+  description: string;
+  thumbnail: string | null;
+}
+
 export interface PaginatedRecipeResponse {
-  data: Recipe[];
+  data: RecipeListItemDto[];
   total: number;
   page: number;
   totalPages: number;

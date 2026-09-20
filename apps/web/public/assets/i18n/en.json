@@ -249,9 +249,14 @@
       "editRecipeAriaLabel": "Edit recipe",
       "deleteRecipeAriaLabel": "Delete recipe",
       "noRecipes": "No recipes found",
+      "viewModeAriaLabel": "Toggle recipe view",
+      "viewModeTable": "Table",
+      "viewModeGrid": "Grid",
       "paginatorAriaLabel": "Select recipe page",
       "deleteConfirmTitle": "Delete Recipe",
-      "deleteConfirmContent": "Are you sure you want to delete \"{{ name }}\"?"
+      "deleteConfirmContent": "Are you sure you want to delete \"{{ name }}\"?",
+      "edit": "EDIT",
+      "delete": "DELETE"
     },
     "AddToShoppingListDirective": {
       "success": "Added to shopping list",

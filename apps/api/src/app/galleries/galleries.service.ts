@@ -344,7 +344,7 @@ export class GalleriesService {
     };
   }
 
-  private buildExternalUrl(externalUrl: string, locationPath: string): string {
+  buildExternalUrl(externalUrl: string, locationPath: string): string {
     const cleanBase = externalUrl.replace(/\/+$/, '');
     const cleanPath = locationPath.replace(/^\/+/, '');
     return `${cleanBase}/${cleanPath}`;

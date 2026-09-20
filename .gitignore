@@ -3,6 +3,7 @@
 # compiled output
 dist
 tmp
+*.tmp
 out-tsc
 
 # dependencies
@@ -53,3 +54,4 @@ prod.db
 app.properties
 junie.properties
 /storage
+.mcp.json
