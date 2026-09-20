@@ -54,3 +54,4 @@ prod.db
 app.properties
 junie.properties
 /storage
+.mcp.json
