@@ -3,6 +3,10 @@
   width: 100%;
 }
 
+app-film-strip {
+  margin-bottom: var(--dim-x-large);
+}
+
 .meta {
   display: flex;
   flex-direction: column;

@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { RecipeListItem } from '../../models/recipe-list.types';
+import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { RecipeGridViewComponent } from './recipe-grid-view.component';
 
 describe('RecipeGridViewComponent', () => {
@@ -15,7 +18,8 @@ describe('RecipeGridViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      thumbnail: 'https://cdn.example.com/spaghetti.jpg'
+      thumbnail: 'https://cdn.example.com/spaghetti.jpg',
+      isShared: true
     },
     {
       id: '2',
@@ -23,7 +27,8 @@ describe('RecipeGridViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: false
     }
   ];
 
@@ -31,6 +36,7 @@ describe('RecipeGridViewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RecipeGridViewComponent,
+        MockComponent(ShareRecipeButtonComponent),
         getTranslocoModule()
       ],
       providers: [
@@ -85,7 +91,8 @@ describe('RecipeGridViewComponent', () => {
         cuisine: 'Italian',
         category: 'Pasta',
         description: `**${longText}**`,
-        thumbnail: null
+        thumbnail: null,
+        isShared: true
       }
     ]);
     fixture.detectChanges();
@@ -117,6 +124,20 @@ describe('RecipeGridViewComponent', () => {
     (actionButtons[1] as HTMLButtonElement).click();
 
     expect(deleteSpy).toHaveBeenCalledWith(sampleRecipes[0]);
+  });
+
+  it('should render ShareRecipeButtonComponent as the second card action with isIcon false', () => {
+    const actions = fixture.nativeElement.querySelectorAll('mat-card-actions')[0];
+    expect(actions.children[1].tagName.toLowerCase()).toBe('app-share-recipe-button');
+
+    const shareDebugEl = fixture.debugElement.query(By.directive(ShareRecipeButtonComponent));
+    expect(shareDebugEl.componentInstance.recipeId()).toBe('1');
+    expect(shareDebugEl.componentInstance.isIcon()).toBe(false);
+  });
+
+  it('should hide ShareRecipeButtonComponent when recipe is not shared', () => {
+    const actions = fixture.nativeElement.querySelectorAll('mat-card-actions')[1];
+    expect(actions.querySelector('app-share-recipe-button')).toBeNull();
   });
 
   it('should emit edit event via onEditRecipe', () => {

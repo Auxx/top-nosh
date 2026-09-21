@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { RecipeListItem } from '../../models/recipe-list.types';
+import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { RecipeTableViewComponent } from './recipe-table-view.component';
 
 describe('RecipeTableViewComponent', () => {
@@ -15,7 +18,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     },
     {
       id: '2',
@@ -23,7 +27,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: false
     }
   ];
 
@@ -34,6 +39,7 @@ describe('RecipeTableViewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RecipeTableViewComponent,
+        MockComponent(ShareRecipeButtonComponent),
         getTranslocoModule()
       ],
       providers: [
@@ -88,7 +94,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     };
 
     fixture.componentRef.setInput('recipes', [ markdownRecipe ]);
@@ -107,7 +114,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: `**${longText}**`,
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     };
 
     fixture.componentRef.setInput('recipes', [ longRecipe ]);
@@ -147,6 +155,19 @@ describe('RecipeTableViewComponent', () => {
     (actionButtons[1] as HTMLButtonElement).click();
 
     expect(deleteSpy).toHaveBeenCalledWith(sampleRecipes[0]);
+  });
+
+  it('should render ShareRecipeButtonComponent as the first action with the recipe id', () => {
+    const actionsCell = fixture.nativeElement.querySelector('td.actions');
+    expect(actionsCell.children[0].tagName.toLowerCase()).toBe('app-share-recipe-button');
+
+    const shareDebugEl = fixture.debugElement.query(By.directive(ShareRecipeButtonComponent));
+    expect(shareDebugEl.componentInstance.recipeId()).toBe('1');
+  });
+
+  it('should hide ShareRecipeButtonComponent when recipe is not shared', () => {
+    const actionsCell = fixture.nativeElement.querySelectorAll('td.actions')[1];
+    expect(actionsCell.querySelector('app-share-recipe-button')).toBeNull();
   });
 
   it('should emit edit event via onEditRecipe', () => {

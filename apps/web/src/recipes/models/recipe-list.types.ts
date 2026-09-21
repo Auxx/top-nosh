@@ -26,6 +26,7 @@ export interface RecipeListItem {
   category: string;
   description: string;
   thumbnail: string | null;
+  isShared: boolean;
 }
 
 export type RecipeListViewMode = 'table' | 'grid';

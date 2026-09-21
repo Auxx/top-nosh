@@ -12,6 +12,7 @@ export interface RecipeListItemDto {
   category: string;
   description: string;
   thumbnail: string | null;
+  isShared: boolean;
 }
 
 export interface PaginatedRecipeResponse {

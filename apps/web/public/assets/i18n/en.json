@@ -180,6 +180,10 @@
       "emptyStages": "No cooking stages added yet. Click \"Add Stage\" above to begin structuring your recipe.",
       "preview": "Preview"
     },
+    "ShareRecipeButtonComponent": {
+      "shareAriaLabel": "Share recipe",
+      "share": "SHARE"
+    },
     "CreateRecipePage": {
       "title": "Create New Recipe",
       "description": "Define recipe metadata, cooking stages, steps, and ingredients",

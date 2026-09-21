@@ -38,6 +38,10 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef class="actions">{{ t('columnActions') }}</th>
       <td mat-cell *matCellDef="let recipe" class="actions">
+        @if (recipe.isShared) {
+          <app-share-recipe-button [recipeId]="recipe.id" />
+        }
+
         <button mat-icon-button
                 [attr.aria-label]="t('editRecipeAriaLabel')"
                 (click)="onEditRecipe(recipe)">

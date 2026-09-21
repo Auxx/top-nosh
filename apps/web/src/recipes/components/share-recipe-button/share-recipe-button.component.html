@@ -1,0 +1,20 @@
+<ng-container *transloco="let t; prefix: 'web.ShareRecipeButtonComponent'">
+  @if (isIcon()) {
+    <button matIconButton
+            type="button"
+            [matTooltip]="t('shareAriaLabel')"
+            [attr.aria-label]="t('shareAriaLabel')"
+            data-testid="share-recipe-btn"
+            (click)="copyShareLink()">
+      <mat-icon>share</mat-icon>
+    </button>
+  } @else {
+    <button matButton="text"
+            type="button"
+            [attr.aria-label]="t('shareAriaLabel')"
+            data-testid="share-recipe-btn"
+            (click)="copyShareLink()">
+      {{ t('share') }}
+    </button>
+  }
+</ng-container>

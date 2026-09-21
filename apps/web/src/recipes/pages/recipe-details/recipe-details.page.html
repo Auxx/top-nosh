@@ -42,6 +42,11 @@
         <ui-mini-badge data-testid="recipe-category" color="secondary">{{ currentRecipe.category }}</ui-mini-badge>
       </div>
 
+
+      @if (currentRecipe.isShared) {
+        <app-share-recipe-button [recipeId]="currentRecipe.id" class="action"/>
+      }
+
       <button matIconButton (click)="onEditRecipe()">
         <mat-icon>edit</mat-icon>
       </button>
@@ -52,7 +57,7 @@
     </ui-page-header>
 
     @if (currentRecipe.galleryId) {
-      <app-film-strip [galleryId]="currentRecipe.galleryId" />
+      <app-film-strip [galleryId]="currentRecipe.galleryId"/>
     }
 
     <div class="meta">
