@@ -18,6 +18,7 @@ import { RemarkComponent } from 'ngx-remark';
 import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
+import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { createIngredientGroup, createStageGroup, createStepGroup } from './recipe-form.helpers';
 
 @Component({
@@ -42,7 +43,8 @@ import { createIngredientGroup, createStageGroup, createStepGroup } from './reci
     RemarkComponent,
     PageHeaderComponent,
     GalleryManagerComponent,
-    InfoCardComponent
+    InfoCardComponent,
+    ShareRecipeButtonComponent
   ],
   templateUrl: './recipe-form.component.html',
   styleUrl: './recipe-form.component.scss',
@@ -208,14 +210,6 @@ export class RecipeFormComponent implements OnInit {
     );
 
     this.getIngredientsArray(stageIndex).updateValueAndValidity();
-  };
-
-  readonly copyShareLink = async (): Promise<void> => {
-    const url = this.shareUrl();
-
-    if (url && typeof navigator !== 'undefined' && navigator.clipboard) {
-      await navigator.clipboard.writeText(url);
-    }
   };
 
   readonly onGalleryIdChange = (newGalleryId: string) => this.form().controls['galleryId']?.setValue(newGalleryId);

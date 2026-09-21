@@ -113,7 +113,7 @@
                          (galleryIdChange)="onGalleryIdChange($event)"/>
 
     <!-- Share Recipe Card -->
-    @if (recipeId()) {
+    @if (recipeId(); as id) {
       <mat-card class="share-recipe-card" data-testid="share-recipe-card">
         <mat-card-header>
           <mat-card-title>{{ t('shareTitle') }}</mat-card-title>
@@ -136,10 +136,7 @@
                 {{ url }}
               </a>
 
-              <!-- Copy To Clipboard button -->
-              <button matIconButton type="button" (click)="copyShareLink()">
-                <mat-icon>share</mat-icon>
-              </button>
+              <app-share-recipe-button [recipeId]="id" />
             }
           </div>
         </mat-card-content>

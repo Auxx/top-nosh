@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { RecipeListItem } from '../../models/recipe-list.types';
+import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { RecipeTableViewComponent } from './recipe-table-view.component';
 
 describe('RecipeTableViewComponent', () => {
@@ -34,6 +37,7 @@ describe('RecipeTableViewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RecipeTableViewComponent,
+        MockComponent(ShareRecipeButtonComponent),
         getTranslocoModule()
       ],
       providers: [
@@ -147,6 +151,14 @@ describe('RecipeTableViewComponent', () => {
     (actionButtons[1] as HTMLButtonElement).click();
 
     expect(deleteSpy).toHaveBeenCalledWith(sampleRecipes[0]);
+  });
+
+  it('should render ShareRecipeButtonComponent as the first action with the recipe id', () => {
+    const actionsCell = fixture.nativeElement.querySelector('td.actions');
+    expect(actionsCell.children[0].tagName.toLowerCase()).toBe('app-share-recipe-button');
+
+    const shareDebugEl = fixture.debugElement.query(By.directive(ShareRecipeButtonComponent));
+    expect(shareDebugEl.componentInstance.recipeId()).toBe('1');
   });
 
   it('should emit edit event via onEditRecipe', () => {

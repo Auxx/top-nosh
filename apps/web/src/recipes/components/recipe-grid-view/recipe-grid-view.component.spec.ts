@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { RecipeListItem } from '../../models/recipe-list.types';
+import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { RecipeGridViewComponent } from './recipe-grid-view.component';
 
 describe('RecipeGridViewComponent', () => {
@@ -31,6 +34,7 @@ describe('RecipeGridViewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RecipeGridViewComponent,
+        MockComponent(ShareRecipeButtonComponent),
         getTranslocoModule()
       ],
       providers: [
@@ -117,6 +121,15 @@ describe('RecipeGridViewComponent', () => {
     (actionButtons[1] as HTMLButtonElement).click();
 
     expect(deleteSpy).toHaveBeenCalledWith(sampleRecipes[0]);
+  });
+
+  it('should render ShareRecipeButtonComponent as the second card action with isIcon false', () => {
+    const actions = fixture.nativeElement.querySelectorAll('mat-card-actions')[0];
+    expect(actions.children[1].tagName.toLowerCase()).toBe('app-share-recipe-button');
+
+    const shareDebugEl = fixture.debugElement.query(By.directive(ShareRecipeButtonComponent));
+    expect(shareDebugEl.componentInstance.recipeId()).toBe('1');
+    expect(shareDebugEl.componentInstance.isIcon()).toBe(false);
   });
 
   it('should emit edit event via onEditRecipe', () => {

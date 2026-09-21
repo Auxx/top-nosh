@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { StripMarkdownPipe, TruncatePipe } from '@top-nosh/ui';
 import { RecipeListItem } from '../../models/recipe-list.types';
+import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 
 @Component({
   selector: 'app-recipe-table-view',
@@ -16,7 +17,8 @@ import { RecipeListItem } from '../../models/recipe-list.types';
     MatIconModule,
     StripMarkdownPipe,
     TruncatePipe,
-    TranslocoDirective
+    TranslocoDirective,
+    ShareRecipeButtonComponent
   ],
   templateUrl: './recipe-table-view.component.html',
   styleUrl: './recipe-table-view.component.scss',
