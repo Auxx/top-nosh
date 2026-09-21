@@ -57,7 +57,8 @@ describe('RecipeListPage', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     },
     {
       id: '2',
@@ -65,7 +66,8 @@ describe('RecipeListPage', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: false
     }
   ];
 
@@ -338,7 +340,8 @@ describe('RecipeListPage', () => {
             cuisine: 'Italian',
             category: 'Pasta',
             description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
-            thumbnail: null
+            thumbnail: null,
+            isShared: true
           }
         ],
         total: 1,
@@ -362,7 +365,8 @@ describe('RecipeListPage', () => {
             cuisine: 'Italian',
             category: 'Pasta',
             description: `**${longText}**`,
-            thumbnail: null
+            thumbnail: null,
+            isShared: true
           }
         ],
         total: 1,

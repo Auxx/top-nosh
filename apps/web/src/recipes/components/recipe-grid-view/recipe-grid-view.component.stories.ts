@@ -9,7 +9,8 @@ const sampleRecipes: RecipeListItem[] = [
     cuisine: 'Italian',
     category: 'Pasta',
     description: 'Rich meat sauce with pasta.',
-    thumbnail: 'https://placehold.co/400x300'
+    thumbnail: 'https://placehold.co/400x300',
+    isShared: true
   },
   {
     id: '2',
@@ -17,7 +18,8 @@ const sampleRecipes: RecipeListItem[] = [
     cuisine: 'Italian',
     category: 'Pizza',
     description: 'Classic cheese and tomato pizza.',
-    thumbnail: null
+    thumbnail: null,
+    isShared: false
   }
 ];
 

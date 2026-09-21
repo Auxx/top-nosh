@@ -30,7 +30,9 @@
             {{ t('edit') }}
           </button>
 
-          <app-share-recipe-button [recipeId]="recipe.id" [isIcon]="false" />
+          @if (recipe.isShared) {
+            <app-share-recipe-button [recipeId]="recipe.id" [isIcon]="false" />
+          }
 
           <button matButton
                   [attr.aria-label]="t('deleteRecipeAriaLabel')"

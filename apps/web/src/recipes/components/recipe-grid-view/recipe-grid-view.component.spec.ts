@@ -18,7 +18,8 @@ describe('RecipeGridViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      thumbnail: 'https://cdn.example.com/spaghetti.jpg'
+      thumbnail: 'https://cdn.example.com/spaghetti.jpg',
+      isShared: true
     },
     {
       id: '2',
@@ -26,7 +27,8 @@ describe('RecipeGridViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: false
     }
   ];
 
@@ -89,7 +91,8 @@ describe('RecipeGridViewComponent', () => {
         cuisine: 'Italian',
         category: 'Pasta',
         description: `**${longText}**`,
-        thumbnail: null
+        thumbnail: null,
+        isShared: true
       }
     ]);
     fixture.detectChanges();
@@ -130,6 +133,11 @@ describe('RecipeGridViewComponent', () => {
     const shareDebugEl = fixture.debugElement.query(By.directive(ShareRecipeButtonComponent));
     expect(shareDebugEl.componentInstance.recipeId()).toBe('1');
     expect(shareDebugEl.componentInstance.isIcon()).toBe(false);
+  });
+
+  it('should hide ShareRecipeButtonComponent when recipe is not shared', () => {
+    const actions = fixture.nativeElement.querySelectorAll('mat-card-actions')[1];
+    expect(actions.querySelector('app-share-recipe-button')).toBeNull();
   });
 
   it('should emit edit event via onEditRecipe', () => {

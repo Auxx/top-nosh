@@ -9,7 +9,8 @@ const sampleRecipes: RecipeListItem[] = [
     cuisine: 'Italian',
     category: 'Pasta',
     description: 'Rich meat sauce with pasta.',
-    thumbnail: null
+    thumbnail: null,
+    isShared: true
   },
   {
     id: '2',
@@ -17,7 +18,8 @@ const sampleRecipes: RecipeListItem[] = [
     cuisine: 'Italian',
     category: 'Pizza',
     description: 'Classic cheese and tomato pizza.',
-    thumbnail: null
+    thumbnail: null,
+    isShared: false
   }
 ];
 

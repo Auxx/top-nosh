@@ -125,7 +125,8 @@ describe('RecipesService', () => {
           cuisine: 'Italian',
           category: 'Main',
           description: 'Tasty pasta',
-          gallery: null
+          gallery: null,
+          isShared: true
         }
       ];
       prismaService.recipe.count.mockResolvedValue(105);
@@ -164,7 +165,8 @@ describe('RecipesService', () => {
             cuisine: 'Italian',
             category: 'Main',
             description: 'Tasty pasta',
-            thumbnail: null
+            thumbnail: null,
+            isShared: true
           }
         ],
         total: 105,
@@ -181,6 +183,7 @@ describe('RecipesService', () => {
           cuisine: 'Italian',
           category: 'Main',
           description: 'Tasty pasta',
+          isShared: false,
           gallery: {
             images: [
               {

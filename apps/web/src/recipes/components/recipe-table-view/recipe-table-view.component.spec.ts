@@ -18,7 +18,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: 'Rich meat sauce with pasta.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     },
     {
       id: '2',
@@ -26,7 +27,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pizza',
       description: 'Classic cheese and tomato pizza.',
-      thumbnail: null
+      thumbnail: null,
+      isShared: false
     }
   ];
 
@@ -92,7 +94,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: '# Amazing **Pasta** with [tasty sauce](https://example.com)',
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     };
 
     fixture.componentRef.setInput('recipes', [ markdownRecipe ]);
@@ -111,7 +114,8 @@ describe('RecipeTableViewComponent', () => {
       cuisine: 'Italian',
       category: 'Pasta',
       description: `**${longText}**`,
-      thumbnail: null
+      thumbnail: null,
+      isShared: true
     };
 
     fixture.componentRef.setInput('recipes', [ longRecipe ]);
@@ -159,6 +163,11 @@ describe('RecipeTableViewComponent', () => {
 
     const shareDebugEl = fixture.debugElement.query(By.directive(ShareRecipeButtonComponent));
     expect(shareDebugEl.componentInstance.recipeId()).toBe('1');
+  });
+
+  it('should hide ShareRecipeButtonComponent when recipe is not shared', () => {
+    const actionsCell = fixture.nativeElement.querySelectorAll('td.actions')[1];
+    expect(actionsCell.querySelector('app-share-recipe-button')).toBeNull();
   });
 
   it('should emit edit event via onEditRecipe', () => {

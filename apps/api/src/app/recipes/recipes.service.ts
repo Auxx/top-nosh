@@ -101,7 +101,8 @@ export class RecipesService {
             firstImage.thumbnailFile.storage.externalUrl,
             firstImage.thumbnailFile.locationPath
           )
-          : null
+          : null,
+        isShared: recipe.isShared
       };
     });
 
