@@ -23,6 +23,7 @@ import { FilmStripComponent } from '../../../galleries/components/film-strip/fil
 import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
 import { CookingModeComponent } from '../../components/cooking-mode/cooking-mode.component';
 import { GlanceComponent } from '../../components/glance/glance.component';
+import { ShareRecipeButtonComponent } from '../../components/share-recipe-button/share-recipe-button.component';
 import { RecipeDetails, RecipeViewMode } from '../../models/recipe-details.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 
@@ -49,7 +50,8 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     GlanceComponent,
     CookingModeComponent,
     FilmStripComponent,
-    TranslocoDirective
+    TranslocoDirective,
+    ShareRecipeButtonComponent
   ],
   templateUrl: './recipe-details.page.html',
   styleUrl: './recipe-details.page.scss',
