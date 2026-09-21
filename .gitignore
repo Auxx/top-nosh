@@ -44,6 +44,8 @@ Thumbs.db
 .nx/migrate-runs
 .claude/worktrees
 .claude/settings.local.json
+.claude/CLAUDE.md
+.claude/skills
 
 .angular
 
