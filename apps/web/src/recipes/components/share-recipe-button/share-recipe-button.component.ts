@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { buildRecipeShareUrl } from './share-recipe-button.helpers';
 
 @Component({
   selector: 'app-share-recipe-button',
@@ -16,11 +17,7 @@ export class ShareRecipeButtonComponent {
 
   readonly isIcon = input<boolean>(true);
 
-  readonly shareUrl = computed(() => {
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    return `${protocol}//${host}/share/recipe/${this.recipeId()}`;
-  });
+  readonly shareUrl = computed(() => buildRecipeShareUrl(this.recipeId()));
 
   readonly copyShareLink = async (): Promise<void> => {
     const url = this.shareUrl();
