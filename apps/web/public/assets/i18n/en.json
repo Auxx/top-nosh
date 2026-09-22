@@ -13,6 +13,9 @@
     },
     "System": {
       "ok": "OK"
+    },
+    "BlockLoaderComponent": {
+      "loading": "Loading..."
     }
   },
   "web": {

@@ -9,29 +9,27 @@
           <mat-spinner diameter="16"></mat-spinner>
         }
       </h1>
-      <div>
-        {{ t('description') }}
-      </div>
+      <div>{{ t('description') }}</div>
     </ui-page-header>
 
     @if (isLoading()) {
-      <div class="loading-container">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p>{{ t('loading') }}</p>
-      </div>
+      <ui-block-loader/>
+
     } @else if (hasError()) {
       <div class="error-container">
         <mat-icon color="warn">error_outline</mat-icon>
         <p>{{ t('loadError') }}</p>
         <button mat-stroked-button (click)="loadShoppingList(currentId()!)">{{ t('retry') }}</button>
       </div>
+
     } @else {
-      <form [formGroup]="form" (focusout)="onFormFocusOut()" class="shopping-list-form">
+      <form [formGroup]="form" (focusout)="onFormFocusOut()">
         <!-- Header Section Card -->
-        <mat-card class="details-card">
+        <mat-card>
           <mat-card-header>
             <mat-card-title>{{ t('detailsTitle') }}</mat-card-title>
           </mat-card-header>
+
           <mat-card-content class="form-header-section">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>{{ t('name') }}</mat-label>
