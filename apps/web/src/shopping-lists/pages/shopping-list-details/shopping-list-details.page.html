@@ -94,7 +94,6 @@
                               subscriptSizing="dynamic">
                 <input matInput
                        formControlName="name"
-                       [placeholder]="t('itemNamePlaceholder')"
                        class="item-name-input"
                        (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
                        (input)="onItemNameInput(item, $event)"
@@ -150,7 +149,6 @@
                                 subscriptSizing="dynamic">
                   <input matInput
                          formControlName="name"
-                         [placeholder]="t('itemNamePlaceholder')"
                          class="item-name-input"
                          (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
                          (input)="onItemNameInput(item, $event)"

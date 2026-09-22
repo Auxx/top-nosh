@@ -210,26 +210,26 @@ export class ShoppingListDetailsPage implements OnInit {
 
           this.itemsFormArray.clear({ emitEvent: false });
 
-          if (details.items?.length) {
-            details.items.forEach((item, index) => {
-              this.itemsFormArray.push(
-                createShoppingListItemFormGroup(this.fb, {
-                  ...item,
-                  order: item.order ?? index
-                }),
-                { emitEvent: false }
-              );
-            });
-          } else {
+          // if (details.items?.length) {
+          details.items.forEach((item, index) => {
             this.itemsFormArray.push(
               createShoppingListItemFormGroup(this.fb, {
-                quantity: 1,
-                isBought: false,
-                order: 0
+                ...item,
+                order: item.order ?? index
               }),
               { emitEvent: false }
             );
-          }
+          });
+          // } else {
+          this.itemsFormArray.push(
+            createShoppingListItemFormGroup(this.fb, {
+              quantity: 1,
+              isBought: false,
+              order: 0
+            }),
+            { emitEvent: false }
+          );
+          // }
 
           this.isLoading.set(false);
         },
