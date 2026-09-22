@@ -7,6 +7,7 @@ import {
   DeleteShoppingListResponse,
   PaginatedShoppingListResponse,
   ShoppingListCreatedResponse,
+  ShoppingListListItemDto,
   ShoppingListWithDetails
 } from './dto/shopping-list-response.dto';
 import { UpdateShoppingListDto } from './dto/update-shopping-list.dto';
@@ -30,11 +31,21 @@ export class ShoppingListsService {
       where,
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: { items: { where: { isBought: false } } }
+        }
+      }
     });
 
+    const items: ShoppingListListItemDto[] = data.map(({ _count, ...list }) => ({
+      ...list,
+      itemCount: _count.items
+    }));
+
     return {
-      data,
+      data: items,
       total,
       page,
       totalPages

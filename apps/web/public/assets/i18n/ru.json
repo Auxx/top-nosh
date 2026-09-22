@@ -276,7 +276,9 @@
       "columnName": "Название",
       "columnDescription": "Описание",
       "columnUpdatedAt": "Дата обновления",
+      "columnItemCount": "Товаров",
       "columnActions": "Действия",
+      "emptyItemCount": "Пусто",
       "deleteShoppingListAriaLabel": "Удалить список покупок",
       "noShoppingLists": "Списки покупок не найдены",
       "paginatorAriaLabel": "Выбрать страницу списков покупок"

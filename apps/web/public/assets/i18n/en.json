@@ -276,7 +276,9 @@
       "columnName": "Name",
       "columnDescription": "Description",
       "columnUpdatedAt": "Updated At",
+      "columnItemCount": "Items",
       "columnActions": "Actions",
+      "emptyItemCount": "Empty",
       "deleteShoppingListAriaLabel": "Delete shopping list",
       "noShoppingLists": "No shopping lists found",
       "paginatorAriaLabel": "Select shopping list page"

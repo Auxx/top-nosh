@@ -54,7 +54,12 @@ describe('ShoppingListsService', () => {
   describe('getShoppingLists', () => {
     it('should return paginated shopping lists with metadata', async () => {
       const mockLists = [
-        { id: '1', name: 'Weekly Groceries', description: 'Weekly essentials' }
+        {
+          id: '1',
+          name: 'Weekly Groceries',
+          description: 'Weekly essentials',
+          _count: { items: 3 }
+        }
       ];
       prismaService.shoppingList.count.mockResolvedValue(105);
       prismaService.shoppingList.findMany.mockResolvedValue(mockLists);
@@ -68,10 +73,17 @@ describe('ShoppingListsService', () => {
         where: { deletedAt: null },
         skip: 50,
         take: 50,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        include: {
+          _count: {
+            select: { items: { where: { isBought: false } } }
+          }
+        }
       });
       expect(result).toEqual({
-        data: mockLists,
+        data: [
+          { id: '1', name: 'Weekly Groceries', description: 'Weekly essentials', itemCount: 3 }
+        ],
         total: 105,
         page: 2,
         totalPages: 3

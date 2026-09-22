@@ -51,8 +51,8 @@ export class ShoppingListPage implements OnInit {
 
   readonly displayedColumns = computed(() =>
     this.isMobile()
-      ? [ 'name', 'actions' ]
-      : [ 'name', 'description', 'updatedAt', 'actions' ]
+      ? [ 'name', 'itemCount', 'actions' ]
+      : [ 'name', 'description', 'updatedAt', 'itemCount', 'actions' ]
   );
 
   ngOnInit(): void {
