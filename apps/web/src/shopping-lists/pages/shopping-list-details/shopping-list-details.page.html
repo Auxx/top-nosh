@@ -2,18 +2,17 @@
   <div class="shopping-list-details-container">
     <!-- Page Header -->
     <ui-page-header [showBackButton]="true" (navigatedBack)="onNavigateBack()">
-      <h1>{{ isEditMode() ? t('titleEdit') : t('titleCreate') }}</h1>
+      <h1>
+        {{ isEditMode() ? t('titleEdit') : t('titleCreate') }}
+
+        @if (isSaving()) {
+          <mat-spinner diameter="16"></mat-spinner>
+        }
+      </h1>
       <div>
         {{ t('description') }}
       </div>
     </ui-page-header>
-
-    @if (isSaving()) {
-      <div class="header-status">
-        <mat-spinner diameter="16"></mat-spinner>
-        <span>{{ t('saving') }}</span>
-      </div>
-    }
 
     @if (isLoading()) {
       <div class="loading-container">
@@ -44,7 +43,8 @@
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>{{ t('descriptionLabel') }}</mat-label>
-              <textarea matInput formControlName="description" rows="2" [placeholder]="t('descriptionPlaceholder')"></textarea>
+              <textarea matInput formControlName="description" rows="2"
+                        [placeholder]="t('descriptionPlaceholder')"></textarea>
             </mat-form-field>
           </mat-card-content>
         </mat-card>
