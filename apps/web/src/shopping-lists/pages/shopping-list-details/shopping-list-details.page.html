@@ -1,171 +1,182 @@
 <ng-container *transloco="let t; prefix: 'web.ShoppingListDetailsPage'">
-  <div class="shopping-list-details-container">
-    <!-- Page Header -->
-    <ui-page-header [showBackButton]="true" (navigatedBack)="onNavigateBack()">
-      <h1>{{ isEditMode() ? t('titleEdit') : t('titleCreate') }}</h1>
-      <div>
-        {{ t('description') }}
-      </div>
-    </ui-page-header>
+  <!-- Page Header -->
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onNavigateBack()">
+    <h1>
+      {{ isEditMode() ? t('titleEdit') : t('titleCreate') }}
 
-    @if (isSaving()) {
-      <div class="header-status">
+      @if (isSaving()) {
         <mat-spinner diameter="16"></mat-spinner>
-        <span>{{ t('saving') }}</span>
-      </div>
-    }
+      }
+    </h1>
 
-    @if (isLoading()) {
-      <div class="loading-container">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p>{{ t('loading') }}</p>
-      </div>
-    } @else if (hasError()) {
-      <div class="error-container">
-        <mat-icon color="warn">error_outline</mat-icon>
-        <p>{{ t('loadError') }}</p>
-        <button mat-stroked-button (click)="loadShoppingList(currentId()!)">{{ t('retry') }}</button>
-      </div>
-    } @else {
-      <form [formGroup]="form" (focusout)="onFormFocusOut()" class="shopping-list-form">
-        <!-- Header Section Card -->
-        <mat-card class="details-card">
-          <mat-card-header>
-            <mat-card-title>{{ t('detailsTitle') }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="form-header-section">
-            <mat-form-field appearance="outline" class="full-width">
+    <div>{{ t('description') }}</div>
+
+    <button matButton="text"
+            class="warn"
+            [disabled]="!hasBoughtItems"
+            (click)="onRemoveAllBoughtItems()">
+      <mat-icon>delete_sweep</mat-icon>
+      <span>{{ t('removeAllBought') }}</span>
+    </button>
+  </ui-page-header>
+
+  @if (isLoading()) {
+    <ui-block-loader/>
+
+  } @else if (hasError()) {
+    <div class="error-container">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>{{ t('loadError') }}</p>
+      <button mat-stroked-button (click)="loadShoppingList(currentId()!)">{{ t('retry') }}</button>
+    </div>
+
+  } @else {
+    <form [formGroup]="form" (focusout)="onFormFocusOut()">
+      <!-- Header Section Card -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ t('detailsTitle') }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="grid-12 mobile-single-column">
+
+            <mat-form-field appearance="outline" class="grid-12-col-12">
               <mat-label>{{ t('name') }}</mat-label>
-              <input matInput formControlName="name" [placeholder]="t('namePlaceholder')" class="list-name-input"/>
+
+              <input matInput
+                     formControlName="name"
+                     [placeholder]="t('namePlaceholder')"/>
+
               <mat-error *uiWhenError="form.controls.name; errorCode: 'required'">
                 {{ t('nameRequired') }}
               </mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" class="grid-12-col-12">
               <mat-label>{{ t('descriptionLabel') }}</mat-label>
-              <textarea matInput formControlName="description" rows="2" [placeholder]="t('descriptionPlaceholder')"></textarea>
-            </mat-form-field>
-          </mat-card-content>
-        </mat-card>
 
-        <!-- Items Section Card -->
-        <mat-card class="items-card">
-          <mat-card-content>
-            <div class="items-section-header">
-              <h2>{{ t('itemsTitle') }}</h2>
-              <button mat-stroked-button
-                      color="warn"
-                      type="button"
-                      class="remove-bought-btn"
-                      [disabled]="!hasBoughtItems"
-                      (click)="onRemoveAllBoughtItems()">
-                <mat-icon>delete_sweep</mat-icon>
-                <span>{{ t('removeAllBought') }}</span>
+              <textarea matInput
+                        formControlName="description"
+                        rows="2"
+                        [placeholder]="t('descriptionPlaceholder')">
+              </textarea>
+            </mat-form-field>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Items Section Card -->
+      <section>
+        <!-- Active Items List (No Title) -->
+        <div cdkDropList
+             class="item-list"
+             (cdkDropListDropped)="onDropActive($event)">
+
+          @for (item of activeItems; track item) {
+            <div class="item-row"
+                 cdkDrag
+                 [formGroup]="item">
+
+              <div cdkDragHandle
+                   [attr.aria-label]="t('dragHandleAriaLabel')">
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+
+              <mat-checkbox formControlName="isBought"
+                            (change)="onBoughtChange()"
+                            [attr.aria-label]="t('boughtAriaLabel')">
+              </mat-checkbox>
+
+              <mat-form-field appearance="outline"
+                              class="item-name-field mat-form-field-underlined"
+                              subscriptSizing="dynamic">
+                <input matInput
+                       formControlName="name"
+                       class="item-name-input"
+                       (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
+                       (input)="onItemNameInput(item, $event)"
+                       (keydown.backspace)="onItemNameBackspace(item, $event)"/>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline"
+                              class="item-quantity-field mat-form-field-underlined"
+                              subscriptSizing="dynamic">
+                <input matInput
+                       type="number"
+                       min="1"
+                       formControlName="quantity"
+                       [placeholder]="t('itemQuantityPlaceholder')"
+                       class="numeric"/>
+              </mat-form-field>
+
+              <button matIconButton
+                      [attr.aria-label]="t('removeItemAriaLabel')"
+                      class="warn"
+                      (click)="onRemoveItem(item)">
+                <mat-icon>close</mat-icon>
               </button>
             </div>
+          }
+        </div>
+      </section>
 
-            <!-- Active Items List (No Title) -->
-            <div cdkDropList
-                 class="items-list active-items-list"
-                 (cdkDropListDropped)="onDropActive($event)">
-              @for (item of activeItems; track item) {
-                <div class="item-row"
-                     cdkDrag
-                     [formGroup]="item">
-                  <div class="drag-handle" cdkDragHandle [attr.aria-label]="t('dragHandleAriaLabel')">
-                    <mat-icon>drag_indicator</mat-icon>
-                  </div>
+      <!-- Completed Section (With Title) -->
+      @if (completedItems.length > 0) {
+        <section>
+          <h3>{{ t('completedTitle') }}</h3>
+          <div cdkDropList
+               class="item-list"
+               (cdkDropListDropped)="onDropCompleted($event)">
 
-                  <mat-checkbox formControlName="isBought"
-                                (change)="onBoughtChange()"
-                                [attr.aria-label]="t('boughtAriaLabel')">
-                  </mat-checkbox>
-
-                  <mat-form-field appearance="outline" class="item-name-field" subscriptSizing="dynamic">
-                    <input matInput
-                           formControlName="name"
-                           [placeholder]="t('itemNamePlaceholder')"
-                           class="item-name-input"
-                           (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
-                           (input)="onItemNameInput(item, $event)"
-                           (keydown.backspace)="onItemNameBackspace(item, $event)"/>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline" class="item-quantity-field" subscriptSizing="dynamic">
-                    <input matInput
-                           type="number"
-                           min="1"
-                           formControlName="quantity"
-                           [placeholder]="t('itemQuantityPlaceholder')"
-                           class="item-quantity-input"/>
-                  </mat-form-field>
-
-                  <button mat-icon-button
-                          type="button"
-                          [attr.aria-label]="t('removeItemAriaLabel')"
-                          class="remove-item-btn"
-                          (click)="onRemoveItem(item)">
-                    <mat-icon>close</mat-icon>
-                  </button>
+            @for (item of completedItems; track item) {
+              <div class="item-row bought"
+                   cdkDrag
+                   [formGroup]="item">
+                <div cdkDragHandle
+                     [attr.aria-label]="t('dragHandleAriaLabel')">
+                  <mat-icon>drag_indicator</mat-icon>
                 </div>
-              }
-            </div>
 
-            <!-- Completed Section (With Title) -->
-            @if (completedItems.length > 0) {
-              <div class="completed-section">
-                <h3 class="completed-title">{{ t('completedTitle') }}</h3>
-                <div cdkDropList
-                     class="items-list completed-items-list"
-                     (cdkDropListDropped)="onDropCompleted($event)">
-                  @for (item of completedItems; track item) {
-                    <div class="item-row bought"
-                         cdkDrag
-                         [formGroup]="item">
-                      <div class="drag-handle" cdkDragHandle [attr.aria-label]="t('dragHandleAriaLabel')">
-                        <mat-icon>drag_indicator</mat-icon>
-                      </div>
+                <mat-checkbox formControlName="isBought"
+                              (change)="onBoughtChange()"
+                              [attr.aria-label]="t('boughtAriaLabel')">
+                </mat-checkbox>
 
-                      <mat-checkbox formControlName="isBought"
-                                    (change)="onBoughtChange()"
-                                    [attr.aria-label]="t('boughtAriaLabel')">
-                      </mat-checkbox>
+                <mat-form-field appearance="outline"
+                                class="item-name-field mat-form-field-underlined"
+                                subscriptSizing="dynamic">
+                  <input matInput
+                         formControlName="name"
+                         class="item-name-input"
+                         (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
+                         (input)="onItemNameInput(item, $event)"
+                         (keydown.backspace)="onItemNameBackspace(item, $event)"/>
+                </mat-form-field>
 
-                      <mat-form-field appearance="outline" class="item-name-field" subscriptSizing="dynamic">
-                        <input matInput
-                               formControlName="name"
-                               [placeholder]="t('itemNamePlaceholder')"
-                               class="item-name-input"
-                               (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
-                               (input)="onItemNameInput(item, $event)"
-                               (keydown.backspace)="onItemNameBackspace(item, $event)"/>
-                      </mat-form-field>
+                <mat-form-field appearance="outline"
+                                class="item-quantity-field mat-form-field-underlined"
+                                subscriptSizing="dynamic">
+                  <input matInput
+                         type="number"
+                         min="1"
+                         formControlName="quantity"
+                         [placeholder]="t('itemQuantityPlaceholder')"
+                         class="item-quantity-input"/>
+                </mat-form-field>
 
-                      <mat-form-field appearance="outline" class="item-quantity-field" subscriptSizing="dynamic">
-                        <input matInput
-                               type="number"
-                               min="1"
-                               formControlName="quantity"
-                               [placeholder]="t('itemQuantityPlaceholder')"
-                               class="item-quantity-input"/>
-                      </mat-form-field>
-
-                      <button mat-icon-button
-                              type="button"
-                              [attr.aria-label]="t('removeItemAriaLabel')"
-                              class="remove-item-btn"
-                              (click)="onRemoveItem(item)">
-                        <mat-icon>close</mat-icon>
-                      </button>
-                    </div>
-                  }
-                </div>
+                <button matIconButton
+                        [attr.aria-label]="t('removeItemAriaLabel')"
+                        class="warn"
+                        (click)="onRemoveItem(item)">
+                  <mat-icon>close</mat-icon>
+                </button>
               </div>
             }
-          </mat-card-content>
-        </mat-card>
-      </form>
-    }
-  </div>
+          </div>
+        </section>
+      }
+    </form>
+  }
 </ng-container>

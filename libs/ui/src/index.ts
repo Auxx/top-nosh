@@ -1,3 +1,4 @@
+export * from './content/components/block-loader/block-loader.component';
 export * from './content/components/mini-badge/mini-badge.component';
 export * from './content/components/notice/notice.component';
 export * from './content/pipes/domain/domain.pipe';

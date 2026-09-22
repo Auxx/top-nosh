@@ -4,12 +4,11 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { PageHeaderComponent } from '@top-nosh/ui';
+import { BlockLoaderComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { RecipeFormComponent } from '../../components/recipe-form/recipe-form.component';
 import { createRecipeForm } from '../../components/recipe-form/recipe-form.helpers';
 import { IngredientUnit } from '../../models/create-recipe.types';
@@ -25,7 +24,7 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
+    BlockLoaderComponent,
     RecipeFormComponent,
     PageHeaderComponent,
     TranslocoDirective

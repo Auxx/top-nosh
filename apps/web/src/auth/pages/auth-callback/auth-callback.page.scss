@@ -2,13 +2,6 @@
   display: block;
 }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 0;
-}
-
 .error-message {
   margin: 16px 0;
   color: var(--mat-sys-error, #ba1a1a);

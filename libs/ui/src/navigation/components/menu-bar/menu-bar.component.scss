@@ -45,7 +45,11 @@ mat-toolbar {
   button.action.mat-mdc-button-base.mat-unthemed {
     @include mat.icon-button-overrides((
             icon-color:var(--mat-sys-inverse-primary),
-    ))
+    ));
+
+    @media (max-width: 599.98px) and (orientation: portrait) {
+      display: none;
+    }
   }
 }
 

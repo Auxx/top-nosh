@@ -1,7 +1,9 @@
 import { ShoppingList, ShoppingListItem } from '@prisma/client';
 
+export type ShoppingListListItemDto = ShoppingList & { itemCount: number; };
+
 export interface PaginatedShoppingListResponse {
-  data: ShoppingList[];
+  data: ShoppingListListItemDto[];
   total: number;
   page: number;
   totalPages: number;

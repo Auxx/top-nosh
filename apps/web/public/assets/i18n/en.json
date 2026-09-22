@@ -13,6 +13,9 @@
     },
     "System": {
       "ok": "OK"
+    },
+    "BlockLoaderComponent": {
+      "loading": "Loading..."
     }
   },
   "web": {
@@ -276,7 +279,9 @@
       "columnName": "Name",
       "columnDescription": "Description",
       "columnUpdatedAt": "Updated At",
+      "columnItemCount": "Items",
       "columnActions": "Actions",
+      "emptyItemCount": "Empty",
       "deleteShoppingListAriaLabel": "Delete shopping list",
       "noShoppingLists": "No shopping lists found",
       "paginatorAriaLabel": "Select shopping list page"
@@ -296,7 +301,7 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Optional description",
       "itemsTitle": "Items",
-      "removeAllBought": "Remove all bought items",
+      "removeAllBought": "Remove ticked",
       "dragHandleAriaLabel": "Drag item to reorder",
       "boughtAriaLabel": "Mark item as bought",
       "itemNamePlaceholder": "Item name",

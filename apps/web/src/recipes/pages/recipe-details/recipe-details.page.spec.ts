@@ -170,7 +170,7 @@ describe('RecipeDetailsPage', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const spinner = compiled.querySelector('[data-testid="loading-spinner"]');
+    const spinner = compiled.querySelector('ui-block-loader');
     expect(spinner).toBeTruthy();
     expect(compiled.querySelector('[data-testid="recipe-name"]')).toBeFalsy();
   });

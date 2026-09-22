@@ -32,6 +32,7 @@ describe('ShoppingListPage', () => {
       id: '1',
       name: 'Weekly Groceries',
       description: 'Groceries for the week',
+      itemCount: 3,
       createdAt: '2026-09-01T00:00:00.000Z',
       updatedAt: '2026-09-01T00:00:00.000Z',
       deletedAt: null
@@ -40,6 +41,7 @@ describe('ShoppingListPage', () => {
       id: '2',
       name: 'Party Supplies',
       description: 'Drinks and snacks',
+      itemCount: 0,
       createdAt: '2026-09-01T00:00:00.000Z',
       updatedAt: '2026-09-01T00:00:00.000Z',
       deletedAt: null
@@ -110,6 +112,7 @@ describe('ShoppingListPage', () => {
       'name',
       'description',
       'updatedAt',
+      'itemCount',
       'actions'
     ]);
   });
@@ -119,7 +122,7 @@ describe('ShoppingListPage', () => {
     fixture.detectChanges();
 
     expect(component.isMobile()).toBe(true);
-    expect(component.displayedColumns()).toEqual([ 'name', 'actions' ]);
+    expect(component.displayedColumns()).toEqual([ 'name', 'itemCount', 'actions' ]);
   });
 
   it('should dispatch setPage on pagination page change', () => {
@@ -149,5 +152,14 @@ describe('ShoppingListPage', () => {
   it('should handle onCreateShoppingList and onDeleteShoppingList calls gracefully', () => {
     expect(() => component.onCreateShoppingList()).not.toThrow();
     expect(() => component.onDeleteShoppingList(sampleShoppingLists[0])).not.toThrow();
+  });
+
+  it('should display the item count, or "Empty" when it is zero', () => {
+    const itemCountCells: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
+      '.mat-column-itemCount'
+    );
+
+    expect(itemCountCells[1].textContent?.trim()).toBe('3');
+    expect(itemCountCells[2].textContent?.trim()).toBe('web.ShoppingListPage.emptyItemCount');
   });
 });
