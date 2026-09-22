@@ -157,6 +157,10 @@ table.item-list-table {
     color: var(--mat-sys-on-surface-variant);
   }
 
+  .numeric {
+    text-align: right;
+  }
+
   .item-description-medium {
     max-width: 300px;
     overflow: hidden;
