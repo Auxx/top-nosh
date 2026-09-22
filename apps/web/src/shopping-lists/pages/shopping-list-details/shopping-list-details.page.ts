@@ -2,7 +2,6 @@ import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } fro
 import { CommonModule, Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
   DestroyRef,
@@ -24,7 +23,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { BlockLoaderComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
-import { catchError, debounceTime, map, Observable, of, tap } from 'rxjs';
+import { catchError, debounceTime, map, Observable, of, tap, throwError } from 'rxjs';
 import {
   CreateShoppingListDto,
   ShoppingListCreatedResponse,
@@ -106,8 +105,6 @@ export class ShoppingListDetailsPage implements OnInit {
 
   private readonly shoppingListService = inject(ShoppingListManagementService);
 
-  private readonly cdr = inject(ChangeDetectorRef);
-
   private readonly elementRef = inject(ElementRef);
 
   private readonly titleService = inject(Title);
@@ -165,7 +162,6 @@ export class ShoppingListDetailsPage implements OnInit {
             { emitEvent: false }
           );
           this.updateTitle('');
-          this.cdr.markForCheck();
         }
       });
 
@@ -200,7 +196,6 @@ export class ShoppingListDetailsPage implements OnInit {
   readonly loadShoppingList = (id: string): void => {
     this.isLoading.set(true);
     this.hasError.set(false);
-    this.cdr.markForCheck();
 
     this.shoppingListService
       .getShoppingListById(id)
@@ -237,12 +232,10 @@ export class ShoppingListDetailsPage implements OnInit {
           }
 
           this.isLoading.set(false);
-          this.cdr.markForCheck();
         },
         error: () => {
           this.isLoading.set(false);
           this.hasError.set(true);
-          this.cdr.markForCheck();
         }
       });
   };
@@ -259,7 +252,7 @@ export class ShoppingListDetailsPage implements OnInit {
   };
 
   readonly onBoughtChange = (): void => {
-    this.cdr.markForCheck();
+    // TODO Remove?
   };
 
   readonly onDropActive = (event: CdkDragDrop<FormGroup[]>): void => {
@@ -293,7 +286,6 @@ export class ShoppingListDetailsPage implements OnInit {
       this.itemsFormArray.push(ctrl, { emitEvent: false });
     });
     this.form.markAsDirty();
-    this.cdr.markForCheck();
     if (this.isListNameValid()) {
       this.save().subscribe();
     }
@@ -310,7 +302,6 @@ export class ShoppingListDetailsPage implements OnInit {
     });
 
     this.itemsFormArray.insert(targetIndex, newGroup);
-    this.cdr.markForCheck();
 
     setTimeout(() => {
       const inputs = this.elementRef.nativeElement.querySelectorAll('.item-name-input');
@@ -350,7 +341,6 @@ export class ShoppingListDetailsPage implements OnInit {
     }
 
     this.itemsFormArray.removeAt(currentIndex);
-    this.cdr.markForCheck();
 
     const targetIndex = Math.max(0, currentIndex - 1);
 
@@ -383,7 +373,6 @@ export class ShoppingListDetailsPage implements OnInit {
       }
 
       this.form.markAsDirty();
-      this.cdr.markForCheck();
 
       if (this.isListNameValid()) {
         this.save().subscribe();
@@ -409,7 +398,6 @@ export class ShoppingListDetailsPage implements OnInit {
     }
 
     this.form.markAsDirty();
-    this.cdr.markForCheck();
 
     if (this.isListNameValid()) {
       this.save().subscribe();
@@ -452,7 +440,6 @@ export class ShoppingListDetailsPage implements OnInit {
       });
 
     this.isSaving.set(true);
-    this.cdr.markForCheck();
 
     const currentId = this.currentId();
 
@@ -469,12 +456,10 @@ export class ShoppingListDetailsPage implements OnInit {
           this.form.get('id')?.setValue(res.id, { emitEvent: false });
           this.location.replaceState(`/shopping-lists/${res.id}`);
           this.isSaving.set(false);
-          this.cdr.markForCheck();
         }),
         catchError(err => {
           this.isSaving.set(false);
-          this.cdr.markForCheck();
-          throw err;
+          return throwError(() => err);
         })
       );
     } else {
@@ -484,17 +469,14 @@ export class ShoppingListDetailsPage implements OnInit {
         items: sanitizedItems
       };
 
-      return this.shoppingListService.update(currentId, updateDto).pipe(
-        tap(() => {
-          this.isSaving.set(false);
-          this.cdr.markForCheck();
-        }),
-        catchError(err => {
-          this.isSaving.set(false);
-          this.cdr.markForCheck();
-          throw err;
-        })
-      );
+      return this.shoppingListService
+        .update(currentId, updateDto).pipe(
+          tap(() => this.isSaving.set(false)),
+          catchError(err => {
+            this.isSaving.set(false);
+            return throwError(() => err);
+          })
+        );
     }
   };
 
