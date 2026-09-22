@@ -9,12 +9,3 @@
   gap: var(--dim-x-large);
 }
 
-.loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 1.5rem;
-  gap: 1rem;
-  color: var(--mat-sys-on-surface-variant, #666);
-}

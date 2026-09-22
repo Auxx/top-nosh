@@ -7,11 +7,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
+import { BlockLoaderComponent, DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { FilmStripComponent } from '../../../galleries/components/film-strip/film-strip.component';
 import { CookingModeComponent } from '../../../recipes/components/cooking-mode/cooking-mode.component';
@@ -29,7 +28,7 @@ import { SharedDataService } from '../../services/shared-data/shared-data.servic
     MatChipsModule,
     MatDividerModule,
     MatIconModule,
-    MatProgressSpinnerModule,
+    BlockLoaderComponent,
     PageHeaderComponent,
     MiniBadgeComponent,
     DomainPipe,

@@ -15,9 +15,7 @@
   </ui-page-header>
 
   @if (loading) {
-    <div class="loading-container">
-      <mat-spinner diameter="40"/>
-    </div>
+    <ui-block-loader/>
   } @else if (error) {
     <mat-card appearance="outlined">
       <mat-card-content class="error-content">

@@ -115,7 +115,7 @@ describe('ImportRecipePage', () => {
     fixture.detectChanges();
 
     expect(component.isLoading()).toBe(true);
-    const spinner = fixture.nativeElement.querySelector('[data-testid="loading-spinner"]');
+    const spinner = fixture.nativeElement.querySelector('ui-block-loader');
     expect(spinner).toBeTruthy();
   });
 

@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@ang
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
+import { BlockLoaderComponent } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
     CommonModule,
     MatCardModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
+    BlockLoaderComponent,
     TranslocoDirective
   ],
   templateUrl: './auth-callback.page.html',

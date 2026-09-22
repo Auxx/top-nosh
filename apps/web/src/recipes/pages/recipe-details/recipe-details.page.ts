@@ -12,12 +12,17 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { ConfirmationDialog, DomainPipe, MiniBadgeComponent, PageHeaderComponent } from '@top-nosh/ui';
+import {
+  BlockLoaderComponent,
+  ConfirmationDialog,
+  DomainPipe,
+  MiniBadgeComponent,
+  PageHeaderComponent
+} from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { FilmStripComponent } from '../../../galleries/components/film-strip/film-strip.component';
 import { WakeLockService } from '../../../system/services/wake-lock/wake-lock.service';
@@ -41,7 +46,7 @@ import { RecipeManagementService } from '../../services/recipe-management/recipe
     MatIconModule,
     MatMenuModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule,
+    BlockLoaderComponent,
     MatTooltipModule,
     PageHeaderComponent,
     MiniBadgeComponent,

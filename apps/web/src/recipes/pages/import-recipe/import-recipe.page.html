@@ -5,10 +5,7 @@
 
   <!-- Loading State -->
   @if (loading) {
-    <div class="loading-state" data-testid="loading-spinner">
-      <mat-spinner diameter="48"></mat-spinner>
-      <p>{{ t('loading') }}</p>
-    </div>
+    <ui-block-loader/>
   }
 
   <!-- Error State -->
