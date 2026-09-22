@@ -189,6 +189,7 @@ export class ShoppingListDetailsPage implements OnInit {
 
   private updateTitle(name?: string | null): void {
     const trimmed = name?.trim();
+
     if (trimmed) {
       this.titleService.setTitle(`Top Nosh - ${trimmed}`);
     } else {

@@ -301,7 +301,7 @@
       "descriptionLabel": "Описание",
       "descriptionPlaceholder": "Необязательное описание",
       "itemsTitle": "Товары",
-      "removeAllBought": "Удалить все купленные товары",
+      "removeAllBought": "Удалить купленные",
       "dragHandleAriaLabel": "Перетащите для изменения порядка",
       "boughtAriaLabel": "Отметить как купленное",
       "itemNamePlaceholder": "Название товара",

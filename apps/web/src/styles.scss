@@ -119,6 +119,10 @@ h2 {
 }
 
 h3 {
+  font-weight: 500;
+}
+
+h3 {
   &.subtitle {
     // TODO Remove?
     font-weight: normal;
@@ -171,6 +175,10 @@ table.item-list-table {
   .actions {
     text-align: right;
     white-space: nowrap;
+
+    app-share-recipe-button {
+      display: inline-block;
+    }
   }
 
   .nowrap-item {
@@ -338,7 +346,26 @@ mat-form-field {
     @include mat.form-field-overrides((
             container-vertical-padding: 8px,
             container-height: 40px
-    ))
+    ));
+
+    &.mat-form-field-underlined {
+      .mdc-text-field--outlined {
+        padding-left: var(--dim-small);
+        padding-right: var(--dim-small);
+      }
+
+      .mdc-notched-outline__leading {
+        border-radius: 0;
+        border-left: none;
+        border-top: none;
+      }
+
+      .mdc-notched-outline__trailing {
+        border-radius: 0;
+        border-right: none;
+        border-top: none;
+      }
+    }
   }
 }
 
@@ -375,5 +402,11 @@ mat-form-field {
     .mat-mdc-dialog-surface {
       border-radius: 0;
     }
+  }
+}
+
+input {
+  &.numeric {
+    text-align: right;
   }
 }

@@ -301,7 +301,7 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Optional description",
       "itemsTitle": "Items",
-      "removeAllBought": "Remove all bought items",
+      "removeAllBought": "Remove ticked",
       "dragHandleAriaLabel": "Drag item to reorder",
       "boughtAriaLabel": "Mark item as bought",
       "itemNamePlaceholder": "Item name",
