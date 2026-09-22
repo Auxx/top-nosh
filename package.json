@@ -10,7 +10,9 @@
     "test": "nx run-many --all --target=test --no-tui",
     "serve:api": "nx run api:serve:development",
     "serve:web": "set PORT=5999 && nx run web:serve:development",
-    "samples:recipe-import": "node .junie/helpers/recipe-import/get-recipe-samples.js"
+    "samples:recipe-import": "node .junie/helpers/recipe-import/get-recipe-samples.js",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:generate": "prisma generate"
   },
   "private": true,
   "dependencies": {
