@@ -1,6 +1,6 @@
 {
   "name": "@top-nosh/source",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "format": "dprint fmt",
