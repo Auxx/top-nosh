@@ -105,22 +105,9 @@
             <div class="label">{{ t('preview') }}</div>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
 
-    <!-- Gallery Manager Card -->
-    <app-gallery-manager [galleryId]="formGroup.controls['galleryId']?.value || undefined"
-                         (galleryIdChange)="onGalleryIdChange($event)"/>
-
-    <!-- Share Recipe Card -->
-    @if (recipeId(); as id) {
-      <mat-card class="share-recipe-card" data-testid="share-recipe-card">
-        <mat-card-header>
-          <mat-card-title>{{ t('shareTitle') }}</mat-card-title>
-        </mat-card-header>
-
-        <mat-card-content>
-          <div class="share-recipe-content">
+        @if (recipeId(); as id) {
+          <div class="share-recipe-content grid-12-col-12">
             <mat-checkbox formControlName="isShared" data-testid="share-recipe-checkbox">
               {{ t('sharePublicly') }}
             </mat-checkbox>
@@ -136,12 +123,16 @@
                 {{ url }}
               </a>
 
-              <app-share-recipe-button [recipeId]="id" />
+              <app-share-recipe-button [recipeId]="id"/>
             }
           </div>
-        </mat-card-content>
-      </mat-card>
-    }
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gallery Manager Card -->
+    <app-gallery-manager [galleryId]="formGroup.controls['galleryId']?.value || undefined"
+                         (galleryIdChange)="onGalleryIdChange($event)"/>
 
     <!-- Stages Section -->
     <div>

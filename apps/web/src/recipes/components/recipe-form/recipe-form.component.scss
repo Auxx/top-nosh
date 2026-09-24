@@ -1,3 +1,9 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+}
+
 .recipe-form-content {
   display: flex;
   flex-direction: column;
@@ -8,28 +14,27 @@ mat-card {
   gap: var(--dim-large);
 }
 
-.share-recipe-card {
-  .share-recipe-content {
-    display: grid;
-    gap: var(--dim-large);
-    grid-template-columns: max-content 1fr max-content;
-    align-items: center;
+.share-recipe-content {
+  display: grid;
+  gap: var(--dim-large);
+  grid-template-columns: max-content 1fr max-content;
+  align-items: center;
+  margin-top: var(--dim-large);
 
-    a {
-      justify-self: end;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
+  a {
+    justify-self: end;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
 
-    @media (max-width: 599.98px) {
-      grid-template-columns: 1fr max-content;
-      gap: 0 var(--dim-medium);
+  @media (max-width: 599.98px) {
+    grid-template-columns: 1fr max-content;
+    gap: 0 var(--dim-medium);
 
-      mat-checkbox {
-        grid-column: 1 / span 2;
-      }
+    mat-checkbox {
+      grid-column: 1 / span 2;
     }
   }
 }
@@ -91,7 +96,7 @@ mat-panel-description {
   display: grid;
   grid-template-columns: 20px 1fr 150px 150px 40px;
   gap: var(--dim-x-medium);
-  background-color: var(--mat-sys-surface);
+  background-color: var(--mat-sys-surface-container-low);
 
   &.cdk-drag-preview {
     background-color: var(--mat-sys-surface-container);
@@ -160,4 +165,10 @@ mat-panel-description {
   p {
     margin: 0;
   }
+}
+
+mat-expansion-panel{
+  @include mat.expansion-overrides((
+          container-background-color: var(--mat-sys-surface-container-low)
+  ));
 }
