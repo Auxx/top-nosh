@@ -75,50 +75,20 @@
              (cdkDropListDropped)="onDropActive($event)">
 
           @for (item of activeItems; track item) {
-            <div class="item-row"
-                 cdkDrag
-                 [formGroup]="item">
-
-              <div cdkDragHandle
-                   [attr.aria-label]="t('dragHandleAriaLabel')">
-                <mat-icon>drag_indicator</mat-icon>
-              </div>
-
-              <mat-checkbox formControlName="isBought"
-                            (change)="onBoughtChange()"
-                            [attr.aria-label]="t('boughtAriaLabel')">
-              </mat-checkbox>
-
-              <mat-form-field appearance="outline"
-                              class="item-name-field mat-form-field-empty"
-                              subscriptSizing="dynamic">
-                <input matInput
-                       formControlName="name"
-                       class="item-name-input"
-                       (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
-                       (input)="onItemNameInput(item, $event)"
-                       (keydown.backspace)="onItemNameBackspace(item, $event)"/>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline"
-                              class="item-quantity-field mat-form-field-compact"
-                              subscriptSizing="dynamic">
-                <input matInput
-                       type="number"
-                       min="1"
-                       formControlName="quantity"
-                       [placeholder]="t('itemQuantityPlaceholder')"
-                       class="numeric"/>
-              </mat-form-field>
-
-              <button matIconButton
-                      [attr.aria-label]="t('removeItemAriaLabel')"
-                      class="warn remove-button"
-                      (click)="onRemoveItem(item)">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
+            <ng-container [ngTemplateOutlet]="itemRow"
+                          [ngTemplateOutletContext]="{ isBought: false, item }"/>
           }
+
+          <div class="item-row">
+            <div class="start-spacer"></div>
+
+            <button matButton="text"
+                    class="add-button"
+                    (click)="onAddItem()">
+              <mat-icon>add</mat-icon>
+              Add item
+            </button>
+          </div>
         </div>
       </section>
 
@@ -131,52 +101,58 @@
                (cdkDropListDropped)="onDropCompleted($event)">
 
             @for (item of completedItems; track item) {
-              <div class="item-row bought"
-                   cdkDrag
-                   [formGroup]="item">
-                <div cdkDragHandle
-                     [attr.aria-label]="t('dragHandleAriaLabel')">
-                  <mat-icon>drag_indicator</mat-icon>
-                </div>
-
-                <mat-checkbox formControlName="isBought"
-                              (change)="onBoughtChange()"
-                              [attr.aria-label]="t('boughtAriaLabel')">
-                </mat-checkbox>
-
-                <mat-form-field appearance="outline"
-                                class="item-name-field mat-form-field-empty"
-                                subscriptSizing="dynamic">
-                  <input matInput
-                         formControlName="name"
-                         class="item-name-input"
-                         (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
-                         (input)="onItemNameInput(item, $event)"
-                         (keydown.backspace)="onItemNameBackspace(item, $event)"/>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline"
-                                class="item-quantity-field mat-form-field-compact"
-                                subscriptSizing="dynamic">
-                  <input matInput
-                         type="number"
-                         min="1"
-                         formControlName="quantity"
-                         [placeholder]="t('itemQuantityPlaceholder')"
-                         class="numeric"/>
-                </mat-form-field>
-
-                <button matIconButton
-                        [attr.aria-label]="t('removeItemAriaLabel')"
-                        class="warn remove-button"
-                        (click)="onRemoveItem(item)">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
+              <ng-container [ngTemplateOutlet]="itemRow"
+                            [ngTemplateOutletContext]="{ isBought: true, item }"/>
             }
           </div>
         </section>
       }
     </form>
   }
+
+  <ng-template #itemRow let-isBought="isBought" let-item="item">
+    <div class="item-row"
+         [class.bought]="isBought"
+         cdkDrag
+         [formGroup]="item">
+      <div cdkDragHandle
+           [attr.aria-label]="t('dragHandleAriaLabel')">
+        <mat-icon>drag_indicator</mat-icon>
+      </div>
+
+      <mat-checkbox formControlName="isBought"
+                    (change)="onBoughtChange()"
+                    [attr.aria-label]="t('boughtAriaLabel')">
+      </mat-checkbox>
+
+      <mat-form-field appearance="outline"
+                      class="item-name-field mat-form-field-empty"
+                      subscriptSizing="dynamic">
+        <input matInput
+               formControlName="name"
+               class="item-name-input"
+               (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
+               (input)="onItemNameInput(item, $event)"
+               (keydown.backspace)="onItemNameBackspace(item, $event)"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline"
+                      class="item-quantity-field mat-form-field-compact"
+                      subscriptSizing="dynamic">
+        <input matInput
+               type="number"
+               min="1"
+               formControlName="quantity"
+               [placeholder]="t('itemQuantityPlaceholder')"
+               class="numeric"/>
+      </mat-form-field>
+
+      <button matIconButton
+              [attr.aria-label]="t('removeItemAriaLabel')"
+              class="warn remove-button"
+              (click)="onRemoveItem(item)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </ng-template>
 </ng-container>
