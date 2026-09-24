@@ -8,7 +8,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { InfoCardComponent } from '@top-nosh/ui';
+import { InfoCardComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { forkJoin } from 'rxjs';
 import { GalleryImageItem } from '../../models/gallery.types';
 import { GalleryManagerService } from '../../services/gallery-manager/gallery-manager.service';
@@ -26,7 +26,8 @@ import { GalleryManagerService } from '../../services/gallery-manager/gallery-ma
     CdkDrag,
     CdkDragHandle,
     TranslocoDirective,
-    InfoCardComponent
+    InfoCardComponent,
+    PageHeaderComponent
   ],
   templateUrl: './gallery-manager.component.html',
   styleUrl: './gallery-manager.component.scss',

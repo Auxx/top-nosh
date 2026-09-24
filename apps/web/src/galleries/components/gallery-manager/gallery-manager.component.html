@@ -1,74 +1,80 @@
 <ng-container *transloco="let t; prefix: 'web.GalleryManagerComponent'">
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>{{ t('title') }}</mat-card-title>
-      <mat-card-subtitle>{{ t('subtitle') }}</mat-card-subtitle>
-    </mat-card-header>
+  <ui-page-header [compact]="true">
+    <h2>{{ t('title') }}</h2>
 
-    <mat-card-content>
-      @if (isLoading()) {
-        <div class="gallery-info">
-          <mat-spinner diameter="36"></mat-spinner>
-          <span>{{ t('loadingGallery') }}</span>
+    <div>{{ t('subtitle') }}</div>
+
+    <button matButton
+            type="button"
+            class="browse-files"
+            (click)="fileInput.click()">
+      <mat-icon>cloud_upload</mat-icon>
+      {{ t('browseFiles') }}
+    </button>
+  </ui-page-header>
+
+  @if (isLoading()) {
+    <div class="gallery-info">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>{{ t('loadingGallery') }}</span>
+    </div>
+  }
+
+  @if (images().length > 0) {
+    <div class="gallery-grid"
+         cdkDropList
+         cdkDropListOrientation="mixed"
+         (cdkDropListDropped)="onDropImage($event)">
+
+      @for (image of images(); track image.id) {
+        <div class="gallery-item-card"
+             cdkDrag
+             (click)="onImageClick(image)"
+             (keydown.enter)="onImageClick(image)"
+             (keydown.space)="onImageClick(image)"
+             tabindex="0"
+             role="button"
+             [attr.aria-label]="t('openImageAriaLabel')">
+
+          <img [src]="image.thumbnail.externalUrl"
+               alt="Recipe image"
+               class="gallery-item-img"
+               loading="lazy"/>
+
+          <div class="gallery-item-actions">
+            <button type="button"
+                    mat-icon-button
+                    class="drag-handle-button"
+                    cdkDragHandle
+                    (click)="$event.stopPropagation()"
+                    [attr.aria-label]="t('dragHandleAriaLabel')">
+              <mat-icon>drag_indicator</mat-icon>
+            </button>
+
+            <button type="button"
+                    mat-icon-button
+                    class="delete-image-button"
+                    (click)="onDeleteImage(image.id, $event)"
+                    [attr.aria-label]="t('deleteImageAriaLabel')">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </div>
       }
+    </div>
+  } @else {
+    <div class="gallery-info">
+      <span>{{ t('emptyGallery') }}</span>
+    </div>
+  }
 
-      @if (images().length > 0) {
-        <div class="gallery-grid"
-             cdkDropList
-             cdkDropListOrientation="mixed"
-             (cdkDropListDropped)="onDropImage($event)">
-
-          @for (image of images(); track image.id) {
-            <div class="gallery-item-card"
-                 cdkDrag
-                 (click)="onImageClick(image)"
-                 (keydown.enter)="onImageClick(image)"
-                 (keydown.space)="onImageClick(image)"
-                 tabindex="0"
-                 role="button"
-                 [attr.aria-label]="t('openImageAriaLabel')">
-
-              <img [src]="image.thumbnail.externalUrl"
-                   alt="Recipe image"
-                   class="gallery-item-img"
-                   loading="lazy"/>
-
-              <div class="gallery-item-actions">
-                <button type="button"
-                        mat-icon-button
-                        class="drag-handle-button"
-                        cdkDragHandle
-                        (click)="$event.stopPropagation()"
-                        [attr.aria-label]="t('dragHandleAriaLabel')">
-                  <mat-icon>drag_indicator</mat-icon>
-                </button>
-
-                <button type="button"
-                        mat-icon-button
-                        class="delete-image-button"
-                        (click)="onDeleteImage(image.id, $event)"
-                        [attr.aria-label]="t('deleteImageAriaLabel')">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-          }
-        </div>
-      } @else {
-        <div class="gallery-info">
-          <span>{{ t('emptyGallery') }}</span>
-        </div>
-      }
-
-      @if (isUploading()) {
-        <div>{{ t('uploading') }}</div>
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      }
-    </mat-card-content>
-  </mat-card>
+  @if (isUploading()) {
+    <div>{{ t('uploading') }}</div>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
 
   <ui-info-card icon="cloud_upload"
+                class="upload-card"
                 [dragAndDrop]="true"
                 [isDragging]="isDragging()"
                 (dragover)="onDragOver($event)"

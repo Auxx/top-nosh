@@ -155,9 +155,9 @@ describe('ShoppingListDetailsPage', () => {
       expect(component.currentId()).toBe('list-123');
       expect(component.form.get('name')?.value).toBe('Weekly Groceries');
       expect(component.form.get('description')?.value).toBe('Weekly grocery shopping');
-      expect(component.itemsFormArray.length).toBe(4);
+      expect(component.itemsFormArray.length).toBe(3);
 
-      expect(component.activeItems.length).toBe(3);
+      expect(component.activeItems.length).toBe(2);
       expect(component.completedItems.length).toBe(1);
       expect(component.hasBoughtItems).toBe(true);
     });
@@ -214,7 +214,7 @@ describe('ShoppingListDetailsPage', () => {
 
     it('should remove item when name is deleted to empty and focus previous item', () => {
       jest.useFakeTimers();
-      expect(component.itemsFormArray.length).toBe(4);
+      expect(component.itemsFormArray.length).toBe(3);
       const secondItem = component.itemsFormArray.at(1);
 
       const event = { target: { value: '' } } as unknown as Event;
@@ -222,7 +222,7 @@ describe('ShoppingListDetailsPage', () => {
       jest.advanceTimersByTime(10);
       fixture.detectChanges();
 
-      expect(component.itemsFormArray.length).toBe(3);
+      expect(component.itemsFormArray.length).toBe(2);
       expect(component.itemsFormArray.at(0).get('name')?.value).toBe('Milk');
       expect(component.itemsFormArray.at(1).get('name')?.value).toBe('Apples');
       jest.useRealTimers();
@@ -230,7 +230,7 @@ describe('ShoppingListDetailsPage', () => {
 
     it('should remove item when Backspace is pressed on empty input and move focus to previous item', () => {
       jest.useFakeTimers();
-      expect(component.itemsFormArray.length).toBe(4);
+      expect(component.itemsFormArray.length).toBe(3);
       const thirdItem = component.itemsFormArray.at(2);
 
       const event = { target: { value: '' } } as unknown as Event;
@@ -238,7 +238,7 @@ describe('ShoppingListDetailsPage', () => {
       jest.advanceTimersByTime(10);
       fixture.detectChanges();
 
-      expect(component.itemsFormArray.length).toBe(3);
+      expect(component.itemsFormArray.length).toBe(2);
       expect(component.itemsFormArray.at(1).get('name')?.value).toBe('Bread');
       jest.useRealTimers();
     });
@@ -246,7 +246,7 @@ describe('ShoppingListDetailsPage', () => {
     it('should not remove item when it is the only remaining item in the list', () => {
       component.itemsFormArray.removeAt(2);
       component.itemsFormArray.removeAt(1);
-      expect(component.itemsFormArray.length).toBe(2);
+      expect(component.itemsFormArray.length).toBe(1);
 
       const singleItem = component.itemsFormArray.at(0);
       const event = { target: { value: '' } } as unknown as Event;
@@ -267,7 +267,7 @@ describe('ShoppingListDetailsPage', () => {
       component.onRemoveItem(itemToRemove);
       fixture.detectChanges();
 
-      expect(component.itemsFormArray.length).toBe(3);
+      expect(component.itemsFormArray.length).toBe(2);
       expect(component.itemsFormArray.at(0).get('name')?.value).toBe('Bread');
     });
 
@@ -278,7 +278,7 @@ describe('ShoppingListDetailsPage', () => {
       fixture.detectChanges();
 
       expect(component.completedItems.length).toBe(0);
-      expect(component.itemsFormArray.length).toBe(3);
+      expect(component.itemsFormArray.length).toBe(2);
       expect(component.itemsFormArray.controls.every(c => !c.get('isBought')?.value)).toBe(true);
       expect(component.hasBoughtItems).toBe(false);
     });

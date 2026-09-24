@@ -348,6 +348,13 @@ mat-form-field {
             container-height: 40px
     ));
 
+    &.mat-form-field-compact {
+      .mdc-text-field--outlined {
+        padding-left: var(--dim-small);
+        padding-right: var(--dim-small);
+      }
+    }
+
     &.mat-form-field-underlined {
       .mdc-text-field--outlined {
         padding-left: var(--dim-small);
@@ -364,6 +371,23 @@ mat-form-field {
         border-radius: 0;
         border-right: none;
         border-top: none;
+      }
+    }
+
+    &.mat-form-field-empty {
+      .mdc-text-field--outlined {
+        padding-left: var(--dim-small);
+        padding-right: var(--dim-small);
+      }
+
+      .mdc-notched-outline__leading {
+        border-radius: 0;
+        border: none;
+      }
+
+      .mdc-notched-outline__trailing {
+        border-radius: 0;
+        border: none;
       }
     }
   }

@@ -38,8 +38,11 @@ section {
 .item-row {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--dim-medium);
+
+  .start-spacer {
+    width: 61px;
+  }
 
   &.cdk-drag-preview {
     background-color: var(--mat-sys-surface-container);
@@ -74,9 +77,20 @@ section {
     }
   }
 
-  &.bought {
-    //opacity: 0.75;
+  .remove-button {
+    @media (max-width: 599.98px) {
+      display: none;
+    }
+  }
 
+  // TODO Do we want to hide it on desktop?
+  //.add-button {
+  //  @media (min-width: 600px) {
+  //    display: none;
+  //  }
+  //}
+
+  &.bought {
     .item-name-input {
       text-decoration: line-through;
       color: var(--mat-sys-on-surface-variant, #666);
