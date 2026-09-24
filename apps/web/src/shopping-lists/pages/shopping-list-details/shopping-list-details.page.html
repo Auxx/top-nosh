@@ -90,7 +90,7 @@
               </mat-checkbox>
 
               <mat-form-field appearance="outline"
-                              class="item-name-field mat-form-field-underlined"
+                              class="item-name-field mat-form-field-empty"
                               subscriptSizing="dynamic">
                 <input matInput
                        formControlName="name"
@@ -101,7 +101,7 @@
               </mat-form-field>
 
               <mat-form-field appearance="outline"
-                              class="item-quantity-field mat-form-field-underlined"
+                              class="item-quantity-field mat-form-field-compact"
                               subscriptSizing="dynamic">
                 <input matInput
                        type="number"
@@ -113,7 +113,7 @@
 
               <button matIconButton
                       [attr.aria-label]="t('removeItemAriaLabel')"
-                      class="warn"
+                      class="warn remove-button"
                       (click)="onRemoveItem(item)">
                 <mat-icon>close</mat-icon>
               </button>
@@ -145,7 +145,7 @@
                 </mat-checkbox>
 
                 <mat-form-field appearance="outline"
-                                class="item-name-field mat-form-field-underlined"
+                                class="item-name-field mat-form-field-empty"
                                 subscriptSizing="dynamic">
                   <input matInput
                          formControlName="name"
@@ -156,19 +156,19 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline"
-                                class="item-quantity-field mat-form-field-underlined"
+                                class="item-quantity-field mat-form-field-compact"
                                 subscriptSizing="dynamic">
                   <input matInput
                          type="number"
                          min="1"
                          formControlName="quantity"
                          [placeholder]="t('itemQuantityPlaceholder')"
-                         class="item-quantity-input"/>
+                         class="numeric"/>
                 </mat-form-field>
 
                 <button matIconButton
                         [attr.aria-label]="t('removeItemAriaLabel')"
-                        class="warn"
+                        class="warn remove-button"
                         (click)="onRemoveItem(item)">
                   <mat-icon>close</mat-icon>
                 </button>

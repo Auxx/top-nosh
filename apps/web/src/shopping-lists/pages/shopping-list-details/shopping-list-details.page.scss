@@ -74,9 +74,19 @@ section {
     }
   }
 
-  &.bought {
-    //opacity: 0.75;
+  .remove-button {
+    @media (max-width: 599.98px) {
+      display: none;
+    }
+  }
 
+  .add-button {
+    @media (min-width: 600px) {
+      display: none;
+    }
+  }
+
+  &.bought {
     .item-name-input {
       text-decoration: line-through;
       color: var(--mat-sys-on-surface-variant, #666);
