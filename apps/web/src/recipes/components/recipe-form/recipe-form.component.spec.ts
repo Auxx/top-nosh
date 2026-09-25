@@ -3,7 +3,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { CuisinesCategoriesResponse } from '../../models/recipe-list.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
@@ -159,7 +159,7 @@ describe('RecipeFormComponent', () => {
     expect(recipeFormComponent.filteredCategories()).toEqual([ 'Pizza' ]);
   });
 
-  it('should add, populate, and remove stages', () => {
+  it('should add, populate, and remove stages when confirmed', () => {
     expect(recipeFormComponent.getStagesArray().length).toBe(0);
 
     recipeFormComponent.addStage();
@@ -169,14 +169,29 @@ describe('RecipeFormComponent', () => {
     stageGroup.get('name')?.setValue('Sauce Prep');
     expect(stageGroup.get('name')?.value).toBe('Sauce Prep');
 
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(true)) });
+
     const fakeEvent = { stopPropagation: jest.fn() } as unknown as Event;
     recipeFormComponent.removeStage(fakeEvent, 0);
 
     expect(fakeEvent.stopPropagation).toHaveBeenCalled();
+    expect(dialogMock.open).toHaveBeenCalled();
     expect(recipeFormComponent.getStagesArray().length).toBe(0);
   });
 
-  it('should add and remove cooking steps inside a stage', () => {
+  it('should not remove a stage when confirmation is cancelled', () => {
+    recipeFormComponent.addStage();
+
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(false)) });
+
+    const fakeEvent = { stopPropagation: jest.fn() } as unknown as Event;
+    recipeFormComponent.removeStage(fakeEvent, 0);
+
+    expect(fakeEvent.stopPropagation).toHaveBeenCalled();
+    expect(recipeFormComponent.getStagesArray().length).toBe(1);
+  });
+
+  it('should add and remove cooking steps inside a stage when confirmed', () => {
     recipeFormComponent.addStage();
     expect(recipeFormComponent.getStepsArray(0).length).toBe(0);
 
@@ -189,11 +204,26 @@ describe('RecipeFormComponent', () => {
 
     expect(stepGroup.valid).toBe(true);
 
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(true)) });
+
     recipeFormComponent.removeStep(0, 0);
+
+    expect(dialogMock.open).toHaveBeenCalled();
     expect(recipeFormComponent.getStepsArray(0).length).toBe(0);
   });
 
-  it('should add and remove ingredients inside a stage', () => {
+  it('should not remove a cooking step when confirmation is cancelled', () => {
+    recipeFormComponent.addStage();
+    recipeFormComponent.addStep(0);
+
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(false)) });
+
+    recipeFormComponent.removeStep(0, 0);
+
+    expect(recipeFormComponent.getStepsArray(0).length).toBe(1);
+  });
+
+  it('should add and remove ingredients inside a stage when confirmed', () => {
     recipeFormComponent.addStage();
     expect(recipeFormComponent.getIngredientsArray(0).length).toBe(0);
 
@@ -207,8 +237,23 @@ describe('RecipeFormComponent', () => {
 
     expect(ingGroup.valid).toBe(true);
 
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(true)) });
+
     recipeFormComponent.removeIngredient(0, 0);
+
+    expect(dialogMock.open).toHaveBeenCalled();
     expect(recipeFormComponent.getIngredientsArray(0).length).toBe(0);
+  });
+
+  it('should not remove an ingredient when confirmation is cancelled', () => {
+    recipeFormComponent.addStage();
+    recipeFormComponent.addIngredient(0);
+
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(false)) });
+
+    recipeFormComponent.removeIngredient(0, 0);
+
+    expect(recipeFormComponent.getIngredientsArray(0).length).toBe(1);
   });
 
   it('should include TSP and TBSP in unitOptions', () => {

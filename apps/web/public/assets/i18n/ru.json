@@ -181,7 +181,13 @@
       "removeStepAriaLabel": "Удалить шаг",
       "emptySteps": "На этом этапе нет шагов приготовления. Нажмите «Шаг», чтобы добавить.",
       "emptyStages": "Этапы приготовления еще не добавлены. Нажмите «Добавить этап» выше, чтобы структурировать рецепт.",
-      "preview": "Предпросмотр"
+      "preview": "Предпросмотр",
+      "removeStageConfirmTitle": "Удалить этап",
+      "removeStageConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?",
+      "removeStepConfirmTitle": "Удалить шаг",
+      "removeStepConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?",
+      "removeIngredientConfirmTitle": "Удалить ингредиент",
+      "removeIngredientConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?"
     },
     "ShareRecipeButtonComponent": {
       "shareAriaLabel": "Поделиться рецептом",

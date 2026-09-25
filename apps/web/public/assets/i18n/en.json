@@ -181,7 +181,13 @@
       "removeStepAriaLabel": "Remove Step",
       "emptySteps": "No cooking steps in this stage. Click \"Add Step\" to add one.",
       "emptyStages": "No cooking stages added yet. Click \"Add Stage\" above to begin structuring your recipe.",
-      "preview": "Preview"
+      "preview": "Preview",
+      "removeStageConfirmTitle": "Remove Stage",
+      "removeStageConfirmContent": "Are you sure you want to remove \"{{ name }}\"?",
+      "removeStepConfirmTitle": "Remove Step",
+      "removeStepConfirmContent": "Are you sure you want to remove \"{{ name }}\"?",
+      "removeIngredientConfirmTitle": "Remove Ingredient",
+      "removeIngredientConfirmContent": "Are you sure you want to remove \"{{ name }}\"?"
     },
     "ShareRecipeButtonComponent": {
       "shareAriaLabel": "Share recipe",
