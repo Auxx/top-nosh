@@ -12,7 +12,9 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { map } from 'rxjs';
 import { ShoppingListItem } from '../../models/shopping-list.types';
-import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
+import {
+  ShoppingListManagementService
+} from '../../services/shopping-list-management/shopping-list-management.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -59,15 +61,11 @@ export class ShoppingListPage implements OnInit {
     this.shoppingListService.reloadShoppingLists();
   }
 
-  readonly onPageChange = (event: PageEvent): void => {
-    this.shoppingListService.setPage(event.pageIndex + 1);
-  };
+  readonly onPageChange = (event: PageEvent) => this.shoppingListService.setPage(event.pageIndex + 1);
 
-  readonly onCreateShoppingList = (): void => {
-    this.router.navigate([ '/shopping-lists', 'new' ]);
-  };
+  readonly onCreateShoppingList = () => this.router.navigate([ '/shopping-lists', 'new' ]);
 
-  readonly onDeleteShoppingList = (item: ShoppingListItem): void => {
-    void item;
+  readonly onDeleteShoppingList = (item: ShoppingListItem) => {
+    // TODO Implement
   };
 }
