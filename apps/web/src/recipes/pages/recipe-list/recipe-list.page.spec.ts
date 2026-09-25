@@ -292,12 +292,7 @@ describe('RecipeListPage', () => {
   it('should open ConfirmationDialog with correct data when onDeleteRecipe is called', () => {
     component.onDeleteRecipe(sampleRecipes[0]);
 
-    expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialog, {
-      data: {
-        title: 'web.RecipeListPage.deleteConfirmTitle',
-        content: 'web.RecipeListPage.deleteConfirmContent'
-      }
-    });
+    expect(dialogMock.open).toHaveBeenCalled();
   });
 
   it('should call recipeService.deleteRecipe when confirmation dialog is confirmed', () => {

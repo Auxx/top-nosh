@@ -1,7 +1,9 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { provideRouter, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { ConfirmationDialog } from '@top-nosh/ui';
+import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { PaginatedShoppingListResponse, ShoppingListItem } from '../../models/shopping-list.types';
 import {
@@ -21,10 +23,15 @@ describe('ShoppingListPage', () => {
     shoppingLists: jest.Mock;
     setPage: jest.Mock;
     reloadShoppingLists: jest.Mock;
+    deleteShoppingList: jest.Mock;
   };
 
   let breakpointObserverMock: {
     observe: jest.Mock;
+  };
+
+  let dialogMock: {
+    open: jest.Mock;
   };
 
   const sampleShoppingLists: ShoppingListItem[] = [
@@ -61,11 +68,18 @@ describe('ShoppingListPage', () => {
     shoppingListServiceMock = {
       shoppingLists: jest.fn().mockReturnValue(mockShoppingLists$.asObservable()),
       setPage: jest.fn(),
-      reloadShoppingLists: jest.fn()
+      reloadShoppingLists: jest.fn(),
+      deleteShoppingList: jest.fn()
     };
 
     breakpointObserverMock = {
       observe: jest.fn().mockReturnValue(mockBreakpoint$.asObservable())
+    };
+
+    dialogMock = {
+      open: jest.fn().mockReturnValue({
+        afterClosed: jest.fn().mockReturnValue(of(true))
+      })
     };
 
     await TestBed.configureTestingModule({
@@ -76,7 +90,8 @@ describe('ShoppingListPage', () => {
       providers: [
         provideRouter([]),
         { provide: ShoppingListManagementService, useValue: shoppingListServiceMock },
-        { provide: BreakpointObserver, useValue: breakpointObserverMock }
+        { provide: BreakpointObserver, useValue: breakpointObserverMock },
+        { provide: MatDialog, useValue: dialogMock }
       ]
     }).compileComponents();
 
@@ -149,9 +164,31 @@ describe('ShoppingListPage', () => {
     expect(emptyState.textContent?.trim()).toContain('ShoppingListPage.noShoppingLists');
   });
 
-  it('should handle onCreateShoppingList and onDeleteShoppingList calls gracefully', () => {
+  it('should handle onCreateShoppingList calls gracefully', () => {
     expect(() => component.onCreateShoppingList()).not.toThrow();
-    expect(() => component.onDeleteShoppingList(sampleShoppingLists[0])).not.toThrow();
+  });
+
+  it('should open ConfirmationDialog with correct data when onDeleteShoppingList is called', () => {
+    component.onDeleteShoppingList(sampleShoppingLists[0]);
+    expect(dialogMock.open).toHaveBeenCalled();
+  });
+
+  it('should call shoppingListService.deleteShoppingList when confirmation dialog is confirmed', () => {
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(true)) });
+    component.onDeleteShoppingList(sampleShoppingLists[0]);
+    expect(shoppingListServiceMock.deleteShoppingList).toHaveBeenCalledWith('1');
+  });
+
+  it('should not call shoppingListService.deleteShoppingList when confirmation dialog is cancelled', () => {
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(false)) });
+    component.onDeleteShoppingList(sampleShoppingLists[0]);
+    expect(shoppingListServiceMock.deleteShoppingList).not.toHaveBeenCalled();
+  });
+
+  it('should not call shoppingListService.deleteShoppingList when confirmation dialog is dismissed with undefined', () => {
+    dialogMock.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(undefined)) });
+    component.onDeleteShoppingList(sampleShoppingLists[0]);
+    expect(shoppingListServiceMock.deleteShoppingList).not.toHaveBeenCalled();
   });
 
   it('should display the item count, or "Empty" when it is zero', () => {

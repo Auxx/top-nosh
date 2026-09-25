@@ -284,7 +284,9 @@
       "emptyItemCount": "Empty",
       "deleteShoppingListAriaLabel": "Delete shopping list",
       "noShoppingLists": "No shopping lists found",
-      "paginatorAriaLabel": "Select shopping list page"
+      "paginatorAriaLabel": "Select shopping list page",
+      "deleteConfirmTitle": "Delete Shopping List",
+      "deleteConfirmContent": "Are you sure you want to delete \"{{ name }}\"?"
     },
     "ShoppingListDetailsPage": {
       "titleEdit": "Edit Shopping List",

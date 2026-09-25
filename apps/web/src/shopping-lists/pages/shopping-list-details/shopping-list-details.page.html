@@ -80,8 +80,6 @@
           }
 
           <div class="item-row">
-<!--            <div class="start-spacer"></div>-->
-
             <button matButton="text"
                     class="add-button"
                     (click)="onAddItem()">
@@ -131,6 +129,7 @@
         <input matInput
                formControlName="name"
                class="item-name-input"
+               enterkeyhint="enter"
                (keydown.enter)="$event.preventDefault(); onEnterItem(item)"
                (input)="onItemNameInput(item, $event)"
                (keydown.backspace)="onItemNameBackspace(item, $event)"/>

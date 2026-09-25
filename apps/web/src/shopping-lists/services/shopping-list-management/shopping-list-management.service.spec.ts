@@ -87,6 +87,7 @@ describe('ShoppingListManagementService', () => {
     expect(Object.prototype.hasOwnProperty.call(service, 'update')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'getShoppingListById')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(service, 'addToShoppingList')).toBe(true);
+    expect(Object.prototype.hasOwnProperty.call(service, 'deleteShoppingList')).toBe(true);
   });
 
   it('should return default filters with page 1 and ensure immutability', () => {
@@ -432,6 +433,60 @@ describe('ShoppingListManagementService', () => {
 
       const updateReq = httpTesting.expectOne('/shopping-lists/123');
       updateReq.flush({ message: 'Server Error' }, { status: 500, statusText: 'Server Error' });
+    });
+  });
+
+  describe('deleteShoppingList', () => {
+    it('should delete shopping list by id, reload shopping lists, and emit true', done => {
+      let listCalls = 0;
+      let recentCalls = 0;
+
+      service.shoppingLists().subscribe(() => {
+        listCalls++;
+      });
+      service.recentShoppingLists().subscribe(() => {
+        recentCalls++;
+      });
+
+      const initialListReq = httpTesting.expectOne('/shopping-lists?page=1');
+      initialListReq.flush(mockShoppingListsResponse);
+
+      const initialRecentReq = httpTesting.expectOne('/shopping-lists/recent');
+      initialRecentReq.flush([]);
+
+      service.deleteShoppingList('123').subscribe(result => {
+        expect(result).toBe(true);
+        done();
+      });
+
+      const deleteReq = httpTesting.expectOne('/shopping-lists/123');
+      expect(deleteReq.request.method).toBe('DELETE');
+      deleteReq.flush({ message: 'Shopping list deleted successfully' });
+
+      const reloadListReq = httpTesting.expectOne('/shopping-lists?page=1');
+      reloadListReq.flush(mockShoppingListsResponse);
+
+      const reloadRecentReq = httpTesting.expectOne('/shopping-lists/recent');
+      reloadRecentReq.flush([]);
+
+      expect(listCalls).toBe(2);
+      expect(recentCalls).toBe(2);
+    });
+
+    it('should propagate error when deleteShoppingList fails without reloading shopping lists', done => {
+      service.deleteShoppingList('999').subscribe({
+        next: () => fail('should have failed with 500 error'),
+        error: error => {
+          expect(error.status).toBe(500);
+          done();
+        }
+      });
+
+      const deleteReq = httpTesting.expectOne('/shopping-lists/999');
+      expect(deleteReq.request.method).toBe('DELETE');
+      deleteReq.flush('Internal Server Error', { status: 500, statusText: 'Internal Server Error' });
+
+      httpTesting.expectNone('/shopping-lists?page=1');
     });
   });
 });
