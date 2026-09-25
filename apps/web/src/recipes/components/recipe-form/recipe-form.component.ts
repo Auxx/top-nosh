@@ -160,30 +160,19 @@ export class RecipeFormComponent implements OnInit {
   readonly getIngredientsArray = (stageIndex: number): FormArray =>
     (this.getStagesArray().at(stageIndex) as FormGroup).controls['ingredients'] as FormArray;
 
-  readonly addStage = (): void => {
-    this.getStagesArray().push(this.createStageGroup());
-  };
+  readonly addStage = () => this.getStagesArray().push(this.createStageGroup());
 
-  readonly removeStage = (event: Event, stageIndex: number): void => {
-    event.stopPropagation();
-    this.getStagesArray().removeAt(stageIndex);
-  };
+  readonly removeStage = (stageIndex: number) => this.getStagesArray().removeAt(stageIndex);
 
-  readonly addStep = (stageIndex: number): void => {
-    this.getStepsArray(stageIndex).push(this.createStepGroup());
-  };
+  readonly addStep = (stageIndex: number) => this.getStepsArray(stageIndex).push(this.createStepGroup());
 
-  readonly removeStep = (stageIndex: number, stepIndex: number): void => {
-    this.getStepsArray(stageIndex).removeAt(stepIndex);
-  };
+  readonly removeStep = (stageIndex: number, stepIndex: number) => this.getStepsArray(stageIndex).removeAt(stepIndex);
 
-  readonly addIngredient = (stageIndex: number): void => {
+  readonly addIngredient = (stageIndex: number) =>
     this.getIngredientsArray(stageIndex).push(this.createIngredientGroup());
-  };
 
-  readonly removeIngredient = (stageIndex: number, ingredientIndex: number): void => {
+  readonly removeIngredient = (stageIndex: number, ingredientIndex: number) =>
     this.getIngredientsArray(stageIndex).removeAt(ingredientIndex);
-  };
 
   readonly onDropStage = (event: CdkDragDrop<unknown[]>): void => {
     moveItemInArray(this.getStagesArray().controls, event.previousIndex, event.currentIndex);
