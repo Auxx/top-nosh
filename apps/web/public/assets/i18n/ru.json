@@ -284,7 +284,9 @@
       "emptyItemCount": "Пусто",
       "deleteShoppingListAriaLabel": "Удалить список покупок",
       "noShoppingLists": "Списки покупок не найдены",
-      "paginatorAriaLabel": "Выбрать страницу списков покупок"
+      "paginatorAriaLabel": "Выбрать страницу списков покупок",
+      "deleteConfirmTitle": "Удалить список покупок",
+      "deleteConfirmContent": "Вы уверены, что хотите удалить «{{ name }}»?"
     },
     "ShoppingListDetailsPage": {
       "titleEdit": "Редактировать список покупок",

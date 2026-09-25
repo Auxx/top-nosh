@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   CreateShoppingListDto,
   defaultShoppingListFilters,
+  DeleteShoppingListResponse,
   PaginatedShoppingListResponse,
   ShoppingListCreatedResponse,
   ShoppingListDetails,
@@ -98,4 +99,12 @@ export class ShoppingListManagementService {
         return true;
       })
     );
+
+  readonly deleteShoppingList = (id: string): Observable<boolean> =>
+    this.http
+      .delete<DeleteShoppingListResponse>(`/shopping-lists/${id}`)
+      .pipe(
+        tap(() => this.reloadShoppingLists()),
+        map(() => true)
+      );
 }

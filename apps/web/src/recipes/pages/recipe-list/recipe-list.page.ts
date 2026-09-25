@@ -213,8 +213,8 @@ export class RecipeListPage {
     this.dialog
       .open(ConfirmationDialog, {
         data: {
-          title: this.deleteConfirmTitle(),
-          content: this.deleteConfirmContent()
+          title: this.deleteConfirmTitle,
+          content: this.deleteConfirmContent
         }
       })
       .afterClosed()

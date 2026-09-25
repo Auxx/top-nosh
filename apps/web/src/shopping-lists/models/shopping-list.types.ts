@@ -45,6 +45,10 @@ export interface ShoppingListCreatedResponse {
   id: string;
 }
 
+export interface DeleteShoppingListResponse {
+  message: string;
+}
+
 export interface CreateShoppingListItemDto {
   name: string;
   quantity: number;

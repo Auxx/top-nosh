@@ -292,7 +292,7 @@ describe('RecipeFormComponent', () => {
       hostComponent.recipeId.set(undefined);
       fixture.detectChanges();
 
-      const shareCard = fixture.nativeElement.querySelector('[data-testid="share-recipe-card"]');
+      const shareCard = fixture.nativeElement.querySelector('.share-recipe-content');
       expect(shareCard).toBeNull();
     });
 
@@ -300,7 +300,7 @@ describe('RecipeFormComponent', () => {
       hostComponent.recipeId.set('recipe-abc-123');
       fixture.detectChanges();
 
-      const shareCard = fixture.nativeElement.querySelector('[data-testid="share-recipe-card"]');
+      const shareCard = fixture.nativeElement.querySelector('.share-recipe-content');
       expect(shareCard).toBeTruthy();
     });
 
