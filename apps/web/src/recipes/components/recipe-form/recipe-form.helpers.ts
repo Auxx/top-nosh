@@ -5,7 +5,7 @@ import { RecipeDetails } from '../../models/recipe-details.types';
 
 export function createStepGroup(
   step?: { id?: string | null; name?: string | null; description?: string | null; } | null
-): FormGroup {
+) {
   return new FormGroup({
     id: new FormControl<string | null>(step?.id ?? null),
     name: new FormControl<string>(step?.name ?? '', [ Validators.required ]),
@@ -17,7 +17,7 @@ export function createIngredientGroup(
   ingredient?:
     | { id?: string | null; name?: string | null; quantity?: number | null; unit?: IngredientUnit | null; }
     | null
-): FormGroup {
+) {
   return new FormGroup({
     id: new FormControl<string | null>(ingredient?.id ?? null),
     name: new FormControl<string>(ingredient?.name ?? '', [ Validators.required ]),
@@ -35,18 +35,18 @@ export function createStageGroup(
       | Array<{ id?: string | null; name?: string | null; quantity?: number | null; unit?: IngredientUnit | null; }>
       | null;
   } | null
-): FormGroup {
+) {
   return new FormGroup({
     id: new FormControl<string | null>(stage?.id ?? null),
     name: new FormControl<string>(stage?.name ?? '', [ Validators.required ]),
-    steps: new FormArray<FormGroup>((stage?.steps || []).map(step => createStepGroup(step))),
-    ingredients: new FormArray<FormGroup>((stage?.ingredients || []).map(ing => createIngredientGroup(ing)))
+    steps: new FormArray((stage?.steps || []).map(step => createStepGroup(step))),
+    ingredients: new FormArray((stage?.ingredients || []).map(ing => createIngredientGroup(ing)))
   });
 }
 
 export function createRecipeForm(
   recipe?: RecipeDetails | ImportedRecipeResponse | null
-): FormGroup {
+) {
   const isShared = recipe && 'isShared' in recipe ? Boolean(recipe.isShared) : false;
 
   return new FormGroup({
@@ -58,7 +58,7 @@ export function createRecipeForm(
     source: new FormControl<string>(recipe?.source ?? ''),
     isShared: new FormControl<boolean>(isShared),
     galleryId: new FormControl<string | null>(recipe?.galleryId ?? null),
-    stages: new FormArray<FormGroup>((recipe?.stages || []).map(stage => createStageGroup(stage)))
+    stages: new FormArray((recipe?.stages || []).map(stage => createStageGroup(stage)))
   });
 }
 

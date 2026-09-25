@@ -100,7 +100,7 @@
 
           <div class="grid-12-col-6 markdown-preview">
             <div class="scroller">
-              <remark [markdown]="formGroup.controls['description'].value"/>
+              <remark [markdown]="formGroup.controls.description.value || ''"/>
             </div>
             <div class="label">{{ t('preview') }}</div>
           </div>
@@ -150,14 +150,14 @@
         </button>
       </ui-page-header>
 
-      @let stages = getStagesArray();
+      @let stages = formGroup.controls.stages;
 
       @if (stages.length > 0) {
         <div cdkDropList (cdkDropListDropped)="onDropStage($event)">
           <mat-accordion multi="true">
-            @for (stageControl of stages.controls; track stageIndex; let stageIndex = $index) {
+            @for (stageControl of stages.controls; track stageControl; let stageIndex = $index) {
               <mat-expansion-panel cdkDrag
-                                   [formGroup]="$any(stageControl)"
+                                   [formGroup]="stageControl"
                                    [expanded]="true">
                 <mat-expansion-panel-header>
                   <mat-panel-title>
@@ -169,7 +169,7 @@
                       {{
                         t('stageTitle', {
                           index: stageIndex + 1,
-                          name: stageControl.get('name')?.value || t('untitledStage')
+                          name: stageControl.controls.name.value || t('untitledStage')
                         })
                       }}
                     </span>
@@ -192,7 +192,7 @@
 
                     <input matInput formControlName="name" [placeholder]="t('stageNamePlaceholder')" required/>
 
-                    <mat-error *uiWhenError="$any(stageControl).controls.name; errorCode: 'required'">
+                    <mat-error *uiWhenError="stageControl.controls.name; errorCode: 'required'">
                       {{ t('stageNameRequired') }}
                     </mat-error>
                   </mat-form-field>
@@ -216,15 +216,15 @@
                       </button>
                     </ui-page-header>
 
-                    @let ingredients = getIngredientsArray(stageIndex);
+                    @let ingredients = stageControl.controls.ingredients;
 
                     @if (ingredients.length > 0) {
                       <div cdkDropList
                            (cdkDropListDropped)="onDropIngredient($event, stageIndex)"
                            class="items-drop-list">
-                        @for (ingredientControl of ingredients.controls; track ingIndex; let ingIndex = $index) {
+                        @for (ingredientControl of ingredients.controls; track ingredientControl; let ingIndex = $index) {
                           <div cdkDrag
-                               [formGroup]="$any(ingredientControl)"
+                               [formGroup]="ingredientControl"
                                class="item-row">
                             <span cdkDragHandle class="drag-handle-wrapper">
                               <mat-icon class="drag-handle-icon">drag_indicator</mat-icon>
@@ -237,7 +237,7 @@
                                      formControlName="name"
                                      [placeholder]="t('ingredientNamePlaceholder')"/>
 
-                              <mat-error *uiWhenError="$any(ingredientControl).controls.name; errorCode: 'required'">
+                              <mat-error *uiWhenError="ingredientControl.controls.name; errorCode: 'required'">
                                 {{ t('ingredientNameRequired') }}
                               </mat-error>
                             </mat-form-field>
@@ -252,11 +252,11 @@
                                      [placeholder]="t('quantityPlaceholder')"/>
 
                               <mat-error
-                                *uiWhenError="$any(ingredientControl).controls.quantity; errorCode: 'required'">
+                                *uiWhenError="ingredientControl.controls.quantity; errorCode: 'required'">
                                 {{ t('quantityRequired') }}
                               </mat-error>
 
-                              <mat-error *uiWhenError="$any(ingredientControl).controls.quantity; errorCode: 'min'">
+                              <mat-error *uiWhenError="ingredientControl.controls.quantity; errorCode: 'min'">
                                 {{ t('quantityMin') }}
                               </mat-error>
                             </mat-form-field>
@@ -272,7 +272,7 @@
                                 }
                               </mat-select>
 
-                              <mat-error *uiWhenError="$any(ingredientControl).controls.unit; errorCode: 'required'">
+                              <mat-error *uiWhenError="ingredientControl.controls.unit; errorCode: 'required'">
                                 {{ t('unitRequired') }}
                               </mat-error>
                             </mat-form-field>
@@ -320,9 +320,9 @@
                       <div cdkDropList
                            (cdkDropListDropped)="onDropStep($event, stageIndex)"
                            class="items-drop-list">
-                        @for (stepControl of steps.controls; track stepIndex; let stepIndex = $index) {
+                        @for (stepControl of steps.controls; track stepControl; let stepIndex = $index) {
                           <div cdkDrag
-                               [formGroup]="$any(stepControl)"
+                               [formGroup]="stepControl"
                                class="item-row">
                             <span cdkDragHandle class="drag-handle-wrapper">
                               <mat-icon class="drag-handle-icon">drag_indicator</mat-icon>
@@ -335,7 +335,7 @@
                                      formControlName="name"
                                      [placeholder]="t('stepTitlePlaceholder')"/>
 
-                              <mat-error *uiWhenError="$any(stepControl).controls.name; errorCode: 'required'">
+                              <mat-error *uiWhenError="stepControl.controls.name; errorCode: 'required'">
                                 {{ t('stepTitleRequired') }}
                               </mat-error>
                             </mat-form-field>

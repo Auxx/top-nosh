@@ -1,26 +1,37 @@
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+  signal
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslocoDirective } from '@jsverse/transloco';
-import { InfoCardComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
+import { ConfirmationDialog, InfoCardComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { buildRecipeShareUrl } from '../share-recipe-button/share-recipe-button.helpers';
-import { createIngredientGroup, createStageGroup, createStepGroup } from './recipe-form.helpers';
+import { createIngredientGroup, createRecipeForm, createStageGroup, createStepGroup } from './recipe-form.helpers';
 
 @Component({
   selector: 'app-recipe-form',
@@ -56,7 +67,40 @@ export class RecipeFormComponent implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly form = input.required<FormGroup>();
+  private readonly dialog = inject(MatDialog);
+
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  private readonly removeStageName = signal({ name: '' });
+
+  private readonly removeStageConfirmTitle = translateSignal('web.RecipeFormComponent.removeStageConfirmTitle');
+
+  private readonly removeStageConfirmContent = translateSignal(
+    'web.RecipeFormComponent.removeStageConfirmContent',
+    this.removeStageName
+  );
+
+  private readonly removeStepName = signal({ name: '' });
+
+  private readonly removeStepConfirmTitle = translateSignal('web.RecipeFormComponent.removeStepConfirmTitle');
+
+  private readonly removeStepConfirmContent = translateSignal(
+    'web.RecipeFormComponent.removeStepConfirmContent',
+    this.removeStepName
+  );
+
+  private readonly removeIngredientName = signal({ name: '' });
+
+  private readonly removeIngredientConfirmTitle = translateSignal(
+    'web.RecipeFormComponent.removeIngredientConfirmTitle'
+  );
+
+  private readonly removeIngredientConfirmContent = translateSignal(
+    'web.RecipeFormComponent.removeIngredientConfirmContent',
+    this.removeIngredientName
+  );
+
+  readonly form = input.required<ReturnType<typeof createRecipeForm>>();
 
   readonly isSubmitting = input.required<boolean>();
 
@@ -152,37 +196,84 @@ export class RecipeFormComponent implements OnInit {
 
   readonly createStageGroup = (name = ''): FormGroup => createStageGroup({ name });
 
-  readonly getStagesArray = (): FormArray => this.form().controls['stages'] as FormArray;
+  readonly getStagesArray = () => this.form().controls.stages;
 
-  readonly getStepsArray = (stageIndex: number): FormArray =>
-    (this.getStagesArray().at(stageIndex) as FormGroup).controls['steps'] as FormArray;
+  readonly getStepsArray = (stageIndex: number) => this.getStagesArray().at(stageIndex).controls.steps;
 
-  readonly getIngredientsArray = (stageIndex: number): FormArray =>
-    (this.getStagesArray().at(stageIndex) as FormGroup).controls['ingredients'] as FormArray;
+  readonly getIngredientsArray = (stageIndex: number) => this.getStagesArray().at(stageIndex).controls.ingredients;
 
-  readonly addStage = (): void => {
-    this.getStagesArray().push(this.createStageGroup());
-  };
+  readonly addStage = () => this.getStagesArray().push(this.createStageGroup());
 
   readonly removeStage = (event: Event, stageIndex: number): void => {
     event.stopPropagation();
-    this.getStagesArray().removeAt(stageIndex);
+
+    const stages = this.getStagesArray();
+    this.removeStageName.set({ name: stages.at(stageIndex).controls.name.value ?? '' });
+
+    this.dialog
+      .open(ConfirmationDialog, {
+        data: {
+          title: this.removeStageConfirmTitle,
+          content: this.removeStageConfirmContent
+        }
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          stages.removeAt(stageIndex);
+          this.cdr.markForCheck();
+        }
+      });
   };
 
-  readonly addStep = (stageIndex: number): void => {
-    this.getStepsArray(stageIndex).push(this.createStepGroup());
-  };
+  readonly addStep = (stageIndex: number) => this.getStepsArray(stageIndex).push(this.createStepGroup());
 
   readonly removeStep = (stageIndex: number, stepIndex: number): void => {
-    this.getStepsArray(stageIndex).removeAt(stepIndex);
+    const steps = this.getStepsArray(stageIndex);
+    this.removeStepName.set({ name: steps.at(stepIndex).controls.name.value ?? '' });
+
+    this.dialog
+      .open(ConfirmationDialog, {
+        data: {
+          title: this.removeStepConfirmTitle,
+          content: this.removeStepConfirmContent
+        }
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          steps.removeAt(stepIndex);
+          this.cdr.markForCheck();
+        }
+      });
   };
 
-  readonly addIngredient = (stageIndex: number): void => {
+  readonly addIngredient = (stageIndex: number) =>
     this.getIngredientsArray(stageIndex).push(this.createIngredientGroup());
-  };
 
   readonly removeIngredient = (stageIndex: number, ingredientIndex: number): void => {
-    this.getIngredientsArray(stageIndex).removeAt(ingredientIndex);
+    const ingredients = this.getIngredientsArray(stageIndex);
+
+    this.removeIngredientName
+      .set({ name: ingredients.at(ingredientIndex).controls.name.value ?? '' });
+
+    this.dialog
+      .open(ConfirmationDialog, {
+        data: {
+          title: this.removeIngredientConfirmTitle,
+          content: this.removeIngredientConfirmContent
+        }
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          ingredients.removeAt(ingredientIndex, { emitEvent: true });
+          this.cdr.markForCheck();
+        }
+      });
   };
 
   readonly onDropStage = (event: CdkDragDrop<unknown[]>): void => {
