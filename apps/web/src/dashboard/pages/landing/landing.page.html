@@ -11,7 +11,7 @@
   <!-- Dashboard Cards Grid -->
   <div class="dashboard-grid">
     <!-- Recent Recipes Card -->
-    <mat-card class="recipes-card">
+    <mat-card>
       <mat-card-header>
         <mat-card-title>{{ t('recentRecipes') }}</mat-card-title>
       </mat-card-header>
@@ -20,8 +20,7 @@
            ngSrc="/images/recipes.avif"
            [alt]="t('recentRecipesAlt')"
            width="400"
-           height="240"
-           class="card-image"/>
+           height="240"/>
 
       <mat-card-content>
         @if (loading()) {

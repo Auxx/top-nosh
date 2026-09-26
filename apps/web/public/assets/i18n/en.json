@@ -432,6 +432,8 @@
       "urlIsInvalid": "Please enter a valid URL"
     },
     "SettingsDashboardPage": {
+      "title": "Settings",
+      "subtitle": "Manage your Top Nosh settings"
     }
   }
 }
