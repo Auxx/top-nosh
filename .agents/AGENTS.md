@@ -58,7 +58,7 @@ Docker.
 ## Shared project configuration metadata
 
 - This library should only contain interfaces, constants and variables, no
-  business logic.
+  NestJs or Angular specific business logic.
 - It serves as a single source of truth for configuration metadata shared across
   the project. All configuration keys and their descriptions are defined here.
 

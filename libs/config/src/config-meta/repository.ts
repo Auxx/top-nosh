@@ -32,7 +32,7 @@ export interface ConfigEntry {
 /**
  * Returns all known configuration entries.
  */
-export const allConfigEntries = (): ConfigEntry[] => [
+export const configEntriesRepository = (): ConfigEntry[] => [
   { key: 'security.oidc.issuerUrl', translationKey: 'securityOidcIssuerUrl', type: 'url' },
   { key: 'security.oidc.clientId', translationKey: 'securityOidcClientId', type: 'string' },
   { key: 'security.oidc.clientSecret', translationKey: 'securityOidcClientSecret', type: 'string' },
