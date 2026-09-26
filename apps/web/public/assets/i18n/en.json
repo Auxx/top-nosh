@@ -430,6 +430,8 @@
       "urlPlaceholder": "https://example.com/recipe-name",
       "urlRequired": "URL is required",
       "urlIsInvalid": "Please enter a valid URL"
+    },
+    "SettingsDashboardPage": {
     }
   }
 }

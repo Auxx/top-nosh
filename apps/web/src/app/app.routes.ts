@@ -41,5 +41,11 @@ export const appRoutes: Route[] = [
     canActivate: [ authGuard ],
     component: AuthorizedPage,
     loadChildren: () => import('../users/users.routes').then(m => m.routes)
+  },
+  {
+    path: 'settings',
+    canActivate: [ authGuard ],
+    component: AuthorizedPage,
+    loadChildren: () => import('../settings/settings.routes').then(m => m.routes)
   }
 ];

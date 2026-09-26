@@ -430,6 +430,8 @@
       "urlPlaceholder": "https://example.com/recipe-name",
       "urlRequired": "URL обязателен",
       "urlIsInvalid": "Пожалуйста, введите корректный URL"
+    },
+    "SettingsDashboardPage": {
     }
   }
 }

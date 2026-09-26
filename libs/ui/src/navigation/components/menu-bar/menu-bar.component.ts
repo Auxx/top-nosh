@@ -16,7 +16,7 @@ const menuItems = (): MenuItem[] => [
   { url: '/dashboard', label: 'dashboard' },
   { url: '/recipes', label: 'recipes' },
   { url: '/shopping-lists', label: 'shoppingLists' },
-  { url: '/users', label: 'settings' },
+  { url: '/settings', label: 'settings' },
   { url: '/logout', label: 'logout', icon: 'logout' }
 ];
 
