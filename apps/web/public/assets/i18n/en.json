@@ -18,6 +18,22 @@
       "loading": "Loading..."
     }
   },
+  "config": {
+    "labels": {
+      "securityOidcIssuerUrl": "Issuer URL",
+      "securityOidcClientId": "Client ID",
+      "securityOidcClientSecret": "Client Secret",
+      "securityOidcCallbackUrl": "Callback URL",
+      "securityOidcLinkByEmail": "Allow linking users by email"
+    },
+    "descriptions": {
+      "securityOidcIssuerUrl": "OpenID Connect issuer URL",
+      "securityOidcClientId": "Client ID provided by the OpenID Connect issuer",
+      "securityOidcClientSecret": "Client secret provided by the OpenID Connect issuer",
+      "securityOidcCallbackUrl": "Callback URL to redirect to after authentication",
+      "securityOidcLinkByEmail": "Disable to improve security of Top Nosh"
+    }
+  },
   "web": {
     "AuthCallbackPage": {
       "title": "Authentication",

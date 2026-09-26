@@ -29,6 +29,8 @@ Docker.
 - Custom UI components are located inside `ui` library project at `libs/ui`.
 - Custom NX generators and executors are located inside `dev-toolkit` library
   project at `libs/dev-toolkit`.
+- Shared project configuration metadata is located inside `config` library
+  project at `libs/config`.
 
 ## Front-end project structure
 
@@ -52,6 +54,13 @@ Docker.
   For example, login DTO is located at `apps/api/src/app/auth/dto/login.dto.ts`.
 - Database schema is located at `prisma/schema.prisma`.
 - Database migrations are located at `prisma/migrations`.
+
+## Shared project configuration metadata
+
+- This library should only contain interfaces, constants and variables, no
+  business logic.
+- It serves as a single source of truth for configuration metadata shared across
+  the project. All configuration keys and their descriptions are defined here.
 
 ## Building projects
 

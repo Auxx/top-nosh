@@ -26,6 +26,9 @@
       ],
       "@top-nosh/ui": [
         "./libs/ui/src/index.ts"
+      ],
+      "@top-nosh/config": [
+        "./libs/config/src/index.ts"
       ]
     }
   },
