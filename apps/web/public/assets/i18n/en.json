@@ -24,14 +24,22 @@
       "securityOidcClientId": "Client ID",
       "securityOidcClientSecret": "Client Secret",
       "securityOidcCallbackUrl": "Callback URL",
-      "securityOidcLinkByEmail": "Allow linking users by email"
+      "securityOidcLinkByEmail": "Allow linking users by email",
+      "fileManagementStorageActive": "Active storage",
+      "fileManagementStorageDefault": "Default storage",
+      "galleryInputMaxUploadSize": "Maximum upload size",
+      "galleryOutputFormat": "Output format"
     },
     "descriptions": {
       "securityOidcIssuerUrl": "OpenID Connect issuer URL",
       "securityOidcClientId": "Client ID provided by the OpenID Connect issuer",
       "securityOidcClientSecret": "Client secret provided by the OpenID Connect issuer",
       "securityOidcCallbackUrl": "Callback URL to redirect to after authentication",
-      "securityOidcLinkByEmail": "Disable to improve security of Top Nosh"
+      "securityOidcLinkByEmail": "Disable to improve security of Top Nosh",
+      "fileManagementStorageActive": "",
+      "fileManagementStorageDefault": "",
+      "galleryInputMaxUploadSize": "",
+      "galleryOutputFormat": ""
     }
   },
   "web": {

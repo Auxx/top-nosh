@@ -37,5 +37,9 @@ export const configEntriesRepository = (): ConfigEntry[] => [
   { key: 'security.oidc.clientId', translationKey: 'securityOidcClientId', type: 'string' },
   { key: 'security.oidc.clientSecret', translationKey: 'securityOidcClientSecret', type: 'string' },
   { key: 'security.oidc.callbackUrl', translationKey: 'securityOidcCallbackUrl', type: 'url' },
-  { key: 'security.oidc.linkByEmail', translationKey: 'securityOidcLinkByEmail', type: 'string' }
+  { key: 'security.oidc.linkByEmail', translationKey: 'securityOidcLinkByEmail', type: 'string' },
+  { key: 'fileManagement.storage.active', translationKey: 'fileManagementStorageActive', type: 'string' },
+  { key: 'fileManagement.storage.default', translationKey: 'fileManagementStorageDefault', type: 'string' },
+  { key: 'gallery.input.maxUploadSize', translationKey: 'galleryInputMaxUploadSize', type: 'string' },
+  { key: 'gallery.output.format', translationKey: 'galleryOutputFormat', type: 'string' }
 ];
