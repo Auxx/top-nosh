@@ -90,7 +90,7 @@ describe('LandingPage', () => {
     fixture.detectChanges();
 
     expect(component.loading()).toBe(true);
-    const loadingStates = fixture.debugElement.queryAll(By.css('.loading-state'));
+    const loadingStates = fixture.debugElement.queryAll(By.css('ui-card-state'));
     expect(loadingStates.length).toBe(2);
     const spinners = fixture.debugElement.queryAll(By.css('mat-spinner'));
     expect(spinners.length).toBe(2);
@@ -102,7 +102,7 @@ describe('LandingPage', () => {
     fixture.detectChanges();
 
     expect(component.error()).toBe(true);
-    const errorContainers = fixture.debugElement.queryAll(By.css('.error-state'));
+    const errorContainers = fixture.debugElement.queryAll(By.css('ui-card-state'));
     expect(errorContainers.length).toBe(2);
     expect(errorContainers[0].nativeElement.textContent).toContain('web.LandingPage.loadError');
   });
@@ -114,27 +114,27 @@ describe('LandingPage', () => {
     expect(component.error()).toBe(false);
 
     // Verify recipes card
-    const recipeLinks = fixture.debugElement.queryAll(By.css('.recipe-list .item-link'));
+    const recipeLinks = fixture.debugElement.queryAll(By.css('mat-card:nth-child(1) ui-card-item-list a'));
     expect(recipeLinks.length).toBe(2);
     expect(recipeLinks[0].nativeElement.textContent).toContain('Spaghetti Carbonara');
     expect(recipeLinks[1].nativeElement.textContent).toContain('Margherita Pizza');
 
     // Verify shopping list card title and items
-    const shoppingTitle = fixture.debugElement.query(By.css('.shopping-card mat-card-title'));
+    const shoppingTitle = fixture.debugElement.query(By.css('mat-card:nth-child(2) mat-card-title'));
     expect(shoppingTitle.nativeElement.textContent).toContain('Weekend Groceries');
 
-    const shoppingItems = fixture.debugElement.queryAll(By.css('.shopping-items-list .item-name'));
+    const shoppingItems = fixture.debugElement.queryAll(By.css('mat-card:nth-child(2) ui-card-item-list span'));
     expect(shoppingItems.length).toBe(2);
     expect(shoppingItems[0].nativeElement.textContent).toContain('Eggs');
     expect(shoppingItems[1].nativeElement.textContent).toContain('Pancetta');
 
     // Verify action navigation buttons
-    const viewRecipesBtn = fixture.debugElement.query(By.css('.recipes-card .navigate-btn'));
+    const viewRecipesBtn = fixture.debugElement.query(By.css('mat-card:nth-child(1) mat-card-actions button'));
     expect(viewRecipesBtn).toBeTruthy();
     viewRecipesBtn.nativeElement.click();
     expect(router.navigate).toHaveBeenCalledWith([ '/recipes' ]);
 
-    const viewShoppingBtn = fixture.debugElement.query(By.css('.shopping-card .navigate-btn'));
+    const viewShoppingBtn = fixture.debugElement.query(By.css('mat-card:nth-child(2) mat-card-actions button'));
     expect(viewShoppingBtn).toBeTruthy();
     viewShoppingBtn.nativeElement.click();
     expect(router.navigate).toHaveBeenCalledWith([ '/shopping-lists', 'list-1' ]);
@@ -148,19 +148,19 @@ describe('LandingPage', () => {
     fixture.detectChanges();
 
     // Verify recipe empty state
-    const recipeEmpty = fixture.debugElement.query(By.css('.recipes-card .empty-state'));
+    const recipeEmpty = fixture.debugElement.query(By.css('mat-card:nth-child(1) ui-card-state'));
     expect(recipeEmpty.nativeElement.textContent).toContain('web.LandingPage.noRecipes');
 
-    const createRecipeBtn = fixture.debugElement.query(By.css('.recipes-card .create-btn'));
+    const createRecipeBtn = fixture.debugElement.query(By.css('mat-card:nth-child(1) mat-card-actions button'));
     expect(createRecipeBtn).toBeTruthy();
     createRecipeBtn.nativeElement.click();
     expect(router.navigate).toHaveBeenCalledWith([ '/recipes', 'new' ]);
 
     // Verify shopping list empty state
-    const shoppingEmpty = fixture.debugElement.query(By.css('.shopping-card .empty-state'));
+    const shoppingEmpty = fixture.debugElement.query(By.css('mat-card:nth-child(2) ui-card-state'));
     expect(shoppingEmpty.nativeElement.textContent).toContain('web.LandingPage.noShoppingListItems');
 
-    const createShoppingBtn = fixture.debugElement.query(By.css('.shopping-card .create-btn'));
+    const createShoppingBtn = fixture.debugElement.query(By.css('mat-card:nth-child(2) mat-card-actions button'));
     expect(createShoppingBtn).toBeTruthy();
     createShoppingBtn.nativeElement.click();
     expect(router.navigate).toHaveBeenCalledWith([ '/shopping-lists', 'new' ]);

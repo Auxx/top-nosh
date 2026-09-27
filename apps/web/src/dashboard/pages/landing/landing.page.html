@@ -1,3 +1,6 @@
+@let isLoading = loading();
+@let hasError = error();
+
 <ng-container *transloco="let t; prefix: 'web.LandingPage'">
 
   <!-- Page Header / Welcome message -->
@@ -25,30 +28,28 @@
            priority/>
 
       <mat-card-content>
-        @if (loading()) {
+        @if (isLoading) {
           <ui-card-state [isLoading]="true"/>
-        }
-
-        @if (error()) {
+        } @else if (hasError) {
           <ui-card-state [errorMessage]="t('loadError')"/>
-        }
-
-        @if (hasRecipes()) {
-          <ui-card-item-list>
-            @for (recipe of data()?.recipes; track recipe.id) {
-              <a [routerLink]="['/recipes', recipe.id]">
-                {{ recipe.name }}
-              </a>
-            }
-          </ui-card-item-list>
-
         } @else {
-          <ui-card-state [noticeMessage]="t('noRecipes')"/>
+          @if (hasRecipes()) {
+            <ui-card-item-list>
+              @for (recipe of data()?.recipes; track recipe.id) {
+                <a [routerLink]="['/recipes', recipe.id]">
+                  {{ recipe.name }}
+                </a>
+              }
+            </ui-card-item-list>
+
+          } @else {
+            <ui-card-state [noticeMessage]="t('noRecipes')"/>
+          }
         }
 
       </mat-card-content>
 
-      @if (!loading() && !error()) {
+      @if (!isLoading && !hasError) {
         <mat-card-actions>
           @if (hasRecipes()) {
             <button matButton
@@ -82,26 +83,24 @@
            priority/>
 
       <mat-card-content>
-        @if (loading()) {
+        @if (isLoading) {
           <ui-card-state [isLoading]="true"/>
-        }
-
-        @if (error()) {
+        } @else if (hasError) {
           <ui-card-state [errorMessage]="t('loadError')"/>
-        }
-
-        @if (hasShoppingListItems()) {
-          <ui-card-item-list>
-            @for (item of data()?.shoppingList?.items; track item.id) {
-              <span>{{ item.name }}</span>
-            }
-          </ui-card-item-list>
         } @else {
-          <ui-card-state [noticeMessage]="t('noShoppingListItems')"/>
+          @if (hasShoppingListItems()) {
+            <ui-card-item-list>
+              @for (item of data()?.shoppingList?.items; track item.id) {
+                <span>{{ item.name }}</span>
+              }
+            </ui-card-item-list>
+          } @else {
+            <ui-card-state [noticeMessage]="t('noShoppingListItems')"/>
+          }
         }
       </mat-card-content>
 
-      @if (!loading() && !error()) {
+      @if (!isLoading && !hasError) {
         <mat-card-actions>
           @if (hasShoppingListItems()) {
             <button matButton
