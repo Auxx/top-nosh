@@ -38,7 +38,8 @@ describe('EditUserPage', () => {
     mockAuthState$ = new BehaviorSubject<AuthState>({
       isAuthenticated: true,
       token: 'jwt-token',
-      userId: 'user-123'
+      userId: 'user-123',
+      refreshToken: 'refresh-token'
     });
 
     userManagementServiceMock = {
@@ -111,7 +112,8 @@ describe('EditUserPage', () => {
     mockAuthState$.next({
       isAuthenticated: true,
       token: 'jwt-token',
-      userId: 'different-user-id'
+      userId: 'different-user-id',
+      refreshToken: 'refresh-token'
     });
 
     component.loadUser('user-123');
