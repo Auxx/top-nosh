@@ -11,5 +11,22 @@
 
   ::ng-deep mat-card {
     max-width: 400px;
+
+    [mat-card-image] {
+      margin-top: var(--dim-large);
+      margin-bottom: var(--dim-x-medium);
+    }
+
+    mat-card-content {
+      margin-bottom: var(--dim-medium);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    mat-card-actions {
+      margin-top: auto;
+    }
   }
 }

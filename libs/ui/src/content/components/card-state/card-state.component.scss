@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  text-align: center;
+  padding: var(--dim-large) var(--dim-xx-large);
+}
+
+.error-message {
+  color: var(--mat-sys-error);
+  font-weight: 500;
+}
+
+.notice-message {
+  color: var(--mat-sys-on-surface-variant);
+  font-style: italic;
+}
