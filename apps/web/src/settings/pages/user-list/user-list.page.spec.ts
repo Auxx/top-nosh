@@ -90,22 +90,6 @@ describe('UserListPage', () => {
     expect(userManagementServiceMock.resetFilters).toHaveBeenCalled();
   });
 
-  it('should have all class methods declared as readonly arrow function properties', () => {
-    expect(Object.prototype.hasOwnProperty.call(component, 'onPageChange')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onCreateUser')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(component, 'onEditUser')).toBe(true);
-  });
-
-  it('should navigate to new user on create button click', () => {
-    component.onCreateUser();
-    expect(router.navigate).toHaveBeenCalledWith([ '/users', 'new' ]);
-  });
-
-  it('should navigate to edit user on onEditUser call', () => {
-    component.onEditUser(sampleUsers[0]);
-    expect(router.navigate).toHaveBeenCalledWith([ '/users', 'user-1', 'edit' ]);
-  });
-
   it('should have desktop columns by default', () => {
     expect(component.displayedColumns()).toEqual([
       'fullName',

@@ -153,7 +153,7 @@ describe('EditUserPage', () => {
       password: 'NewPassword123!'
     });
     expect(snackBarMock.open).toHaveBeenCalledWith('web.EditUserPage.success', undefined, { duration: 5000 });
-    expect(router.navigate).toHaveBeenCalledWith([ '/users' ]);
+    expect(router.navigate).toHaveBeenCalledWith([ '/settings', 'users' ]);
     expect(component.isSubmitting()).toBe(false);
   });
 
@@ -237,6 +237,6 @@ describe('EditUserPage', () => {
 
   it('should navigate to /users on onCancel call', () => {
     component.onCancel();
-    expect(router.navigate).toHaveBeenCalledWith([ '/users' ]);
+    expect(router.navigate).toHaveBeenCalledWith([ '/settings', 'users' ]);
   });
 });
