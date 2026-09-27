@@ -433,7 +433,12 @@
     },
     "SettingsDashboardPage": {
       "title": "Settings",
-      "subtitle": "Manage your Top Nosh settings"
+      "subtitle": "Manage your Top Nosh settings",
+      "general": "General Settings",
+      "theme": "Theme",
+      "security": "Security Settings",
+      "users": "Users",
+      "oidc": "OpenID Connect"
     }
   }
 }

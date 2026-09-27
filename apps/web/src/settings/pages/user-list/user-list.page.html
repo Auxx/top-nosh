@@ -2,13 +2,13 @@
   @let columns = displayedColumns();
 
   <!-- Page Header -->
-  <ui-page-header>
+  <ui-page-header [showBackButton]="true" (navigatedBack)="backToSettings()">
     <h1>{{ t('title') }}</h1>
     <div>
       {{ t('description') }}
     </div>
 
-    <button matButton (click)="onCreateUser()">
+    <button matButton [routerLink]="['new']">
       <mat-icon>add</mat-icon>
       <span>{{ t('createUser') }}</span>
     </button>
@@ -21,7 +21,7 @@
       <ng-container matColumnDef="fullName">
         <th mat-header-cell *matHeaderCellDef>{{ t('columnFullName') }}</th>
         <td mat-cell *matCellDef="let item">
-          <a [routerLink]="['/users', item.id, 'edit']" class="label">
+          <a [routerLink]="[item.id, 'edit']" class="label">
             {{ item.fullName }}
           </a>
         </td>
@@ -56,8 +56,8 @@
         <th mat-header-cell *matHeaderCellDef class="actions">{{ t('columnActions') }}</th>
         <td mat-cell *matCellDef="let item" class="actions">
           <button mat-icon-button
-                  [attr.aria-label]="t('editUserAriaLabel')"
-                  (click)="onEditUser(item)">
+                  [routerLink]="[item.id, 'edit']"
+                  [attr.aria-label]="t('editUserAriaLabel')">
             <mat-icon>edit</mat-icon>
           </button>
         </td>

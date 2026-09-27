@@ -59,9 +59,7 @@ export class UserListPage {
     this.userManagementService.resetFilters();
   }
 
+  readonly backToSettings = () => this.router.navigate([ '/settings' ]);
+
   readonly onPageChange = (event: PageEvent) => this.userManagementService.setPage(event.pageIndex + 1);
-
-  readonly onCreateUser = () => this.router.navigate([ '/users', 'new' ]);
-
-  readonly onEditUser = (user: UserResponseDto) => this.router.navigate([ '/users', user.id, 'edit' ]);
 }

@@ -5,13 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import {
-  CardGridComponent,
-  CardIconComponent,
-  CardItemListComponent,
-  CardStateComponent,
-  PageHeaderComponent
-} from '@top-nosh/ui';
+import { CardGridComponent, CardItemListComponent, CardStateComponent, PageHeaderComponent } from '@top-nosh/ui';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardData } from '../../services/dashboard/dashboard.service.types';
 
@@ -28,7 +22,6 @@ import { DashboardData } from '../../services/dashboard/dashboard.service.types'
     TranslocoDirective,
     CardGridComponent,
     CardItemListComponent,
-    CardIconComponent,
     CardStateComponent
   ],
   templateUrl: './landing.page.html',

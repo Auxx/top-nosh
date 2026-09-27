@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -14,9 +15,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { BlockLoaderComponent, NoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { take } from 'rxjs';
+import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
+import { UserResponseDto } from '../../models/user.types';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 
 export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -40,7 +44,7 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
 };
 
 @Component({
-  selector: 'app-create-user',
+  selector: 'app-edit-user',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -49,27 +53,37 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    BlockLoaderComponent,
     PageHeaderComponent,
     WhenError,
+    NoticeComponent,
     TranslocoDirective
   ],
-  templateUrl: './create-user.page.html',
-  styleUrl: './create-user.page.scss',
+  templateUrl: './edit-user.page.html',
+  styleUrl: './edit-user.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateUserPage {
+export class EditUserPage {
   private readonly fb = inject(FormBuilder);
   private readonly userManagementService = inject(UserManagementService);
+  private readonly authService = inject(AuthenticationService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly okMessage = translateSignal('ui.System.ok');
-  private readonly successMessage = translateSignal('web.CreateUserPage.success');
-  private readonly failureMessage = translateSignal('web.CreateUserPage.failure');
+  private readonly successMessage = translateSignal('web.EditUserPage.success');
+  private readonly failureMessage = translateSignal('web.EditUserPage.failure');
 
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
+  readonly userId = signal<string | null>(null);
+  readonly isLoading = signal<boolean>(true);
+  readonly hasError = signal<boolean>(false);
   readonly isSubmitting = signal<boolean>(false);
+  readonly canEdit = signal<boolean>(false);
+  readonly user = signal<UserResponseDto | null>(null);
 
   readonly form = this.fb.nonNullable.group(
     {
@@ -81,12 +95,63 @@ export class CreateUserPage {
     { validators: [ passwordsMatchValidator ] }
   );
 
-  readonly onCancel = (): void => {
-    this.router.navigate([ '/users' ]);
+  constructor() {
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        const id = params.get('id');
+        this.userId.set(id);
+
+        if (id) {
+          this.loadUser(id);
+        } else {
+          this.hasError.set(true);
+          this.isLoading.set(false);
+        }
+      });
+  }
+
+  readonly loadUser = (id: string): void => {
+    this.isLoading.set(true);
+    this.hasError.set(false);
+
+    this.userManagementService
+      .getUserById(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: user => {
+          this.user.set(user);
+          this.form.patchValue({
+            fullName: user.fullName,
+            email: user.email
+          });
+
+          this.authService
+            .state()
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(authState => {
+              if (authState.userId === id) {
+                this.canEdit.set(true);
+                this.form.enable();
+              } else {
+                this.canEdit.set(false);
+                this.form.disable();
+              }
+              this.isLoading.set(false);
+            });
+        },
+        error: () => {
+          this.hasError.set(true);
+          this.isLoading.set(false);
+        }
+      });
   };
 
+  readonly onCancel = () => this.router.navigate([ '/settings', 'users' ]);
+
   readonly onSubmit = (): void => {
-    if (this.form.invalid || this.isSubmitting()) {
+    const id = this.userId();
+    if (!id || this.form.invalid || this.isSubmitting() || !this.canEdit()) {
       return;
     }
 
@@ -99,11 +164,11 @@ export class CreateUserPage {
 
     const { fullName, email, password } = this.form.getRawValue();
 
-    this.userManagementService.create({ fullName, email, password }).subscribe({
+    this.userManagementService.update(id, { fullName, email, password }).subscribe({
       next: () => {
         this.isSubmitting.set(false);
         this.snackBar.open(this.successMessage(), undefined, { duration: 5000 });
-        this.router.navigate([ '/users' ]).then();
+        this.router.navigate([ '/settings', 'users' ]).then();
       },
       error: error => {
         this.isSubmitting.set(false);
