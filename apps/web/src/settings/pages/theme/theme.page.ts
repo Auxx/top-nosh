@@ -9,8 +9,12 @@ import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { BlockLoaderComponent, BlockNoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
-import { Validator } from 'class-validator';
-import { availableColorSchemes, availableThemes, ColorScheme, Palette } from './theme.page.types';
+import {
+  availableColorSchemes,
+  availableThemes,
+  ColorScheme,
+  Palette
+} from '../../services/theme-manager/theme-manager.types';
 
 @Component({
   selector: 'app-theme',
