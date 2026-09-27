@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
@@ -9,6 +10,8 @@ import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { BlockLoaderComponent, BlockNoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { take } from 'rxjs';
+import { ThemeManagerService } from '../../services/theme-manager/theme-manager.service';
 import {
   availableColorSchemes,
   availableThemes,
@@ -44,6 +47,8 @@ import {
 })
 export class ThemePage {
   private readonly router = inject(Router);
+  private readonly themeManager = inject(ThemeManagerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly isLoading = signal(false);
 
@@ -67,11 +72,32 @@ export class ThemePage {
     colorScheme: this.colorScheme
   });
 
+  constructor() {
+    this.themeManager
+      .colorScheme()
+      .pipe(
+        take(1),
+        takeUntilDestroyed()
+      )
+      .subscribe(scheme => {
+        this.colorScheme.setValue(scheme, { emitEvent: false });
+      });
+
+    this.colorScheme.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(value => {
+        this.themeManager.previewColorScheme(value);
+      });
+
+    this.destroyRef.onDestroy(() => {
+      this.themeManager.resetColorScheme();
+    });
+  }
+
   readonly onNavigateBack = () => this.router.navigate([ '/settings' ]);
 
   readonly onSubmit = () => {
-    // TODO Not implemented yet
-    // This navigation should happen on successful form submit
+    this.themeManager.switchColorScheme(this.colorScheme.value);
     this.router.navigate([ '/settings' ]).then();
   };
 }
