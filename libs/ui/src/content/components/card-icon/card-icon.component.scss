@@ -1,0 +1,17 @@
+$icon-size: 48px;
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 112px;
+  background: var(--mat-sys-surface-container-high);
+  margin-top: var(--dim-large);
+  margin-bottom: var(--dim-x-medium);
+}
+
+mat-icon {
+  font-size: $icon-size;
+  width: $icon-size;
+  height: $icon-size;
+}
