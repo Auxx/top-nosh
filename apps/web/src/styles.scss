@@ -27,13 +27,9 @@
 html {
   height: 100%;
   @include mat.theme((
-    //color: (
-    //  primary: mat.$chartreuse-palette,
-    //  tertiary: mat.$red-palette,
-    //),
-          color: mat.$chartreuse-palette,
-          typography: Roboto,
-          density: 0,
+    color: mat.$chartreuse-palette,
+    typography: Roboto,
+    density: 0,
   ));
 }
 
@@ -323,12 +319,12 @@ ol.steps-list {
 
 .mat-mdc-icon-button {
   @include mat.icon-button-overrides((
-          icon-color: var(--mat-sys-primary),
+    icon-color: var(--mat-sys-primary),
   ));
 
   &.warn {
     @include mat.icon-button-overrides((
-            icon-color: var(--mat-sys-error),
+      icon-color: var(--mat-sys-error),
     ));
   }
 }
@@ -336,7 +332,7 @@ ol.steps-list {
 .mat-mdc-button:not(:disabled) {
   &.warn {
     @include mat.button-overrides((
-            text-label-text-color: var(--mat-sys-error),
+      text-label-text-color: var(--mat-sys-error),
     ));
   }
 }
@@ -344,8 +340,8 @@ ol.steps-list {
 mat-form-field {
   &.mat-form-field-appearance-outline {
     @include mat.form-field-overrides((
-            container-vertical-padding: 8px,
-            container-height: 40px
+      container-vertical-padding: 8px,
+      container-height: 40px
     ));
 
     &.mat-form-field-compact {
@@ -432,5 +428,15 @@ mat-form-field {
 input {
   &.numeric {
     text-align: right;
+  }
+}
+
+.column-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dim-x-large);
+
+  mat-card {
+    gap: var(--dim-large);
   }
 }

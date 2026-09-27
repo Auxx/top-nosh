@@ -1,0 +1,84 @@
+@let loading = isLoading();
+@let submitting = isSubmitting();
+
+<ng-container *transloco="let t; prefix: 'web.ThemePage'">
+  <ui-page-header [showBackButton]="true" (navigatedBack)="onNavigateBack()">
+    <h1>{{ t('title') }}</h1>
+
+    <div>{{ t('description') }}</div>
+
+    <button matIconButton
+            form="theme-form"
+            type="submit"
+            [disabled]="form.invalid || submitting || loading">
+      <mat-icon>save</mat-icon>
+    </button>
+  </ui-page-header>
+
+  @if (loading) {
+    <ui-block-loader/>
+
+  } @else if (hasError()) {
+    <ui-block-notice icon="error_outline" [isError]="true">
+      <p>{{ t('loadError') }}</p>
+    </ui-block-notice>
+
+  } @else {
+    <form [formGroup]="form"
+          (ngSubmit)="onSubmit()"
+          id="theme-form"
+          class="column-form">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ t('general') }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="grid-12 mobile-single-column">
+            <mat-form-field appearance="outline" class="grid-12-col-6">
+              <mat-label>{{ t('palette') }}</mat-label>
+
+              <mat-select [formControl]="palette">
+                @for (option of availableThemes; track option.value) {
+                  <mat-option [value]="option.value">
+                    {{ t(option.label) }}
+                  </mat-option>
+                }
+              </mat-select>
+
+              <mat-error *uiWhenError="palette; errorCode: 'required'">
+                {{ t('paletteRequired') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ t('personal') }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="grid-12 mobile-single-column">
+            <mat-form-field appearance="outline" class="grid-12-col-6">
+              <mat-label>{{ t('colorScheme') }}</mat-label>
+
+              <mat-select [formControl]="colorScheme">
+                @for (option of availableColorSchemes(); track option.value) {
+                  <mat-option [value]="option.value">
+                    {{ t(option.label) }}
+                  </mat-option>
+                }
+              </mat-select>
+
+              <mat-error *uiWhenError="palette; errorCode: 'required'">
+                {{ t('paletteRequired') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  }
+</ng-container>

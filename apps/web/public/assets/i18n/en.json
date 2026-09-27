@@ -439,6 +439,31 @@
       "security": "Security Settings",
       "users": "Users",
       "oidc": "OpenID Connect"
+    },
+    "ThemePage": {
+      "title": "Theme Settings",
+      "description": "Customize the look and feel of your Top Nosh experience.",
+      "loadError": "Failed to load theme settings. Please try again later.",
+      "general": "General settings",
+      "personal": "Personal preferences",
+      "palette": "Colour palette",
+      "paletteRequired": "Colour palette is required",
+      "paletteRed": "Red",
+      "paletteGreen": "Green",
+      "paletteBlue": "Blue",
+      "paletteYellow": "Yellow",
+      "paletteCyan": "Cyan",
+      "paletteMagenta": "Magenta",
+      "paletteOrange": "Orange",
+      "paletteChartreuse": "Chartreuse",
+      "paletteSpringGreen": "Spring green",
+      "paletteAzure": "Azure",
+      "paletteViolet": "Violet",
+      "paletteRose": "Rose",
+      "colorScheme": "Colour scheme",
+      "lightDark": "Auto",
+      "light": "Light",
+      "dark": "Dark"
     }
   }
 }
