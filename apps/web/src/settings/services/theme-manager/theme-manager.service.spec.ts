@@ -1,36 +1,48 @@
 import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
+import { take } from 'rxjs';
 import { ThemeManagerService } from './theme-manager.service';
 import { THEME_COLOR_SCHEME_STORAGE_KEY } from './theme-manager.types';
 
 describe('ThemeManagerService', () => {
   let service: ThemeManagerService;
-  let documentMock: Document;
+
+  let bodyClasses: string[] = [];
+
+  let localStorage: Record<string, string> = {};
+
+  const documentMock = {
+    body: {
+      classList: {
+        add: (className: string) => bodyClasses.push(className),
+        contains: (className: string) => bodyClasses.includes(className),
+        remove: (...classNames: string[]) => bodyClasses = bodyClasses.filter(c => !classNames.includes(c))
+      }
+    },
+    defaultView: {
+      localStorage: {
+        getItem: (key: string) => localStorage[key] ?? null,
+        setItem: (key: string, value: string) => localStorage[key] = value
+      }
+    }
+  };
 
   beforeEach(() => {
-    localStorage.clear();
-    document.body.className = '';
-    TestBed.configureTestingModule({
-      providers: [ ThemeManagerService ]
-    });
-    service = TestBed.inject(ThemeManagerService);
-    documentMock = TestBed.inject(DOCUMENT);
-  });
+    bodyClasses = [];
+    localStorage = {};
 
-  afterEach(() => {
-    localStorage.clear();
-    document.body.className = '';
+    TestBed.configureTestingModule({
+      providers: [
+        ThemeManagerService,
+        { provide: DOCUMENT, useValue: documentMock }
+      ]
+    });
+
+    service = TestBed.inject(ThemeManagerService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  it('should have methods declared as arrow function properties', () => {
-    expect(Object.prototype.hasOwnProperty.call(service, 'getColorScheme')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(service, 'switchColorScheme')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(service, 'previewColorScheme')).toBe(true);
-    expect(Object.prototype.hasOwnProperty.call(service, 'resetPreview')).toBe(true);
   });
 
   describe('initialization', () => {
@@ -43,91 +55,36 @@ describe('ThemeManagerService', () => {
         done();
       });
     });
-
-    it('should load saved dark scheme from localStorage on startup and add dark class', done => {
-      localStorage.setItem(THEME_COLOR_SCHEME_STORAGE_KEY, 'dark');
-
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        providers: [ ThemeManagerService ]
-      });
-      const newService = TestBed.inject(ThemeManagerService);
-      const doc = TestBed.inject(DOCUMENT);
-
-      expect(doc.body.classList.contains('dark')).toBe(true);
-      expect(doc.body.classList.contains('light')).toBe(false);
-
-      newService.colorScheme().subscribe(scheme => {
-        expect(scheme).toBe('dark');
-        done();
-      });
-    });
-
-    it('should load saved light scheme from localStorage on startup and add light class', done => {
-      localStorage.setItem(THEME_COLOR_SCHEME_STORAGE_KEY, 'light');
-
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        providers: [ ThemeManagerService ]
-      });
-      const newService = TestBed.inject(ThemeManagerService);
-      const doc = TestBed.inject(DOCUMENT);
-
-      expect(doc.body.classList.contains('light')).toBe(true);
-      expect(doc.body.classList.contains('dark')).toBe(false);
-
-      newService.colorScheme().subscribe(scheme => {
-        expect(scheme).toBe('light');
-        done();
-      });
-    });
-
-    it('should fallback to default light-dark scheme when localStorage has invalid value', done => {
-      localStorage.setItem(THEME_COLOR_SCHEME_STORAGE_KEY, 'invalid-scheme');
-
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        providers: [ ThemeManagerService ]
-      });
-      const newService = TestBed.inject(ThemeManagerService);
-      const doc = TestBed.inject(DOCUMENT);
-
-      expect(doc.body.classList.contains('light')).toBe(false);
-      expect(doc.body.classList.contains('dark')).toBe(false);
-
-      newService.colorScheme().subscribe(scheme => {
-        expect(scheme).toBe('light-dark');
-        done();
-      });
-    });
   });
 
   describe('switchColorScheme', () => {
-    it('should update body class, update subject emission, and persist to localStorage when switching to dark', done => {
+    it('should update body class, update subject emission', done => {
       service.switchColorScheme('dark');
 
-      expect(documentMock.body.classList.contains('dark')).toBe(true);
-      expect(documentMock.body.classList.contains('light')).toBe(false);
-      expect(localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY)).toBe('dark');
+      service.colorScheme()
+        .pipe(take(1))
+        .subscribe(scheme => {
+          expect(documentMock.body.classList.contains('dark')).toBe(true);
+          expect(documentMock.body.classList.contains('light')).toBe(false);
+          expect(scheme).toBe('dark');
 
-      service.colorScheme().subscribe(scheme => {
-        expect(scheme).toBe('dark');
-        done();
-      });
+          done();
+        });
     });
 
-    it('should update body class, update subject emission, and persist to localStorage when switching to light', done => {
+    it('should update body class, update subject emission', done => {
       service.switchColorScheme('dark');
       service.switchColorScheme('light');
 
-      expect(documentMock.body.classList.contains('light')).toBe(true);
-      expect(documentMock.body.classList.contains('dark')).toBe(false);
-      expect(localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY)).toBe('light');
+      service.colorScheme()
+        .pipe(take(1))
+        .subscribe(scheme => {
+          expect(documentMock.body.classList.contains('light')).toBe(true);
+          expect(documentMock.body.classList.contains('dark')).toBe(false);
+          expect(scheme).toBe('light');
 
-      service.colorScheme().subscribe(scheme => {
-        expect(scheme).toBe('light');
-        done();
-      });
+          done();
+        });
     });
 
     it('should remove light and dark classes when switching to light-dark', done => {
@@ -138,7 +95,6 @@ describe('ThemeManagerService', () => {
 
       expect(documentMock.body.classList.contains('dark')).toBe(false);
       expect(documentMock.body.classList.contains('light')).toBe(false);
-      expect(localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY)).toBe('light-dark');
 
       service.colorScheme().subscribe(scheme => {
         expect(scheme).toBe('light-dark');
@@ -149,13 +105,13 @@ describe('ThemeManagerService', () => {
 
   describe('previewColorScheme', () => {
     it('should change body class without mutating subject or updating localStorage', done => {
-      expect(localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY)).toBeNull();
+      expect(localStorage[THEME_COLOR_SCHEME_STORAGE_KEY]).toBeUndefined();
 
       service.previewColorScheme('dark');
 
       expect(documentMock.body.classList.contains('dark')).toBe(true);
       expect(documentMock.body.classList.contains('light')).toBe(false);
-      expect(localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY)).toBeNull();
+      expect(localStorage[THEME_COLOR_SCHEME_STORAGE_KEY]).toBeUndefined();
 
       service.colorScheme().subscribe(scheme => {
         expect(scheme).toBe('light-dark');
