@@ -1,0 +1,15 @@
+:host {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(max-content, 400px));
+  gap: var(--dim-x-large);
+  justify-content: center;
+  align-items: stretch;
+
+  @media (max-width: 599.98px) and (orientation: portrait) {
+    grid-template-columns: minmax(max-content, 400px);
+  }
+
+  ::ng-deep mat-card {
+    max-width: 400px;
+  }
+}
