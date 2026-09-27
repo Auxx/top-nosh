@@ -1,4 +1,5 @@
 export * from './content/components/block-loader/block-loader.component';
+export * from './content/components/block-notice/block-notice.component';
 export * from './content/components/card-icon/card-icon.component';
 export * from './content/components/card-state/card-state.component';
 export * from './content/components/mini-badge/mini-badge.component';
