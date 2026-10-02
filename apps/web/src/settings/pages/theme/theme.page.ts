@@ -79,9 +79,7 @@ export class ThemePage {
         take(1),
         takeUntilDestroyed()
       )
-      .subscribe(scheme => {
-        this.colorScheme.setValue(scheme, { emitEvent: false });
-      });
+      .subscribe(scheme => this.colorScheme.setValue(scheme, { emitEvent: false }));
 
     this.colorScheme
       .valueChanges
