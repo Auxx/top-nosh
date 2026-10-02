@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<NoticeComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-notice></ui-notice>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-notice></ui-notice>`
+  })
 };

@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<EditUserPage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-edit-user></app-edit-user>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-edit-user></app-edit-user>`
+  })
 };

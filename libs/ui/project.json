@@ -15,9 +15,6 @@
         "jestConfig": "libs/ui/jest.config.cts",
         "tsConfig": "libs/ui/tsconfig.spec.json"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
     }
   }
 }

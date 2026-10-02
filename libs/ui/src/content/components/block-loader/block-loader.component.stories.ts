@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<BlockLoaderComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-block-loader></ui-block-loader>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-block-loader></ui-block-loader>`
+  })
 };

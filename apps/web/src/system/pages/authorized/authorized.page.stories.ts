@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<AuthorizedPage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-authorized></app-authorized>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-authorized></app-authorized>`
+  })
 };

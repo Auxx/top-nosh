@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<PageHeaderComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-page-header></ui-page-header>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-page-header></ui-page-header>`
+  })
 };

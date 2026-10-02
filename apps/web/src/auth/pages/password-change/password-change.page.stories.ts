@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<PasswordChangePage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-password-change></app-password-change>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-password-change></app-password-change>`
+  })
 };

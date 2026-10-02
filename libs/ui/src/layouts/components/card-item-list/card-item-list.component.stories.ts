@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<CardItemListComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-card-item-list></ui-card-item-list>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-card-item-list></ui-card-item-list>`
+  })
 };

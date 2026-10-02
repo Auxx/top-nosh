@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<CookingModeComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-cooking-mode></app-cooking-mode>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-cooking-mode></app-cooking-mode>`
+  })
 };

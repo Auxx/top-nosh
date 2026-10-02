@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<CardStateComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-card-state></ui-card-state>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-card-state></ui-card-state>`
+  })
 };

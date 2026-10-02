@@ -36,14 +36,14 @@ export class RecipesService {
       if (!cuisineMap.has(pair.cuisine)) {
         cuisineMap.set(pair.cuisine, new Set());
       }
-      cuisineMap.get(pair.cuisine)!.add(pair.category);
+      cuisineMap.get(pair.cuisine).add(pair.category);
     }
 
     const sortedCuisines = Array.from(cuisineMap.keys()).sort((a, b) => a.localeCompare(b));
 
     return sortedCuisines.map(cuisine => ({
       cuisine,
-      categories: Array.from(cuisineMap.get(cuisine)!).sort((a, b) => a.localeCompare(b))
+      categories: Array.from(cuisineMap.get(cuisine)).sort((a, b) => a.localeCompare(b))
     }));
   }
 
@@ -210,7 +210,7 @@ export class RecipesService {
 
       const existingStageMap = new Map(existing.stages.map(s => [ s.id, s ]));
       const incomingStageIds = new Set(
-        dto.stages.filter(s => s.id).map(s => s.id!)
+        dto.stages.map(s => s.id).filter(id => id !== undefined)
       );
 
       const stagesToDelete = existing.stages.filter(
@@ -227,7 +227,7 @@ export class RecipesService {
         const stageOrder = stageDto.order ?? stageIdx;
 
         if (stageDto.id && existingStageMap.has(stageDto.id)) {
-          const existingStage = existingStageMap.get(stageDto.id)!;
+          const existingStage = existingStageMap.get(stageDto.id);
 
           await tx.recipeStage.update({
             where: { id: stageDto.id },
@@ -242,7 +242,7 @@ export class RecipesService {
             existingStage.steps.map(st => [ st.id, st ])
           );
           const incomingStepIds = new Set(
-            stageDto.steps.filter(st => st.id).map(st => st.id!)
+            stageDto.steps.map(st => st.id).filter(id => id !== undefined)
           );
           const stepsToDelete = existingStage.steps.filter(
             st => !incomingStepIds.has(st.id)
@@ -284,7 +284,7 @@ export class RecipesService {
             existingStage.ingredients.map(ing => [ ing.id, ing ])
           );
           const incomingIngIds = new Set(
-            stageDto.ingredients.filter(ing => ing.id).map(ing => ing.id!)
+            stageDto.ingredients.map(ing => ing.id).filter(id => id !== undefined)
           );
           const ingsToDelete = existingStage.ingredients.filter(
             ing => !incomingIngIds.has(ing.id)

@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<ThemePage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-theme></app-theme>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-theme></app-theme>`
+  })
 };

@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<LandingPage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-landing></app-landing>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-landing></app-landing>`
+  })
 };

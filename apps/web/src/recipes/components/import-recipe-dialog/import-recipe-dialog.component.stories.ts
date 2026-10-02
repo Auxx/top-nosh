@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<ImportRecipeDialogComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-import-recipe-dialog></app-import-recipe-dialog>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-import-recipe-dialog></app-import-recipe-dialog>`
+  })
 };

@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<GlanceComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-glance></app-glance>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-glance></app-glance>`
+  })
 };

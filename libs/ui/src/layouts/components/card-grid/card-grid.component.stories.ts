@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<CardGridComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-card-grid></ui-card-grid>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-card-grid></ui-card-grid>`
+  })
 };

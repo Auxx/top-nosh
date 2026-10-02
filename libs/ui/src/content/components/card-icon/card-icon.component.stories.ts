@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<CardIconComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-card-icon></ui-card-icon>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-card-icon></ui-card-icon>`
+  })
 };

@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<RecipeListPage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-recipe-list></app-recipe-list>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-recipe-list></app-recipe-list>`
+  })
 };

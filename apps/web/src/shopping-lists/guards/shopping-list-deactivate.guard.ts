@@ -5,6 +5,5 @@ export interface CanDeactivateComponent {
   canDeactivate: () => boolean | Observable<boolean> | Promise<boolean>;
 }
 
-export const canDeactivateShoppingList: CanDeactivateFn<CanDeactivateComponent> = component => {
-  return component.canDeactivate ? component.canDeactivate() : true;
-};
+export const canDeactivateShoppingList: CanDeactivateFn<CanDeactivateComponent> = component =>
+  component.canDeactivate ? component.canDeactivate() : true;

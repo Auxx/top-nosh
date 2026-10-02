@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<SettingsDashboardPage>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-settings-dashboard></app-settings-dashboard>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-settings-dashboard></app-settings-dashboard>`
+  })
 };
