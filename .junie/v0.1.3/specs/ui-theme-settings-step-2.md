@@ -1,6 +1,7 @@
 # UI Theme Settings Step 2
 
-This is the second step of the UI theming feature. It focuses on user selectable material palette. 
+This is the second step of the UI theming feature. It focuses on user selectable
+material palette.
 
 ## The workflow
 
