@@ -83,15 +83,12 @@ export class ThemePage {
         this.colorScheme.setValue(scheme, { emitEvent: false });
       });
 
-    this.colorScheme.valueChanges
+    this.colorScheme
+      .valueChanges
       .pipe(takeUntilDestroyed())
-      .subscribe(value => {
-        this.themeManager.previewColorScheme(value);
-      });
+      .subscribe(value => this.themeManager.previewColorScheme(value));
 
-    this.destroyRef.onDestroy(() => {
-      this.themeManager.resetColorScheme();
-    });
+    this.destroyRef.onDestroy(() => this.themeManager.resetColorScheme());
   }
 
   readonly onNavigateBack = () => this.router.navigate([ '/settings' ]);

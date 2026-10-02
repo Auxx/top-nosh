@@ -11,7 +11,6 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { PageHeaderComponent } from '@top-nosh/ui';
 import { map } from 'rxjs';
-import { UserResponseDto } from '../../models/user.types';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 
 @Component({

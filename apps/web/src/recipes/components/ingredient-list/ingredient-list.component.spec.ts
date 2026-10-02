@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { TranslocoTestingModule } from '@jsverse/transloco';
 import { MiniBadgeComponent, NoticeComponent, SectionHeaderComponent } from '@top-nosh/ui';
 import { MockComponents, MockDirectives } from 'ng-mocks';
 import {
