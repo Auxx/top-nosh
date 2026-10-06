@@ -1,9 +1,9 @@
 import { allConfigEntryTypes, configEntriesRepository } from './repository';
 
 describe('configEntriesRepository', () => {
-  it('should return all 9 configuration entries', () => {
+  it('should return all 10 configuration entries', () => {
     const entries = configEntriesRepository();
-    expect(entries).toHaveLength(9);
+    expect(entries).toHaveLength(10);
   });
 
   it('should have unique keys across all entries', () => {
@@ -33,7 +33,8 @@ describe('configEntriesRepository', () => {
       { key: 'fileManagement.storage.active', translationKey: 'fileManagementStorageActive', type: 'string' },
       { key: 'fileManagement.storage.default', translationKey: 'fileManagementStorageDefault', type: 'string' },
       { key: 'gallery.input.maxUploadSize', translationKey: 'galleryInputMaxUploadSize', type: 'string' },
-      { key: 'gallery.output.format', translationKey: 'galleryOutputFormat', type: 'string' }
+      { key: 'gallery.output.format', translationKey: 'galleryOutputFormat', type: 'string' },
+      { key: 'ui.theme.palette', translationKey: 'uiThemePalette', type: 'string' }
     ];
     expect(entries).toEqual(expected);
   });

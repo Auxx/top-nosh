@@ -83,18 +83,54 @@ export class ThemePage {
       )
       .subscribe(scheme => this.colorScheme.setValue(scheme, { emitEvent: false }));
 
+    this.themeManager
+      .colorPalette()
+      .pipe(
+        take(1),
+        takeUntilDestroyed()
+      )
+      .subscribe(palette => this.palette.setValue(palette, { emitEvent: false }));
+
     this.colorScheme
       .valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(value => this.themeManager.previewColorScheme(value));
 
-    this.destroyRef.onDestroy(() => this.themeManager.resetColorScheme());
+    this.palette
+      .valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(value => this.themeManager.previewColorPalette(value));
+
+    this.destroyRef.onDestroy(() => {
+      this.themeManager.resetColorScheme();
+      this.themeManager.resetColorPalette();
+    });
   }
 
   readonly onNavigateBack = () => this.router.navigate([ '/settings' ]);
 
   readonly onSubmit = () => {
+    if (this.form.invalid || this.isSubmitting()) {
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    this.hasError.set(false);
+
     this.themeManager.switchColorScheme(this.colorScheme.value);
-    this.router.navigate([ '/settings' ]).then();
+
+    this.themeManager
+      .switchColorPalette(this.palette.value)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          this.router.navigate([ '/settings' ]).then();
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.hasError.set(true);
+        }
+      });
   };
 }

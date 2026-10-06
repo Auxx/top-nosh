@@ -1,6 +1,7 @@
 import { OptionItem } from '../../../system/types/option-item';
 
 export const THEME_COLOR_SCHEME_STORAGE_KEY = 'top-nosh-color-scheme';
+export const UI_THEME_PALETTE_CONFIG_KEY = 'ui.theme.palette';
 
 export const allPalettes = [
   'chartreuse',

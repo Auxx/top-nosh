@@ -41,5 +41,6 @@ export const configEntriesRepository = (): ConfigEntry[] => [
   { key: 'fileManagement.storage.active', translationKey: 'fileManagementStorageActive', type: 'string' },
   { key: 'fileManagement.storage.default', translationKey: 'fileManagementStorageDefault', type: 'string' },
   { key: 'gallery.input.maxUploadSize', translationKey: 'galleryInputMaxUploadSize', type: 'string' },
-  { key: 'gallery.output.format', translationKey: 'galleryOutputFormat', type: 'string' }
+  { key: 'gallery.output.format', translationKey: 'galleryOutputFormat', type: 'string' },
+  { key: 'ui.theme.palette', translationKey: 'uiThemePalette', type: 'string' }
 ];

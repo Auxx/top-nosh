@@ -29,3 +29,26 @@ body {
     color-scheme: dark;
   }
 }
+
+$palettes: (
+  'chartreuse': mat.$chartreuse-palette,
+  'red': mat.$red-palette,
+  'green': mat.$green-palette,
+  'blue': mat.$blue-palette,
+  'yellow': mat.$yellow-palette,
+  'cyan': mat.$cyan-palette,
+  'magenta': mat.$magenta-palette,
+  'orange': mat.$orange-palette,
+  'spring-green': mat.$spring-green-palette,
+  'azure': mat.$azure-palette,
+  'violet': mat.$violet-palette,
+  'rose': mat.$rose-palette,
+);
+
+@each $name, $palette in $palettes {
+  body.#{$name} {
+    @include mat.theme((
+      color: $palette,
+    ));
+  }
+}
