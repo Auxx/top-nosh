@@ -1,0 +1,54 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: mat.$chartreuse-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light dark;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  &.light {
+    color-scheme: light;
+  }
+
+  &.dark {
+    color-scheme: dark;
+  }
+}
+
+$palettes: (
+  'chartreuse': mat.$chartreuse-palette,
+  'red': mat.$red-palette,
+  'green': mat.$green-palette,
+  'blue': mat.$blue-palette,
+  'yellow': mat.$yellow-palette,
+  'cyan': mat.$cyan-palette,
+  'magenta': mat.$magenta-palette,
+  'orange': mat.$orange-palette,
+  'spring-green': mat.$spring-green-palette,
+  'azure': mat.$azure-palette,
+  'violet': mat.$violet-palette,
+  'rose': mat.$rose-palette,
+);
+
+@each $name, $palette in $palettes {
+  body.#{$name} {
+    @include mat.theme((
+      color: $palette,
+    ));
+  }
+}

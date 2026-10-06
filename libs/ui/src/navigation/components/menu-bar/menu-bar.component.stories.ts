@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<MenuBarComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<lib-menu-bar></lib-menu-bar>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<lib-menu-bar></lib-menu-bar>`
+  })
 };

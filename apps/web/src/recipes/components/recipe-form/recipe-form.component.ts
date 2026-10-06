@@ -27,6 +27,7 @@ import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
 import { ConfirmationDialog, InfoCardComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
+import { OptionItem } from '../../../system/types/option-item';
 import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
@@ -106,7 +107,7 @@ export class RecipeFormComponent implements OnInit {
 
   readonly recipeId = input<string | undefined>(undefined);
 
-  readonly unitOptions: { value: IngredientUnit; label: string; }[] = [
+  readonly unitOptions: OptionItem<IngredientUnit>[] = [
     { value: 'GRAMS', label: 'Grams (g)' },
     { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
     { value: 'TSP', label: 'Teaspoons' },

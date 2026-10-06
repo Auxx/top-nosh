@@ -124,7 +124,7 @@ export class ShoppingListsService {
 
       const existingItemMap = new Map(existing.items.map(i => [ i.id, i ]));
       const incomingItemIds = new Set(
-        dto.items.filter(i => i.id).map(i => i.id!)
+        dto.items.map(i => i.id).filter(id => id !== undefined)
       );
 
       const itemsToDelete = existing.items.filter(

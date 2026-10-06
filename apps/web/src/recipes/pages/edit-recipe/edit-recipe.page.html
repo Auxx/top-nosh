@@ -48,7 +48,7 @@
     <form [formGroup]="recipeForm"
           (ngSubmit)="onSubmit()"
           id="recipe-form"
-          class="recipe-form">
+          class="column-form">
       <app-recipe-form [form]="recipeForm"
                        [recipeId]="recipeValue.id"
                        [isSubmitting]="submitting"/>

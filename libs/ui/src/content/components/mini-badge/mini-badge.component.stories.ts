@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<MiniBadgeComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-mini-badge></ui-mini-badge>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-mini-badge></ui-mini-badge>`
+  })
 };

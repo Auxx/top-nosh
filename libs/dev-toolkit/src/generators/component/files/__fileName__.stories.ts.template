@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<<%= className %>>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<<%= selector %>></<%= selector %>>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<<%= selector %>></<%= selector %>>`
+  })
 };

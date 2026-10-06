@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
-import { ImageViewDialog } from '../../dialogs/image-view/image-view.dialog';
 import { GalleryDetails, GalleryImageItem } from '../../models/gallery.types';
 import { GalleryManagerService } from '../../services/gallery-manager/gallery-manager.service';
 import { FilmStripComponent } from './film-strip.component';

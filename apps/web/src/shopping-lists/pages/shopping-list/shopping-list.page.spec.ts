@@ -2,13 +2,10 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { provideRouter, Router } from '@angular/router';
-import { ConfirmationDialog } from '@top-nosh/ui';
 import { BehaviorSubject, of } from 'rxjs';
 import { getTranslocoModule } from '../../../system/transloco-testing.module';
 import { PaginatedShoppingListResponse, ShoppingListItem } from '../../models/shopping-list.types';
-import {
-  ShoppingListManagementService
-} from '../../services/shopping-list-management/shopping-list-management.service';
+import { ShoppingListManagementService } from '../../services/shopping-list-management/shopping-list-management.service';
 import { ShoppingListPage } from './shopping-list.page';
 
 describe('ShoppingListPage', () => {

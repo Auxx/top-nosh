@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<InfoCardComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<ui-info-card></ui-info-card>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<ui-info-card></ui-info-card>`
+  })
 };

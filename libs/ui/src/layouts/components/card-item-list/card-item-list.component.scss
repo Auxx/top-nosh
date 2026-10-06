@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  ::ng-deep {
+    a, span {
+      font-weight: 500;
+      padding: var(--dim-medium) 0;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

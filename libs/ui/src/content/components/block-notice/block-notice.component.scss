@@ -1,0 +1,23 @@
+$icon-size: 40px;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  text-align: center;
+  gap: var(--dim-medium);
+  padding: var(--dim-large) var(--dim-xx-large);
+  font-weight: 500;
+
+  &.error {
+    color: var(--mat-sys-error);
+  }
+}
+
+mat-icon {
+  font-size: $icon-size;
+  width: $icon-size;
+  height: $icon-size;
+}

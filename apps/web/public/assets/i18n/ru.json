@@ -18,6 +18,30 @@
       "loading": "Загрузка..."
     }
   },
+  "config": {
+    "labels": {
+      "securityOidcIssuerUrl": "URL издателя",
+      "securityOidcClientId": "ID клиента",
+      "securityOidcClientSecret": "Секрет клиента",
+      "securityOidcCallbackUrl": "URL обратного вызова",
+      "securityOidcLinkByEmail": "Разрешить связывание пользователей по email",
+      "fileManagementStorageActive": "Активное хранилище",
+      "fileManagementStorageDefault": "Хранилище по умолчанию",
+      "galleryInputMaxUploadSize": "Максимальный размер загрузки",
+      "galleryOutputFormat": "Формат вывода"
+    },
+    "descriptions": {
+      "securityOidcIssuerUrl": "URL издателя OpenID Connect",
+      "securityOidcClientId": "ID клиента, предоставленный издателем OpenID Connect",
+      "securityOidcClientSecret": "Секрет клиента, предоставленный издателем OpenID Connect",
+      "securityOidcCallbackUrl": "URL обратного вызова для перенаправления после аутентификации",
+      "securityOidcLinkByEmail": "Отключите для повышения безопасности Top Nosh",
+      "fileManagementStorageActive": "",
+      "fileManagementStorageDefault": "",
+      "galleryInputMaxUploadSize": "",
+      "galleryOutputFormat": ""
+    }
+  },
   "web": {
     "AuthCallbackPage": {
       "title": "Аутентификация",
@@ -406,6 +430,8 @@
       "urlPlaceholder": "https://example.com/recipe-name",
       "urlRequired": "URL обязателен",
       "urlIsInvalid": "Пожалуйста, введите корректный URL"
+    },
+    "SettingsDashboardPage": {
     }
   }
 }

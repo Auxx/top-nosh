@@ -1,0 +1,44 @@
+<ng-container *transloco="let t; prefix: 'web.SettingsDashboardPage'">
+
+  <!-- Page Header / Welcome message -->
+  <ui-page-header>
+    <h1>{{ t('title') }}</h1>
+    <div>
+      {{ t('subtitle') }}
+    </div>
+  </ui-page-header>
+
+  <ui-card-grid>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ t('general') }}</mat-card-title>
+      </mat-card-header>
+
+      <ui-card-icon icon="settings"/>
+
+      <mat-card-content>
+        <ui-card-item-list>
+          <a [routerLink]="['theme']">{{ t('theme') }}</a>
+        </ui-card-item-list>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ t('security') }}</mat-card-title>
+      </mat-card-header>
+
+      <ui-card-icon icon="security"/>
+
+      <mat-card-content>
+        <ui-card-item-list>
+          <a [routerLink]="['users']">{{ t('users') }}</a>
+          <a [routerLink]="['/']">{{ t('oidc') }}</a>
+        </ui-card-item-list>
+      </mat-card-content>
+    </mat-card>
+
+  </ui-card-grid>
+
+</ng-container>

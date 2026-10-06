@@ -15,10 +15,8 @@ export default meta;
 type Story = StoryObj<GalleryManagerComponent>;
 
 export const Primary: Story = {
-  render: props => {
-    return {
-      props,
-      template: `<app-gallery-manager></app-gallery-manager>`
-    };
-  }
+  render: props => ({
+    props,
+    template: `<app-gallery-manager></app-gallery-manager>`
+  })
 };

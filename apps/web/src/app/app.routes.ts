@@ -37,9 +37,9 @@ export const appRoutes: Route[] = [
     loadChildren: () => import('../shopping-lists/shopping-lists.routes').then(m => m.routes)
   },
   {
-    path: 'users',
+    path: 'settings',
     canActivate: [ authGuard ],
     component: AuthorizedPage,
-    loadChildren: () => import('../users/users.routes').then(m => m.routes)
+    loadChildren: () => import('../settings/settings.routes').then(m => m.routes)
   }
 ];

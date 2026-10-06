@@ -1,3 +1,6 @@
+@let isLoading = loading();
+@let hasError = error();
+
 <ng-container *transloco="let t; prefix: 'web.LandingPage'">
 
   <!-- Page Header / Welcome message -->
@@ -8,10 +11,11 @@
     </div>
   </ui-page-header>
 
-  <!-- Dashboard Cards Grid -->
-  <div class="dashboard-grid">
-    <!-- Recent Recipes Card -->
-    <mat-card class="recipes-card">
+  <!-- Dashboard card grid -->
+  <ui-card-grid>
+
+    <!-- Recipes card -->
+    <mat-card>
       <mat-card-header>
         <mat-card-title>{{ t('recentRecipes') }}</mat-card-title>
       </mat-card-header>
@@ -21,39 +25,31 @@
            [alt]="t('recentRecipesAlt')"
            width="400"
            height="240"
-           class="card-image"/>
+           priority/>
 
       <mat-card-content>
-        @if (loading()) {
-          <div class="loading-state">
-            <mat-spinner diameter="40" [attr.aria-label]="t('loadingRecipes')"/>
-          </div>
-
-        } @else if (error()) {
-          <div class="error-state">
-            <p>{{ t('loadError') }}</p>
-          </div>
-
-        } @else if (hasRecipes()) {
-          <ul class="items-list recipe-list">
-            @for (recipe of data()?.recipes; track recipe.id) {
-              <li class="item-entry">
-                <a [routerLink]="['/recipes', recipe.id]"
-                   class="item-link">
+        @if (isLoading) {
+          <ui-card-state [isLoading]="true"/>
+        } @else if (hasError) {
+          <ui-card-state [errorMessage]="t('loadError')"/>
+        } @else {
+          @if (hasRecipes()) {
+            <ui-card-item-list>
+              @for (recipe of data()?.recipes; track recipe.id) {
+                <a [routerLink]="['/recipes', recipe.id]">
                   {{ recipe.name }}
                 </a>
-              </li>
-            }
-          </ul>
+              }
+            </ui-card-item-list>
 
-        } @else {
-          <div class="empty-state">
-            <p class="empty-message">{{ t('noRecipes') }}</p>
-          </div>
+          } @else {
+            <ui-card-state [noticeMessage]="t('noRecipes')"/>
+          }
         }
+
       </mat-card-content>
 
-      @if (!loading() && !error()) {
+      @if (!isLoading && !hasError) {
         <mat-card-actions>
           @if (hasRecipes()) {
             <button matButton
@@ -73,8 +69,8 @@
       }
     </mat-card>
 
-    <!-- Shopping Items Card -->
-    <mat-card class="shopping-card">
+    <!-- Shopping lists card -->
+    <mat-card>
       <mat-card-header>
         <mat-card-title>{{ shoppingListTitle() }}</mat-card-title>
       </mat-card-header>
@@ -84,36 +80,27 @@
            width="400"
            height="240"
            [alt]="t('shoppingListsAlt')"
-           class="card-image"/>
+           priority/>
 
       <mat-card-content>
-        @if (loading()) {
-          <div class="loading-state">
-            <mat-spinner diameter="40" [attr.aria-label]="t('loadingShoppingList')"/>
-          </div>
-
-        } @else if (error()) {
-          <div class="error-state">
-            <p>{{ t('loadError') }}</p>
-          </div>
-
-        } @else if (hasShoppingListItems()) {
-          <ul class="items-list shopping-items-list">
-            @for (item of data()?.shoppingList?.items; track item.id) {
-              <li class="item-entry">
-                <span class="item-name">{{ item.name }}</span>
-              </li>
-            }
-          </ul>
-
+        @if (isLoading) {
+          <ui-card-state [isLoading]="true"/>
+        } @else if (hasError) {
+          <ui-card-state [errorMessage]="t('loadError')"/>
         } @else {
-          <div class="empty-state">
-            <p class="empty-message">{{ t('noShoppingListItems') }}</p>
-          </div>
+          @if (hasShoppingListItems()) {
+            <ui-card-item-list>
+              @for (item of data()?.shoppingList?.items; track item.id) {
+                <span>{{ item.name }}</span>
+              }
+            </ui-card-item-list>
+          } @else {
+            <ui-card-state [noticeMessage]="t('noShoppingListItems')"/>
+          }
         }
       </mat-card-content>
 
-      @if (!loading() && !error()) {
+      @if (!isLoading && !hasError) {
         <mat-card-actions>
           @if (hasShoppingListItems()) {
             <button matButton
@@ -132,6 +119,6 @@
         </mat-card-actions>
       }
     </mat-card>
-  </div>
+  </ui-card-grid>
 
 </ng-container>
