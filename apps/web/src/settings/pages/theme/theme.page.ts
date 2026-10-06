@@ -14,7 +14,7 @@ import { take } from 'rxjs';
 import { ThemeManagerService } from '../../services/theme-manager/theme-manager.service';
 import {
   availableColorSchemes,
-  availableThemes,
+  availablePalettes,
   ColorScheme,
   Palette
 } from '../../services/theme-manager/theme-manager.types';
@@ -47,7 +47,9 @@ import {
 })
 export class ThemePage {
   private readonly router = inject(Router);
+
   private readonly themeManager = inject(ThemeManagerService);
+
   private readonly destroyRef = inject(DestroyRef);
 
   readonly isLoading = signal(false);
@@ -56,7 +58,7 @@ export class ThemePage {
 
   readonly hasError = signal(false);
 
-  readonly availableThemes = availableThemes();
+  readonly availablePalettes = availablePalettes();
 
   protected readonly availableColorSchemes = availableColorSchemes;
 

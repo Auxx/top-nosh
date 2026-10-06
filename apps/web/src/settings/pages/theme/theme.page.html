@@ -39,7 +39,7 @@
               <mat-label>{{ t('palette') }}</mat-label>
 
               <mat-select [formControl]="palette">
-                @for (option of availableThemes; track option.value) {
+                @for (option of availablePalettes; track option.value) {
                   <mat-option [value]="option.value">
                     {{ t(option.label) }}
                   </mat-option>

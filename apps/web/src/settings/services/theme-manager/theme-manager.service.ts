@@ -9,7 +9,22 @@ export class ThemeManagerService {
 
   private readonly localStorage = this.document.defaultView?.localStorage;
 
-  private readonly colorScheme$ = new BehaviorSubject<ColorScheme>('light-dark');
+  private readonly loadColorScheme = (): ColorScheme => {
+    try {
+      if (this.localStorage !== undefined) {
+        const stored = this.localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY);
+
+        if (stored !== null && (allColorSchemes as readonly string[]).includes(stored)) {
+          return stored as ColorScheme;
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    }
+    return 'light-dark';
+  };
+
+  private readonly colorScheme$ = new BehaviorSubject<ColorScheme>(this.loadColorScheme());
 
   constructor() {
     this.colorScheme$
@@ -18,8 +33,6 @@ export class ThemeManagerService {
         this.saveColorScheme(colorScheme);
         this.applyColorScheme(colorScheme);
       });
-
-    this.colorScheme$.next(this.loadColorScheme());
   }
 
   readonly colorScheme = (): Observable<ColorScheme> => this.colorScheme$.asObservable();
@@ -40,21 +53,6 @@ export class ThemeManagerService {
       this.document.body.classList.add(scheme);
     }
   }
-
-  private readonly loadColorScheme = (): ColorScheme => {
-    try {
-      if (this.localStorage !== undefined) {
-        const stored = this.localStorage.getItem(THEME_COLOR_SCHEME_STORAGE_KEY);
-
-        if (stored !== null && (allColorSchemes as readonly string[]).includes(stored)) {
-          return stored as ColorScheme;
-        }
-      }
-    } catch {
-      // Ignore storage read errors
-    }
-    return 'light-dark';
-  };
 
   private readonly saveColorScheme = (scheme: ColorScheme) => {
     try {

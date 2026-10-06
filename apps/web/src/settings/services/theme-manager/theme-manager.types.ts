@@ -23,7 +23,7 @@ export const allColorSchemes = [ 'light-dark', 'light', 'dark' ] as const;
 
 export type ColorScheme = typeof allColorSchemes[number];
 
-export const availableThemes = (): OptionItem<Palette>[] => [
+export const availablePalettes = (): OptionItem<Palette>[] => [
   { value: 'chartreuse', label: 'paletteChartreuse' },
   { value: 'red', label: 'paletteRed' },
   { value: 'green', label: 'paletteGreen' },
