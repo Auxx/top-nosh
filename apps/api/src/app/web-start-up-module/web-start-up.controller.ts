@@ -13,6 +13,7 @@ export interface WebManifest {
   name: string;
   short_name: string;
   start_url: string;
+  id: string;
   display: 'standalone' | 'fullscreen' | 'minimal-ui' | 'browser';
   icons: WebManifestIcon[];
 }
@@ -36,6 +37,7 @@ export class WebStartUpController {
       name: 'Top Nosh',
       short_name: 'Top Nosh',
       start_url: `${getFrontendUrl()}/`,
+      id: `${getFrontendUrl()}/`,
       display: 'standalone',
       icons: [
         {
