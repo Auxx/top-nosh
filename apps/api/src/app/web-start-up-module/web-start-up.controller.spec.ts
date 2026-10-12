@@ -82,6 +82,7 @@ describe('Configuration Controller', () => {
         name: 'Top Nosh',
         short_name: 'Top Nosh',
         start_url: 'http://localhost:4200/',
+        id: 'http://localhost:4200/',
         display: 'standalone',
         icons: [
           {
@@ -119,6 +120,7 @@ describe('Configuration Controller', () => {
     });
 
     it('should return dynamic start_url when SERVER_HTTP_DOMAIN is set', () => {
+      process.env['SERVER_DEVELOPMENT_MODE'] = 'false';
       process.env['SERVER_HTTP_DOMAIN'] = 'https://topnosh.example.com';
       const manifest = controller.manifest();
       expect(manifest.start_url).toBe('https://topnosh.example.com/');
