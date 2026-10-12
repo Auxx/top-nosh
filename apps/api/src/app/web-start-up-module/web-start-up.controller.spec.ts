@@ -69,4 +69,68 @@ describe('Configuration Controller', () => {
       'PRODUCTION=true\nAPI_URL=\nSECURITY_OIDC_ENABLED=false\n'
     );
   });
+
+  describe('PWA Manifest', () => {
+    it('should return manifest with default configuration and icons', () => {
+      delete process.env['SERVER_DEVELOPMENT_MODE'];
+      delete process.env['SERVER_DEVELOPMENT_DOMAIN'];
+      delete process.env['SERVER_HTTP_DOMAIN'];
+
+      const manifest = controller.manifest();
+
+      expect(manifest).toEqual({
+        name: 'Top Nosh',
+        short_name: 'Top Nosh',
+        start_url: 'http://localhost:4200/',
+        id: 'http://localhost:4200/',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/images/pwa/android/launchericon-48x48.png',
+            sizes: '48x48',
+            type: 'image/png'
+          },
+          {
+            src: '/images/pwa/android/launchericon-72x72.png',
+            sizes: '72x72',
+            type: 'image/png'
+          },
+          {
+            src: '/images/pwa/android/launchericon-96x96.png',
+            sizes: '96x96',
+            type: 'image/png'
+          },
+          {
+            src: '/images/pwa/android/launchericon-144x144.png',
+            sizes: '144x144',
+            type: 'image/png'
+          },
+          {
+            src: '/images/pwa/android/launchericon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/images/pwa/android/launchericon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      });
+    });
+
+    it('should return dynamic start_url when SERVER_HTTP_DOMAIN is set', () => {
+      process.env['SERVER_DEVELOPMENT_MODE'] = 'false';
+      process.env['SERVER_HTTP_DOMAIN'] = 'https://topnosh.example.com';
+      const manifest = controller.manifest();
+      expect(manifest.start_url).toBe('https://topnosh.example.com/');
+    });
+
+    it('should return dynamic start_url in dev mode when SERVER_DEVELOPMENT_DOMAIN is set', () => {
+      process.env['SERVER_DEVELOPMENT_MODE'] = 'true';
+      process.env['SERVER_DEVELOPMENT_DOMAIN'] = 'http://dev.topnosh.local:4200///';
+      const manifest = controller.manifest();
+      expect(manifest.start_url).toBe('http://dev.topnosh.local:4200/');
+    });
+  });
 });

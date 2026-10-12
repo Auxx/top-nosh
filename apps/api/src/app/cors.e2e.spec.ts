@@ -7,6 +7,10 @@ import { getCorsOptions } from './cors.config';
 describe('CORS Integration', () => {
   const originalEnv = { ...process.env };
 
+  beforeAll(() => {
+    process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:4200';
+  });
+
   afterAll(() => {
     process.env = originalEnv;
   });
@@ -82,6 +86,7 @@ describe('CORS Integration', () => {
     let customApp: INestApplication;
 
     beforeAll(async () => {
+      process.env['SERVER_DEVELOPMENT_MODE'] = 'true';
       process.env['SERVER_DEVELOPMENT_DOMAIN'] = 'https://app.example.com/';
       customApp = await createTestApp();
     });

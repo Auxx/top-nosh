@@ -10,7 +10,9 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix, {
     exclude: [
-      { path: 'assets/app.properties', method: RequestMethod.GET }
+      { path: 'assets/app.properties', method: RequestMethod.GET },
+      { path: 'manifest.webmanifest', method: RequestMethod.GET },
+      { path: 'manifest.json', method: RequestMethod.GET }
     ]
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));

@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, RequestMethod } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import request from 'supertest';
 import { AppModule } from './app.module';
@@ -8,7 +8,13 @@ describe('Static Serving and API Separation E2E', () => {
 
   beforeAll(async () => {
     app = await NestFactory.create(AppModule, { logger: false });
-    app.setGlobalPrefix('api');
+    app.setGlobalPrefix('api', {
+      exclude: [
+        { path: 'assets/app.properties', method: RequestMethod.GET },
+        { path: 'manifest.webmanifest', method: RequestMethod.GET },
+        { path: 'manifest.json', method: RequestMethod.GET }
+      ]
+    });
     await app.init();
   });
 
@@ -31,6 +37,26 @@ describe('Static Serving and API Separation E2E', () => {
 
     expect(response.body.statusCode).toBe(404);
     expect(response.body.message).toContain('Cannot GET /api/unknown-endpoint');
+  });
+
+  it('should serve manifest at /manifest.webmanifest', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/manifest.webmanifest')
+      .expect(200);
+
+    expect(response.headers['content-type']).toContain('application/manifest+json');
+    expect(response.body.name).toBe('Top Nosh');
+    expect(response.body.display).toBe('standalone');
+  });
+
+  it('should serve manifest at /manifest.json', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/manifest.json')
+      .expect(200);
+
+    expect(response.headers['content-type']).toContain('application/manifest+json');
+    expect(response.body.name).toBe('Top Nosh');
+    expect(response.body.display).toBe('standalone');
   });
 
   it('should serve Angular index.html for root path /', async () => {
