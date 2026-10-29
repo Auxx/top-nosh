@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:24.21.0-alpine AS builder
+FROM node:24.22.2-alpine AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN npx -y prisma@7.10.0 generate
 RUN npx nx run-many --target=build --projects=api,web --configuration=production
 
 # Stage 2: Production Runtime
-FROM node:24.20.0-alpine AS runner
+FROM node:24.22.2-alpine AS runner
 
 WORKDIR /app
 
