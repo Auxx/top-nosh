@@ -1,7 +1,8 @@
-import { INestApplication, RequestMethod } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { PrismaService } from '@top-nosh/data-access';
 import request from 'supertest';
+import { configureApp } from '../configure-app';
 import { DataPermissionsReport } from '../data-permissions/data-permissions';
 import { NeedsAttentionModule } from './needs-attention.module';
 
@@ -18,13 +19,7 @@ describe('Needs attention mode E2E', () => {
   beforeEach(async () => {
     process.env['SERVER_HTTP_DOMAIN'] = 'http://localhost:4200/';
     app = await NestFactory.create(NeedsAttentionModule.forRoot(report), { logger: false, abortOnError: false });
-    app.setGlobalPrefix('api', {
-      exclude: [
-        { path: 'assets/app.properties', method: RequestMethod.GET },
-        { path: 'manifest.webmanifest', method: RequestMethod.GET },
-        { path: 'manifest.json', method: RequestMethod.GET }
-      ]
-    });
+    configureApp(app);
     await app.init();
   });
 

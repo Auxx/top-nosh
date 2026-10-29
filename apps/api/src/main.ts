@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { getCorsOptions } from './app/cors.config';
+import { configureApp, GLOBAL_PREFIX } from './app/configure-app';
 import { checkDataPermissions, formatDataPermissionsReport } from './app/data-permissions/data-permissions';
 import { NeedsAttentionModule } from './app/needs-attention/needs-attention.module';
 
@@ -19,19 +19,10 @@ async function bootstrap() {
     Logger.error(formatDataPermissionsReport(report));
   }
   const app = await NestFactory.create(report.ok ? AppModule : NeedsAttentionModule.forRoot(report));
-  app.enableCors(getCorsOptions());
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix, {
-    exclude: [
-      { path: 'assets/app.properties', method: RequestMethod.GET },
-      { path: 'manifest.webmanifest', method: RequestMethod.GET },
-      { path: 'manifest.json', method: RequestMethod.GET }
-    ]
-  });
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  configureApp(app);
   const port = process.env.SERVER_HTTP_PORT || 3000;
   await app.listen(port);
-  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`🚀 Application is running on: http://localhost:${port}/${GLOBAL_PREFIX}`);
 }
 
 bootstrap().then();
