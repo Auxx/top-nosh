@@ -84,6 +84,20 @@ describe('data-permissions', () => {
     });
   });
 
+  it('leaves no probe file behind after a successful check', () => {
+    fs.mkdirSync(storagePath);
+    checkDataPermissions({ databaseUrl, storagePath });
+    expect(fs.readdirSync(dataDir)).toEqual([ 'storage' ]);
+    expect(fs.readdirSync(storagePath)).toEqual([]);
+  });
+
+  it('recovers from a stale probe file left by a crashed run', () => {
+    fs.writeFileSync(path.join(dataDir, `.top-nosh-write-test-${process.pid}`), '');
+    const report = checkDataPermissions({ databaseUrl, storagePath });
+    expect(report.ok).toBe(true);
+    expect(fs.readdirSync(dataDir)).toEqual([]);
+  });
+
   it('fails when data dir does not exist', () => {
     fs.rmSync(dataDir, { recursive: true });
     const report = checkDataPermissions({ databaseUrl, storagePath: path.join(root, 'storage') });
@@ -113,6 +127,44 @@ describe('data-permissions', () => {
     expect(text).toContain(dataDir);
     expect(text).toContain(`${report.uid}:${report.gid}`);
     expect(text).toContain('chown -R');
+    expect(text).toContain('https://github.com/Auxx/top-nosh#rootless-docker--podman');
+    expect(text).not.toContain(':ro');
+    expect(text).not.toContain('is missing');
+  });
+
+  it('formatDataPermissionsReport hints at a read-only mount for EROFS', () => {
+    const text = formatDataPermissionsReport({
+      ok: false,
+      uid: 1000,
+      gid: 1000,
+      failures: [ { path: '/app/data', reason: 'EROFS' } ]
+    });
+    expect(text).toContain('read-only');
+    expect(text).toContain(':ro');
+    expect(text).not.toContain('chown -R');
+  });
+
+  it('formatDataPermissionsReport hints at a missing folder for ENOENT', () => {
+    const text = formatDataPermissionsReport({
+      ok: false,
+      uid: 1000,
+      gid: 1000,
+      failures: [ { path: '/app/data', reason: 'ENOENT' } ]
+    });
+    expect(text).toContain('is missing');
+    expect(text).toContain('/app/data');
+    expect(text).not.toContain('chown -R');
+  });
+
+  it('formatDataPermissionsReport keeps chown hint alongside other hints', () => {
+    const text = formatDataPermissionsReport({
+      ok: false,
+      uid: 1000,
+      gid: 1000,
+      failures: [ { path: '/a', reason: 'EROFS' }, { path: '/b', reason: 'EACCES' } ]
+    });
+    expect(text).toContain('chown -R');
+    expect(text).toContain(':ro');
   });
 });
 
