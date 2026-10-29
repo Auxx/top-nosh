@@ -3,9 +3,22 @@ import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { getCorsOptions } from './app/cors.config';
+import { checkDataPermissions, formatDataPermissionsReport } from './app/data-permissions/data-permissions';
+import { NeedsAttentionModule } from './app/needs-attention/needs-attention.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const report = checkDataPermissions();
+  if (process.argv.includes('--check-data-permissions')) {
+    if (!report.ok) {
+      console.error(formatDataPermissionsReport(report));
+    }
+    process.exit(report.ok ? 0 : 1);
+  }
+
+  if (!report.ok) {
+    Logger.error(formatDataPermissionsReport(report));
+  }
+  const app = await NestFactory.create(report.ok ? AppModule : NeedsAttentionModule.forRoot(report));
   app.enableCors(getCorsOptions());
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix, {
