@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PrismaModule } from '@top-nosh/data-access';
-import { existsSync } from 'fs';
-import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -14,27 +12,9 @@ import { GalleriesModule } from './galleries/galleries.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { SharingModule } from './sharing/sharing.module';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
+import { getStaticRootPath } from './static-root';
 import { UsersModule } from './users/users.module';
 import { WebStartUpModule } from './web-start-up-module/web-start-up-module';
-
-function getStaticRootPath(): string {
-  const candidates = [
-    join(__dirname, '..', 'web', 'browser'),
-    join(__dirname, '../../../../dist/apps/web/browser'),
-    join(process.cwd(), 'dist', 'apps', 'web', 'browser'),
-    join(process.cwd(), '..', '..', 'dist', 'apps', 'web', 'browser')
-  ];
-
-  console.log('CWD', process.cwd());
-
-  for (const candidate of candidates) {
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-
-  return join(__dirname, '..', 'web', 'browser');
-}
 
 @Module({
   imports: [

@@ -3,7 +3,7 @@ import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '@prisma/client';
 import * as path from 'path';
 
-function getDatabaseUrl(): string {
+export function getDatabaseUrl(): string {
   const envUrl = process.env['PRISMA_DATABASE_URL'] || 'file:./data/top-nosh.db';
   if (envUrl.startsWith('file:')) {
     const rawPath = envUrl.slice('file:'.length);

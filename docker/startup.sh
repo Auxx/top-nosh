@@ -1,4 +1,7 @@
 #!/bin/ash
 
-npx -y prisma@7.10.0 migrate deploy
-node dist/apps/api/main.js
+if node dist/apps/api/main.js --check-data-permissions; then
+  ./node_modules/.bin/prisma migrate deploy
+fi
+
+exec node dist/apps/api/main.js

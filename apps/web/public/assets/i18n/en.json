@@ -43,6 +43,16 @@
     }
   },
   "web": {
+    "NeedsAttentionPage": {
+      "title": "This Top Nosh instance needs attention",
+      "intro": "After an update, Top Nosh needs permission to write to its data folder. Your recipes are safe; nothing has been changed.",
+      "operatorHeading": "If you run this instance",
+      "operatorSteps": "Stop the container, run the command below on the host, then start it again. Replace /path/to/data with your data folder.",
+      "rootlessHint": "Using rootless Docker or Podman? The command is different — see the README.",
+      "readmeLink": "Upgrade instructions",
+      "userHeading": "If you don't",
+      "userText": "Please contact the person who runs this Top Nosh instance."
+    },
     "AuthCallbackPage": {
       "title": "Authentication",
       "loadingSubtitle": "Completing login, please wait...",

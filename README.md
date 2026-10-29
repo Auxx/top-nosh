@@ -7,6 +7,17 @@ A self-hosted recipe library management system with shopping lists.
 **Top Nosh** is only distributed as a Docker container. You will need to create
 an empty folder to store the database and specify some environment variables.
 
+The container runs as an unprivileged user (uid/gid 1000), so the data folder
+must be owned by that user. Create it **before** the first start, otherwise
+Docker will create it as root and Top Nosh will show a "needs attention" page:
+
+```sh
+mkdir -p /path/to/data && sudo chown -R 1000:1000 /path/to/data
+```
+
+Using rootless Docker or Podman? See
+[Rootless Docker / Podman](#rootless-docker--podman).
+
 It is recommended to use Docker Compose.
 
 ```yml
@@ -14,6 +25,13 @@ services:
   top-nosh:
     image: auxx/top-nosh:latest
     container_name: top-nosh
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - /path/to/data:/app/data
     environment:
@@ -25,8 +43,19 @@ services:
     restart: unless-stopped
 ```
 
+The hardening options (`read_only`, `tmpfs`, `cap_drop`, `security_opt`) are
+optional, but the image works with them and they are recommended. Nothing is
+downloaded when the container starts, and the image contains no compilers or
+package managers.
+
 Replace `/path/to/data` with a path to the directory you wish to persist the
 database and other files.
+
+If you need a different user, add `user: "<uid>:<gid>"` to the service in your
+Compose file and make sure the data folder is owned by that uid.
+
+On first start, database migrations run before Top Nosh begins listening. On
+slow hardware this can take up to a minute, so please be patient.
 
 Set `SERVER_HTTP_DOMAIN` to your domain. If running locally, you can use
 `http://localhost:3000`. It is advised to put Top Nosh behind a reverse proxy
@@ -66,3 +95,37 @@ OIDC support can be enabled by setting up some additional environment variables:
 - `SECURITY_OIDC_LINK_BY_EMAIL` - when set to `true`,enables linking existing
   users to OIDC users with the same email. It is advised to disable this feature
   for security reasons.
+
+## Upgrading to 0.2.0
+
+Version 0.2.0 is a breaking release: the container no longer runs as root, but
+as uid/gid 1000. An existing data folder is owned by root, so you need to change
+its owner once:
+
+1. Stop the container.
+2. Run `sudo chown -R 1000:1000 /path/to/data`. On rootless Docker or Podman,
+   use the variants in [Rootless Docker / Podman](#rootless-docker--podman)
+   instead.
+3. Start the new version.
+
+If you skip step 2, Top Nosh stays up but shows a "needs attention" page instead
+of the app. No data is lost; fix the ownership and restart the container. See
+the [CHANGELOG](CHANGELOG.md) for the full list of changes.
+
+## Rootless Docker / Podman
+
+With user namespaces, uid 1000 inside the container maps to a subordinate uid on
+the host, so a plain `chown 1000:1000` gives the wrong owner. Change the owner
+from inside the user namespace instead.
+
+Podman:
+
+```sh
+podman unshare chown -R 1000:1000 /path/to/data
+```
+
+Rootless Docker (run the `chown` in a throwaway container):
+
+```sh
+docker run --rm -v /path/to/data:/data alpine chown -R 1000:1000 /data
+```
