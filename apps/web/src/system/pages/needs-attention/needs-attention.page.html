@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <mat-card *transloco="let t; prefix: 'web.NeedsAttentionPage'">
+    <h1>{{ t('title') }}</h1>
+    <p>{{ t('intro') }}</p>
+
+    <h2>{{ t('operatorHeading') }}</h2>
+    <p>{{ t('operatorSteps') }}</p>
+    <pre><code>sudo chown -R {{ uid }}:{{ gid }} /path/to/data</code></pre>
+    <p>{{ t('rootlessHint') }}</p>
+    <p><a [href]="readmeUrl" target="_blank" rel="noopener">{{ t('readmeLink') }}</a></p>
+
+    <h2>{{ t('userHeading') }}</h2>
+    <p>{{ t('userText') }}</p>
+  </mat-card>
+</div>
