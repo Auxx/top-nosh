@@ -20,6 +20,7 @@ async function bootstrap() {
   }
   const app = await NestFactory.create(report.ok ? AppModule : NeedsAttentionModule.forRoot(report));
   configureApp(app);
+  app.enableShutdownHooks();
   const port = process.env.SERVER_HTTP_PORT || 3000;
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${GLOBAL_PREFIX}`);
