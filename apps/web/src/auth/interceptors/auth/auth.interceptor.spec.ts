@@ -75,7 +75,7 @@ describe('authInterceptor', () => {
     req.flush({ data: 'secret' });
   });
 
-  it('should redirect to login and throw error when user is not authenticated', done => {
+  it('should throw error without navigating when user is not authenticated', done => {
     authServiceMock.state.mockReturnValue(of({ isAuthenticated: false, token: null }));
 
     httpClient.get('/api/protected').subscribe({
@@ -83,7 +83,7 @@ describe('authInterceptor', () => {
         done.fail('Expected error, but succeeded');
       },
       error: error => {
-        expect(routerMock.navigate).toHaveBeenCalledWith([ '/auth', 'login' ]);
+        expect(routerMock.navigate).not.toHaveBeenCalled();
         expect(error.message).toBe('User is not authenticated');
         httpTesting.expectNone('/api/protected');
         done();

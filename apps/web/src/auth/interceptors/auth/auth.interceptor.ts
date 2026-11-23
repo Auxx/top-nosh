@@ -27,7 +27,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       take(1),
       switchMap(state => {
         if (!state.isAuthenticated || !state.token) {
-          router.navigate([ '/auth', 'login' ]).then();
+          // Don't navigate here: route guards handle redirects for guests. Navigating from a
+          // background request would cancel in-flight navigations (e.g. to /auth/callback).
           return throwError(() => new Error('User is not authenticated'));
         }
 

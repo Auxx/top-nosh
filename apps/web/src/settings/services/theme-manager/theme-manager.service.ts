@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, take, tap } from 'rxjs';
+import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
 import {
   ConfigurationService,
   ConfigurationValuesMap
@@ -19,6 +20,8 @@ export class ThemeManagerService {
   private readonly document = inject(DOCUMENT);
 
   private readonly configurationService = inject(ConfigurationService);
+
+  private readonly authenticationService = inject(AuthenticationService);
 
   private readonly localStorage = this.document.defaultView?.localStorage;
 
@@ -55,7 +58,15 @@ export class ThemeManagerService {
         this.applyColorPalette(palette);
       });
 
-    this.loadColorPalette();
+    // The palette is stored server-side and requires authentication, so only fetch it once the
+    // user is logged in (including after a login that happens later in the session).
+    this.authenticationService.authState$
+      .pipe(
+        map(state => state.isAuthenticated),
+        distinctUntilChanged(),
+        filter(isAuthenticated => isAuthenticated)
+      )
+      .subscribe(() => this.loadColorPalette());
   }
 
   readonly colorScheme = (): Observable<ColorScheme> => this.colorScheme$.asObservable();
