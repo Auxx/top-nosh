@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { of, take, throwError } from 'rxjs';
+import { BehaviorSubject, of, take, throwError } from 'rxjs';
+import { AuthenticationService, AuthState } from '../../../auth/services/authentication/authentication.service';
 import { ConfigurationService } from '../../../system/services/configuration/configuration.service';
 import { ThemeManagerService } from './theme-manager.service';
 import { THEME_COLOR_SCHEME_STORAGE_KEY, UI_THEME_PALETTE_CONFIG_KEY } from './theme-manager.types';
@@ -11,6 +12,12 @@ describe('ThemeManagerService', () => {
   let bodyClasses: string[] = [];
 
   let localStorage: Record<string, string> = {};
+
+  let authState$: BehaviorSubject<AuthState>;
+
+  const authenticatedState: AuthState = { isAuthenticated: true, token: 't', refreshToken: 'r', userId: 'u' };
+
+  const guestState: AuthState = { isAuthenticated: false, token: null, refreshToken: null, userId: null };
 
   let configurationServiceMock: {
     getConfigurations: jest.Mock;
@@ -36,6 +43,7 @@ describe('ThemeManagerService', () => {
   beforeEach(() => {
     bodyClasses = [];
     localStorage = {};
+    authState$ = new BehaviorSubject<AuthState>(authenticatedState);
 
     configurationServiceMock = {
       getConfigurations: jest.fn().mockReturnValue(of({})),
@@ -46,7 +54,8 @@ describe('ThemeManagerService', () => {
       providers: [
         ThemeManagerService,
         { provide: DOCUMENT, useValue: documentMock },
-        { provide: ConfigurationService, useValue: configurationServiceMock }
+        { provide: ConfigurationService, useValue: configurationServiceMock },
+        { provide: AuthenticationService, useValue: { authState$ } }
       ]
     });
 
@@ -88,7 +97,8 @@ describe('ThemeManagerService', () => {
         providers: [
           ThemeManagerService,
           { provide: DOCUMENT, useValue: documentMock },
-          { provide: ConfigurationService, useValue: configurationServiceMock }
+          { provide: ConfigurationService, useValue: configurationServiceMock },
+          { provide: AuthenticationService, useValue: { authState$ } }
         ]
       });
 
@@ -113,7 +123,8 @@ describe('ThemeManagerService', () => {
         providers: [
           ThemeManagerService,
           { provide: DOCUMENT, useValue: documentMock },
-          { provide: ConfigurationService, useValue: configurationServiceMock }
+          { provide: ConfigurationService, useValue: configurationServiceMock },
+          { provide: AuthenticationService, useValue: { authState$ } }
         ]
       });
 
@@ -125,6 +136,50 @@ describe('ThemeManagerService', () => {
         expect(palette).toBe('chartreuse');
         done();
       });
+    });
+  });
+
+  describe('authentication gating', () => {
+    const createService = (initialState: AuthState) => {
+      TestBed.resetTestingModule();
+      authState$ = new BehaviorSubject<AuthState>(initialState);
+      bodyClasses = [];
+      configurationServiceMock.getConfigurations.mockClear();
+
+      TestBed.configureTestingModule({
+        providers: [
+          ThemeManagerService,
+          { provide: DOCUMENT, useValue: documentMock },
+          { provide: ConfigurationService, useValue: configurationServiceMock },
+          { provide: AuthenticationService, useValue: { authState$ } }
+        ]
+      });
+
+      return TestBed.inject(ThemeManagerService);
+    };
+
+    it('should not fetch the palette while the user is a guest', () => {
+      createService(guestState);
+
+      expect(configurationServiceMock.getConfigurations).not.toHaveBeenCalled();
+      expect(documentMock.body.classList.contains('chartreuse')).toBe(true);
+    });
+
+    it('should fetch the palette once the user becomes authenticated', () => {
+      configurationServiceMock.getConfigurations.mockReturnValue(of({ [UI_THEME_PALETTE_CONFIG_KEY]: 'cyan' }));
+
+      createService(guestState);
+      authState$.next(authenticatedState);
+
+      expect(configurationServiceMock.getConfigurations).toHaveBeenCalledTimes(1);
+      expect(documentMock.body.classList.contains('cyan')).toBe(true);
+    });
+
+    it('should not refetch the palette on repeated authenticated state emissions', () => {
+      createService(authenticatedState);
+      authState$.next({ ...authenticatedState, token: 'refreshed' });
+
+      expect(configurationServiceMock.getConfigurations).toHaveBeenCalledTimes(1);
     });
   });
 
