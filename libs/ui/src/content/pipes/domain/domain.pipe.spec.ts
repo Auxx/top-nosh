@@ -27,4 +27,10 @@ describe('DomainPipe', () => {
       (URL as { parse?: unknown; }).parse = original;
     }
   });
+
+  it('shows internationalised hostnames in Unicode', () => {
+    expect(pipe.transform('https://bücher.de/rezept')).toBe('bücher.de');
+    expect(pipe.transform('https://xn--bcher-kva.de/')).toBe('bücher.de');
+    expect(pipe.transform('https://www.xn--caf-dma.com/menu')).toBe('www.café.com');
+  });
 });
