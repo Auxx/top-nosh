@@ -33,6 +33,12 @@ export default [
           ],
           depConstraints: [
             {
+              sourceTag: "type:ui",
+              onlyDependOnLibsWithTags: [
+                "type:ui"
+              ]
+            },
+            {
               sourceTag: "*",
               onlyDependOnLibsWithTags: [
                 "*"
