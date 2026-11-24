@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { WhenError } from './when-error.directive';
+import { WhenErrorDirective } from './when-error.directive';
 
 let initialControl: AbstractControl;
 
@@ -10,7 +10,7 @@ function invalidControl(): FormControl {
 }
 
 @Component({
-  imports: [ WhenError ],
+  imports: [ WhenErrorDirective ],
   template: `<span class="err" *uiWhenError="control(); errorCode: code(); let e">{{ e }}</span>`
 })
 class HostComponent {
@@ -20,7 +20,7 @@ class HostComponent {
 }
 
 @Component({
-  imports: [ WhenError ],
+  imports: [ WhenErrorDirective ],
   template:
     `<span class="err" *uiWhenError="control(); errorCode: code(); let e; let err = error">{{ e }}/{{ err }}</span>`
 })
@@ -31,7 +31,7 @@ class ContextHostComponent {
 }
 
 @Component({
-  imports: [ WhenError ],
+  imports: [ WhenErrorDirective ],
   template:
     `<span class="err req" *uiWhenError="c; errorCode: 'required'">req</span><span class="err mail" *uiWhenError="c; errorCode: 'email'">mail</span>`
 })
@@ -39,7 +39,15 @@ class TwoCodesHostComponent {
   readonly c = invalidControl();
 }
 
-describe('WhenError', () => {
+@Component({
+  imports: [ WhenErrorDirective ],
+  template: `<span class="err" *uiWhenError="c; errorCode: 'required'; let e">{{ e.toUpperCase() }}</span>`
+})
+class TypedHostComponent {
+  readonly c = invalidControl();
+}
+
+describe('WhenErrorDirective', () => {
   let fixture: ComponentFixture<HostComponent>;
   let host: HostComponent;
 
@@ -147,5 +155,13 @@ describe('WhenError', () => {
     await settle();
 
     expect(errors().length).toBe(1);
+  });
+
+  it('exposes the error code as a typed string in the template context', async () => {
+    const typed = TestBed.createComponent(TypedHostComponent);
+    typed.componentInstance.c.markAsTouched();
+    await typed.whenStable();
+
+    expect(typed.nativeElement.querySelector('.err')?.textContent).toBe('REQUIRED');
   });
 });

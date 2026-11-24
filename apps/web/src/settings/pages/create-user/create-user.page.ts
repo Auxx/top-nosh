@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { PageHeaderComponent, WhenErrorDirective } from '@top-nosh/ui';
 import { UserManagementService } from '../../services/user-management/user-management.service';
 
 export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -50,7 +50,7 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatButtonModule,
     MatIconModule,
     PageHeaderComponent,
-    WhenError,
+    WhenErrorDirective,
     TranslocoDirective
   ],
   templateUrl: './create-user.page.html',

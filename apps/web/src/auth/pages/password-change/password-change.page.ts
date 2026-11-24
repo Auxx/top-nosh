@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { WhenError } from '@top-nosh/ui';
+import { WhenErrorDirective } from '@top-nosh/ui';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -47,7 +47,7 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    WhenError,
+    WhenErrorDirective,
     TranslocoDirective
   ],
   templateUrl: './password-change.page.html',

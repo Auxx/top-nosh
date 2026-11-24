@@ -19,7 +19,11 @@ export interface WhenErrorContext {
 @Directive({
   selector: '[uiWhenError]'
 })
-export class WhenError {
+export class WhenErrorDirective {
+  static ngTemplateContextGuard(_dir: WhenErrorDirective, _ctx: unknown): _ctx is WhenErrorContext {
+    return true;
+  }
+
   private readonly viewContainer = inject(ViewContainerRef);
 
   private readonly templateRef = inject<TemplateRef<WhenErrorContext>>(TemplateRef);

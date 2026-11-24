@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { WhenError } from '@top-nosh/ui';
+import { WhenErrorDirective } from '@top-nosh/ui';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
@@ -21,7 +21,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    WhenError,
+    WhenErrorDirective,
     TranslocoDirective
   ],
   templateUrl: './login.page.html',

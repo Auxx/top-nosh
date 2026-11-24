@@ -22,7 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { BlockLoaderComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { BlockLoaderComponent, PageHeaderComponent, WhenErrorDirective } from '@top-nosh/ui';
 import { catchError, debounceTime, map, Observable, of, tap, throwError } from 'rxjs';
 import {
   CreateShoppingListDto,
@@ -85,7 +85,7 @@ export function createShoppingListForm(
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    WhenError,
+    WhenErrorDirective,
     PageHeaderComponent,
     TranslocoDirective,
     BlockLoaderComponent

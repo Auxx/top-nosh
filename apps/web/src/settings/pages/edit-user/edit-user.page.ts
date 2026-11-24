@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { BlockLoaderComponent, NoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { BlockLoaderComponent, NoticeComponent, PageHeaderComponent, WhenErrorDirective } from '@top-nosh/ui';
 import { take } from 'rxjs';
 import { AuthenticationService } from '../../../auth/services/authentication/authentication.service';
 import { UserResponseDto } from '../../models/user.types';
@@ -55,7 +55,7 @@ export const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): Va
     MatIconModule,
     BlockLoaderComponent,
     PageHeaderComponent,
-    WhenError,
+    WhenErrorDirective,
     NoticeComponent,
     TranslocoDirective
   ],

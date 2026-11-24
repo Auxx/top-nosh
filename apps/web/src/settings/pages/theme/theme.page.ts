@@ -9,7 +9,7 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { BlockLoaderComponent, BlockNoticeComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { BlockLoaderComponent, BlockNoticeComponent, PageHeaderComponent, WhenErrorDirective } from '@top-nosh/ui';
 import { take } from 'rxjs';
 import { ThemeManagerService } from '../../services/theme-manager/theme-manager.service';
 import {
@@ -37,7 +37,7 @@ import {
     MatOption,
     MatSelect,
     ReactiveFormsModule,
-    WhenError,
+    WhenErrorDirective,
     MatIcon,
     MatIconButton
   ],
