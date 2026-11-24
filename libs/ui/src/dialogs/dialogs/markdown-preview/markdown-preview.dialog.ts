@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { RemarkComponent } from 'ngx-remark';
 
 export interface MarkdownPreviewDialogData {
@@ -21,5 +21,4 @@ export interface MarkdownPreviewDialogData {
 })
 export class MarkdownPreviewDialog {
   readonly data: MarkdownPreviewDialogData = inject(MAT_DIALOG_DATA);
-  readonly dialogRef = inject(MatDialogRef<MarkdownPreviewDialog>);
 }

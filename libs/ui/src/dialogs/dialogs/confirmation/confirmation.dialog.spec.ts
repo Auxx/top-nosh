@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationDialog, ConfirmationDialogData } from './confirmation.dialog';
@@ -92,5 +93,25 @@ describe('ConfirmationDialog', () => {
     buttons[1].click();
 
     expect(dialogRefMock.close).toHaveBeenCalledWith(true);
+  });
+
+  it('should give initial focus to the cancel button', async () => {
+    await createComponent();
+    const [ cancel, confirm ] = fixture.nativeElement.querySelectorAll('mat-dialog-actions button');
+    expect(cancel.hasAttribute('cdkfocusinitial')).toBe(true);
+    expect(confirm.hasAttribute('cdkfocusinitial')).toBe(false);
+  });
+
+  it('should emphasize the confirm button', async () => {
+    await createComponent();
+    const [ cancel, confirm ] = fixture.nativeElement.querySelectorAll('mat-dialog-actions button');
+    expect(confirm.classList).toContain('mat-mdc-unelevated-button');
+    expect(cancel.classList).not.toContain('mat-mdc-unelevated-button');
+  });
+
+  it('should render signal title and content', async () => {
+    await createComponent({ title: signal('Signal title'), content: signal('Signal content') });
+    expect(fixture.nativeElement.querySelector('[mat-dialog-title]').textContent.trim()).toBe('Signal title');
+    expect(fixture.nativeElement.querySelector('mat-dialog-content').textContent.trim()).toBe('Signal content');
   });
 });
