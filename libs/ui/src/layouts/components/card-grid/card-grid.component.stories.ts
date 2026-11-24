@@ -1,6 +1,7 @@
 import { MatCardModule } from '@angular/material/card';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
+import { expect } from 'storybook/test';
 import { CardGridComponent } from './card-grid.component';
 
 const meta: Meta<CardGridComponent> = {
@@ -31,7 +32,6 @@ export const TwoCards: Story = {
   })
 };
 
-// TODO(plan 08): M4
 export const LongTitle: Story = {
   render: args => ({
     props: args,
@@ -47,8 +47,10 @@ export const LongTitle: Story = {
   })
 };
 
-// TODO(plan 08): M4
 export const Mobile: Story = {
   ...LongTitle,
-  globals: { viewport: { value: 'mobile1', isRotated: false } }
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  play: ({ canvasElement }) => {
+    expect(canvasElement.scrollWidth).toBeLessThanOrEqual(canvasElement.clientWidth);
+  }
 };
