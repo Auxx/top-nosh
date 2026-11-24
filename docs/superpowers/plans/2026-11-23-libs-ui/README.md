@@ -21,7 +21,7 @@ in-progress work from `master`, run `git branch -a --list '*ui-*'`.
 | -- | -------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------- | ---------- | ----------- |
 | 01 | [Quick fixes](01-quick-fixes.md)                         | H1, H4, H2 (type-check part), L1–L5, L6, L7, L13, M10 (orphan file) | `fix/ui-quick-fixes`       | none       | Done        |
 | 02 | [`uiWhenError` directive](02-when-error-directive.md)    | H3, L12, M14 (directive tests)                                      | `fix/ui-when-error`        | none       | Done        |
-| 03 | [Library foundations](03-library-foundations.md)         | M6, M5 (shared breakpoints), L14                                    | `refactor/ui-foundations`  | 01         | In progress |
+| 03 | [Library foundations](03-library-foundations.md)         | M6, M5 (shared breakpoints), L14                                    | `refactor/ui-foundations`  | 01         | Done        |
 | 04 | [Storybook](04-storybook.md)                             | H2 (Storybook part), M14 (visual and a11y coverage)                 | `feature/ui-storybook`     | 01, 03     | Not started |
 | 05 | [Pipe correctness](05-pipe-correctness.md)               | M8, L10, L11, M14 (pipe tests)                                      | `fix/ui-pipes`             | none       | Not started |
 | 06 | [Localization](06-localization.md)                       | M7                                                                  | `feature/ui-i18n`          | 01, 03     | Not started |
