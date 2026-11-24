@@ -1,6 +1,8 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TranslocoService } from '@jsverse/transloco';
+import { provideTransloco, Translation, TranslocoLoader, TranslocoService } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
+import { Observable, of, Subject } from 'rxjs';
 import { getTranslocoModule } from '../../../transloco-testing.module';
 import { UnitPipe } from './unit.pipe';
 
@@ -30,7 +32,10 @@ describe('UnitPipe', () => {
           translocoConfig: { availableLangs: [ 'en', 'ru' ], defaultLang: 'en' }
         })
       ],
-      providers: [ provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }) ]
+      providers: [
+        provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
+        { provide: ChangeDetectorRef, useValue: { markForCheck: jest.fn() } }
+      ]
     });
     transloco = TestBed.inject(TranslocoService);
     pipe = TestBed.runInInjectionContext(() => new UnitPipe());
@@ -72,5 +77,54 @@ describe('UnitPipe', () => {
 
   it('falls back to "<quantity> <unit>" for unknown units', () => {
     expect(pipe.transform(5, 'PINCH')).toBe('5 PINCH');
+  });
+
+  it('picks the plural form from the displayed (rounded) number', () => {
+    expect(pipe.transform(0.999, 'TSP')).toBe('1 teaspoon');
+    expect(pipe.transform(1.004, 'ITEM_COUNT')).toBe('1 item');
+  });
+
+  it('keeps a non-numeric quantity as written', () => {
+    expect(pipe.transform('1/2', 'TSP')).toBe('1/2 teaspoons');
+    expect(pipe.transform('1/2', 'PINCH')).toBe('1/2 PINCH');
+    transloco.setActiveLang('ru');
+    expect(pipe.transform('1/2', 'TSP')).toBe('1/2 ч. л.');
+  });
+});
+
+describe('UnitPipe while a language is loading', () => {
+  const pending = new Subject<Translation>();
+
+  class DeferredLoader implements TranslocoLoader {
+    getTranslation(lang: string): Observable<Translation> {
+      return lang === 'ru' ? pending : of({ ui: { Unit: en } });
+    }
+  }
+
+  it('renders the fallback until the language loads, then re-renders', async () => {
+    const markForCheck = jest.fn();
+    TestBed.configureTestingModule({
+      providers: [
+        provideTransloco({
+          config: { availableLangs: [ 'en', 'ru' ], defaultLang: 'en' },
+          loader: DeferredLoader
+        }),
+        provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
+        { provide: ChangeDetectorRef, useValue: { markForCheck } }
+      ]
+    });
+    const transloco = TestBed.inject(TranslocoService);
+    await transloco.load('en').toPromise();
+    const pipe = TestBed.runInInjectionContext(() => new UnitPipe());
+    expect(pipe.transform(1, 'TBSP')).toBe('1 tablespoon');
+
+    transloco.setActiveLang('ru');
+    markForCheck.mockClear();
+    expect(pipe.transform(0.5, 'TBSP')).toBe('0,5 TBSP');
+
+    pending.next({ ui: { Unit: ru } });
+    pending.complete();
+    expect(markForCheck).toHaveBeenCalled();
+    expect(pipe.transform(0.5, 'TBSP')).toBe('0,5 ст. л.');
   });
 });

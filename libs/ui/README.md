@@ -83,8 +83,10 @@ Components use Transloco. The keys live in the consuming app's
 
 The `ui.Unit.*` keys use MessageFormat syntax, so the app must provide
 `provideTranslocoMessageformat`. `quantity` is the number already formatted for
-the active language; `count` is the raw number for plural selection. A unit with
-no key renders as `<quantity> <UNIT>`.
+the active language; `count` is the same number rounded to two decimals, used
+for plural selection. A unit with no key, or any unit while the active language
+is still loading, renders as `<quantity> <UNIT>`. A non-numeric quantity is
+shown as written.
 
 ## Catalogue
 
