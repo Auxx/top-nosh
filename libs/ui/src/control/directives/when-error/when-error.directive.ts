@@ -18,8 +18,7 @@ export interface WhenErrorContext<T = unknown> {
 }
 
 @Directive({
-  selector: '[uiWhenError]',
-  standalone: true
+  selector: '[uiWhenError]'
 })
 export class WhenError {
   private readonly destroyRef = inject(DestroyRef);

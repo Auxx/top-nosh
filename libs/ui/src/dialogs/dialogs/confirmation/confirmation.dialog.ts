@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, isSignal, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 export interface ConfirmationDialogData {
   title: string | Signal<string>;
@@ -16,21 +16,18 @@ export interface ConfirmationDialogData {
     MatButtonModule
   ],
   templateUrl: './confirmation.dialog.html',
-  styleUrl: './confirmation.dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmationDialog {
   readonly data: ConfirmationDialogData = inject(MAT_DIALOG_DATA);
 
-  readonly dialogRef = inject(MatDialogRef<ConfirmationDialog>);
-
   readonly title = computed(() => {
     const result = this.data.title;
-    return typeof result === 'string' ? result : result();
+    return isSignal(result) ? result() : result;
   });
 
   readonly content = computed(() => {
     const result = this.data.content;
-    return typeof result === 'string' ? result : result();
+    return isSignal(result) ? result() : result;
   });
 }
