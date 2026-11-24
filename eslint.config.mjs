@@ -39,6 +39,11 @@ export default [
               ]
             },
             {
+              sourceTag: "type:domain",
+              onlyDependOnLibsWithTags: [],
+              allowedExternalImports: []
+            },
+            {
               sourceTag: "*",
               onlyDependOnLibsWithTags: [
                 "*"
