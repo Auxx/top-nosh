@@ -21,6 +21,11 @@ mat-toolbar {
   margin: auto;
 
   @include bp.compact {
+    @include mat.toolbar-overrides((
+            standard-height: calc(56px + env(safe-area-inset-top)),
+            mobile-height: calc(56px + env(safe-area-inset-top)),
+    ));
+
     position: fixed;
     z-index: 100;
     top: 0;
