@@ -26,6 +26,16 @@ Selector prefix: `ui`. Tagged `type:ui`, so it may only depend on other
    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    ```
 
+4. Tell the library which locale to format numbers with for each Transloco
+   language (optional; without it the language code is used as the locale):
+
+   ```ts
+   provideUiLocales({ locales: { en: 'en-GB', ru: 'ru-RU' }, defaultLocale: 'en-GB' })
+   ```
+
+   `defaultLocale` is used for a language missing from `locales`. `apps/web`
+   builds both from `@top-nosh/domain`.
+
 ## Styles API
 
 `@use 'ui';` pulls in `tokens` and `theming`. The CSS custom properties are
@@ -86,7 +96,8 @@ The `ui.Unit.*` keys use MessageFormat syntax, so the app must provide
 the active language; `count` is the same number rounded to two decimals, used
 for plural selection. A unit with no key, or any unit while the active language
 is still loading, renders as `<quantity> <UNIT>`. A non-numeric quantity is
-shown as written.
+shown as written. The library has no list of units: a unit is known exactly when
+the active language has a `ui.Unit.<UNIT>` key.
 
 ## Catalogue
 
