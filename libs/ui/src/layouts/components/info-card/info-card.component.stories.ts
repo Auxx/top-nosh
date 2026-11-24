@@ -28,7 +28,7 @@ export const DropZone: Story = {
     props: args,
     template: `
       <ui-info-card ${argsToTemplate(args)}>
-        <section>Drop a file here or <button matButton>choose a file</button></section>
+        <section>Drop a file here or <button type="button" matButton>choose a file</button></section>
       </ui-info-card>`
   })
 };

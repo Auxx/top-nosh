@@ -21,4 +21,21 @@ describe('MiniBadgeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('sets namespaced colour properties', async () => {
+    fixture.componentRef.setInput('color', 'tertiary');
+    await fixture.whenStable();
+
+    const style = (fixture.nativeElement as HTMLElement).style;
+
+    expect(style.getPropertyValue('--ui-mini-badge-background')).toBe('var(--mat-sys-tertiary-container)');
+    expect(style.getPropertyValue('--ui-mini-badge-foreground')).toBe('var(--mat-sys-on-tertiary-container)');
+  });
+
+  it('does not leak generic custom properties', () => {
+    const style = (fixture.nativeElement as HTMLElement).style;
+
+    expect(style.getPropertyValue('--background')).toBe('');
+    expect(style.getPropertyValue('--foreground')).toBe('');
+  });
 });

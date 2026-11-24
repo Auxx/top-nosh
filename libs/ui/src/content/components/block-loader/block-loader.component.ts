@@ -10,7 +10,10 @@ import { TranslocoDirective } from '@jsverse/transloco';
   ],
   templateUrl: './block-loader.component.html',
   styleUrl: './block-loader.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'status'
+  }
 })
 export class BlockLoaderComponent {
 }

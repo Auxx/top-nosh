@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -14,13 +16,31 @@
       &:last-child {
         padding-bottom: 0;
       }
+
+      @include bp.coarse-pointer {
+        display: flex;
+        align-items: center;
+        min-height: 48px;
+
+        &:first-child,
+        &:last-child {
+          padding: var(--dim-medium) 0;
+        }
+      }
     }
 
     a {
+      color: var(--mat-sys-primary);
       text-decoration: none;
 
-      &:hover {
+      &:focus-visible {
         text-decoration: underline;
+      }
+
+      @include bp.hover {
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

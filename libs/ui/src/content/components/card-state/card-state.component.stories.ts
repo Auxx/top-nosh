@@ -13,8 +13,6 @@ export default meta;
 type Story = StoryObj<CardStateComponent>;
 
 export const Loading: Story = {
-  // TODO(plan 09): M13
-  parameters: { a11y: { test: 'todo' } },
   args: { isLoading: true },
   render: args => ({
     props: args,

@@ -6,8 +6,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   styleUrl: './mini-badge.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[style.--background]': 'background()',
-    '[style.--foreground]': 'foreground()',
+    '[style.--ui-mini-badge-background]': 'background()',
+    '[style.--ui-mini-badge-foreground]': 'foreground()',
     '[class.alternative]': 'alternative()'
   }
 })

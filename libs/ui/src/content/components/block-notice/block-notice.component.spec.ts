@@ -36,6 +36,16 @@ describe('BlockNoticeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('is a status region by default', () => {
+    expect((fixture.nativeElement as HTMLElement).getAttribute('role')).toBe('status');
+  });
+
+  it('is an alert when isError', async () => {
+    fixture.componentRef.setInput('isError', true);
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).getAttribute('role')).toBe('alert');
+  });
+
   it('should render only the icon and the projected content', async () => {
     const host = TestBed.createComponent(HostComponent);
     await host.whenStable();

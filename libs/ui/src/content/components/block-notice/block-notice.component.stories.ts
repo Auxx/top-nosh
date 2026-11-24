@@ -21,8 +21,6 @@ export const Info: Story = {
 };
 
 export const Error: Story = {
-  // TODO(plan 09): M13
-  parameters: { a11y: { test: 'todo' } },
   args: { icon: 'error', isError: true },
   render: args => ({
     props: args,

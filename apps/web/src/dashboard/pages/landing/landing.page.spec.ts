@@ -92,8 +92,29 @@ describe('LandingPage', () => {
     expect(component.loading()).toBe(true);
     const loadingStates = fixture.debugElement.queryAll(By.css('ui-card-state'));
     expect(loadingStates.length).toBe(2);
+    loadingStates.forEach(state => expect(state.nativeElement.getAttribute('aria-busy')).toBe('true'));
     const spinners = fixture.debugElement.queryAll(By.css('mat-spinner'));
     expect(spinners.length).toBe(2);
+  });
+
+  it('should keep the same ui-card-state elements mounted from loading to loaded', () => {
+    const loadingSubject = new Subject<DashboardData>();
+    dashboardServiceMock.getDashboardData.mockReturnValue(loadingSubject.asObservable());
+    component.loadDashboardData();
+    fixture.detectChanges();
+
+    const before = fixture.debugElement.queryAll(By.css('ui-card-state')).map(s => s.nativeElement);
+    expect(before.length).toBe(2);
+
+    loadingSubject.next(sampleDashboardData);
+    fixture.detectChanges();
+
+    const after = fixture.debugElement.queryAll(By.css('ui-card-state')).map(s => s.nativeElement);
+    expect(after.length).toBe(2);
+    expect(after[0]).toBe(before[0]);
+    expect(after[1]).toBe(before[1]);
+    expect(after[0].getAttribute('aria-busy')).toBe('false');
+    expect(after[0].querySelectorAll('ui-card-item-list a').length).toBe(2);
   });
 
   it('should show error message when fetching data fails', () => {
