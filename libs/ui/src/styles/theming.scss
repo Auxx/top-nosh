@@ -9,9 +9,8 @@ html {
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
+  // Follow the user's system color scheme by default. The `light` and `dark`
+  // classes below force one scheme.
   color-scheme: light dark;
 
   // Set a default background, font and text colors for the application using

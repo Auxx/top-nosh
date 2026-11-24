@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 @Component({
   selector: 'ui-mini-badge',
-  imports: [],
   template: '<ng-content/>',
   styleUrl: './mini-badge.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

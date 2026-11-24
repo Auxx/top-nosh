@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'stripMarkdown',
-  standalone: true
+  name: 'stripMarkdown'
 })
 export class StripMarkdownPipe implements PipeTransform {
   transform(value?: string | null): string {
