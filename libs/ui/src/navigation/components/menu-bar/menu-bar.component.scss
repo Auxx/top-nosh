@@ -1,68 +1,77 @@
 @use '@angular/material' as mat;
+@use 'breakpoints' as bp;
 
 :host {
   display: block;
   height: 64px;
   background-color: var(--mat-sys-primary);
 
-  @media (max-width: 599.98px) and (orientation: portrait) {
-    height: 56px;
+  @include bp.compact {
+    height: calc(56px + env(safe-area-inset-top));
   }
 }
 
 mat-toolbar {
   @include mat.toolbar-overrides((
           container-background-color: var(--mat-sys-primary),
-          container-text-color: var(--mat-sys-primary-container),
+          container-text-color: var(--mat-sys-on-primary),
   ));
 
   max-width: calc(var(--page-max-width) - var(--dim-large));
   margin: auto;
 
-  @media (max-width: 599.98px) and (orientation: portrait) {
+  @include bp.compact {
     position: fixed;
-    z-index: 1000;
-  }
-
-  a.action.mat-mdc-button-base.mat-unthemed {
-    @include mat.button-overrides((
-            text-label-text-color: var(--mat-sys-inverse-primary),
-            text-label-text-weight: 400,
-    ));
-
-    &.selected {
-      @include mat.button-overrides((
-              text-label-text-color: var(--mat-toolbar-container-text-color),
-              text-label-text-weight: 500,
-      ));
-    }
-
-    @media (max-width: 599.98px) and (orientation: portrait) {
-      display: none;
-    }
-  }
-
-  button.action.mat-mdc-button-base.mat-unthemed {
-    @include mat.icon-button-overrides((
-            icon-color:var(--mat-sys-inverse-primary),
-    ));
-
-    @media (max-width: 599.98px) and (orientation: portrait) {
-      display: none;
-    }
+    z-index: 100;
+    top: 0;
+    padding-top: env(safe-area-inset-top);
   }
 }
 
-button {
-  @include mat.icon-button-overrides((
-          icon-color: var(--mat-sys-primary-container),
+.spacer {
+  flex: 1;
+}
+
+.nav-link {
+  @include mat.button-overrides((
+          text-label-text-color: var(--mat-sys-on-primary),
+          text-label-text-weight: 400,
   ));
+
+  &.selected {
+    @include mat.button-overrides((
+            text-label-text-weight: 500,
+    ));
+
+    box-shadow: inset 0 -2px 0 var(--mat-sys-on-primary);
+  }
+
+  @include bp.compact {
+    display: none;
+  }
+}
+
+.nav-icon,
+.collapsed {
+  @include mat.icon-button-overrides((
+          icon-color: var(--mat-sys-on-primary),
+  ));
+}
+
+.nav-icon {
+  @include bp.compact {
+    display: none;
+  }
 }
 
 .collapsed {
   display: none;
 
-  @media (max-width: 599.98px) and (orientation: portrait) {
-    display: flex;
+  @include bp.compact {
+    display: inline-flex;
   }
+}
+
+.mat-mdc-menu-item.selected {
+  background: var(--mat-sys-secondary-container);
 }
