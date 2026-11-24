@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "license": "MIT",
   "engines": {
-    "node": ">=24.22.2"
+    "node": ">=26.13.1"
   },
   "scripts": {
     "format": "dprint fmt",

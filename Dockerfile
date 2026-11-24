@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:24.22.2-alpine AS builder
+FROM node:26.13.1-alpine AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN npx prisma generate
 RUN npx nx run-many --target=build --projects=api,web --configuration=production
 
 # Stage 2: Production dependencies (native modules compiled here, tools stay behind)
-FROM node:24.22.2-alpine AS prod-deps
+FROM node:26.13.1-alpine AS prod-deps
 
 WORKDIR /app
 
@@ -31,7 +31,7 @@ RUN npm ci --omit=dev
 RUN npx prisma generate
 
 # Stage 3: Production Runtime
-FROM node:24.22.2-alpine AS runner
+FROM node:26.13.1-alpine AS runner
 
 WORKDIR /app
 
