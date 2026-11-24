@@ -1,6 +1,33 @@
 import nx from "@nx/eslint-plugin";
 import stylistic from "@stylistic/eslint-plugin"
 
+// Shared with project configs that need a file-scoped variant (libs/ui/.storybook).
+export const moduleBoundaryOptions = {
+  enforceBuildableLibDependency: true,
+  allow: [
+    "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$"
+  ],
+  depConstraints: [
+    {
+      sourceTag: "type:ui",
+      onlyDependOnLibsWithTags: [
+        "type:ui"
+      ]
+    },
+    {
+      sourceTag: "type:domain",
+      onlyDependOnLibsWithTags: [],
+      allowedExternalImports: []
+    },
+    {
+      sourceTag: "*",
+      onlyDependOnLibsWithTags: [
+        "*"
+      ]
+    }
+  ]
+};
+
 export default [
   ...nx.configs["flat/base"],
   ...nx.configs["flat/typescript"],
@@ -26,31 +53,7 @@ export default [
     rules: {
       "@nx/enforce-module-boundaries": [
         "error",
-        {
-          enforceBuildableLibDependency: true,
-          allow: [
-            "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$"
-          ],
-          depConstraints: [
-            {
-              sourceTag: "type:ui",
-              onlyDependOnLibsWithTags: [
-                "type:ui"
-              ]
-            },
-            {
-              sourceTag: "type:domain",
-              onlyDependOnLibsWithTags: [],
-              allowedExternalImports: []
-            },
-            {
-              sourceTag: "*",
-              onlyDependOnLibsWithTags: [
-                "*"
-              ]
-            }
-          ]
-        }
+        moduleBoundaryOptions
       ]
     }
   },

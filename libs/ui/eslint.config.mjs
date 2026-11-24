@@ -1,5 +1,5 @@
 import nx from "@nx/eslint-plugin";
-import baseConfig from "../../eslint.config.mjs";
+import baseConfig, { moduleBoundaryOptions } from "../../eslint.config.mjs";
 
 export default [
     ...nx.configs["flat/angular"],
@@ -38,16 +38,12 @@ export default [
             "@nx/enforce-module-boundaries": [
                 "error",
                 {
-                    enforceBuildableLibDependency: true,
-                    depConstraints: [
-                        {
-                            sourceTag: "type:ui",
-                            onlyDependOnLibsWithTags: [
-                                "type:ui",
-                                "type:domain"
-                            ]
-                        }
-                    ]
+                    ...moduleBoundaryOptions,
+                    depConstraints: moduleBoundaryOptions.depConstraints.map(constraint =>
+                        constraint.sourceTag === "type:ui"
+                            ? { ...constraint, onlyDependOnLibsWithTags: [ ...constraint.onlyDependOnLibsWithTags, "type:domain" ] }
+                            : constraint
+                    )
                 }
             ]
         }
