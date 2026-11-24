@@ -24,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
-import { ConfirmationDialog, InfoCardComponent, PageHeaderComponent, WhenError } from '@top-nosh/ui';
+import { ConfirmationDialog, InfoCardComponent, PageHeaderComponent, WhenErrorDirective } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
 import { OptionItem } from '../../../system/types/option-item';
@@ -51,7 +51,7 @@ import { createIngredientGroup, createRecipeForm, createStageGroup, createStepGr
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    WhenError,
+    WhenErrorDirective,
     TranslocoDirective,
     RemarkComponent,
     PageHeaderComponent,

@@ -17,7 +17,7 @@ import {
 } from '@angular/material/dialog';
 import { MatError, MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { WhenError } from '@top-nosh/ui';
+import { WhenErrorDirective } from '@top-nosh/ui';
 
 @Component({
   selector: 'app-import-recipe-dialog',
@@ -33,7 +33,7 @@ import { WhenError } from '@top-nosh/ui';
     MatFormField,
     MatInput,
     MatLabel,
-    WhenError
+    WhenErrorDirective
   ],
   templateUrl: './import-recipe-dialog.component.html',
   styleUrl: './import-recipe-dialog.component.scss',

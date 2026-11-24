@@ -1,31 +1,32 @@
 import {
-  DestroyRef,
   Directive,
   effect,
   EmbeddedViewRef,
   inject,
   input,
   TemplateRef,
+  untracked,
   ViewContainerRef
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs';
 
-export interface WhenErrorContext<T = unknown> {
-  $implicit: T;
-  error: T;
+export interface WhenErrorContext {
+  $implicit: string;
+  error: string;
 }
 
 @Directive({
   selector: '[uiWhenError]'
 })
-export class WhenError {
-  private readonly destroyRef = inject(DestroyRef);
+export class WhenErrorDirective {
+  static ngTemplateContextGuard(_dir: WhenErrorDirective, _ctx: unknown): _ctx is WhenErrorContext {
+    return true;
+  }
 
   private readonly viewContainer = inject(ViewContainerRef);
 
-  private readonly templateRef = inject(TemplateRef<WhenErrorContext>);
+  private readonly templateRef = inject<TemplateRef<WhenErrorContext>>(TemplateRef);
 
   readonly uiWhenError = input.required<AbstractControl>();
 
@@ -33,32 +34,33 @@ export class WhenError {
 
   private viewRef?: EmbeddedViewRef<WhenErrorContext>;
 
-  private controlSub?: Subscription;
-
   constructor() {
-    effect(() => {
+    effect(onCleanup => {
       const control = this.uiWhenError();
       const errorCode = this.uiWhenErrorErrorCode();
 
-      this.controlSub?.unsubscribe();
+      const sub = control.events.pipe(startWith(null)).subscribe(() => {
+        untracked(() => this.render(control, errorCode));
+      });
 
-      this.controlSub = control.statusChanges
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          if (control.invalid && (control.touched || control.dirty)) {
-            if (control.hasError(errorCode)) {
-              if (this.viewRef === undefined) {
-                this.viewContainer.clear();
-                this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, { error: errorCode });
-              }
-
-              return;
-            }
-          }
-
-          this.viewRef = undefined;
-          this.viewContainer.clear();
-        });
+      onCleanup(() => sub.unsubscribe());
     });
+  }
+
+  private render(control: AbstractControl, errorCode: string): void {
+    if (control.invalid && (control.touched || control.dirty) && control.hasError(errorCode)) {
+      if (this.viewRef === undefined || this.viewRef.context.error !== errorCode) {
+        this.viewContainer.clear();
+        this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
+          $implicit: errorCode,
+          error: errorCode
+        });
+      }
+
+      return;
+    }
+
+    this.viewContainer.clear();
+    this.viewRef = undefined;
   }
 }
