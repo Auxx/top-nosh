@@ -1,5 +1,8 @@
 # Stage 1: Build
-FROM node:26.13.1-alpine AS builder
+# Runs on the native build platform: its output (dist + generated Prisma client, JS and WASM)
+# is architecture-independent, and running `prisma generate` under QEMU emulation corrupts
+# the schema WASM output on arm64 ("Unable to parse JSON [Context: getDmmf]").
+FROM --platform=$BUILDPLATFORM node:26.13.1-alpine AS builder
 
 WORKDIR /app
 
@@ -28,7 +31,6 @@ COPY prisma ./prisma/
 COPY prisma7.config.ts ./
 
 RUN npm ci --omit=dev
-RUN npx prisma generate
 
 # Stage 3: Production Runtime
 FROM node:26.13.1-alpine AS runner
@@ -45,6 +47,7 @@ COPY prisma ./prisma/
 COPY prisma7.config.ts ./
 COPY --chmod=755 docker/startup.sh ./
 COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/dist ./dist
 
 RUN mkdir -p /app/data && chown node:node /app/data
