@@ -26,6 +26,12 @@
       "title": "Description Preview",
       "empty": "No Markdown content was provided.",
       "close": "Close"
+    },
+    "Unit": {
+      "GRAMS": "{quantity}g",
+      "ITEM_COUNT": "{count, plural, one {{quantity} item} other {{quantity} items}}",
+      "TSP": "{count, plural, one {{quantity} teaspoon} other {{quantity} teaspoons}}",
+      "TBSP": "{count, plural, one {{quantity} tablespoon} other {{quantity} tablespoons}}"
     }
   },
   "config": {
