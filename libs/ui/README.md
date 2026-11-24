@@ -118,8 +118,19 @@ Everything exported from `src/index.ts`:
 - `CardGridComponent`: `<ui-card-grid>`
 - `CardItemListComponent`: `<ui-card-item-list>`
 - `InfoCardComponent`: `<ui-info-card>`
-- `PageHeaderComponent`: `<ui-page-header>`
-- `SectionHeaderComponent`: `<ui-section-header>`
+- `PageHeaderComponent`: `<ui-page-header>`; content slots (only direct children
+  (or the single root element of a top-level `@if`/`@for` block) are matched, so
+  links nested inside the subtitle stay there):
+  - title: `h1`-`h6`
+  - subtitle: a direct child marked `uiPageHeaderSubtitle`
+  - actions: a direct-child `button`, `a`, or any element marked
+    `uiPageHeaderAction`; actions wrap onto extra lines on compact screens
+
+  **Breaking:** unmarked `<div>`s are no longer projected, and the old `.action`
+  class is replaced by `uiPageHeaderAction`.
+- `SectionHeaderComponent`: `<ui-section-header>`; inputs: `level` (`2 | 3 | 4`,
+  default `2`; renders `h2`/`h3`/`h4`); the description element is omitted when
+  no description is given
 - `MenuBarComponent`: `<ui-menu-bar>`; inputs: `title`, `items` (`MenuItem[]`:
   `url`, `label`, `icon?`; labels are already translated)
 

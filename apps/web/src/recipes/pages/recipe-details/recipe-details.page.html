@@ -34,14 +34,14 @@
     <!-- Page Header & Top Bar -->
     <ui-page-header [showBackButton]="true" (navigatedBack)="onBackToList()">
       <h1>{{ currentRecipe.name }}</h1>
-      <div class="badge-container">
+      <div uiPageHeaderSubtitle class="badge-container">
         <ui-mini-badge data-testid="recipe-cuisine" color="primary">{{ currentRecipe.cuisine }}</ui-mini-badge>
         <ui-mini-badge data-testid="recipe-category" color="secondary">{{ currentRecipe.category }}</ui-mini-badge>
       </div>
 
 
       @if (currentRecipe.isShared) {
-        <app-share-recipe-button [recipeId]="currentRecipe.id" class="action"/>
+        <app-share-recipe-button [recipeId]="currentRecipe.id" uiPageHeaderAction/>
       }
 
       <button matIconButton (click)="onEditRecipe()">

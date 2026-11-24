@@ -3,7 +3,7 @@
 :host {
   display: grid;
   grid-template-columns: 1fr max-content;
-  grid-template-rows: 40px max-content;
+  grid-template-rows: minmax(40px, auto) auto;
   align-items: center;
   gap: var(--dim-large);
   margin-bottom: var(--dim-xx-large);
@@ -20,6 +20,8 @@
     margin-bottom: var(--dim-large);
 
     .actions {
+      flex-wrap: wrap;
+      row-gap: var(--dim-small);
       width: 100%;
 
       .actions-spacer {
@@ -38,6 +40,8 @@
 .header {
   grid-column: 1;
   grid-row: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 
   ::ng-deep {
     h1, h2, h3, h4, h5, h6 {
@@ -49,6 +53,8 @@
 .subheader {
   grid-column: 1;
   grid-row: 2;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .actions {

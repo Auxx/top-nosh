@@ -27,3 +27,11 @@ export const Default: Story = {
 export const TitleOnly: Story = {
   args: { title: 'Ingredients' }
 };
+
+export const Level3: Story = {
+  args: {
+    title: 'Ingredients',
+    icon: 'restaurant',
+    level: 3
+  }
+};

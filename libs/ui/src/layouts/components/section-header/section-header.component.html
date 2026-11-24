@@ -1,12 +1,32 @@
 @let iconValue = icon();
 
-<h2>
+<ng-template #content>
   @if (iconValue !== undefined) {
     <mat-icon>{{ iconValue }}</mat-icon>
   }
   {{ title() }}
-</h2>
+</ng-template>
 
-<div class="description">
-  {{ description() }}
-</div>
+@switch (level()) {
+  @case (3) {
+    <h3>
+      <ng-container [ngTemplateOutlet]="content"/>
+    </h3>
+  }
+  @case (4) {
+    <h4>
+      <ng-container [ngTemplateOutlet]="content"/>
+    </h4>
+  }
+  @default {
+    <h2>
+      <ng-container [ngTemplateOutlet]="content"/>
+    </h2>
+  }
+}
+
+@if (description(); as d) {
+  <div class="description">
+    {{ d }}
+  </div>
+}
