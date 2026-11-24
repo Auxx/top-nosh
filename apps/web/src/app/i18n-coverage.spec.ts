@@ -25,19 +25,25 @@ describe('translation files', () => {
     expect(json.ui.Unit[unit]).not.toBe('');
   });
 
-  // libs/ui renders these keys; every language must define all of them.
-  const uiKeys = Object.keys(flatten(read(DEFAULT_LANGUAGE).ui, 'ui.'));
-  const uiCases = LANGUAGE_CODES
-    .filter(code => code !== DEFAULT_LANGUAGE)
-    .flatMap(code => uiKeys.map(key => [ code, key ] as const));
+  // Every language defines exactly the default language's keys. A value may be
+  // empty only where the default language's is (e.g. unused config descriptions).
+  const defaults = flatten(read(DEFAULT_LANGUAGE));
+  const others = LANGUAGE_CODES.filter(code => code !== DEFAULT_LANGUAGE);
+  const keyCases = others.flatMap(code => Object.keys(defaults).map(key => [ code, key ] as const));
 
-  it('finds the ui keys in the default language', () => {
-    expect(uiKeys).toContain('ui.Confirmation.cancel');
+  it('finds nested keys in the default language', () => {
+    expect(Object.keys(defaults)).toContain('ui.Confirmation.cancel');
   });
 
-  it.each(uiCases)('%s translates %s', (code, key) => {
+  it.each(keyCases)('%s translates %s', (code, key) => {
     const value = flatten(read(code))[key];
     expect(typeof value).toBe('string');
-    expect(value).not.toBe('');
+    if (defaults[key] !== '') {
+      expect(value).not.toBe('');
+    }
+  });
+
+  it.each(others)('%s has no keys the default language lacks', code => {
+    expect(Object.keys(flatten(read(code))).filter(key => !(key in defaults))).toEqual([]);
   });
 });
