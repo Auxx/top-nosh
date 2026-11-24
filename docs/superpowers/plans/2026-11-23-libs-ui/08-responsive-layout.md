@@ -125,7 +125,7 @@ M11, M12). The [plan index](README.md) holds the global constraints.
 | `drops unmarked divs`                        | host text doesn't contain `unmarked`                                                                        |
 | `emits navigatedBack from the back button`   | with `showBackButton` set to true, clicking `.actions button` that contains `arrow_back` calls the spy once |
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=page-header`. Expected:
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=page-header`. Expected:
       the first three FAIL.
 - [ ] **Step 3: Implement.**
   - Selectors: `select="[uiPageHeaderSubtitle]"` and
@@ -143,7 +143,7 @@ M11, M12). The [plan index](README.md) holds the global constraints.
     "<div>"` returns nothing.
 - [ ] **Step 5:** Update the stories to the new slots. Add `LongTitle` (an
       `<h1>` of 90 characters at 800px width) and give `Mobile` three action
-      buttons. Run `npx nx test ui --testPathPattern=page-header && npx nx test
+      buttons. Run `npx nx test ui --testPathPatterns=page-header && npx nx test
       web && npx nx run web:lint && npx nx run ui:test-storybook`. Expected:
       PASS.
 - [ ] **Step 6:** Manual check at 360px: `/recipes/new`, `/settings/users`, a
@@ -173,7 +173,7 @@ M11, M12). The [plan index](README.md) holds the global constraints.
   - `omits the description element when there is none`: `.description` is
     `null`.
   - `renders the description when given`: `.description` text is `'Desc'`.
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=section-header`.
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=section-header`.
       Expected: the level and omission tests FAIL.
 - [ ] **Step 3: Implement.**
   - Put the icon and title in an `<ng-template #content>`, and render it inside

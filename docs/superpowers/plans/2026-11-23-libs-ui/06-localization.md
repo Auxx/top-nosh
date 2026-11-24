@@ -98,7 +98,7 @@ plural rules (already configured in the app via
 
   The existing English expectations stay as they are; they now pass through
   translations.
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=dialog`. Expected: the
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=dialog`. Expected: the
       Russian test FAILS.
 - [ ] **Step 3: Implement.**
   - Confirmation: add `private readonly defaultConfirm =
@@ -139,7 +139,7 @@ it('rounds to two decimals', () => {
 });
 ```
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=scale-quantity`.
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=scale-quantity`.
       Expected: FAIL (it returns strings).
 - [ ] **Step 3:** Change the return type and drop `.toString()` in both
       branches.
@@ -180,7 +180,7 @@ it('rounds to two decimals', () => {
 | Two-decimal cap                | `(0.3333,'GRAMS')` → `'0.33g'`                                                                                                                                          |
 | Unknown unit fallback          | `(5,'PINCH')` → `'5 PINCH'`                                                                                                                                             |
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=unit.pipe`. Expected:
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=unit.pipe`. Expected:
       FAIL.
 - [ ] **Step 3: Implement.** Add the translation rows to both JSON files. In the
       pipe:

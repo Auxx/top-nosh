@@ -106,7 +106,7 @@ part). The [plan index](README.md) holds the global constraints.
 | `marks the active section`                           | the `/recipes` link has the class `selected` and `aria-current="page"`; `/settings` has neither                                                                                                                                |
 | `renders the same items as links in the mobile menu` | click the `More` trigger, `await fixture.whenStable()`; `document.querySelectorAll('.mat-mdc-menu-panel a.mat-mdc-menu-item')` has 3 elements, the first has `aria-current="page"`, and the `logout` one contains a `mat-icon` |
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=menu-bar`. Expected:
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=menu-bar`. Expected:
       FAIL.
 - [ ] **Step 3: Implement.**
   - Delete the hard-coded `menuItems`.
@@ -125,7 +125,7 @@ part). The [plan index](README.md) holds the global constraints.
     the signals, logout with icon 'logout' … ])`.
   - Template: `<ui-menu-bar [title]="title()" [items]="menuItems()"/>`.
   - Move the keys in both JSON files.
-- [ ] **Step 5:** Run `npx nx test ui --testPathPattern=menu-bar && npx nx test
+- [ ] **Step 5:** Run `npx nx test ui --testPathPatterns=menu-bar && npx nx test
       web && npx nx run web:lint`. Expected: PASS.
 - [ ] **Step 6:** Commit: `refactor(ui): make menu bar input-driven with link
       semantics`.

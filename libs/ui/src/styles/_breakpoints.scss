@@ -1,0 +1,26 @@
+$compact-max: 599.98px;
+$medium-max: 839.98px;
+
+@mixin compact {
+  @media (max-width: $compact-max) {
+    @content;
+  }
+}
+
+@mixin below-expanded {
+  @media (max-width: $medium-max) {
+    @content;
+  }
+}
+
+@mixin hover {
+  @media (hover: hover) {
+    @content;
+  }
+}
+
+@mixin coarse-pointer {
+  @media (pointer: coarse) {
+    @content;
+  }
+}

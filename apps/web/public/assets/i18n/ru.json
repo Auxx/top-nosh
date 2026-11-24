@@ -15,7 +15,7 @@
     "System": {
       "ok": "ОК"
     },
-    "BlockLoaderComponent": {
+    "BlockLoader": {
       "loading": "Загрузка..."
     }
   },

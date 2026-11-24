@@ -1,30 +1,9 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
+// `@use 'ui'` emits the library's design tokens and the Angular Material 3 theme
+// (defined in libs/ui/src/styles/theming.scss).
+// `mat` is imported for the component override mixins used below.
 @use '@angular/material' as mat;
 
-@use "../../../libs/ui/src/styles/theming";
-
-:root {
-  --density-regular: 1;
-  --density-compact: 0.75;
-  --density-large: 1.5;
-
-  --app-density: var(--density-regular);
-
-  --base-dimension: calc(8px * var(--app-density));
-
-  --dim-medium: var(--base-dimension); // 8px
-  --dim-x-medium: calc(var(--base-dimension) * 1.5); // 12px
-  --dim-small: calc(var(--dim-medium) / 2); // 4px
-  --dim-large: calc(var(--dim-medium) * 2); // 16px
-  --dim-x-large: calc(var(--dim-medium) * 3); // 24px
-  --dim-xx-large: calc(var(--dim-medium) * 4); // 32px
-
-  --page-max-width: 1000px;
-}
+@use 'ui';
 
 html {
   height: 100%;
