@@ -123,7 +123,7 @@ describe('RecipeTableViewComponent', () => {
 
     const descriptionCell = fixture.nativeElement.querySelector('.item-description-medium');
     expect(descriptionCell).toBeTruthy();
-    expect(descriptionCell.textContent.trim()).toBe('A'.repeat(100) + '...');
+    expect(descriptionCell.textContent.trim()).toBe('A'.repeat(100) + '…');
   });
 
   it('should display empty state when recipes is empty', () => {
