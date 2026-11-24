@@ -458,6 +458,38 @@
       "urlIsInvalid": "Пожалуйста, введите корректный URL"
     },
     "SettingsDashboardPage": {
+      "title": "Настройки",
+      "subtitle": "Управление настройками Top Nosh",
+      "general": "Общие настройки",
+      "theme": "Тема",
+      "security": "Настройки безопасности",
+      "users": "Пользователи",
+      "oidc": "OpenID Connect"
+    },
+    "ThemePage": {
+      "title": "Настройки темы",
+      "description": "Настройте внешний вид Top Nosh.",
+      "loadError": "Не удалось загрузить настройки темы. Пожалуйста, попробуйте позже.",
+      "general": "Общие настройки",
+      "personal": "Личные предпочтения",
+      "palette": "Цветовая палитра",
+      "paletteRequired": "Цветовая палитра обязательна",
+      "paletteRed": "Красный",
+      "paletteGreen": "Зеленый",
+      "paletteBlue": "Синий",
+      "paletteYellow": "Желтый",
+      "paletteCyan": "Голубой",
+      "paletteMagenta": "Пурпурный",
+      "paletteOrange": "Оранжевый",
+      "paletteChartreuse": "Шартрез",
+      "paletteSpringGreen": "Весенне-зеленый",
+      "paletteAzure": "Лазурный",
+      "paletteViolet": "Фиолетовый",
+      "paletteRose": "Розовый",
+      "colorScheme": "Цветовая схема",
+      "lightDark": "Авто",
+      "light": "Светлая",
+      "dark": "Темная"
     }
   }
 }
