@@ -40,8 +40,6 @@ export const WithMarkdown: Story = {
   ]
 };
 
-// TODO(unowned): .empty-state uses --mat-sys-outline (contrast 4.26:1 < 4.5:1); no plan owns this yet
 export const Empty: Story = {
-  parameters: { a11y: { test: 'todo' } },
   decorators: [ dialogProviders({ markdown: '' }) ]
 };
