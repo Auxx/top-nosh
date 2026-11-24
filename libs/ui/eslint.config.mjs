@@ -1,5 +1,5 @@
 import nx from "@nx/eslint-plugin";
-import baseConfig from "../../eslint.config.mjs";
+import baseConfig, { moduleBoundaryOptions } from "../../eslint.config.mjs";
 
 export default [
     ...nx.configs["flat/angular"],
@@ -24,6 +24,26 @@ export default [
                     type: "element",
                     prefix: "ui",
                     style: "kebab-case"
+                }
+            ]
+        }
+    },
+    {
+        // Storybook mirrors the app's setup, so it may read the shared domain
+        // definitions. The library source itself stays type:ui-only.
+        files: [
+            ".storybook/**/*.ts"
+        ],
+        rules: {
+            "@nx/enforce-module-boundaries": [
+                "error",
+                {
+                    ...moduleBoundaryOptions,
+                    depConstraints: moduleBoundaryOptions.depConstraints.map(constraint =>
+                        constraint.sourceTag === "type:ui"
+                            ? { ...constraint, onlyDependOnLibsWithTags: [ ...constraint.onlyDependOnLibsWithTags, "type:domain" ] }
+                            : constraint
+                    )
                 }
             ]
         }

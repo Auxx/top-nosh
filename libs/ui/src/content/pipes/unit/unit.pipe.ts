@@ -1,18 +1,13 @@
 import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
-
-const KNOWN_UNITS = new Set([ 'GRAMS', 'ITEM_COUNT', 'TSP', 'TBSP' ]);
-
-const LOCALES: Record<string, string> = {
-  en: 'en-GB',
-  ru: 'ru-RU'
-};
-
-const DEFAULT_LOCALE = 'en-GB';
+import { resolveUiLocale, UI_LOCALES } from '../../../i18n/ui-locales';
 
 /**
  * Formats an ingredient quantity with its unit in the active language.
+ *
+ * A unit is known when it has a `ui.Unit.<UNIT>` translation; the number
+ * locale comes from `provideUiLocales()`.
  *
  * Impure so that a language switch re-renders the output; the result is
  * memoized on the inputs and the active language. Until the active language's
@@ -23,6 +18,7 @@ const DEFAULT_LOCALE = 'en-GB';
 export class UnitPipe implements PipeTransform {
   private readonly transloco = inject(TranslocoService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly uiLocales = inject(UI_LOCALES);
 
   private loadedLang?: string;
 
@@ -70,16 +66,18 @@ export class UnitPipe implements PipeTransform {
     // Round once so the plural form matches the number the user sees.
     const count = numeric ? Math.round(value * 100) / 100 : NaN;
     const formatted = numeric
-      ? new Intl.NumberFormat(LOCALES[lang] ?? DEFAULT_LOCALE, {
+      ? new Intl.NumberFormat(resolveUiLocale(this.uiLocales, lang), {
         maximumFractionDigits: 2,
         useGrouping: false
       }).format(count)
       : String(quantity);
 
-    if (!loaded || !KNOWN_UNITS.has(unit)) {
+    const key = `ui.Unit.${unit}`;
+
+    if (!loaded || this.transloco.getTranslation(lang)[key] === undefined) {
       return `${formatted} ${unit}`;
     }
 
-    return this.transloco.translate(`ui.Unit.${unit}`, { count, quantity: formatted }, lang);
+    return this.transloco.translate(key, { count, quantity: formatted }, lang);
   }
 }

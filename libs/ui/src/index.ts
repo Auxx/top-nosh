@@ -12,6 +12,7 @@ export * from './content/pipes/unit/unit.pipe';
 export * from './control/directives/when-error/when-error.directive';
 export * from './dialogs/confirmation/confirmation.dialog';
 export * from './dialogs/markdown-preview/markdown-preview.dialog';
+export * from './i18n/ui-locales';
 export * from './layouts/components/card-grid/card-grid.component';
 export * from './layouts/components/card-item-list/card-item-list.component';
 export * from './layouts/components/info-card/info-card.component';

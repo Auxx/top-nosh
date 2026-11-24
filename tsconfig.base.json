@@ -29,6 +29,9 @@
       ],
       "@top-nosh/config": [
         "./libs/config/src/index.ts"
+      ],
+      "@top-nosh/domain": [
+        "./libs/domain/src/index.ts"
       ]
     }
   },

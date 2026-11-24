@@ -24,15 +24,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { translateSignal, TranslocoDirective } from '@jsverse/transloco';
+import { INGREDIENT_UNITS, IngredientUnit } from '@top-nosh/domain';
 import { ConfirmationDialog, InfoCardComponent, PageHeaderComponent, WhenErrorDirective } from '@top-nosh/ui';
 import { RemarkComponent } from 'ngx-remark';
 import { GalleryManagerComponent } from '../../../galleries/components/gallery-manager/gallery-manager.component';
 import { OptionItem } from '../../../system/types/option-item';
-import { IngredientUnit } from '../../models/create-recipe.types';
 import { RecipeManagementService } from '../../services/recipe-management/recipe-management.service';
 import { ShareRecipeButtonComponent } from '../share-recipe-button/share-recipe-button.component';
 import { buildRecipeShareUrl } from '../share-recipe-button/share-recipe-button.helpers';
 import { createIngredientGroup, createRecipeForm, createStageGroup, createStepGroup } from './recipe-form.helpers';
+
+const UNIT_LABELS: Record<IngredientUnit, string> = {
+  GRAMS: 'Grams (g)',
+  ITEM_COUNT: 'Item count (pcs)',
+  TSP: 'Teaspoons',
+  TBSP: 'Table spoons'
+};
 
 @Component({
   selector: 'app-recipe-form',
@@ -107,12 +114,10 @@ export class RecipeFormComponent implements OnInit {
 
   readonly recipeId = input<string | undefined>(undefined);
 
-  readonly unitOptions: OptionItem<IngredientUnit>[] = [
-    { value: 'GRAMS', label: 'Grams (g)' },
-    { value: 'ITEM_COUNT', label: 'Item count (pcs)' },
-    { value: 'TSP', label: 'Teaspoons' },
-    { value: 'TBSP', label: 'Table spoons' }
-  ];
+  readonly unitOptions: OptionItem<IngredientUnit>[] = INGREDIENT_UNITS.map(value => ({
+    value,
+    label: UNIT_LABELS[value]
+  }));
 
   readonly isShared = signal<boolean>(false);
 

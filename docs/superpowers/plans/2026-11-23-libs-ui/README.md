@@ -28,7 +28,7 @@ in-progress work from `master`, run `git branch -a --list '*ui-*'`.
 | 07 | [Menu bar](07-menu-bar.md)                               | M1, M2, M3, M5 (menu bar)                                           | `refactor/ui-menu-bar`     | 01, 03, 04 | Not started |
 | 08 | [Responsive layout components](08-responsive-layout.md)  | M4, M5 (grid, header), M11, M12                                     | `fix/ui-responsive-layout` | 03, 04     | Not started |
 | 09 | [Content components: touch and a11y](09-content-a11y.md) | M9, M10, M13, L9                                                    | `fix/ui-content-a11y`      | 03, 04     | Not started |
-| 10 | [Shared domain definitions](10-shared-domain.md)         | follow-up to 06: single source for languages, locales, units        | `refactor/shared-domain`   | 06         | Not started |
+| 10 | [Shared domain definitions](10-shared-domain.md)         | follow-up to 06: single source for languages, locales, units        | `refactor/shared-domain`   | 06         | Done        |
 
 Plans with no dependency on each other can run in parallel (01, 02 and 05 can
 start immediately). After 03 and 04 merge, plans 06–09 are independent of each
