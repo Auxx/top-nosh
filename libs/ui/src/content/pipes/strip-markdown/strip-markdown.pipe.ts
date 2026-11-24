@@ -20,8 +20,12 @@ export class StripMarkdownPipe implements PipeTransform {
       .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
       // Remove headers (# Header)
       .replace(/^#{1,6}\s+/gm, '')
-      // Remove bold/italic (***text***, **text**, *text*, ___text___, __text__, _text_)
-      .replace(/(\*{1,3}|_{1,3})(.*?)\1/g, '$2')
+      // Remove bold/italic (***text***, **text**, *text*). Markers must hug
+      // non-space text, so operators such as `2 * 3 * 4` survive.
+      .replace(/(\*{1,3})(?=\S)(.+?)(?<=\S)\1/g, '$2')
+      // Remove bold/italic (___text___, __text__, _text_). Markers must also
+      // sit on word boundaries, so `snake_case_name` survives.
+      .replace(/(?<![\p{L}\p{N}_])(_{1,3})(?=\S)(.+?)(?<=\S)\1(?![\p{L}\p{N}_])/gu, '$2')
       // Remove strikethrough (~~text~~)
       .replace(/~~(.*?)~~/g, '$1')
       // Remove blockquotes (> text)
