@@ -1,13 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { MenuBarComponent } from './menu-bar.component';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { MenuBarComponent, MenuItem } from './menu-bar.component';
+
+const items: MenuItem[] = [
+  { url: '/dashboard', label: 'Dashboard' },
+  { url: '/recipes', label: 'Recipes' },
+  { url: '/shopping-lists', label: 'Shopping Lists' },
+  { url: '/settings', label: 'Settings' },
+  { url: '/logout', label: 'Log out', icon: 'logout' }
+];
 
 const meta: Meta<MenuBarComponent> = {
   title: 'Navigation/MenuBar',
   component: MenuBarComponent,
   tags: [ 'autodocs' ],
+  args: { title: 'Top Nosh', items },
   render: args => ({
     props: args,
-    template: `<ui-menu-bar></ui-menu-bar>`
+    template: `<ui-menu-bar [title]="title" [items]="items"></ui-menu-bar>`
   })
 };
 
@@ -15,13 +25,25 @@ export default meta;
 
 type Story = StoryObj<MenuBarComponent>;
 
-// TODO(plan 07): M3
-export const Desktop: Story = {
-  parameters: { a11y: { test: 'todo' } }
+export const Desktop: Story = {};
+
+export const Mobile: Story = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } }
 };
 
-// TODO(plan 07): M3
-export const Mobile: Story = {
-  parameters: { a11y: { test: 'todo' } },
-  globals: { viewport: { value: 'mobile1', isRotated: false } }
+export const MobileKeyboard: Story = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: 'More' });
+    trigger.focus();
+    await userEvent.keyboard('{Enter}');
+    const menu = within(document.body);
+    await expect(await menu.findAllByRole('menuitem')).toHaveLength(5);
+    await waitFor(() => expect(document.activeElement).toHaveAttribute('role', 'menuitem'));
+    // CDK menus read the legacy keyCode, which user-event omits for Escape.
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true, cancelable: true })
+    );
+    await waitFor(() => expect(trigger).toHaveFocus());
+  }
 };

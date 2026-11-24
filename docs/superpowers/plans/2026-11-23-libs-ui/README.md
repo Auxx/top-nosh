@@ -25,7 +25,7 @@ in-progress work from `master`, run `git branch -a --list '*ui-*'`.
 | 04 | [Storybook](04-storybook.md)                             | H2 (Storybook part), M14 (visual and a11y coverage)                 | `feature/ui-storybook`     | 01, 03     | Done        |
 | 05 | [Pipe correctness](05-pipe-correctness.md)               | M8, L10, L11, M14 (pipe tests)                                      | `fix/ui-pipes`             | none       | Done        |
 | 06 | [Localization](06-localization.md)                       | M7                                                                  | `feature/ui-i18n`          | 01, 03     | Done        |
-| 07 | [Menu bar](07-menu-bar.md)                               | M1, M2, M3, M5 (menu bar)                                           | `refactor/ui-menu-bar`     | 01, 03, 04 | Not started |
+| 07 | [Menu bar](07-menu-bar.md)                               | M1, M2, M3, M5 (menu bar)                                           | `refactor/ui-menu-bar`     | 01, 03, 04 | Done        |
 | 08 | [Responsive layout components](08-responsive-layout.md)  | M4, M5 (grid, header), M11, M12                                     | `fix/ui-responsive-layout` | 03, 04     | Not started |
 | 09 | [Content components: touch and a11y](09-content-a11y.md) | M9, M10, M13, L9                                                    | `fix/ui-content-a11y`      | 03, 04     | Not started |
 | 10 | [Shared domain definitions](10-shared-domain.md)         | follow-up to 06: single source for languages, locales, units        | `refactor/shared-domain`   | 06         | Done        |

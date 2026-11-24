@@ -72,13 +72,8 @@ Components use Transloco. The keys live in the consuming app's
 
 | Key                        | English                                                                       |
 | -------------------------- | ----------------------------------------------------------------------------- |
-| `ui.MenuBar.title`         | Top Nosh                                                                      |
-| `ui.MenuBar.dashboard`     | Dashboard                                                                     |
-| `ui.MenuBar.recipes`       | Recipes                                                                       |
-| `ui.MenuBar.shoppingLists` | Shopping Lists                                                                |
-| `ui.MenuBar.settings`      | Settings                                                                      |
-| `ui.MenuBar.logout`        | Log out                                                                       |
 | `ui.MenuBar.more`          | More                                                                          |
+| `ui.MenuBar.navigation`    | Main navigation                                                               |
 | `ui.PageHeader.back`       | Back                                                                          |
 | `ui.System.ok`             | OK                                                                            |
 | `ui.BlockLoader.loading`   | Loading...                                                                    |
@@ -125,7 +120,8 @@ Everything exported from `src/index.ts`:
 - `InfoCardComponent`: `<ui-info-card>`
 - `PageHeaderComponent`: `<ui-page-header>`
 - `SectionHeaderComponent`: `<ui-section-header>`
-- `MenuBarComponent`: `<ui-menu-bar>`
+- `MenuBarComponent`: `<ui-menu-bar>`; inputs: `title`, `items` (`MenuItem[]`:
+  `url`, `label`, `icon?`; labels are already translated)
 
 ## Storybook
 
