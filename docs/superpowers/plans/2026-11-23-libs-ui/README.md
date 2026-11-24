@@ -23,7 +23,7 @@ in-progress work from `master`, run `git branch -a --list '*ui-*'`.
 | 02 | [`uiWhenError` directive](02-when-error-directive.md)    | H3, L12, M14 (directive tests)                                      | `fix/ui-when-error`        | none       | Done        |
 | 03 | [Library foundations](03-library-foundations.md)         | M6, M5 (shared breakpoints), L14                                    | `refactor/ui-foundations`  | 01         | Done        |
 | 04 | [Storybook](04-storybook.md)                             | H2 (Storybook part), M14 (visual and a11y coverage)                 | `feature/ui-storybook`     | 01, 03     | Done        |
-| 05 | [Pipe correctness](05-pipe-correctness.md)               | M8, L10, L11, M14 (pipe tests)                                      | `fix/ui-pipes`             | none       | Not started |
+| 05 | [Pipe correctness](05-pipe-correctness.md)               | M8, L10, L11, M14 (pipe tests)                                      | `fix/ui-pipes`             | none       | In progress |
 | 06 | [Localization](06-localization.md)                       | M7                                                                  | `feature/ui-i18n`          | 01, 03     | Not started |
 | 07 | [Menu bar](07-menu-bar.md)                               | M1, M2, M3, M5 (menu bar)                                           | `refactor/ui-menu-bar`     | 01, 03, 04 | Not started |
 | 08 | [Responsive layout components](08-responsive-layout.md)  | M4, M5 (grid, header), M11, M12                                     | `fix/ui-responsive-layout` | 03, 04     | Not started |
