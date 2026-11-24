@@ -59,6 +59,7 @@
         "buildTarget": "ui:build-storybook",
         "staticFilePath": "dist/storybook/ui",
         "spa": true,
+        "watch": false,
         "port": 4401
       }
     },

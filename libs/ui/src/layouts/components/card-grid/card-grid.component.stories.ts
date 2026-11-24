@@ -39,7 +39,7 @@ export const LongTitle: Story = {
       <ui-card-grid>
         <mat-card>
           <mat-card-header>
-            <mat-card-title>Supercalifragilisticexpialidocious_unbroken_word_of_sixty</mat-card-title>
+            <mat-card-title>Supercalifragilisticexpialidocious_unbroken_word_sixty_chars</mat-card-title>
           </mat-card-header>
           <mat-card-content>Content of the card.</mat-card-content>
         </mat-card>

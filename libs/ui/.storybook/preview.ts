@@ -1,4 +1,4 @@
-import { provideRouter } from '@angular/router';
+import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
 import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { applicationConfig, Preview } from '@storybook/angular-vite';
@@ -38,11 +38,12 @@ const preview: Preview = {
           loader: StorybookTranslocoLoader
         }),
         provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
-        provideRouter([])
+        provideRouter([], withDisabledInitialNavigation())
       ]
     }),
     (story, ctx) => {
-      document.body.className = `${ctx.globals['scheme']} ${ctx.globals['palette']}`;
+      document.body.classList.remove('light', 'dark', ...palettes);
+      document.body.classList.add(ctx.globals['scheme'], ctx.globals['palette']);
       return story();
     }
   ],

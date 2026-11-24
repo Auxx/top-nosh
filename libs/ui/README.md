@@ -107,8 +107,13 @@ translations are loaded from `apps/web/public/assets/i18n`.
 
 - `npx nx run ui:storybook`: dev server on <http://localhost:4400>
 - `npx nx run ui:build-storybook`: static build to `dist/storybook/ui`
+- `npx nx run ui:static-storybook`: serves the static build on
+  <http://localhost:4401> (used by `test-storybook`)
 - `npx nx run ui:test-storybook`: builds and serves the static Storybook, then
   runs every story as a smoke and accessibility test (Jest + Playwright)
+
+Ports 4400 and 4401 must be free: the file server silently picks another port if
+4401 is busy, which would fool the test runner's wait gate.
 
 The test runner needs a browser, installed once per machine:
 
