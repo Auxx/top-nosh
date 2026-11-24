@@ -65,6 +65,14 @@ bp;`:
 }
 ```
 
+### Component custom properties
+
+| Property                     | Meaning                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- |
+| `--ui-mini-badge-height`     | `ui-mini-badge` minimum height (default `28px`); a minimum, so the text scales with the font size |
+| `--ui-mini-badge-background` | `ui-mini-badge` background; set on the host from the `color` input                                |
+| `--ui-mini-badge-foreground` | `ui-mini-badge` text colour; set on the host from the `color` input                               |
+
 ## Translations
 
 Components use Transloco. The keys live in the consuming app's
@@ -77,6 +85,7 @@ Components use Transloco. The keys live in the consuming app's
 | `ui.PageHeader.back`       | Back                                                                          |
 | `ui.System.ok`             | OK                                                                            |
 | `ui.BlockLoader.loading`   | Loading...                                                                    |
+| `ui.CardState.loading`     | Loading… (aria-label of the card-state spinner)                               |
 | `ui.Confirmation.confirm`  | Yes                                                                           |
 | `ui.Confirmation.cancel`   | No                                                                            |
 | `ui.MarkdownPreview.title` | Description Preview                                                           |
@@ -94,6 +103,11 @@ for plural selection. A unit with no key, or any unit while the active language
 is still loading, renders as `<quantity> <UNIT>`. A non-numeric quantity is
 shown as written. The library has no list of units: a unit is known exactly when
 the active language has a `ui.Unit.<UNIT>` key.
+
+Live-region semantics: `ui-block-loader` is `role="status"`. `ui-card-state` is
+`aria-live="polite"` with `aria-busy` while loading, and its error paragraph is
+`role="alert"`. `ui-block-notice` is `role="alert"` when `isError`, otherwise
+`role="status"`.
 
 ## Catalogue
 
@@ -117,7 +131,15 @@ Everything exported from `src/index.ts`:
   `MarkdownPreviewDialogData`
 - `CardGridComponent`: `<ui-card-grid>`
 - `CardItemListComponent`: `<ui-card-item-list>`
-- `InfoCardComponent`: `<ui-info-card>`
+- `InfoCardComponent`: `<ui-info-card>`; with `dragAndDrop` true it is a drop
+  zone, and its host stays non-interactive for assistive tech (no `role` or
+  `tabindex`; consumers must not add them):
+  - `<section>`: must contain a real `<button>`, the keyboard and assistive tech
+    path. A host `(click)` is optional mouse sugar; if both open the same thing,
+    stop propagation on the button's click
+  - `<aside>`: never shown; meant for the hidden `<input type="file">`
+  - the border highlights while the button has focus (`:focus-within`); the
+    hover highlight applies only on hover-capable pointers
 - `PageHeaderComponent`: `<ui-page-header>`; content slots (only direct children
   (or the single root element of a top-level `@if`/`@for` block) are matched, so
   links nested inside the subtitle stay there):
