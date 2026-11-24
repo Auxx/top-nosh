@@ -24,14 +24,16 @@ in-progress work from `master`, run `git branch -a --list '*ui-*'`.
 | 03 | [Library foundations](03-library-foundations.md)         | M6, M5 (shared breakpoints), L14                                    | `refactor/ui-foundations`  | 01         | Done        |
 | 04 | [Storybook](04-storybook.md)                             | H2 (Storybook part), M14 (visual and a11y coverage)                 | `feature/ui-storybook`     | 01, 03     | Done        |
 | 05 | [Pipe correctness](05-pipe-correctness.md)               | M8, L10, L11, M14 (pipe tests)                                      | `fix/ui-pipes`             | none       | Done        |
-| 06 | [Localization](06-localization.md)                       | M7                                                                  | `feature/ui-i18n`          | 01, 03     | Not started |
+| 06 | [Localization](06-localization.md)                       | M7                                                                  | `feature/ui-i18n`          | 01, 03     | Done        |
 | 07 | [Menu bar](07-menu-bar.md)                               | M1, M2, M3, M5 (menu bar)                                           | `refactor/ui-menu-bar`     | 01, 03, 04 | Not started |
 | 08 | [Responsive layout components](08-responsive-layout.md)  | M4, M5 (grid, header), M11, M12                                     | `fix/ui-responsive-layout` | 03, 04     | Not started |
 | 09 | [Content components: touch and a11y](09-content-a11y.md) | M9, M10, M13, L9                                                    | `fix/ui-content-a11y`      | 03, 04     | Not started |
+| 10 | [Shared domain definitions](10-shared-domain.md)         | follow-up to 06: single source for languages, locales, units        | `refactor/shared-domain`   | 06         | Not started |
 
 Plans with no dependency on each other can run in parallel (01, 02 and 05 can
 start immediately). After 03 and 04 merge, plans 06–09 are independent of each
-other.
+other. Plan 10 is a follow-up to 06, from the review discussion on its PR; it
+has no finding ID.
 
 M14 (test coverage) has no plan of its own. Every plan adds behavioural tests
 for the units it touches, and Plan 04 adds a story-level accessibility run for

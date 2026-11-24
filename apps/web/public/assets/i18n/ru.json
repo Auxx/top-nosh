@@ -17,6 +17,21 @@
     },
     "BlockLoader": {
       "loading": "Загрузка..."
+    },
+    "Confirmation": {
+      "confirm": "Да",
+      "cancel": "Нет"
+    },
+    "MarkdownPreview": {
+      "title": "Предпросмотр описания",
+      "empty": "Текст в формате Markdown отсутствует.",
+      "close": "Закрыть"
+    },
+    "Unit": {
+      "GRAMS": "{quantity} г",
+      "ITEM_COUNT": "{quantity} шт.",
+      "TSP": "{quantity} ч. л.",
+      "TBSP": "{quantity} ст. л."
     }
   },
   "config": {

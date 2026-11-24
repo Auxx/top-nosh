@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, isSignal, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { translateSignal } from '@jsverse/transloco';
 
 export interface ConfirmationDialogData {
   title: string | Signal<string>;
@@ -20,6 +21,9 @@ export interface ConfirmationDialogData {
 })
 export class ConfirmationDialog {
   readonly data: ConfirmationDialogData = inject(MAT_DIALOG_DATA);
+
+  protected readonly defaultConfirm = translateSignal('ui.Confirmation.confirm');
+  protected readonly defaultCancel = translateSignal('ui.Confirmation.cancel');
 
   readonly title = computed(() => {
     const result = this.data.title;

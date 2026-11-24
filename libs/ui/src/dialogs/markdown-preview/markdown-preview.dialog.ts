@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { translateSignal } from '@jsverse/transloco';
 import { RemarkComponent } from 'ngx-remark';
 
 export interface MarkdownPreviewDialogData {
@@ -21,4 +22,8 @@ export interface MarkdownPreviewDialogData {
 })
 export class MarkdownPreviewDialog {
   readonly data: MarkdownPreviewDialogData = inject(MAT_DIALOG_DATA);
+
+  protected readonly defaultTitle = translateSignal('ui.MarkdownPreview.title');
+  protected readonly emptyText = translateSignal('ui.MarkdownPreview.empty');
+  protected readonly closeText = translateSignal('ui.MarkdownPreview.close');
 }
