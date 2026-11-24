@@ -33,8 +33,9 @@ Selector prefix: `ui`. Tagged `type:ui`, so it may only depend on other
    provideUiLocales({ locales: { en: 'en-GB', ru: 'ru-RU' }, defaultLocale: 'en-GB' })
    ```
 
-   `defaultLocale` is used for a language missing from `locales`. `apps/web`
-   builds both from `@top-nosh/domain`.
+   `defaultLocale` is used for a language missing from `locales`. A value that
+   isn't a valid BCP 47 tag (e.g. `en_US`) is skipped, so it can't break
+   rendering. `apps/web` builds both from `@top-nosh/domain`.
 
 ## Styles API
 

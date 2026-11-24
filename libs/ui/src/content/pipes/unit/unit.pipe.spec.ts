@@ -99,8 +99,13 @@ describe('UnitPipe locale configuration', () => {
     TestBed.configureTestingModule({
       imports: [
         getTranslocoModule({
-          langs: { en: { ui: { Unit: en } }, ru: { ui: { Unit: ru } }, de: { ui: { Unit: en } } },
-          translocoConfig: { availableLangs: [ 'en', 'ru', 'de' ], defaultLang: 'en' }
+          langs: {
+            en: { ui: { Unit: en } },
+            ru: { ui: { Unit: ru } },
+            de: { ui: { Unit: en } },
+            en_US: { ui: { Unit: en } }
+          },
+          translocoConfig: { availableLangs: [ 'en', 'ru', 'de', 'en_US' ], defaultLang: 'en' }
         })
       ],
       providers: [
@@ -121,6 +126,12 @@ describe('UnitPipe locale configuration', () => {
     ]);
     transloco.setActiveLang('de');
     expect(pipe.transform(0.5, 'TSP')).toBe('0.5 teaspoons');
+  });
+
+  it('does not throw for a language code that is not a valid locale', () => {
+    const { pipe, transloco } = createPipe([]);
+    transloco.setActiveLang('en_US');
+    expect(() => pipe.transform(0.5, 'TSP')).not.toThrow();
   });
 
   it('works without provideUiLocales', () => {
