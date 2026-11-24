@@ -38,10 +38,17 @@ mat-toolbar {
 }
 
 .nav-link {
+  // The link colour comes from the toolbar's container-text-color token.
   @include mat.button-overrides((
-          text-label-text-color: var(--mat-sys-on-primary),
+          text-state-layer-color: var(--mat-sys-on-primary),
+          text-ripple-color: var(--mat-sys-on-primary),
           text-label-text-weight: 400,
   ));
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-on-primary);
+    outline-offset: -2px;
+  }
 
   &.selected {
     @include mat.button-overrides((
@@ -60,7 +67,14 @@ mat-toolbar {
 .collapsed {
   @include mat.icon-button-overrides((
           icon-color: var(--mat-sys-on-primary),
+          state-layer-color: var(--mat-sys-on-primary),
+          ripple-color: var(--mat-sys-on-primary),
   ));
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-on-primary);
+    outline-offset: -2px;
+  }
 }
 
 .nav-icon {
