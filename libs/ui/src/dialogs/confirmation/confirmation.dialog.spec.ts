@@ -1,6 +1,8 @@
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslocoService } from '@jsverse/transloco';
+import { getTranslocoModule } from '../../transloco-testing.module';
 import { ConfirmationDialog, ConfirmationDialogData } from './confirmation.dialog';
 
 describe('ConfirmationDialog', () => {
@@ -13,19 +15,38 @@ describe('ConfirmationDialog', () => {
     content: 'Test message content'
   };
 
-  const createComponent = async (data: ConfirmationDialogData = defaultData) => {
+  const createComponent = async (data: ConfirmationDialogData = defaultData, lang = 'en') => {
     dialogRefMock = {
       close: jest.fn()
     };
 
     await TestBed.configureTestingModule({
-      imports: [ ConfirmationDialog ],
+      imports: [
+        ConfirmationDialog,
+        getTranslocoModule({
+          langs: {
+            en: {
+              ui: {
+                Confirmation: { confirm: 'Yes', cancel: 'No' },
+                MarkdownPreview: {
+                  title: 'Description Preview',
+                  empty: 'No Markdown content was provided.',
+                  close: 'Close'
+                }
+              }
+            },
+            ru: { ui: { Confirmation: { confirm: 'Да', cancel: 'Нет' } } }
+          },
+          translocoConfig: { availableLangs: [ 'en', 'ru' ], defaultLang: 'en' }
+        })
+      ],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: data },
         { provide: MatDialogRef, useValue: dialogRefMock }
       ]
     }).compileComponents();
 
+    TestBed.inject(TranslocoService).setActiveLang(lang);
     fixture = TestBed.createComponent(ConfirmationDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -113,5 +134,11 @@ describe('ConfirmationDialog', () => {
     await createComponent({ title: signal('Signal title'), content: signal('Signal content') });
     expect(fixture.nativeElement.querySelector('[mat-dialog-title]').textContent.trim()).toBe('Signal title');
     expect(fixture.nativeElement.querySelector('mat-dialog-content').textContent.trim()).toBe('Signal content');
+  });
+
+  it('should render Russian default button labels', async () => {
+    await createComponent(defaultData, 'ru');
+    const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll('mat-dialog-actions button');
+    expect(Array.from(buttons, b => b.textContent?.trim())).toEqual([ 'Нет', 'Да' ]);
   });
 });

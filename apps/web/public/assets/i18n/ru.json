@@ -17,6 +17,15 @@
     },
     "BlockLoader": {
       "loading": "Загрузка..."
+    },
+    "Confirmation": {
+      "confirm": "Да",
+      "cancel": "Нет"
+    },
+    "MarkdownPreview": {
+      "title": "Предпросмотр описания",
+      "empty": "Текст в формате Markdown отсутствует.",
+      "close": "Закрыть"
     }
   },
   "config": {

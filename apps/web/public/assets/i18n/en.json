@@ -17,6 +17,15 @@
     },
     "BlockLoader": {
       "loading": "Loading..."
+    },
+    "Confirmation": {
+      "confirm": "Yes",
+      "cancel": "No"
+    },
+    "MarkdownPreview": {
+      "title": "Description Preview",
+      "empty": "No Markdown content was provided.",
+      "close": "Close"
     }
   },
   "config": {

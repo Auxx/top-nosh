@@ -1,11 +1,13 @@
-<h2 mat-dialog-title>{{ data.title || 'Description Preview' }}</h2>
-<mat-dialog-content>
-  @if (data.markdown) {
-    <remark [markdown]="data.markdown" />
-  } @else {
-    <p class="empty-state">No Markdown content was provided.</p>
-  }
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button matButton [mat-dialog-close]="true">Close</button>
-</mat-dialog-actions>
+<ng-container *transloco="let t; prefix: 'ui.MarkdownPreview'">
+  <h2 mat-dialog-title>{{ data.title || t('title') }}</h2>
+  <mat-dialog-content>
+    @if (data.markdown) {
+      <remark [markdown]="data.markdown" />
+    } @else {
+      <p class="empty-state">{{ t('empty') }}</p>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton [mat-dialog-close]="true">{{ t('close') }}</button>
+  </mat-dialog-actions>
+</ng-container>

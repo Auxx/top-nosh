@@ -3,6 +3,6 @@
   <p>{{ content() }}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button matButton cdkFocusInitial [mat-dialog-close]="false">{{ data.cancelText || 'No' }}</button>
-  <button matButton="filled" [mat-dialog-close]="true">{{ data.confirmText || 'Yes' }}</button>
+  <button matButton cdkFocusInitial [mat-dialog-close]="false">{{ data.cancelText || defaultCancel() }}</button>
+  <button matButton="filled" [mat-dialog-close]="true">{{ data.confirmText || defaultConfirm() }}</button>
 </mat-dialog-actions>

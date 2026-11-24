@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { RemarkComponent } from 'ngx-remark';
+import { getTranslocoModule } from '../../transloco-testing.module';
 import { MarkdownPreviewDialog, MarkdownPreviewDialogData } from './markdown-preview.dialog';
 
 describe('MarkdownPreviewDialog', () => {
@@ -19,7 +20,25 @@ describe('MarkdownPreviewDialog', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ MarkdownPreviewDialog ],
+      imports: [
+        MarkdownPreviewDialog,
+        getTranslocoModule({
+          langs: {
+            en: {
+              ui: {
+                Confirmation: { confirm: 'Yes', cancel: 'No' },
+                MarkdownPreview: {
+                  title: 'Description Preview',
+                  empty: 'No Markdown content was provided.',
+                  close: 'Close'
+                }
+              }
+            },
+            ru: { ui: { Confirmation: { confirm: 'Да', cancel: 'Нет' } } }
+          },
+          translocoConfig: { availableLangs: [ 'en', 'ru' ], defaultLang: 'en' }
+        })
+      ],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: data },
         { provide: MatDialogRef, useValue: dialogRefMock }
@@ -77,5 +96,11 @@ describe('MarkdownPreviewDialog', () => {
     button.click();
 
     expect(dialogRefMock.close).toHaveBeenCalledWith(true);
+  });
+
+  it('should render the close button label from translations', async () => {
+    await createComponent();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('mat-dialog-actions button');
+    expect(button.textContent?.trim()).toBe('Close');
   });
 });

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { RemarkComponent } from 'ngx-remark';
 
 export interface MarkdownPreviewDialogData {
@@ -13,7 +14,8 @@ export interface MarkdownPreviewDialogData {
   imports: [
     MatDialogModule,
     MatButtonModule,
-    RemarkComponent
+    RemarkComponent,
+    TranslocoDirective
   ],
   templateUrl: './markdown-preview.dialog.html',
   styleUrl: './markdown-preview.dialog.scss',
