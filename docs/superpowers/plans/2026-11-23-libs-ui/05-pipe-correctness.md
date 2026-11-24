@@ -98,7 +98,7 @@ describe('DomainPipe', () => {
 });
 ```
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=domain`. Expected: FAIL
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=domain`. Expected: FAIL
       (it returns origins, and throws without `URL.parse`).
 - [ ] **Step 3:** Implement with `new URL(value).hostname` in a `try`/`catch`
       that returns `value`. Return `''` for falsy input.
@@ -143,8 +143,8 @@ it('counts graphemes, not code units, against the limit', () => {
 });
 ```
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=truncate`. Expected: the
-      new tests FAIL.
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=truncate`. Expected:
+      the new tests FAIL.
 - [ ] **Step 3: Implement.** Split with `new Intl.Segmenter(undefined, {
       granularity: 'grapheme' })` (a module-level constant). If the grapheme
       count is ≤ `limit`, return `value`. Otherwise take the first `limit`
@@ -179,7 +179,7 @@ it('should strip emphasis around a phrase with punctuation', () => {
 });
 ```
 
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=strip-markdown`.
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=strip-markdown`.
       Expected: the first two FAIL.
 - [ ] **Step 3: Implement.** Replace the single emphasis replace with two:
   - asterisks: `/(\*{1,3})(?=\S)(.+?)(?<=\S)\1/g` → `'$2'`

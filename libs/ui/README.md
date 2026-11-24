@@ -88,8 +88,10 @@ Everything exported from `src/index.ts`:
 - `TruncatePipe`: `truncate`
 - `UnitPipe`: `unit`
 - `WhenErrorDirective`: `[uiWhenError]`
-- `ConfirmationDialog`: `<ui-confirmation-dialog>`
-- `MarkdownPreviewDialog`: `<ui-markdown-preview-dialog>`
+- `ConfirmationDialog`: opened via `MatDialog.open`; data:
+  `ConfirmationDialogData`
+- `MarkdownPreviewDialog`: opened via `MatDialog.open`; data:
+  `MarkdownPreviewDialogData`
 - `CardGridComponent`: `<ui-card-grid>`
 - `CardItemListComponent`: `<ui-card-item-list>`
 - `InfoCardComponent`: `<ui-info-card>`
@@ -100,5 +102,7 @@ Everything exported from `src/index.ts`:
 ## Commands
 
 - `nx test ui`
+- `nx test ui --testPathPatterns=<name>`: runs only the spec files whose path
+  matches `<name>` (regex; Jest 30 flag, `--testPathPattern` no longer works)
 - `nx run ui:lint`
 - `nx run ui:typecheck`

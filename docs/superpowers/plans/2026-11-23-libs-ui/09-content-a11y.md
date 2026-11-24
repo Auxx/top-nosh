@@ -91,7 +91,8 @@ Storybook with `addon-a11y` (Plan 04).
 | card-state   | `is not busy when idle`                                      | `aria-busy` is `'false'` or absent                                                                                                                                                                                                             |
 
 - [ ] **Step 2:** Run `npx nx test ui
-      --testPathPattern="block-loader|block-notice|card-state"`. Expected: FAIL.
+      --testPathPatterns="block-loader|block-notice|card-state"`. Expected:
+      FAIL.
 - [ ] **Step 3: Implement.**
   - Add the `host` entries listed under Roles.
   - In `card-state`, add `readonly loadingLabel =
@@ -131,7 +132,7 @@ Storybook with `addon-a11y` (Plan 04).
     `tabIndex >= 0`.
   - `hides the aside slot`: the `aside` element's parent has class `hidden`
     (Jest doesn't apply component styles, so assert the class).
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=info-card`. Expected:
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=info-card`. Expected:
       PASS. These tests pin the library contract before the restyle; the app is
       what violates it, and Step 5's a11y run is the failing check for that.
 - [ ] **Step 3: Restyle.**
@@ -188,7 +189,7 @@ Storybook with `addon-a11y` (Plan 04).
     `'var(--mat-sys-on-tertiary-container)'`.
   - `does not leak generic custom properties`: the host style `--background` is
     `''`.
-- [ ] **Step 2:** Run `npx nx test ui --testPathPattern=mini-badge`. Expected:
+- [ ] **Step 2:** Run `npx nx test ui --testPathPatterns=mini-badge`. Expected:
       FAIL.
 - [ ] **Step 3: Implement.**
   - Rename the host style bindings and the SCSS variables to the names in Global
