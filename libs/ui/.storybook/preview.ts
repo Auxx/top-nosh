@@ -43,10 +43,13 @@ const preview: Preview = {
         provideTranslocoMessageformat({ locales: LANGUAGES.map(language => language.locale) }),
         provideUiLocales({ locales: LOCALES, defaultLocale: LOCALES[DEFAULT_LANGUAGE] }),
         // Render stories only after the active language has loaded, so the
-        // a11y checks never see a control whose label is still pending.
+        // a11y checks never see a control whose label is still pending. A
+        // failed load is logged, not thrown: stories still render, untranslated.
         provideAppInitializer(() => {
           const transloco = inject(TranslocoService);
-          return firstValueFrom(transloco.load(transloco.getActiveLang()));
+          return firstValueFrom(transloco.load(transloco.getActiveLang())).catch((error: unknown) => {
+            console.error('Storybook: could not load translations', error);
+          });
         }),
         provideRouter([], withDisabledInitialNavigation())
       ]
