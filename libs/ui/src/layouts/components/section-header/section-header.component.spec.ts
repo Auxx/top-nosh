@@ -21,4 +21,27 @@ describe('SectionHeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('renders an h2 by default', () => {
+    expect(fixture.nativeElement.querySelector('h2')).not.toBeNull();
+  });
+
+  it('renders the requested level', async () => {
+    fixture.componentRef.setInput('level', 3);
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('h3')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('h2')).toBeNull();
+  });
+
+  it('omits the description element when there is none', () => {
+    expect(fixture.nativeElement.querySelector('.description')).toBeNull();
+  });
+
+  it('renders the description when given', async () => {
+    fixture.componentRef.setInput('description', 'Desc');
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('.description').textContent.trim()).toBe('Desc');
+  });
 });
