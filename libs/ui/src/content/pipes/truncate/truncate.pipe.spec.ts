@@ -46,4 +46,18 @@ describe('TruncatePipe', () => {
   it('counts graphemes, not code units, against the limit', () => {
     expect(pipe.transform('👍🏽👍🏽', 2)).toBe('👍🏽👍🏽');
   });
+
+  it('loads and truncates by code point where Intl.Segmenter is unavailable (Firefox < 125)', () => {
+    const original = Intl.Segmenter;
+    delete (Intl as { Segmenter?: unknown; }).Segmenter;
+    try {
+      jest.isolateModules(() => {
+        const { TruncatePipe: IsolatedPipe } = require('./truncate.pipe') as typeof import('./truncate.pipe');
+        expect(new IsolatedPipe().transform('The quick brown fox', 12)).toBe('The quick…');
+        expect(new IsolatedPipe().transform('😀😀😀', 2)).toBe('😀😀…');
+      });
+    } finally {
+      (Intl as { Segmenter?: unknown; }).Segmenter = original;
+    }
+  });
 });

@@ -1,6 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-const graphemeSegmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+// Firefox gained Intl.Segmenter only in 125, and Angular's default browserslist
+// reaches back to 119. Create it lazily so its absence can never break module
+// loading, and fall back to code points (which never split a surrogate pair).
+let graphemeSegmenter: Intl.Segmenter | null | undefined;
+
+function splitGraphemes(value: string): string[] {
+  if (graphemeSegmenter === undefined) {
+    graphemeSegmenter = typeof Intl.Segmenter === 'function'
+      ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+      : null;
+  }
+  return graphemeSegmenter
+    ? Array.from(graphemeSegmenter.segment(value), ({ segment }) => segment)
+    : Array.from(value);
+}
 const whitespace = /^\s+$/;
 
 @Pipe({
@@ -15,7 +29,7 @@ export class TruncatePipe implements PipeTransform {
     if (!value) {
       return '';
     }
-    const graphemes = Array.from(graphemeSegmenter.segment(value), ({ segment }) => segment);
+    const graphemes = splitGraphemes(value);
     if (graphemes.length <= limit) {
       return value;
     }
