@@ -272,6 +272,20 @@ describe('RecipeDetailsPage', () => {
       expect(component.isUrl(undefined)).toBe(false);
     });
 
+    it('should render a URL source as a link labelled with its bare hostname', () => {
+      const recipeWithUrlSource: RecipeDetails = {
+        ...mockRecipeDetails,
+        source: 'http://www.example.com:8080/recipes/1?x=2'
+      };
+      mockRecipeService.getRecipeById.mockReturnValueOnce(of(recipeWithUrlSource));
+      component.loadRecipe('test-recipe-1');
+      fixture.detectChanges();
+
+      const link = (fixture.nativeElement as HTMLElement).querySelector('[data-testid="recipe-source-link"]');
+      expect(link?.getAttribute('href')).toBe('http://www.example.com:8080/recipes/1?x=2');
+      expect(link?.textContent?.trim()).toBe('www.example.com');
+    });
+
     it('should render source as plain text when source is non-URL text', () => {
       const recipeWithTextSource: RecipeDetails = {
         ...mockRecipeDetails,

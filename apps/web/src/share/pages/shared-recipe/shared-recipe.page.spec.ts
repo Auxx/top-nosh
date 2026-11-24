@@ -155,7 +155,7 @@ describe('SharedRecipePage', () => {
       expect(compiled.querySelector('[data-testid="recipe-description"]')?.textContent).toContain(
         'A classic Italian pasta dish.'
       );
-      expect(compiled.querySelector('[data-testid="recipe-source-link"]')).toBeTruthy();
+      expect(compiled.querySelector('[data-testid="recipe-source-link"]')?.textContent?.trim()).toBe('example.com');
     });
   });
 
