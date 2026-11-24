@@ -59,18 +59,32 @@ bp;`:
 Components use Transloco. The keys live in the consuming app's
 `assets/i18n/*.json` (for `apps/web`: `apps/web/public/assets/i18n/en.json`).
 
-| Key                        | English        |
-| -------------------------- | -------------- |
-| `ui.MenuBar.title`         | Top Nosh       |
-| `ui.MenuBar.dashboard`     | Dashboard      |
-| `ui.MenuBar.recipes`       | Recipes        |
-| `ui.MenuBar.shoppingLists` | Shopping Lists |
-| `ui.MenuBar.settings`      | Settings       |
-| `ui.MenuBar.logout`        | Log out        |
-| `ui.MenuBar.more`          | More           |
-| `ui.PageHeader.back`       | Back           |
-| `ui.System.ok`             | OK             |
-| `ui.BlockLoader.loading`   | Loading...     |
+| Key                        | English                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| `ui.MenuBar.title`         | Top Nosh                                                                      |
+| `ui.MenuBar.dashboard`     | Dashboard                                                                     |
+| `ui.MenuBar.recipes`       | Recipes                                                                       |
+| `ui.MenuBar.shoppingLists` | Shopping Lists                                                                |
+| `ui.MenuBar.settings`      | Settings                                                                      |
+| `ui.MenuBar.logout`        | Log out                                                                       |
+| `ui.MenuBar.more`          | More                                                                          |
+| `ui.PageHeader.back`       | Back                                                                          |
+| `ui.System.ok`             | OK                                                                            |
+| `ui.BlockLoader.loading`   | Loading...                                                                    |
+| `ui.Confirmation.confirm`  | Yes                                                                           |
+| `ui.Confirmation.cancel`   | No                                                                            |
+| `ui.MarkdownPreview.title` | Description Preview                                                           |
+| `ui.MarkdownPreview.empty` | No Markdown content was provided.                                             |
+| `ui.MarkdownPreview.close` | Close                                                                         |
+| `ui.Unit.GRAMS`            | `{quantity}g`                                                                 |
+| `ui.Unit.ITEM_COUNT`       | `{count, plural, one {{quantity} item} other {{quantity} items}}`             |
+| `ui.Unit.TSP`              | `{count, plural, one {{quantity} teaspoon} other {{quantity} teaspoons}}`     |
+| `ui.Unit.TBSP`             | `{count, plural, one {{quantity} tablespoon} other {{quantity} tablespoons}}` |
+
+The `ui.Unit.*` keys use MessageFormat syntax, so the app must provide
+`provideTranslocoMessageformat`. `quantity` is the number already formatted for
+the active language; `count` is the raw number for plural selection. A unit with
+no key renders as `<quantity> <UNIT>`.
 
 ## Catalogue
 
