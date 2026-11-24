@@ -49,4 +49,30 @@ describe('StripMarkdownPipe', () => {
   it('should trim and normalize whitespace', () => {
     expect(pipe.transform('  Multiple   spaces \n\n and newlines  ')).toBe('Multiple spaces and newlines');
   });
+
+  it('should keep underscores inside words', () => {
+    expect(pipe.transform('use snake_case_name and my_file_v2.txt')).toBe('use snake_case_name and my_file_v2.txt');
+  });
+
+  it('should keep spaced asterisks used as operators', () => {
+    expect(pipe.transform('2 * 3 * 4 = 24')).toBe('2 * 3 * 4 = 24');
+  });
+
+  it('should strip emphasis around a phrase with punctuation', () => {
+    expect(pipe.transform('**Prep ahead:** chill overnight')).toBe('Prep ahead: chill overnight');
+  });
+
+  it('should remove *** and ___ horizontal rules without leftovers', () => {
+    expect(pipe.transform('a\n***\nb')).toBe('a b');
+    expect(pipe.transform('a\n___\nb')).toBe('a b');
+  });
+
+  it('should keep unspaced asterisks between digits and letters', () => {
+    expect(pipe.transform('2*3*4 = 24')).toBe('2*3*4 = 24');
+    expect(pipe.transform('Rated 4*/5* by me')).toBe('Rated 4*/5* by me');
+  });
+
+  it('should remove bullets inside blockquotes', () => {
+    expect(pipe.transform('> * quoted item\n> - another')).toBe('quoted item another');
+  });
 });

@@ -98,7 +98,7 @@ describe('RecipeGridViewComponent', () => {
     fixture.detectChanges();
 
     const content = fixture.nativeElement.querySelector('mat-card-content');
-    expect(content.textContent.trim()).toBe('A'.repeat(100) + '...');
+    expect(content.textContent.trim()).toBe('A'.repeat(100) + '…');
   });
 
   it('should display empty state when recipes is empty', () => {
