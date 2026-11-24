@@ -53,6 +53,12 @@ describe('MenuBarComponent', () => {
     expect(toolbarLinks().map(a => a.getAttribute('href'))).toEqual([ '/recipes', '/settings', '/logout' ]);
   });
 
+  it('renders text items as plain links, not buttons', () => {
+    const textLinks = toolbarLinks().filter(a => a.classList.contains('nav-link'));
+    expect(textLinks.map(a => a.getAttribute('href'))).toEqual([ '/recipes', '/settings' ]);
+    textLinks.forEach(a => expect(a.classList).not.toContain('mat-mdc-button-base'));
+  });
+
   it('labels icon-only links', () => {
     const logout = toolbarLinks().find(a => a.getAttribute('href') === '/logout');
     expect(logout?.getAttribute('aria-label')).toBe('Log out');

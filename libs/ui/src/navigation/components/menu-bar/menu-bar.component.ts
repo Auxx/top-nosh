@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatToolbar } from '@angular/material/toolbar';
@@ -16,7 +16,6 @@ export interface MenuItem {
   selector: 'ui-menu-bar',
   imports: [
     MatToolbar,
-    MatButton,
     RouterLink,
     MatIconButton,
     MatIcon,

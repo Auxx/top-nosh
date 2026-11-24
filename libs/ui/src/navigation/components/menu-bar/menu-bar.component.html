@@ -7,8 +7,7 @@
 
       @for (item of items(); track item.url) {
         @if (item.icon === undefined) {
-          <a matButton
-             class="nav-link"
+          <a class="nav-link"
              [routerLink]="item.url"
              routerLinkActive="selected"
              ariaCurrentWhenActive="page">
