@@ -1,13 +1,11 @@
-<ng-container *transloco="let t; prefix: 'ui.MarkdownPreview'">
-  <h2 mat-dialog-title>{{ data.title || t('title') }}</h2>
-  <mat-dialog-content>
-    @if (data.markdown) {
-      <remark [markdown]="data.markdown" />
-    } @else {
-      <p class="empty-state">{{ t('empty') }}</p>
-    }
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button matButton [mat-dialog-close]="true">{{ t('close') }}</button>
-  </mat-dialog-actions>
-</ng-container>
+<h2 mat-dialog-title>{{ data.title || defaultTitle() }}</h2>
+<mat-dialog-content>
+  @if (data.markdown) {
+    <remark [markdown]="data.markdown" />
+  } @else {
+    <p class="empty-state">{{ emptyText() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton [mat-dialog-close]="true">{{ closeText() }}</button>
+</mat-dialog-actions>

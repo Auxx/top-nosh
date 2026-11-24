@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
+import { provideTransloco, Translation, TranslocoLoader } from '@jsverse/transloco';
 import { RemarkComponent } from 'ngx-remark';
+import { NEVER, Observable } from 'rxjs';
 import { getTranslocoModule } from '../../transloco-testing.module';
 import { MarkdownPreviewDialog, MarkdownPreviewDialogData } from './markdown-preview.dialog';
 
@@ -102,5 +104,30 @@ describe('MarkdownPreviewDialog', () => {
     await createComponent();
     const button: HTMLButtonElement = fixture.nativeElement.querySelector('mat-dialog-actions button');
     expect(button.textContent?.trim()).toBe('Close');
+  });
+
+  it('should render the caller content and close button before translations load', async () => {
+    class NeverLoader implements TranslocoLoader {
+      getTranslation(): Observable<Translation> {
+        return NEVER;
+      }
+    }
+
+    await TestBed.configureTestingModule({
+      imports: [ MarkdownPreviewDialog ],
+      providers: [
+        provideTransloco({ config: { availableLangs: [ 'en' ], defaultLang: 'en' }, loader: NeverLoader }),
+        { provide: MAT_DIALOG_DATA, useValue: { title: 'Custom Preview', markdown: '# Hi' } },
+        { provide: MatDialogRef, useValue: { close: jest.fn() } }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MarkdownPreviewDialog);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('[mat-dialog-title]')?.textContent.trim()).toBe('Custom Preview');
+    expect(fixture.debugElement.query(By.directive(RemarkComponent))).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('mat-dialog-actions button')).toBeTruthy();
   });
 });
