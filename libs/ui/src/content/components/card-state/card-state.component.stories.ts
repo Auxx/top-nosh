@@ -1,22 +1,46 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { argsToTemplate } from '@storybook/angular-vite';
 import { CardStateComponent } from './card-state.component';
 
 const meta: Meta<CardStateComponent> = {
-  title: 'Components/CardState',
+  title: 'Content/CardState',
   component: CardStateComponent,
-
-  args: {},
-
-  argTypes: {}
+  tags: [ 'autodocs' ]
 };
 
 export default meta;
 
 type Story = StoryObj<CardStateComponent>;
 
-export const Primary: Story = {
-  render: props => ({
-    props,
-    template: `<ui-card-state></ui-card-state>`
+export const Loading: Story = {
+  // TODO(plan 09): M13
+  parameters: { a11y: { test: 'todo' } },
+  args: { isLoading: true },
+  render: args => ({
+    props: args,
+    template: `<ui-card-state ${argsToTemplate(args)}></ui-card-state>`
+  })
+};
+
+export const Error: Story = {
+  args: { errorMessage: 'Could not load the recipes.' },
+  render: args => ({
+    props: args,
+    template: `<ui-card-state ${argsToTemplate(args)}></ui-card-state>`
+  })
+};
+
+export const Notice: Story = {
+  args: { noticeMessage: 'No recipes match your search.' },
+  render: args => ({
+    props: args,
+    template: `<ui-card-state ${argsToTemplate(args)}></ui-card-state>`
+  })
+};
+
+export const Content: Story = {
+  render: args => ({
+    props: args,
+    template: `<ui-card-state ${argsToTemplate(args)}><p>Recipe content goes here.</p></ui-card-state>`
   })
 };

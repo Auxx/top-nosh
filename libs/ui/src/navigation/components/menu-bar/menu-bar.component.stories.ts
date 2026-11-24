@@ -1,22 +1,27 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { MenuBarComponent } from './menu-bar.component';
 
 const meta: Meta<MenuBarComponent> = {
-  title: 'Components/MenuBar',
+  title: 'Navigation/MenuBar',
   component: MenuBarComponent,
-
-  args: {},
-
-  argTypes: {}
+  tags: [ 'autodocs' ],
+  render: args => ({
+    props: args,
+    template: `<ui-menu-bar></ui-menu-bar>`
+  })
 };
 
 export default meta;
 
 type Story = StoryObj<MenuBarComponent>;
 
-export const Primary: Story = {
-  render: props => ({
-    props,
-    template: `<lib-menu-bar></lib-menu-bar>`
-  })
+// TODO(plan 07): M3
+export const Desktop: Story = {
+  parameters: { a11y: { test: 'todo' } }
+};
+
+// TODO(plan 07): M3
+export const Mobile: Story = {
+  parameters: { a11y: { test: 'todo' } },
+  globals: { viewport: { value: 'mobile1', isRotated: false } }
 };

@@ -99,6 +99,39 @@ Everything exported from `src/index.ts`:
 - `SectionHeaderComponent`: `<ui-section-header>`
 - `MenuBarComponent`: `<ui-menu-bar>`
 
+## Storybook
+
+Every component and dialog has stories under `src/`. The config lives in
+`.storybook/`; the toolbar has _scheme_ (light/dark) and _palette_ switches, and
+translations are loaded from `apps/web/public/assets/i18n`.
+
+- `npx nx run ui:storybook`: dev server on <http://localhost:4400>
+- `npx nx run ui:build-storybook`: static build to `dist/storybook/ui`
+- `npx nx run ui:static-storybook`: serves the static build on
+  <http://localhost:4401> (used by `test-storybook`)
+- `npx nx run ui:test-storybook`: builds and serves the static Storybook, then
+  runs every story as a smoke and accessibility test (Jest + Playwright)
+
+Ports 4400 and 4401 must be free: the file server silently picks another port if
+4401 is busy, which would fool the test runner's wait gate.
+
+The test runner needs a browser, installed once per machine:
+
+```sh
+npx playwright install chromium
+```
+
+Accessibility checks run on every story with `a11y.test: 'error'` (set globally
+in `.storybook/preview.ts`). A story that exposes a known issue owned by a later
+plan downgrades itself and names the finding:
+
+```ts
+// TODO(plan NN): <finding id>
+parameters: { a11y: { test: 'todo' } },
+```
+
+Everything else must pass at `'error'`.
+
 ## Commands
 
 - `nx test ui`

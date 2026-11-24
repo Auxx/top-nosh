@@ -1,22 +1,21 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { argsToTemplate } from '@storybook/angular-vite';
 import { CardIconComponent } from './card-icon.component';
 
 const meta: Meta<CardIconComponent> = {
-  title: 'Components/CardIcon',
+  title: 'Content/CardIcon',
   component: CardIconComponent,
-
-  args: {},
-
-  argTypes: {}
+  tags: [ 'autodocs' ]
 };
 
 export default meta;
 
 type Story = StoryObj<CardIconComponent>;
 
-export const Primary: Story = {
-  render: props => ({
-    props,
-    template: `<ui-card-icon></ui-card-icon>`
+export const Default: Story = {
+  args: { icon: 'restaurant' },
+  render: args => ({
+    props: args,
+    template: `<ui-card-icon ${argsToTemplate(args)}></ui-card-icon>`
   })
 };

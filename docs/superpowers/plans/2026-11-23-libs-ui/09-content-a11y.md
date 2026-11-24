@@ -70,14 +70,15 @@ Storybook with `addon-a11y` (Plan 04).
 **Files:**
 
 - Modify:
-  `libs/ui/src/content/components/block-loader/block-loader.component.ts`,
+  `libs/ui/src/content/components/block-loader/block-loader.component.{ts,html}`,
   `block-notice/block-notice.component.ts`,
   `card-state/card-state.component.{ts,html}`
 - Modify: `apps/web/public/assets/i18n/en.json`, `ru.json`
   (`ui.CardState.loading`)
 - Test: the three specs
-- Modify: `card-state` and `block-notice` stories (remove `TODO(plan 09)`
-  markers)
+- Modify: `block-loader`, `card-state` and `block-notice` stories (remove
+  `TODO(plan 09)` markers; the block-loader one is
+  `libs/ui/src/content/components/block-loader/block-loader.component.stories.ts`)
 
 - [ ] **Step 1: Write the failing tests.**
 
@@ -99,6 +100,9 @@ Storybook with `addon-a11y` (Plan 04).
     translateSignal('ui.CardState.loading')` and bind
     `[attr.aria-label]="loadingLabel()"` on the spinner.
   - Add `role="alert"` to the error paragraph.
+  - In `block-loader.component.html`, add `aria-hidden="true"` to the
+    `mat-spinner`: the visible "Loading..." text already names the status
+    region, and the unnamed spinner otherwise fails axe `aria-progressbar-name`.
   - Add the key to both JSON files.
 - [ ] **Step 4:** Run the same command, then `npx nx run ui:test-storybook` with
       the `todo` markers removed. Expected: PASS.

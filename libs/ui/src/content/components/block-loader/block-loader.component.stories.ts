@@ -1,22 +1,22 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { expect, within } from 'storybook/test';
 import { BlockLoaderComponent } from './block-loader.component';
 
 const meta: Meta<BlockLoaderComponent> = {
-  title: 'Components/BlockLoader',
+  title: 'Content/BlockLoader',
   component: BlockLoaderComponent,
-
-  args: {},
-
-  argTypes: {}
+  tags: [ 'autodocs' ]
 };
 
 export default meta;
 
 type Story = StoryObj<BlockLoaderComponent>;
 
-export const Primary: Story = {
-  render: props => ({
-    props,
-    template: `<ui-block-loader></ui-block-loader>`
-  })
+export const Default: Story = {
+  // TODO(plan 09): M13
+  parameters: { a11y: { test: 'todo' } },
+  render: () => ({ template: '<ui-block-loader></ui-block-loader>' }),
+  play: async ({ canvasElement }) => {
+    await expect(await within(canvasElement).findByText('Loading...')).toBeVisible();
+  }
 };
