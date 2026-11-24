@@ -44,6 +44,24 @@ describe('CardStateComponent', () => {
     expect(host().getAttribute('aria-busy')).toBe('false');
   });
 
+  it('marks the host as showing content only when there is no state to show', async () => {
+    expect(host().classList).toContain('ui-card-state-content');
+
+    fixture.componentRef.setInput('isLoading', true);
+    await fixture.whenStable();
+    expect(host().classList).not.toContain('ui-card-state-content');
+
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.componentRef.setInput('noticeMessage', 'Nothing here');
+    await fixture.whenStable();
+    expect(host().classList).not.toContain('ui-card-state-content');
+
+    fixture.componentRef.setInput('noticeMessage', undefined);
+    fixture.componentRef.setInput('errorMessage', 'Boom');
+    await fixture.whenStable();
+    expect(host().classList).not.toContain('ui-card-state-content');
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { translateSignal } from '@jsverse/transloco';
 
@@ -12,7 +12,8 @@ import { translateSignal } from '@jsverse/transloco';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'aria-live': 'polite',
-    '[attr.aria-busy]': 'isLoading()'
+    '[attr.aria-busy]': 'isLoading()',
+    '[class.ui-card-state-content]': 'showsContent()'
   }
 })
 export class CardStateComponent {
@@ -23,4 +24,8 @@ export class CardStateComponent {
   readonly errorMessage = input<string | undefined>();
 
   readonly noticeMessage = input<string | undefined>();
+
+  protected readonly showsContent = computed(() =>
+    !this.isLoading() && this.errorMessage() === undefined && this.noticeMessage() === undefined
+  );
 }
