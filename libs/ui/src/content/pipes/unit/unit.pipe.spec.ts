@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideTransloco, Translation, TranslocoLoader, TranslocoService } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { Observable, of, Subject } from 'rxjs';
+import { provideUiLocales } from '../../../i18n/ui-locales';
 import { getTranslocoModule } from '../../../transloco-testing.module';
 import { UnitPipe } from './unit.pipe';
 
@@ -34,6 +35,7 @@ describe('UnitPipe', () => {
       ],
       providers: [
         provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
+        provideUiLocales({ locales: { en: 'en-GB', ru: 'ru-RU' }, defaultLocale: 'en-GB' }),
         { provide: ChangeDetectorRef, useValue: { markForCheck: jest.fn() } }
       ]
     });
@@ -89,6 +91,42 @@ describe('UnitPipe', () => {
     expect(pipe.transform('1/2', 'PINCH')).toBe('1/2 PINCH');
     transloco.setActiveLang('ru');
     expect(pipe.transform('1/2', 'TSP')).toBe('1/2 ч. л.');
+  });
+});
+
+describe('UnitPipe locale configuration', () => {
+  const createPipe = (providers: unknown[]) => {
+    TestBed.configureTestingModule({
+      imports: [
+        getTranslocoModule({
+          langs: { en: { ui: { Unit: en } }, ru: { ui: { Unit: ru } }, de: { ui: { Unit: en } } },
+          translocoConfig: { availableLangs: [ 'en', 'ru', 'de' ], defaultLang: 'en' }
+        })
+      ],
+      providers: [
+        provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
+        { provide: ChangeDetectorRef, useValue: { markForCheck: jest.fn() } },
+        ...(providers as [])
+      ]
+    });
+    return {
+      pipe: TestBed.runInInjectionContext(() => new UnitPipe()),
+      transloco: TestBed.inject(TranslocoService)
+    };
+  };
+
+  it('unknown language uses the default locale', () => {
+    const { pipe, transloco } = createPipe([
+      provideUiLocales({ locales: { en: 'en-GB', ru: 'ru-RU' }, defaultLocale: 'en-GB' })
+    ]);
+    transloco.setActiveLang('de');
+    expect(pipe.transform(0.5, 'TSP')).toBe('0.5 teaspoons');
+  });
+
+  it('works without provideUiLocales', () => {
+    const { pipe, transloco } = createPipe([]);
+    transloco.setActiveLang('ru');
+    expect(pipe.transform(0.5, 'TSP')).toBe('0,5 ч. л.');
   });
 });
 
