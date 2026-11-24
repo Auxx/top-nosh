@@ -103,13 +103,36 @@ describe('WhenErrorDirective', () => {
     const twoFixture = TestBed.createComponent(TwoCodesHostComponent);
     await twoFixture.whenStable();
     const c = twoFixture.componentInstance.c;
-    c.setValue('abc');
-    c.markAsDirty();
-    await twoFixture.whenStable();
     const el: HTMLElement = twoFixture.nativeElement;
+    c.markAsTouched();
+    await twoFixture.whenStable();
+
+    expect(el.querySelector('.req')).not.toBeNull();
+    expect(el.querySelector('.mail')).toBeNull();
+
+    c.setValue('abc');
+    await twoFixture.whenStable();
 
     expect(el.querySelector('.req')).toBeNull();
     expect(el.querySelector('.mail')).not.toBeNull();
+    expect(el.querySelectorAll('.err').length).toBe(1);
+  });
+
+  it('re-renders when the error code input changes', async () => {
+    initialControl = new FormControl('a', [ Validators.minLength(3), Validators.email ]);
+    initialControl.markAsTouched();
+    await create();
+    host.code.set('minlength');
+    await settle();
+
+    expect(errors().length).toBe(1);
+    expect(errors()[0].textContent).toBe('minlength');
+
+    host.code.set('email');
+    await settle();
+
+    expect(errors().length).toBe(1);
+    expect(errors()[0].textContent).toBe('email');
   });
 
   it('hides when the control becomes valid', async () => {
