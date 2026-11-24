@@ -28,25 +28,17 @@
            priority/>
 
       <mat-card-content>
-        @if (isLoading) {
-          <ui-card-state [isLoading]="true"/>
-        } @else if (hasError) {
-          <ui-card-state [errorMessage]="t('loadError')"/>
-        } @else {
-          @if (hasRecipes()) {
-            <ui-card-item-list>
-              @for (recipe of data()?.recipes; track recipe.id) {
-                <a [routerLink]="['/recipes', recipe.id]">
-                  {{ recipe.name }}
-                </a>
-              }
-            </ui-card-item-list>
-
-          } @else {
-            <ui-card-state [noticeMessage]="t('noRecipes')"/>
-          }
-        }
-
+        <ui-card-state [isLoading]="isLoading"
+                       [errorMessage]="hasError ? t('loadError') : undefined"
+                       [noticeMessage]="!hasRecipes() ? t('noRecipes') : undefined">
+          <ui-card-item-list>
+            @for (recipe of data()?.recipes; track recipe.id) {
+              <a [routerLink]="['/recipes', recipe.id]">
+                {{ recipe.name }}
+              </a>
+            }
+          </ui-card-item-list>
+        </ui-card-state>
       </mat-card-content>
 
       @if (!isLoading && !hasError) {
@@ -83,21 +75,15 @@
            priority/>
 
       <mat-card-content>
-        @if (isLoading) {
-          <ui-card-state [isLoading]="true"/>
-        } @else if (hasError) {
-          <ui-card-state [errorMessage]="t('loadError')"/>
-        } @else {
-          @if (hasShoppingListItems()) {
-            <ui-card-item-list>
-              @for (item of data()?.shoppingList?.items; track item.id) {
-                <span>{{ item.name }}</span>
-              }
-            </ui-card-item-list>
-          } @else {
-            <ui-card-state [noticeMessage]="t('noShoppingListItems')"/>
-          }
-        }
+        <ui-card-state [isLoading]="isLoading"
+                       [errorMessage]="hasError ? t('loadError') : undefined"
+                       [noticeMessage]="!hasShoppingListItems() ? t('noShoppingListItems') : undefined">
+          <ui-card-item-list>
+            @for (item of data()?.shoppingList?.items; track item.id) {
+              <span>{{ item.name }}</span>
+            }
+          </ui-card-item-list>
+        </ui-card-state>
       </mat-card-content>
 
       @if (!isLoading && !hasError) {

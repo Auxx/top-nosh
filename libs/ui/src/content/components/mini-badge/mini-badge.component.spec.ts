@@ -36,5 +36,6 @@ describe('MiniBadgeComponent', () => {
     const style = (fixture.nativeElement as HTMLElement).style;
 
     expect(style.getPropertyValue('--background')).toBe('');
+    expect(style.getPropertyValue('--foreground')).toBe('');
   });
 });

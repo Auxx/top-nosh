@@ -11,7 +11,7 @@ describe('BlockLoaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         BlockLoaderComponent,
-        getTranslocoModule({ langs: { en: { ui: { BlockLoader: { loading: 'Loading...' } } } } })
+        getTranslocoModule({ langs: { en: { ui: { BlockLoader: { loading: 'Loading…' } } } } })
       ]
     })
       .compileComponents();
@@ -30,6 +30,6 @@ describe('BlockLoaderComponent', () => {
   });
 
   it('should render the translated loading text', () => {
-    expect(fixture.nativeElement.querySelector('p').textContent.trim()).toBe('Loading...');
+    expect(fixture.nativeElement.querySelector('p').textContent.trim()).toBe('Loading…');
   });
 });

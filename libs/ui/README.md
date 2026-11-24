@@ -67,11 +67,11 @@ bp;`:
 
 ### Component custom properties
 
-| Property                     | Meaning                                                                                           |
-| ---------------------------- | ------------------------------------------------------------------------------------------------- |
-| `--ui-mini-badge-height`     | `ui-mini-badge` minimum height (default `28px`); a minimum, so the text scales with the font size |
-| `--ui-mini-badge-background` | `ui-mini-badge` background; set on the host from the `color` input                                |
-| `--ui-mini-badge-foreground` | `ui-mini-badge` text colour; set on the host from the `color` input                               |
+| Property                     | Meaning                                                                                                  |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `--ui-mini-badge-height`     | `ui-mini-badge` minimum height (default `28px`); a minimum, so the text scales with the font size        |
+| `--ui-mini-badge-background` | `ui-mini-badge` background; read-only, driven by the `color` input (inline host style, not overridable)  |
+| `--ui-mini-badge-foreground` | `ui-mini-badge` text colour; read-only, driven by the `color` input (inline host style, not overridable) |
 
 ## Translations
 
@@ -84,7 +84,7 @@ Components use Transloco. The keys live in the consuming app's
 | `ui.MenuBar.navigation`    | Main navigation                                                               |
 | `ui.PageHeader.back`       | Back                                                                          |
 | `ui.System.ok`             | OK                                                                            |
-| `ui.BlockLoader.loading`   | Loading...                                                                    |
+| `ui.BlockLoader.loading`   | Loading…                                                                      |
 | `ui.CardState.loading`     | Loading… (aria-label of the card-state spinner)                               |
 | `ui.Confirmation.confirm`  | Yes                                                                           |
 | `ui.Confirmation.cancel`   | No                                                                            |
@@ -107,7 +107,8 @@ the active language has a `ui.Unit.<UNIT>` key.
 Live-region semantics: `ui-block-loader` is `role="status"`. `ui-card-state` is
 `aria-live="polite"` with `aria-busy` while loading, and its error paragraph is
 `role="alert"`. `ui-block-notice` is `role="alert"` when `isError`, otherwise
-`role="status"`.
+`role="status"`. Keep a live region mounted and swap its content, not the
+element; otherwise state changes are not announced.
 
 ## Catalogue
 
