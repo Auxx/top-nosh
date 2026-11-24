@@ -6,7 +6,8 @@
       "recipes": "Рецепты",
       "shoppingLists": "Списки покупок",
       "settings": "Настройки",
-      "logout": "Выйти"
+      "logout": "Выйти",
+      "more": "Ещё"
     },
     "PageHeader": {
       "back": "Назад"

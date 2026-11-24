@@ -14,14 +14,16 @@
       } @else {
         <button matIconButton
                 [routerLink]="item.url"
+                [attr.aria-label]="t(item.label)"
                 class="action">
-          <mat-icon size="18">{{ item.icon }}</mat-icon>
+          <mat-icon>{{ item.icon }}</mat-icon>
         </button>
       }
     }
 
     <button matIconButton
             class="collapsed"
+            [attr.aria-label]="t('more')"
             [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>

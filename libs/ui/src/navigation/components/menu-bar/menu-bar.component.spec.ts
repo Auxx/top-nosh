@@ -11,7 +11,22 @@ describe('MenuBarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MenuBarComponent,
-        getTranslocoModule()
+        getTranslocoModule({
+          langs: {
+            en: {
+              ui: {
+                MenuBar: {
+                  logout: 'Log out',
+                  more: 'More',
+                  dashboard: 'Dashboard',
+                  recipes: 'Recipes',
+                  shoppingLists: 'Shopping Lists',
+                  settings: 'Settings'
+                }
+              }
+            }
+          }
+        })
       ],
       providers: [ provideRouter([]) ]
     }).compileComponents();
@@ -19,9 +34,23 @@ describe('MenuBarComponent', () => {
     fixture = TestBed.createComponent(MenuBarComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should label every icon-only button', () => {
+    const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('button'));
+    const iconOnly = buttons.filter(b =>
+      (b.textContent ?? '').trim() === (b.querySelector('mat-icon')?.textContent ?? '').trim()
+    );
+    expect(iconOnly.length).toBe(2);
+    expect(iconOnly.map(b => b.getAttribute('aria-label'))).toEqual([ 'Log out', 'More' ]);
+  });
+
+  it('should not set an unsupported size attribute on icons', () => {
+    expect(fixture.nativeElement.querySelector('mat-icon[size]')).toBeNull();
   });
 });

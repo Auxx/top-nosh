@@ -6,7 +6,8 @@
       "recipes": "Recipes",
       "shoppingLists": "Shopping Lists",
       "settings": "Settings",
-      "logout": "Log out"
+      "logout": "Log out",
+      "more": "More"
     },
     "PageHeader": {
       "back": "Back"
