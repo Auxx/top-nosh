@@ -5,7 +5,7 @@
   <ui-page-header [showBackButton]="true" (navigatedBack)="onNavigateBack()">
     <h1>{{ t('title') }}</h1>
 
-    <div>{{ t('description') }}</div>
+    <div uiPageHeaderSubtitle>{{ t('description') }}</div>
 
     <button matIconButton
             form="theme-form"
