@@ -54,3 +54,31 @@ export const Mobile: Story = {
     expect(canvasElement.scrollWidth).toBeLessThanOrEqual(canvasElement.clientWidth);
   }
 };
+
+export const Landscape: Story = {
+  render: args => ({
+    props: args,
+    template: `
+      <div style="width: 740px">
+        <ui-card-grid>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Supercalifragilisticexpialidocious_unbroken_word_sixty_chars</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>Content of the first card.</mat-card-content>
+          </mat-card>
+          <mat-card>
+            <mat-card-header><mat-card-title>Second card</mat-card-title></mat-card-header>
+            <mat-card-content>Content of the second card.</mat-card-content>
+          </mat-card>
+        </ui-card-grid>
+      </div>`
+  }),
+  play: ({ canvasElement }) => {
+    const wrapper = canvasElement.querySelector('div') as HTMLElement;
+    const cards = canvasElement.querySelectorAll('mat-card');
+    expect(cards.length).toBe(2);
+    expect(wrapper.scrollWidth).toBeLessThanOrEqual(wrapper.clientWidth);
+    expect(cards[0].getBoundingClientRect().top).toBe(cards[1].getBoundingClientRect().top);
+  }
+};

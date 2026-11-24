@@ -58,6 +58,7 @@ export const LongTitle: Story = {
     const subtitle = canvasElement.querySelector('[uiPageHeaderSubtitle]')?.getBoundingClientRect();
     expect(title).toBeDefined();
     expect(subtitle).toBeDefined();
+    expect(title?.height).toBeGreaterThan(20);
     expect(title?.bottom).toBeLessThanOrEqual(subtitle?.top ?? 0);
   }
 };
@@ -73,6 +74,23 @@ export const Mobile: Story = {
         <button matButton>Import</button>
         <button matButton>New recipe</button>
         <button matButton>Export</button>
+      </ui-page-header>`
+  }),
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  play: ({ canvasElement }) => {
+    expect(canvasElement.scrollWidth).toBeLessThanOrEqual(canvasElement.clientWidth);
+  }
+};
+
+export const MobileLongTitle: Story = {
+  render: args => ({
+    props: args,
+    template: `
+      <ui-page-header ${argsToTemplate(args)}>
+        <h1>Supercalifragilisticexpialidocious_unbroken_word_sixty_chars</h1>
+        <div uiPageHeaderSubtitle>All your saved recipes</div>
+        <button matButton>Import</button>
+        <button matButton>New recipe</button>
       </ui-page-header>`
   }),
   globals: { viewport: { value: 'mobile1', isRotated: false } },

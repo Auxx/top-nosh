@@ -40,6 +40,8 @@
 .header {
   grid-column: 1;
   grid-row: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 
   ::ng-deep {
     h1, h2, h3, h4, h5, h6 {
@@ -51,6 +53,8 @@
 .subheader {
   grid-column: 1;
   grid-row: 2;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .actions {

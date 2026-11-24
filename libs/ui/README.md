@@ -119,7 +119,8 @@ Everything exported from `src/index.ts`:
 - `CardItemListComponent`: `<ui-card-item-list>`
 - `InfoCardComponent`: `<ui-info-card>`
 - `PageHeaderComponent`: `<ui-page-header>`; content slots (only direct children
-  are matched, so links nested inside the subtitle stay there):
+  (or the single root element of a top-level `@if`/`@for` block) are matched, so
+  links nested inside the subtitle stay there):
   - title: `h1`-`h6`
   - subtitle: a direct child marked `uiPageHeaderSubtitle`
   - actions: a direct-child `button`, `a`, or any element marked
