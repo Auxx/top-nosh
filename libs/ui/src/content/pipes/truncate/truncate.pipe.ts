@@ -5,17 +5,27 @@ import { Pipe, PipeTransform } from '@angular/core';
 // loading, and fall back to code points (which never split a surrogate pair).
 let graphemeSegmenter: Intl.Segmenter | null | undefined;
 
-function splitGraphemes(value: string): string[] {
+function firstGraphemes(value: string, count: number): string[] {
   if (graphemeSegmenter === undefined) {
     graphemeSegmenter = typeof Intl.Segmenter === 'function'
       ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
       : null;
   }
-  return graphemeSegmenter
-    ? Array.from(graphemeSegmenter.segment(value), ({ segment }) => segment)
-    : Array.from(value);
+  const graphemes: string[] = [];
+  const iterable: Iterable<string | Intl.SegmentData> = graphemeSegmenter ? graphemeSegmenter.segment(value) : value;
+  for (const item of iterable) {
+    if (graphemes.length >= count) {
+      break;
+    }
+    graphemes.push(typeof item === 'string' ? item : item.segment);
+  }
+  return graphemes;
 }
+
 const whitespace = /^\s+$/;
+// Cut back to a word boundary only if that keeps at least this share of the
+// limit; otherwise a short word before a long URL would swallow the text.
+const minKeptRatio = 0.6;
 
 @Pipe({
   name: 'truncate'
@@ -23,13 +33,17 @@ const whitespace = /^\s+$/;
 export class TruncatePipe implements PipeTransform {
   /**
    * Shortens `value` to at most `limit` grapheme clusters, cutting back to the
-   * last word boundary when one exists, and appends `ellipsis`.
+   * last word boundary when one is near the limit, and appends `ellipsis`.
    */
   transform(value?: string | null, limit = 100, ellipsis = '…'): string {
     if (!value) {
       return '';
     }
-    const graphemes = splitGraphemes(value);
+    // A string never has more graphemes than UTF-16 code units.
+    if (value.length <= limit) {
+      return value;
+    }
+    const graphemes = firstGraphemes(value, limit + 1);
     if (graphemes.length <= limit) {
       return value;
     }
@@ -40,7 +54,7 @@ export class TruncatePipe implements PipeTransform {
       while (lastSpace > 0 && !whitespace.test(kept[lastSpace])) {
         lastSpace--;
       }
-      if (lastSpace > 0) {
+      if (lastSpace > 0 && lastSpace >= limit * minKeptRatio) {
         kept = kept.slice(0, lastSpace);
       }
     }
