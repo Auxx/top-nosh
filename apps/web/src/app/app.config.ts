@@ -9,6 +9,8 @@ import {
 import { provideRouter, TitleStrategy, withComponentInputBinding } from '@angular/router';
 import { getBrowserLang, provideTransloco } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
+import { DEFAULT_LANGUAGE, LANGUAGE_CODES, LANGUAGES, LOCALES } from '@top-nosh/domain';
+import { provideUiLocales } from '@top-nosh/ui';
 import { authInterceptor } from '../auth/interceptors/auth/auth.interceptor';
 import { baseUrlInterceptor } from '../system/interceptors/base-url/base-url.interceptor';
 import { appRoutes } from './app.routes';
@@ -18,17 +20,18 @@ import { TranslocoHttpLoader } from './transloco-loader';
 export const translocoProviders: (Provider | EnvironmentProviders)[] = [
   provideTransloco({
     config: {
-      availableLangs: [ 'en', 'ru' ],
+      availableLangs: [ ...LANGUAGE_CODES ],
       defaultLang: getBrowserLang(),
       reRenderOnLangChange: true,
       prodMode: !isDevMode(),
-      fallbackLang: 'en'
+      fallbackLang: DEFAULT_LANGUAGE
     },
     loader: TranslocoHttpLoader
   }),
   provideTranslocoMessageformat({
-    locales: [ 'en-GB', 'ru-RU' ]
-  })
+    locales: LANGUAGES.map(language => language.locale)
+  }),
+  provideUiLocales({ locales: LOCALES, defaultLocale: LOCALES[DEFAULT_LANGUAGE] })
 ];
 
 export const appConfig: ApplicationConfig = {

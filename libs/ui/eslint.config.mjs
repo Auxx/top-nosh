@@ -29,6 +29,30 @@ export default [
         }
     },
     {
+        // Storybook mirrors the app's setup, so it may read the shared domain
+        // definitions. The library source itself stays type:ui-only.
+        files: [
+            ".storybook/**/*.ts"
+        ],
+        rules: {
+            "@nx/enforce-module-boundaries": [
+                "error",
+                {
+                    enforceBuildableLibDependency: true,
+                    depConstraints: [
+                        {
+                            sourceTag: "type:ui",
+                            onlyDependOnLibsWithTags: [
+                                "type:ui",
+                                "type:domain"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
         files: [
             "**/*.html"
         ],

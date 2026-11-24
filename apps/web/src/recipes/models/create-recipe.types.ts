@@ -1,4 +1,6 @@
-export type IngredientUnit = 'GRAMS' | 'ITEM_COUNT' | 'TSP' | 'TBSP';
+import type { IngredientUnit } from '@top-nosh/domain';
+
+export type { IngredientUnit };
 
 export interface CreateIngredientDto {
   name: string;

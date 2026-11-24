@@ -3,7 +3,9 @@ import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
 import { provideTransloco, TranslocoLoader, TranslocoService } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { applicationConfig, Preview } from '@storybook/angular-vite';
+import { DEFAULT_LANGUAGE, LANGUAGE_CODES, LANGUAGES, LOCALES } from '@top-nosh/domain';
 import { firstValueFrom, from, Observable } from 'rxjs';
+import { provideUiLocales } from '../src/i18n/ui-locales';
 
 class StorybookTranslocoLoader implements TranslocoLoader {
   getTranslation(lang: string): Observable<Record<string, unknown>> {
@@ -32,13 +34,14 @@ const preview: Preview = {
       providers: [
         provideTransloco({
           config: {
-            availableLangs: [ 'en', 'ru' ],
-            defaultLang: 'en',
+            availableLangs: [ ...LANGUAGE_CODES ],
+            defaultLang: DEFAULT_LANGUAGE,
             reRenderOnLangChange: true
           },
           loader: StorybookTranslocoLoader
         }),
-        provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
+        provideTranslocoMessageformat({ locales: LANGUAGES.map(language => language.locale) }),
+        provideUiLocales({ locales: LOCALES, defaultLocale: LOCALES[DEFAULT_LANGUAGE] }),
         // Render stories only after the active language has loaded, so the
         // a11y checks never see a control whose label is still pending.
         provideAppInitializer(() => {
