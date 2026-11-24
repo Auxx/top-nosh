@@ -13,8 +13,6 @@ export default meta;
 type Story = StoryObj<BlockLoaderComponent>;
 
 export const Default: Story = {
-  // TODO(plan 09): M13
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ template: '<ui-block-loader></ui-block-loader>' }),
   play: async ({ canvasElement }) => {
     await expect(await within(canvasElement).findByText('Loading...')).toBeVisible();

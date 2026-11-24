@@ -13,6 +13,9 @@
     "BlockLoader": {
       "loading": "Загрузка..."
     },
+    "CardState": {
+      "loading": "Загрузка…"
+    },
     "Confirmation": {
       "confirm": "Да",
       "cancel": "Нет"

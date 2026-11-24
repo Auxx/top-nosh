@@ -10,7 +10,8 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './block-notice.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.error]': 'isError()'
+    '[class.error]': 'isError()',
+    '[attr.role]': 'isError() ? "alert" : "status"'
   }
 })
 export class BlockNoticeComponent {
