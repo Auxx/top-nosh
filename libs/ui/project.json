@@ -13,6 +13,63 @@
       "options": {
         "command": "tsc -p libs/ui/tsconfig.lib.json --noEmit"
       }
+    },
+    "storybook": {
+      "executor": "@storybook/angular-vite:start-storybook",
+      "continuous": true,
+      "options": {
+        "port": 4400,
+        "configDir": "libs/ui/.storybook",
+        "tsConfig": "libs/ui/.storybook/tsconfig.json",
+        "styles": [
+          "libs/ui/src/styles/ui.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "libs/ui/src/styles"
+          ]
+        },
+        "zoneless": true
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular-vite:build-storybook",
+      "outputs": [
+        "{options.outputDir}"
+      ],
+      "options": {
+        "outputDir": "dist/storybook/ui",
+        "configDir": "libs/ui/.storybook",
+        "tsConfig": "libs/ui/.storybook/tsconfig.json",
+        "styles": [
+          "libs/ui/src/styles/ui.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "libs/ui/src/styles"
+          ]
+        },
+        "zoneless": true
+      }
+    },
+    "static-storybook": {
+      "executor": "@nx/web:file-server",
+      "continuous": true,
+      "options": {
+        "buildTarget": "ui:build-storybook",
+        "staticFilePath": "dist/storybook/ui",
+        "spa": true,
+        "port": 4401
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "static-storybook"
+      ],
+      "options": {
+        "command": "node libs/ui/.storybook/wait-for-url.mjs http://localhost:4401 && test-storybook --url http://localhost:4401 --config-dir libs/ui/.storybook"
+      }
     }
   }
 }

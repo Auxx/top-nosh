@@ -1,22 +1,16 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { NoticeComponent } from './notice.component';
 
 const meta: Meta<NoticeComponent> = {
-  title: 'Components/Notice',
+  title: 'Content/Notice',
   component: NoticeComponent,
-
-  args: {},
-
-  argTypes: {}
+  tags: [ 'autodocs' ]
 };
 
 export default meta;
 
 type Story = StoryObj<NoticeComponent>;
 
-export const Primary: Story = {
-  render: props => ({
-    props,
-    template: `<ui-notice></ui-notice>`
-  })
+export const Default: Story = {
+  render: () => ({ template: '<ui-notice>No recipes match your search.</ui-notice>' })
 };
