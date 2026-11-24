@@ -1,37 +1,51 @@
 <ng-container *transloco="let t; prefix: 'ui.MenuBar'">
-  <mat-toolbar>
-    <span>Top Nosh</span>
+  <nav [attr.aria-label]="t('navigation')">
+    <mat-toolbar>
+      <span class="title">{{ title() }}</span>
 
-    <span class="spacer"></span>
+      <span class="spacer"></span>
 
-    @for (item of menuItems; track item.url) {
-      @if (item.icon === undefined) {
-        <a matButton [routerLink]="item.url"
-           routerLinkActive="selected"
-           class="action">
-          {{ t(item.label) }}
-        </a>
-      } @else {
-        <button matIconButton
-                [routerLink]="item.url"
-                [attr.aria-label]="t(item.label)"
-                class="action">
-          <mat-icon>{{ item.icon }}</mat-icon>
-        </button>
+      @for (item of items(); track item.url) {
+        @if (item.icon === undefined) {
+          <a matButton
+             class="nav-link"
+             [routerLink]="item.url"
+             routerLinkActive="selected"
+             ariaCurrentWhenActive="page">
+            {{ item.label }}
+          </a>
+        } @else {
+          <a matIconButton
+             class="nav-icon"
+             [routerLink]="item.url"
+             routerLinkActive="selected"
+             ariaCurrentWhenActive="page"
+             [attr.aria-label]="item.label">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </a>
+        }
       }
-    }
 
-    <button matIconButton
-            class="collapsed"
-            [attr.aria-label]="t('more')"
-            [matMenuTriggerFor]="menu">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-  </mat-toolbar>
+      <button matIconButton
+              class="collapsed"
+              [attr.aria-label]="t('more')"
+              [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </mat-toolbar>
+  </nav>
 
   <mat-menu #menu="matMenu">
-    @for (item of menuItems; track item.url) {
-      <button mat-menu-item [routerLink]="item.url">{{ t(item.label) }}</button>
+    @for (item of items(); track item.url) {
+      <a mat-menu-item
+         [routerLink]="item.url"
+         routerLinkActive="selected"
+         ariaCurrentWhenActive="page">
+        @if (item.icon !== undefined) {
+          <mat-icon>{{ item.icon }}</mat-icon>
+        }
+        {{ item.label }}
+      </a>
     }
   </mat-menu>
 </ng-container>

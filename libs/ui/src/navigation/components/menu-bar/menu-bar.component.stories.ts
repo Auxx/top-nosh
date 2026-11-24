@@ -1,13 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { MenuBarComponent } from './menu-bar.component';
+import { MenuBarComponent, MenuItem } from './menu-bar.component';
+
+const items: MenuItem[] = [
+  { url: '/dashboard', label: 'Dashboard' },
+  { url: '/recipes', label: 'Recipes' },
+  { url: '/shopping-lists', label: 'Shopping Lists' },
+  { url: '/settings', label: 'Settings' },
+  { url: '/logout', label: 'Log out', icon: 'logout' }
+];
 
 const meta: Meta<MenuBarComponent> = {
   title: 'Navigation/MenuBar',
   component: MenuBarComponent,
   tags: [ 'autodocs' ],
+  args: { title: 'Top Nosh', items },
   render: args => ({
     props: args,
-    template: `<ui-menu-bar></ui-menu-bar>`
+    template: `<ui-menu-bar [title]="title" [items]="items"></ui-menu-bar>`
   })
 };
 

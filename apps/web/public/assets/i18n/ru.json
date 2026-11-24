@@ -1,13 +1,8 @@
 {
   "ui": {
     "MenuBar": {
-      "title": "Top Nosh",
-      "dashboard": "Главная",
-      "recipes": "Рецепты",
-      "shoppingLists": "Списки покупок",
-      "settings": "Настройки",
-      "logout": "Выйти",
-      "more": "Ещё"
+      "more": "Ещё",
+      "navigation": "Основная навигация"
     },
     "PageHeader": {
       "back": "Назад"
@@ -59,6 +54,14 @@
     }
   },
   "web": {
+    "AuthorizedPage": {
+      "title": "Top Nosh",
+      "dashboard": "Главная",
+      "recipes": "Рецепты",
+      "shoppingLists": "Списки покупок",
+      "settings": "Настройки",
+      "logout": "Выйти"
+    },
     "NeedsAttentionPage": {
       "title": "Этот экземпляр Top Nosh требует внимания",
       "intro": "После обновления Top Nosh нужно разрешение на запись в папку с данными. Ваши рецепты в безопасности, ничего не было изменено.",

@@ -1,13 +1,8 @@
 {
   "ui": {
     "MenuBar": {
-      "title": "Top Nosh",
-      "dashboard": "Dashboard",
-      "recipes": "Recipes",
-      "shoppingLists": "Shopping Lists",
-      "settings": "Settings",
-      "logout": "Log out",
-      "more": "More"
+      "more": "More",
+      "navigation": "Main navigation"
     },
     "PageHeader": {
       "back": "Back"
@@ -59,6 +54,14 @@
     }
   },
   "web": {
+    "AuthorizedPage": {
+      "title": "Top Nosh",
+      "dashboard": "Dashboard",
+      "recipes": "Recipes",
+      "shoppingLists": "Shopping Lists",
+      "settings": "Settings",
+      "logout": "Log out"
+    },
     "NeedsAttentionPage": {
       "title": "This Top Nosh instance needs attention",
       "intro": "After an update, Top Nosh needs permission to write to its data folder. Your recipes are safe; nothing has been changed.",
