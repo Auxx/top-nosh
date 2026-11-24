@@ -1,8 +1,9 @@
+import { inject, provideAppInitializer } from '@angular/core';
 import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
-import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
+import { provideTransloco, TranslocoLoader, TranslocoService } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { applicationConfig, Preview } from '@storybook/angular-vite';
-import { from, Observable } from 'rxjs';
+import { firstValueFrom, from, Observable } from 'rxjs';
 
 class StorybookTranslocoLoader implements TranslocoLoader {
   getTranslation(lang: string): Observable<Record<string, unknown>> {
@@ -38,6 +39,12 @@ const preview: Preview = {
           loader: StorybookTranslocoLoader
         }),
         provideTranslocoMessageformat({ locales: [ 'en-GB', 'ru-RU' ] }),
+        // Render stories only after the active language has loaded, so the
+        // a11y checks never see a control whose label is still pending.
+        provideAppInitializer(() => {
+          const transloco = inject(TranslocoService);
+          return firstValueFrom(transloco.load(transloco.getActiveLang()));
+        }),
         provideRouter([], withDisabledInitialNavigation())
       ]
     }),
