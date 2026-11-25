@@ -5,6 +5,15 @@
   min-height: 120px;
   text-align: center;
   padding: var(--dim-large) var(--dim-xx-large);
+
+  // Projected content keeps its own layout: the centred box is only for the
+  // spinner, error and notice states.
+  &.ui-card-state-content {
+    display: block;
+    min-height: 0;
+    text-align: start;
+    padding: 0;
+  }
 }
 
 .error-message {
